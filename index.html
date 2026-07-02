@@ -1,0 +1,1098 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Music Saloon DRUM | 店舗・曲管理アプリ</title>
+  <link rel="icon" href="drum-icon.jpg">
+  <style>
+    :root {
+      --forest: #143f2c;
+      --forest-2: #0b2b1e;
+      --leaf: #2f6b4b;
+      --orange: #f08a35;
+      --orange-2: #ffc07a;
+      --cream: #fff7e8;
+      --paper: #fbf4e5;
+      --panel: rgba(255, 252, 244, .94);
+      --ink: #241d17;
+      --muted: #74685d;
+      --line: rgba(20, 63, 44, .18);
+      --blue: #376e9f;
+      --purple: #7753a5;
+      --red: #b5422a;
+      --shadow: 0 18px 50px rgba(20, 33, 25, .18);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(251, 244, 229, .96), rgba(255, 247, 232, .98)),
+        var(--paper);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 192, 122, .22);
+      background: rgba(11, 43, 30, .9);
+      backdrop-filter: blur(14px);
+      color: #fff;
+    }
+
+    nav {
+      width: min(1180px, calc(100% - 32px));
+      min-height: 72px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-weight: 900;
+      text-decoration: none;
+      letter-spacing: 0;
+    }
+
+    .brand img {
+      width: 48px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 2px solid rgba(240, 138, 53, .86);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .26);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .nav-links a {
+      min-height: 40px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: rgba(255, 247, 232, .78);
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      background: rgba(240, 138, 53, .18);
+    }
+
+    .hero {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      align-items: end;
+      color: #fff;
+      background:
+        linear-gradient(100deg, rgba(9, 27, 19, .9), rgba(20, 63, 44, .58) 55%, rgba(20, 63, 44, .18)),
+        url("drum-stage.jpeg") center/cover;
+    }
+
+    .hero-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 80px 0 96px;
+    }
+
+    .hero-logo {
+      width: min(340px, 62vw);
+      border-radius: 8px;
+      border: 2px solid rgba(240, 138, 53, .9);
+      box-shadow: var(--shadow);
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--orange-2);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin: 0;
+      font-size: clamp(42px, 7vw, 88px);
+      line-height: 1.02;
+      letter-spacing: 0;
+      text-shadow: 0 18px 44px rgba(0, 0, 0, .34);
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: 20px 0 30px;
+      color: rgba(255, 247, 232, .94);
+      font-size: 18px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    button,
+    input,
+    textarea,
+    select { font: inherit; }
+
+    .btn {
+      min-height: 46px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 10px 18px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      font-weight: 900;
+      transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary { color: var(--forest-2); background: var(--orange); box-shadow: 0 12px 28px rgba(240, 138, 53, .28); }
+    .btn.primary:hover { background: var(--orange-2); }
+    .btn.secondary { color: var(--forest); background: rgba(255, 247, 232, .94); }
+    .btn.ghost { color: var(--forest); background: #fff; border-color: var(--line); }
+    .btn.danger { color: var(--red); background: #fff; border-color: rgba(181, 66, 42, .28); }
+
+    section {
+      padding: 78px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dark-section {
+      color: var(--cream);
+      background:
+        linear-gradient(135deg, rgba(20, 63, 44, .96), rgba(11, 43, 30, .98)),
+        var(--forest);
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(29px, 4vw, 46px);
+      line-height: 1.15;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 740px;
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .dark-section .lead { color: rgba(255, 247, 232, .76); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(20, 33, 25, .08);
+    }
+
+    .dark-section .card {
+      color: var(--cream);
+      background: rgba(255, 247, 232, .08);
+      border-color: rgba(255, 192, 122, .22);
+    }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .tag {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      color: var(--forest-2);
+      background: var(--orange);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .tag.green { color: #fff; background: var(--leaf); }
+    .tag.blue { color: #fff; background: var(--blue); }
+    .tag.purple { color: #fff; background: var(--purple); }
+    .price {
+      margin: 12px 0 0;
+      color: #d9832e;
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    .dark-section .price { color: var(--orange-2); }
+
+    #menu .card {
+      background: linear-gradient(180deg, rgba(255, 253, 248, .98), rgba(255, 247, 232, .96));
+    }
+
+    #menu .card h3 {
+      color: var(--forest);
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "Yu Gothic", serif;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    #menu .card > p:not(.price) {
+      color: #655847;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    #menu .price {
+      color: #c97624;
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", "Yu Gothic", serif;
+      font-size: 26px;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
+    }
+
+    .info-list {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px 18px;
+      margin: 0;
+    }
+
+    .info-list dt {
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .dark-section .info-list dt { color: rgba(255, 192, 122, .84); }
+    .info-list dd { margin: 0; }
+
+    .feature-list {
+      display: grid;
+      gap: 13px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: feature;
+    }
+
+    .feature-list li {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      align-items: center;
+      gap: 12px;
+      color: #4f565c;
+      font-size: 20px;
+      font-weight: 900;
+      counter-increment: feature;
+    }
+
+    .feature-list li::before {
+      content: counter(feature) ".";
+      color: var(--orange);
+      font-size: 46px;
+      font-style: italic;
+      line-height: 1;
+    }
+
+    .manager {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    form { display: grid; gap: 14px; }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      color: var(--ink);
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(240, 138, 53, .15);
+    }
+
+    textarea {
+      min-height: 104px;
+      resize: vertical;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .toolbar input { max-width: 360px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fffdf8;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      background: #f1e6d4;
+      color: #4b3a2b;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+    .empty { color: var(--muted); text-align: center; padding: 26px; }
+    .status { color: var(--leaf); font-weight: 900; }
+
+    .song-groups {
+      display: grid;
+      gap: 14px;
+    }
+
+    .kana-group {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fffdf8;
+    }
+
+    .kana-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      color: #fff;
+      background: var(--forest);
+      font-weight: 900;
+    }
+
+    .favorite-list {
+      display: grid;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .favorite-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      padding: 14px;
+      border-top: 1px solid var(--line);
+      align-items: center;
+    }
+
+    .favorite-title {
+      margin: 0;
+      font-weight: 900;
+      font-size: 18px;
+    }
+
+    .favorite-meta {
+      margin: 3px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 22px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 32px 0;
+      color: #f3e7d6;
+      background: var(--forest-2);
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    footer strong { color: #fff; }
+
+    @media (max-width: 880px) {
+      nav {
+        min-height: auto;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 12px 0;
+      }
+
+      .nav-links { justify-content: flex-start; }
+      .hero { min-height: 700px; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .grid,
+      .manager,
+      .contact-grid { grid-template-columns: 1fr; }
+      .info-list { grid-template-columns: 1fr; }
+      .favorite-item { grid-template-columns: 1fr; }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr { display: block; }
+
+      thead { display: none; }
+      tr {
+        border-bottom: 1px solid var(--line);
+        padding: 10px 0;
+      }
+      td {
+        border: 0;
+        padding: 6px 12px;
+      }
+      td::before {
+        content: attr(data-label);
+        display: block;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 900;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="メインナビゲーション">
+      <a class="brand" href="#top" aria-label="Music Saloon DRUM ホーム">
+        <img src="drum-icon.jpg" alt="">
+        <span>Music Saloon DRUM</span>
+      </a>
+      <div class="nav-links">
+        <a href="#about">店舗情報</a>
+        <a href="#features">特徴</a>
+        <a href="#menu">料金</a>
+        <a href="#favorites">よく歌う曲</a>
+        <a href="#customers">マイ曲リスト</a>
+        <a href="#contact">問い合わせ</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-label="Music Saloon DRUM">
+      <div class="hero-inner">
+        <img class="hero-logo" src="drum-icon.jpg" alt="Music Saloon DRUM">
+        <p class="eyebrow">Karaoke, instruments and live music</p>
+        <h1>歌える、弾ける、楽しめる。</h1>
+        <p>江古田駅近くのMusic Saloon DRUM。店内の楽器とカラオケで遊べるお店の情報を見ながら、自分の歌いたい曲リストもまとめて管理できます。</p>
+        <div class="actions">
+          <a class="btn primary" href="#favorites">曲を登録する</a>
+          <a class="btn secondary" href="#menu">料金を見る</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>店舗情報</h2>
+            <p class="lead">深緑とオレンジのロゴカラーに合わせて、店舗の空気感が伝わるページに整えました。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Shop</span>
+            <h3>Music Saloon DRUM</h3>
+            <dl class="info-list">
+              <dt>営業時間</dt>
+              <dd>19:00 - 00:00<br>平日お昼の営業は予約制の貸し切りです。</dd>
+              <dt>定休日</dt>
+              <dd>毎週日曜日<br>貸切やイベント時は営業いたします。</dd>
+              <dt>電話</dt>
+              <dd><a href="tel:0339514056">03-3951-4056</a></dd>
+              <dt>メール</dt>
+              <dd><a href="mailto:drum.sns@gmail.com">drum.sns@gmail.com</a></dd>
+            </dl>
+          </article>
+          <article class="card">
+            <span class="tag green">Access</span>
+            <h3>アクセス</h3>
+            <dl class="info-list">
+              <dt>最寄駅</dt>
+              <dd>西武池袋線 江古田駅 徒歩1分<br>都営大江戸線 新江古田駅 徒歩7分</dd>
+              <dt>道案内</dt>
+              <dd>江古田駅南口、サエラ薬局に向かって左横の通りを進み「ラーメン喜角家」さんがあるビルの3階です。</dd>
+            </dl>
+          </article>
+          <article class="card">
+            <span class="tag blue">Reserve</span>
+            <h3>団体・貸切</h3>
+            <p>10名様以上のご利用で、お一人様3,500円から承ります。貸切、イベント、バンド利用などは電話またはメールでお問い合わせください。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="dark-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>カラオケと楽器で遊べるお店</h2>
+            <p class="lead">ステージの近さと音の楽しさが伝わるように、店内写真をメインビジュアルに使っています。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Instruments</span>
+            <h3>当店の楽器を使用できます</h3>
+            <p>ギター、アンプ、ベースアンプ、エレピ、ドラム、カホンなどを使って楽しめます。</p>
+          </article>
+          <article class="card">
+            <span class="tag">Live</span>
+            <h3>生演奏も弾き語りもOK</h3>
+            <p>バンドでの演奏、弾き語り、カラオケと生演奏の組み合わせにも対応します。</p>
+          </article>
+          <article class="card">
+            <span class="tag">Sound</span>
+            <h3>DAM通信カラオケと音響</h3>
+            <p>ミキサーも使用したこだわりの音響。カラオケだけでも十分楽しめます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="menu">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>料金プラン</h2>
+            <p class="lead">新システム案内の90分制を優先して掲載しています。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Standard</span>
+            <h3>飲み放題・歌い放題プラン</h3>
+            <p>ご入店から90分。焼酎、ウイスキー、ソフトドリンクが対象です。</p>
+            <p class="price">男性 3,500円<br>女性 2,500円</p>
+          </article>
+          <article class="card">
+            <span class="tag green">Extension</span>
+            <h3>自動延長</h3>
+            <p>お時間終了後は、お客様の会話や歌を中断させないよう自動延長制となります。</p>
+            <p class="price">60分 1,000円</p>
+          </article>
+          <article class="card">
+            <span class="tag purple">Bottle</span>
+            <h3>ボトルでお楽しみのお客様</h3>
+            <p>チャージ料は現行通り。セット料金とカラオケ代が別途かかります。</p>
+            <p class="price">男性 2,500円<br>女性 1,500円</p>
+          </article>
+          <article class="card">
+            <span class="tag">Set</span>
+            <h3>セット料金</h3>
+            <p>アイス、ミネラルなど。ボトル利用時のセット料金です。</p>
+            <p class="price">1,500円</p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Karaoke</span>
+            <h3>カラオケ代</h3>
+            <p>ボトル利用時のカラオケ料金です。</p>
+            <p class="price">1曲 200円</p>
+          </article>
+          <article class="card">
+            <span class="tag green">Party</span>
+            <h3>10名様以上</h3>
+            <p>団体利用、貸切、イベント利用のご相談を承ります。</p>
+            <p class="price">お一人様 3,500円〜</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="favorites" class="dark-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>よく歌う曲</h2>
+            <p class="lead">自分の定番曲を50音順で整理できます。歌手名・曲名で検索できます。</p>
+          </div>
+          <button class="btn danger" id="clearFavorites" type="button">全削除</button>
+        </div>
+
+        <div class="manager">
+          <div class="card">
+            <form id="favoriteForm">
+              <label>
+                曲名
+                <input id="favoriteTitle" required placeholder="例：糸">
+              </label>
+              <label>
+                歌手名
+                <input id="favoriteArtist" required placeholder="例：中島みゆき">
+              </label>
+              <label>
+                よみがな
+                <input id="favoriteKana" placeholder="例：いと">
+              </label>
+              <label>
+                キー・メモ
+                <input id="favoriteKey" placeholder="例：原曲キー / -1">
+              </label>
+              <label>
+                補足
+                <textarea id="favoriteMemo" placeholder="例：最後に歌う定番。キーは少し低めが歌いやすい。"></textarea>
+              </label>
+              <button class="btn primary" type="submit">曲を保存</button>
+              <p class="small">50音順は「よみがな」を入れると正確に並びます。</p>
+            </form>
+          </div>
+
+          <div>
+            <div class="toolbar">
+              <input id="favoriteSearch" placeholder="歌手名・曲名で検索">
+              <strong id="favoriteCount">0曲</strong>
+            </div>
+            <div class="song-groups" id="favoriteGroups"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="customers">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>マイ曲リスト</h2>
+            <p class="lead">QRコードから開いた方が、自分の歌いたい曲、歌いやすいキー、メモを保存できます。歌手名・曲名で検索できます。</p>
+          </div>
+          <button class="btn danger" id="clearAll" type="button">全削除</button>
+        </div>
+
+        <div class="manager">
+          <div class="card">
+            <form id="songForm">
+              <label>
+                表示名（任意）
+                <input id="customerName" autocomplete="nickname" placeholder="例：自分 / ニックネーム">
+              </label>
+              <label>
+                曲名
+                <input id="songTitle" required placeholder="例：糸">
+              </label>
+              <label>
+                歌手名
+                <input id="artistName" placeholder="例：中島みゆき">
+              </label>
+              <label>
+                キー・歌いやすさ
+                <select id="songKey">
+                  <option value="">未設定</option>
+                  <option>原曲キー</option>
+                  <option>+1</option>
+                  <option>+2</option>
+                  <option>-1</option>
+                  <option>-2</option>
+                  <option>低めが歌いやすい</option>
+                  <option>高めが歌いやすい</option>
+                </select>
+              </label>
+              <label>
+                メモ
+                <textarea id="memo" placeholder="例：サビ前から入る。次回来店時におすすめ曲を提案。"></textarea>
+              </label>
+              <button class="btn primary" type="submit">保存</button>
+              <p class="small">個人情報を扱う場合は、公開PCではなく店舗管理端末で利用してください。</p>
+            </form>
+          </div>
+
+          <div>
+            <div class="toolbar">
+              <input id="searchBox" placeholder="歌手名・曲名・メモで検索">
+              <strong id="countText">0件</strong>
+            </div>
+            <table aria-label="マイ曲リスト">
+              <thead>
+                <tr>
+                  <th>表示名</th>
+                  <th>曲名</th>
+                  <th>歌手名</th>
+                  <th>キー</th>
+                  <th>メモ</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="songList"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>問い合わせ</h2>
+            <p class="lead">電話またはメールでお問い合わせください。フォームからはメールアプリが開きます。</p>
+          </div>
+        </div>
+        <div class="contact-grid">
+          <article class="card">
+            <h3>連絡先</h3>
+            <dl class="info-list">
+              <dt>電話</dt>
+              <dd><a href="tel:0339514056">03-3951-4056</a></dd>
+              <dt>メール</dt>
+              <dd><a href="mailto:drum.sns@gmail.com">drum.sns@gmail.com</a></dd>
+              <dt>営業時間</dt>
+              <dd>19:00 - 00:00</dd>
+            </dl>
+          </article>
+          <article class="card">
+            <form id="contactForm">
+              <label>
+                お名前
+                <input id="contactName" required placeholder="例：山田 太郎">
+              </label>
+              <label>
+                連絡先
+                <input id="contactReply" required placeholder="電話番号またはメールアドレス">
+              </label>
+              <label>
+                内容
+                <textarea id="contactMessage" required placeholder="予約、貸切、メニューについてなど"></textarea>
+              </label>
+              <button class="btn primary" type="submit">メールを作成</button>
+              <p class="small">送信ボタンを押すと、お使いのメールアプリが開きます。</p>
+            </form>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>Music Saloon DRUM</strong>
+      <span>© <span id="year"></span> Music Saloon DRUM. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script>
+    const storageKey = "music-saloon-drum-songs";
+    const favoriteStorageKey = "music-saloon-drum-favorites";
+    const contactEmail = "drum.sns@gmail.com";
+    const form = document.getElementById("songForm");
+    const list = document.getElementById("songList");
+    const searchBox = document.getElementById("searchBox");
+    const countText = document.getElementById("countText");
+    const clearAll = document.getElementById("clearAll");
+    const contactForm = document.getElementById("contactForm");
+    const favoriteForm = document.getElementById("favoriteForm");
+    const favoriteGroups = document.getElementById("favoriteGroups");
+    const favoriteSearch = document.getElementById("favoriteSearch");
+    const favoriteCount = document.getElementById("favoriteCount");
+    const clearFavorites = document.getElementById("clearFavorites");
+
+    const kanaGroups = [
+      { label: "あ", chars: "あいうえお" },
+      { label: "か", chars: "かきくけこがぎぐげご" },
+      { label: "さ", chars: "さしすせそざじずぜぞ" },
+      { label: "た", chars: "たちつてとだぢづでど" },
+      { label: "な", chars: "なにぬねの" },
+      { label: "は", chars: "はひふへほばびぶべぼぱぴぷぺぽ" },
+      { label: "ま", chars: "まみむめも" },
+      { label: "や", chars: "やゆよ" },
+      { label: "ら", chars: "らりるれろ" },
+      { label: "わ", chars: "わをん" },
+      { label: "英数", chars: "abcdefghijklmnopqrstuvwxyz0123456789" },
+      { label: "その他", chars: "" }
+    ];
+
+    let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
+    let favorites = JSON.parse(localStorage.getItem(favoriteStorageKey) || "[]");
+
+    function saveSongs() {
+      localStorage.setItem(storageKey, JSON.stringify(songs));
+    }
+
+    function saveFavorites() {
+      localStorage.setItem(favoriteStorageKey, JSON.stringify(favorites));
+    }
+
+    function escapeText(value) {
+      return String(value || "").replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function createId() {
+      if (crypto && crypto.randomUUID) return crypto.randomUUID();
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function normalizeKana(value) {
+      return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[ァ-ン]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 96));
+    }
+
+    function getKanaGroup(item) {
+      const source = normalizeKana(item.kana || item.title || item.artist);
+      const first = source.charAt(0);
+      if (!first) return "その他";
+      const match = kanaGroups.find((group) => group.chars.includes(first));
+      return match ? match.label : "その他";
+    }
+
+    function renderFavorites() {
+      const query = favoriteSearch.value.trim().toLowerCase();
+      const filtered = favorites
+        .filter((item) => [item.title, item.artist, item.kana, item.key, item.memo].join(" ").toLowerCase().includes(query))
+        .sort((a, b) => {
+          const groupDiff = kanaGroups.findIndex((group) => group.label === getKanaGroup(a)) - kanaGroups.findIndex((group) => group.label === getKanaGroup(b));
+          if (groupDiff) return groupDiff;
+          return normalizeKana(a.kana || a.title).localeCompare(normalizeKana(b.kana || b.title), "ja");
+        });
+
+      favoriteCount.textContent = `${filtered.length}曲`;
+
+      if (!filtered.length) {
+        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">まだ登録がありません</div></div>`;
+        return;
+      }
+
+      const grouped = filtered.reduce((groups, item) => {
+        const groupName = getKanaGroup(item);
+        if (!groups[groupName]) groups[groupName] = [];
+        groups[groupName].push(item);
+        return groups;
+      }, {});
+
+      favoriteGroups.innerHTML = kanaGroups
+        .filter((group) => grouped[group.label])
+        .map((group) => `
+          <div class="kana-group">
+            <div class="kana-head"><span>${group.label}行</span><span>${grouped[group.label].length}曲</span></div>
+            <ul class="favorite-list">
+              ${grouped[group.label].map((item) => `
+                <li class="favorite-item">
+                  <div>
+                    <p class="favorite-title">${escapeText(item.title)}</p>
+                    <p class="favorite-meta">${escapeText(item.artist)} / ${escapeText(item.kana || "よみ未設定")} / ${escapeText(item.key || "キー未設定")}</p>
+                    ${item.memo ? `<p class="favorite-meta">${escapeText(item.memo)}</p>` : ""}
+                  </div>
+                  <button class="btn ghost" type="button" data-favorite-delete="${item.id}">削除</button>
+                </li>
+              `).join("")}
+            </ul>
+          </div>
+        `).join("");
+    }
+
+    function renderSongs() {
+      const query = searchBox.value.trim().toLowerCase();
+      const filtered = songs.filter((item) => {
+        return [item.customer, item.title, item.artist, item.key, item.memo]
+          .join(" ")
+          .toLowerCase()
+          .includes(query);
+      });
+
+      countText.textContent = `${filtered.length}件`;
+
+      if (!filtered.length) {
+        list.innerHTML = `<tr><td class="empty" colspan="6">まだ登録がありません</td></tr>`;
+        return;
+      }
+
+      list.innerHTML = filtered.map((item) => `
+        <tr>
+          <td data-label="表示名">${escapeText(item.customer || "自分")}</td>
+          <td data-label="曲名">${escapeText(item.title)}</td>
+          <td data-label="歌手名">${escapeText(item.artist || "-")}</td>
+          <td data-label="キー"><span class="status">${escapeText(item.key || "未設定")}</span></td>
+          <td data-label="メモ">${escapeText(item.memo || "-")}</td>
+          <td data-label="操作"><button class="btn ghost" type="button" data-delete="${item.id}">削除</button></td>
+        </tr>
+      `).join("");
+    }
+
+    favoriteForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      favorites.push({
+        id: createId(),
+        title: document.getElementById("favoriteTitle").value.trim(),
+        artist: document.getElementById("favoriteArtist").value.trim(),
+        kana: document.getElementById("favoriteKana").value.trim(),
+        key: document.getElementById("favoriteKey").value.trim(),
+        memo: document.getElementById("favoriteMemo").value.trim(),
+        createdAt: new Date().toISOString()
+      });
+      saveFavorites();
+      favoriteForm.reset();
+      renderFavorites();
+    });
+
+    favoriteGroups.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-favorite-delete]");
+      if (!button) return;
+      favorites = favorites.filter((item) => item.id !== button.dataset.favoriteDelete);
+      saveFavorites();
+      renderFavorites();
+    });
+
+    clearFavorites.addEventListener("click", () => {
+      if (!favorites.length) return;
+      if (confirm("登録済みのよく歌う曲をすべて削除しますか？")) {
+        favorites = [];
+        saveFavorites();
+        renderFavorites();
+      }
+    });
+
+    favoriteSearch.addEventListener("input", renderFavorites);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      songs.unshift({
+        id: createId(),
+        customer: document.getElementById("customerName").value.trim() || "自分",
+        title: document.getElementById("songTitle").value.trim(),
+        artist: document.getElementById("artistName").value.trim(),
+        key: document.getElementById("songKey").value,
+        memo: document.getElementById("memo").value.trim(),
+        createdAt: new Date().toISOString()
+      });
+      saveSongs();
+      form.reset();
+      renderSongs();
+    });
+
+    list.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-delete]");
+      if (!button) return;
+      songs = songs.filter((item) => item.id !== button.dataset.delete);
+      saveSongs();
+      renderSongs();
+    });
+
+    clearAll.addEventListener("click", () => {
+      if (!songs.length) return;
+      if (confirm("登録済みのマイ曲リストをすべて削除しますか？")) {
+        songs = [];
+        saveSongs();
+        renderSongs();
+      }
+    });
+
+    searchBox.addEventListener("input", renderSongs);
+
+    contactForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const name = document.getElementById("contactName").value.trim();
+      const reply = document.getElementById("contactReply").value.trim();
+      const message = document.getElementById("contactMessage").value.trim();
+      const subject = encodeURIComponent("Music Saloon DRUMへの問い合わせ");
+      const body = encodeURIComponent(`お名前: ${name}\n連絡先: ${reply}\n\n内容:\n${message}`);
+      location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    renderFavorites();
+    renderSongs();
+  </script>
+</body>
+</html>
+
