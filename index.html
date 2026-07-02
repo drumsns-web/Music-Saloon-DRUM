@@ -300,6 +300,51 @@
       text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
     }
 
+    .menu-block {
+      margin-top: 34px;
+    }
+
+    .menu-block h3 {
+      margin: 0 0 14px;
+      color: var(--forest);
+      font-size: 24px;
+      line-height: 1.35;
+    }
+
+    .menu-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .menu-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px dashed rgba(20, 63, 44, .22);
+      padding-bottom: 8px;
+    }
+
+    .menu-list span:last-child {
+      color: #c97624;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .menu-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    #menu .card > .menu-note {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
     .info-list {
       display: grid;
       grid-template-columns: 140px 1fr;
@@ -552,9 +597,10 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
+        <a href="#info">お知らせ</a>
         <a href="#menu">メニュー</a>
         <a href="#favorites">よく歌う曲</a>
-        <a href="#customers">マイ曲リスト</a>
+        <a href="#customers">曲リスト</a>
         <a href="#about">店舗情報</a>
         <a href="#features">特徴</a>
         <a href="#contact">問い合わせ</a>
@@ -576,50 +622,176 @@
       </div>
     </section>
 
+    <section id="info">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>インフォメーション</h2>
+            <p class="lead">ご来店中に確認していただきたいお知らせや、SNSへのリンクをまとめています。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Today</span>
+            <h3>本日のご案内</h3>
+            <p>メニュー、料金、曲リストはこのページから確認できます。曲リストはお使いの端末のブラウザ内に保存されます。</p>
+          </article>
+          <article class="card">
+            <span class="tag green">Instagram</span>
+            <h3>Instagram</h3>
+            <p>イベント情報や店内の様子はInstagramでもご案内できます。</p>
+            <a class="btn ghost" href="https://www.instagram.com/musicsaloondrum/" target="_blank" rel="noopener">Instagramを開く</a>
+            <p class="small">@musicsaloondrum</p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Hours</span>
+            <h3>営業時間</h3>
+            <dl class="info-list">
+              <dt>営業時間</dt>
+              <dd>19:00 - 00:00</dd>
+              <dt>定休日</dt>
+              <dd>毎週日曜日</dd>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="menu">
       <div class="wrap">
         <div class="section-head">
           <div>
             <h2>メニュー・料金</h2>
-            <p class="lead">ご利用中に確認しやすいよう、料金プランをまとめています。今後、ドリンクやフードのメニューもここに追加できます。</p>
+            <p class="lead">ご利用中に確認しやすいよう、飲み放題プランと通常メニューを分けて掲載しています。</p>
           </div>
+        </div>
+
+        <div class="menu-block">
+          <h3>飲み放題♪歌い放題♪コース</h3>
+          <div class="grid">
+            <article class="card">
+              <span class="tag">Standard</span>
+              <h3>スタンダードプラン</h3>
+              <p>ご来店から90分。焼酎、ウイスキー、ソフトドリンクが飲み放題。ハイボールやサワー類もあります。</p>
+              <p class="price">男性 3,500円<br>女性 2,500円</p>
+              <p class="menu-note">延長1時間 1名様につき1,000円</p>
+            </article>
+            <article class="card">
+              <span class="tag green">Super</span>
+              <h3>スーパープラン</h3>
+              <p>スタンダードプランに加えて、カルピス、梅酒、芋焼酎、麦焼酎も楽しめます。</p>
+              <p class="price">男性 4,000円<br>女性 3,000円</p>
+            </article>
+            <article class="card">
+              <span class="tag purple">Premium</span>
+              <h3>プレミアムプラン</h3>
+              <p>スタンダード・スーパープランに加えて、生ビール、ワイン（赤・白）も対象です。</p>
+              <p class="price">男性 5,000円<br>女性 4,000円</p>
+            </article>
+          </div>
+          <p class="menu-note">22時半以降のご来店でも料金は同じです。営業は0時までのため、飲み放題ご利用のお客様はお早目のご来店をおすすめします。</p>
+        </div>
+
+        <div class="menu-block">
+          <h3>飲み放題メニュー</h3>
+          <div class="grid">
+            <article class="card">
+              <span class="tag">Standard</span>
+              <h3>スタンダード</h3>
+              <p>焼酎、ウイスキー、ソフトドリンク</p>
+              <p class="menu-note">焼酎水割り、ハイボール、レモンサワー、グレープフルーツサワー、緑茶ハイ、ウーロンハイなど。</p>
+            </article>
+            <article class="card">
+              <span class="tag green">Super</span>
+              <h3>スーパープラン</h3>
+              <p>スタンダード対象メニューに追加</p>
+              <p class="menu-note">カルピス、梅酒、芋焼酎、麦焼酎。</p>
+            </article>
+            <article class="card">
+              <span class="tag purple">Premium</span>
+              <h3>プレミアム</h3>
+              <p>スタンダード・スーパー対象メニューに追加</p>
+              <p class="menu-note">生ビール、ワイン（赤・白）。</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="menu-block">
+          <h3>通常メニュー</h3>
         </div>
         <div class="grid">
           <article class="card">
-            <span class="tag">Standard</span>
-            <h3>飲み放題・歌い放題プラン</h3>
-            <p>ご入店から90分。焼酎、ウイスキー、ソフトドリンクが対象です。</p>
-            <p class="price">男性 3,500円<br>女性 2,500円</p>
+            <span class="tag">Beer</span>
+            <h3>ビール</h3>
+            <ul class="menu-list">
+              <li><span>生ビール：アサヒスーパードライ</span><span>1,000円</span></li>
+              <li><span>瓶ビール：アサヒスーパードライ</span><span>1,000円</span></li>
+              <li><span>瓶ビール：ハートランド</span><span>1,000円</span></li>
+            </ul>
           </article>
           <article class="card">
-            <span class="tag green">Extension</span>
-            <h3>自動延長</h3>
-            <p>お時間終了後は、お客様の会話や歌を中断させないよう自動延長制となります。</p>
-            <p class="price">60分 1,000円</p>
+            <span class="tag green">Shochu</span>
+            <h3>焼酎</h3>
+            <ul class="menu-list">
+              <li><span>Japan（甲類）</span><span>3,000円</span></li>
+              <li><span>いいちこ 日田全麹（麦）</span><span>4,000円</span></li>
+              <li><span>銀しろ（米）</span><span>4,000円</span></li>
+              <li><span>一刻者（芋）</span><span>5,500円</span></li>
+              <li><span>里の曙（黒糖）</span><span>8,500円</span></li>
+            </ul>
           </article>
           <article class="card">
-            <span class="tag purple">Bottle</span>
-            <h3>ボトルでお楽しみのお客様</h3>
-            <p>チャージ料は現行通り。セット料金とカラオケ代が別途かかります。</p>
-            <p class="price">男性 2,500円<br>女性 1,500円</p>
+            <span class="tag purple">Whisky</span>
+            <h3>ウイスキー</h3>
+            <ul class="menu-list">
+              <li><span>I.W.ハーパー</span><span>6,500円</span></li>
+              <li><span>竹鶴</span><span>21,000円</span></li>
+              <li><span>余市</span><span>21,000円</span></li>
+              <li><span>シーバスリーガル</span><span>9,500円</span></li>
+              <li><span>シーバス ミズナラ</span><span>12,000円</span></li>
+              <li><span>スーパーニッカ</span><span>7,500円</span></li>
+            </ul>
           </article>
           <article class="card">
-            <span class="tag">Set</span>
-            <h3>セット料金</h3>
-            <p>アイス、ミネラルなど。ボトル利用時のセット料金です。</p>
-            <p class="price">1,500円</p>
+            <span class="tag">Alcohol</span>
+            <h3>その他お酒</h3>
+            <ul class="menu-list">
+              <li><span>ヘネシー V.S</span><span>12,000円</span></li>
+              <li><span>日本酒</span><span>1,000円</span></li>
+              <li><span>グラスワイン 赤・白</span><span>800円</span></li>
+              <li><span>梅酒</span><span>800円</span></li>
+              <li><span>梅酒ソーダ割り</span><span>800円</span></li>
+              <li><span>カクテル各種</span><span>800円</span></li>
+              <li><span>サワー各種</span><span>800円</span></li>
+            </ul>
           </article>
           <article class="card">
-            <span class="tag blue">Karaoke</span>
-            <h3>カラオケ代</h3>
-            <p>ボトル利用時のカラオケ料金です。</p>
-            <p class="price">1曲 200円</p>
+            <span class="tag blue">Soft Drink</span>
+            <h3>ソフトドリンク</h3>
+            <p class="price">各 500円</p>
+            <p>ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、コーヒー、ジンジャーエール</p>
           </article>
           <article class="card">
-            <span class="tag green">Party</span>
-            <h3>10名様以上</h3>
-            <p>団体利用、貸切、イベント利用のご相談を承ります。</p>
-            <p class="price">お一人様 3,500円〜</p>
+            <span class="tag green">Charge</span>
+            <h3>チャージ・カラオケ</h3>
+            <ul class="menu-list">
+              <li><span>チャージ 男性（お通し付・時間制限なし）</span><span>2,500円</span></li>
+              <li><span>チャージ 女性（お通し付・時間制限なし）</span><span>1,500円</span></li>
+              <li><span>カラオケ1曲</span><span>200円</span></li>
+              <li><span>セット料金（水割りなどの場合・お一人様）</span><span>1,500円</span></li>
+            </ul>
+            <p class="menu-note">楽器使用料は無料です。セット料金にはアイス・ミネラル・緑茶・ウーロン茶などが含まれます。</p>
+          </article>
+          <article class="card">
+            <span class="tag">Food</span>
+            <h3>食べ物</h3>
+            <ul class="menu-list">
+              <li><span>カレーライス</span><span>1,000円</span></li>
+              <li><span>スパゲッティ</span><span>1,000円</span></li>
+              <li><span>乾き物 小</span><span>500円</span></li>
+              <li><span>乾き物 大</span><span>1,000円</span></li>
+              <li><span>チーズ盛り合わせ</span><span>1,000円</span></li>
+            </ul>
           </article>
         </div>
       </div>
@@ -629,7 +801,7 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <h2>マイ曲リスト</h2>
+            <h2>曲リスト</h2>
             <p class="lead">QRコードから開いた方が、自分の歌いたい曲、歌いやすいキー、メモを保存できます。歌手名・曲名で検索できます。</p>
           </div>
           <button class="btn danger" id="clearAll" type="button">全削除</button>
@@ -640,11 +812,11 @@
             <form id="songForm">
               <label>
                 曲名
-                <input id="songTitle" required placeholder="例：糸">
+                <input id="songTitle" required placeholder="例：いとしのエリー">
               </label>
               <label>
                 歌手名
-                <input id="artistName" placeholder="例：中島みゆき">
+                <input id="artistName" placeholder="例：サザンオールスターズ">
               </label>
               <label>
                 キー・歌いやすさ
@@ -673,7 +845,7 @@
               <input id="searchBox" placeholder="歌手名・曲名・メモで検索">
               <strong id="countText">0件</strong>
             </div>
-            <table aria-label="マイ曲リスト">
+            <table aria-label="曲リスト">
               <thead>
                 <tr>
                   <th>曲名</th>
@@ -705,15 +877,15 @@
             <form id="favoriteForm">
               <label>
                 曲名
-                <input id="favoriteTitle" required placeholder="例：糸">
+                <input id="favoriteTitle" required placeholder="例：いとしのエリー">
               </label>
               <label>
                 歌手名
-                <input id="favoriteArtist" required placeholder="例：中島みゆき">
+                <input id="favoriteArtist" required placeholder="例：サザンオールスターズ">
               </label>
               <label>
                 よみがな
-                <input id="favoriteKana" placeholder="例：いと">
+                <input id="favoriteKana" placeholder="例：いとしのえりー">
               </label>
               <label>
                 キー・メモ
@@ -1063,7 +1235,7 @@
 
     clearAll.addEventListener("click", () => {
       if (!songs.length) return;
-      if (confirm("登録済みのマイ曲リストをすべて削除しますか？")) {
+      if (confirm("登録済みの曲リストをすべて削除しますか？")) {
         songs = [];
         saveSongs();
         renderSongs();
