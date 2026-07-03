@@ -478,6 +478,7 @@
       font-size: 14px;
       color: #2e251d;
       font-weight: 700;
+      overflow-wrap: break-word;
     }
 
     th {
@@ -490,6 +491,17 @@
     tr:last-child td { border-bottom: 0; }
     .empty { color: var(--muted); text-align: center; padding: 26px; font-weight: 800; }
     .status { color: var(--leaf); font-weight: 900; }
+    .song-title-cell,
+    .artist-cell {
+      min-width: 180px;
+      max-width: 340px;
+      white-space: normal;
+    }
+
+    .action-cell {
+      width: 88px;
+      white-space: nowrap;
+    }
 
     .song-groups {
       display: grid;
@@ -527,12 +539,26 @@
       padding: 14px;
       border-top: 1px solid var(--line);
       align-items: center;
+      transition: transform .18s ease, background .18s ease;
+      touch-action: pan-y;
+    }
+
+    .swipe-row {
+      transition: transform .18s ease, background .18s ease;
+      touch-action: pan-y;
+    }
+
+    .swipe-row.swiping-left,
+    .favorite-item.swiping-left {
+      background: rgba(181, 66, 42, .08);
+      transform: translateX(-12px);
     }
 
     .favorite-title {
       margin: 0;
       font-weight: 900;
       font-size: 18px;
+      overflow-wrap: anywhere;
     }
 
     .favorite-meta {
@@ -552,6 +578,48 @@
       color: var(--muted);
       font-size: 13px;
       font-weight: 700;
+    }
+
+    .privacy-note {
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      margin: 0 0 18px;
+      padding: 12px 14px;
+      background: rgba(240, 138, 53, .12);
+      color: #2f261d;
+      font-weight: 800;
+    }
+
+    .undo-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 40;
+      width: min(520px, calc(100% - 32px));
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid rgba(255, 192, 122, .42);
+      border-radius: 8px;
+      padding: 12px 14px;
+      color: #fff7e8;
+      background: rgba(11, 43, 30, .96);
+      box-shadow: var(--shadow);
+      font-weight: 900;
+    }
+
+    .undo-toast.show { display: flex; }
+
+    .undo-toast button {
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      color: var(--forest-2);
+      background: var(--orange);
+      cursor: pointer;
+      font-weight: 900;
     }
 
     footer {
@@ -597,6 +665,7 @@
       tr {
         border-bottom: 1px solid var(--line);
         padding: 10px 0;
+        transition: transform .18s ease, background .18s ease;
       }
       td {
         border: 0;
@@ -842,7 +911,7 @@
                 <input id="artistName" placeholder="例：サザンオールスターズ">
               </label>
               <label>
-                キー・歌いやすさ
+                キー
                 <select id="songKey">
                   <option value="">未設定</option>
                   <option>原曲キー</option>
@@ -864,6 +933,7 @@
           </div>
 
           <div>
+            <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。</p>
             <div class="toolbar">
               <input id="searchBox" placeholder="歌手名・曲名・メモで検索">
               <strong id="countText">0件</strong>
@@ -911,7 +981,7 @@
                 <input id="favoriteKana" placeholder="例：いとしのえりー">
               </label>
               <label>
-                キー・メモ
+                キー
                 <input id="favoriteKey" placeholder="例：原曲キー / -1">
               </label>
               <label>
@@ -919,11 +989,12 @@
                 <textarea id="favoriteMemo" placeholder="例：最後に歌う定番。キーは少し低めが歌いやすい。"></textarea>
               </label>
               <button class="btn primary" type="submit">曲を保存</button>
-              <p class="small">50音順は「よみがな」を入れると正確に並びます。</p>
+              <p class="small">よみがなは検索・並び替え用です。最初の数文字だけでもかまいません。</p>
             </form>
           </div>
 
           <div>
+            <p class="privacy-note">よく歌う曲リストもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。</p>
             <div class="toolbar">
               <input id="favoriteSearch" placeholder="歌手名・曲名で検索">
               <strong id="favoriteCount">0曲</strong>
@@ -1054,6 +1125,11 @@
     </div>
   </footer>
 
+  <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
+    <span id="undoText">削除しました</span>
+    <button id="undoButton" type="button">元に戻す</button>
+  </div>
+
   <script>
     const storageKey = "music-saloon-drum-songs";
     const favoriteStorageKey = "music-saloon-drum-favorites";
@@ -1069,6 +1145,9 @@
     const favoriteSearch = document.getElementById("favoriteSearch");
     const favoriteCount = document.getElementById("favoriteCount");
     const clearFavorites = document.getElementById("clearFavorites");
+    const undoToast = document.getElementById("undoToast");
+    const undoText = document.getElementById("undoText");
+    const undoButton = document.getElementById("undoButton");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -1087,6 +1166,8 @@
 
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
     let favorites = JSON.parse(localStorage.getItem(favoriteStorageKey) || "[]");
+    let undoTimer = null;
+    let undoAction = null;
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
@@ -1126,6 +1207,92 @@
       return match ? match.label : "その他";
     }
 
+    function showUndo(message, callback) {
+      clearTimeout(undoTimer);
+      undoText.textContent = message;
+      undoAction = callback;
+      undoToast.classList.add("show");
+      undoTimer = setTimeout(() => {
+        undoToast.classList.remove("show");
+        undoAction = null;
+      }, 6000);
+    }
+
+    undoButton.addEventListener("click", () => {
+      if (!undoAction) return;
+      undoAction();
+      undoToast.classList.remove("show");
+      undoAction = null;
+      clearTimeout(undoTimer);
+    });
+
+    function itemLabel(item) {
+      return item.title ? `「${item.title}」` : "この曲";
+    }
+
+    function deleteFavorite(id) {
+      const index = favorites.findIndex((item) => item.id === id);
+      if (index === -1) return;
+      const item = favorites[index];
+      if (!confirm(`${itemLabel(item)}を削除してもよろしいですか？`)) return;
+      favorites.splice(index, 1);
+      saveFavorites();
+      renderFavorites();
+      showUndo(`${itemLabel(item)}を削除しました`, () => {
+        favorites.splice(index, 0, item);
+        saveFavorites();
+        renderFavorites();
+      });
+    }
+
+    function deleteSong(id) {
+      const index = songs.findIndex((item) => item.id === id);
+      if (index === -1) return;
+      const item = songs[index];
+      if (!confirm(`${itemLabel(item)}を削除してもよろしいですか？`)) return;
+      songs.splice(index, 1);
+      saveSongs();
+      renderSongs();
+      showUndo(`${itemLabel(item)}を削除しました`, () => {
+        songs.splice(index, 0, item);
+        saveSongs();
+        renderSongs();
+      });
+    }
+
+    function enableSwipeDelete(container, selector, idAttribute, deleteHandler) {
+      let startX = 0;
+      let startY = 0;
+      let target = null;
+
+      container.addEventListener("touchstart", (event) => {
+        target = event.target.closest(selector);
+        if (!target || !container.contains(target)) return;
+        const touch = event.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+      }, { passive: true });
+
+      container.addEventListener("touchmove", (event) => {
+        if (!target) return;
+        const touch = event.touches[0];
+        const diffX = touch.clientX - startX;
+        const diffY = Math.abs(touch.clientY - startY);
+        if (diffX < -28 && diffY < 45) target.classList.add("swiping-left");
+      }, { passive: true });
+
+      container.addEventListener("touchend", (event) => {
+        if (!target) return;
+        const touch = event.changedTouches[0];
+        const diffX = touch.clientX - startX;
+        const diffY = Math.abs(touch.clientY - startY);
+        const id = target.dataset[idAttribute];
+        target.classList.remove("swiping-left");
+        target = null;
+        if (diffX < -72 && diffY < 60 && id) deleteHandler(id);
+      }, { passive: true });
+    }
+
     function renderFavorites() {
       const query = favoriteSearch.value.trim().toLowerCase();
       const filtered = favorites
@@ -1157,10 +1324,10 @@
             <div class="kana-head"><span>${group.label}行</span><span>${grouped[group.label].length}曲</span></div>
             <ul class="favorite-list">
               ${grouped[group.label].map((item) => `
-                <li class="favorite-item">
+                <li class="favorite-item" data-favorite-id="${item.id}">
                   <div>
                     <p class="favorite-title">${escapeText(item.title)}</p>
-                    <p class="favorite-meta">${escapeText(item.artist)} / ${escapeText(item.kana || "よみ未設定")} / ${escapeText(item.key || "キー未設定")}</p>
+                    <p class="favorite-meta">${escapeText(item.artist)}${item.key ? ` / ${escapeText(item.key)}` : ""}</p>
                     ${item.memo ? `<p class="favorite-meta">${escapeText(item.memo)}</p>` : ""}
                   </div>
                   <button class="btn ghost" type="button" data-favorite-delete="${item.id}">削除</button>
@@ -1188,12 +1355,12 @@
       }
 
       list.innerHTML = filtered.map((item) => `
-        <tr>
-          <td data-label="曲名">${escapeText(item.title)}</td>
-          <td data-label="歌手名">${escapeText(item.artist || "-")}</td>
+        <tr class="swipe-row" data-song-id="${item.id}">
+          <td class="song-title-cell" data-label="曲名">${escapeText(item.title)}</td>
+          <td class="artist-cell" data-label="歌手名">${escapeText(item.artist || "-")}</td>
           <td data-label="キー"><span class="status">${escapeText(item.key || "未設定")}</span></td>
           <td data-label="メモ">${escapeText(item.memo || "-")}</td>
-          <td data-label="操作"><button class="btn ghost" type="button" data-delete="${item.id}">削除</button></td>
+          <td class="action-cell" data-label="操作"><button class="btn ghost" type="button" data-delete="${item.id}">削除</button></td>
         </tr>
       `).join("");
     }
@@ -1217,9 +1384,7 @@
     favoriteGroups.addEventListener("click", (event) => {
       const button = event.target.closest("[data-favorite-delete]");
       if (!button) return;
-      favorites = favorites.filter((item) => item.id !== button.dataset.favoriteDelete);
-      saveFavorites();
-      renderFavorites();
+      deleteFavorite(button.dataset.favoriteDelete);
     });
 
     clearFavorites.addEventListener("click", () => {
@@ -1251,10 +1416,11 @@
     list.addEventListener("click", (event) => {
       const button = event.target.closest("[data-delete]");
       if (!button) return;
-      songs = songs.filter((item) => item.id !== button.dataset.delete);
-      saveSongs();
-      renderSongs();
+      deleteSong(button.dataset.delete);
     });
+
+    enableSwipeDelete(favoriteGroups, "[data-favorite-id]", "favoriteId", deleteFavorite);
+    enableSwipeDelete(list, "[data-song-id]", "songId", deleteSong);
 
     clearAll.addEventListener("click", () => {
       if (!songs.length) return;
