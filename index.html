@@ -29,7 +29,7 @@
 
     body {
       margin: 0;
-      font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
+      font-family: "BIZ UDPGothic", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
       color: var(--ink);
       background:
         linear-gradient(180deg, rgba(251, 244, 229, .96), rgba(255, 247, 232, .98)),
@@ -146,8 +146,16 @@
     .hero p {
       max-width: 700px;
       margin: 20px 0 30px;
-      color: rgba(255, 247, 232, .94);
-      font-size: 18px;
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: #fffdf8;
+      background: rgba(11, 43, 30, .68);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, .24);
+      font-size: 19px;
+      font-weight: 900;
+      line-height: 1.75;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .55);
     }
 
     .actions {
@@ -286,14 +294,12 @@
 
     #menu .card h3 {
       color: var(--forest);
-      font-family: "Yu Mincho", "Hiragino Mincho ProN", "Yu Gothic", serif;
       font-size: 22px;
       font-weight: 900;
     }
 
     #menu .card > p:not(.price) {
       color: #43372b;
-      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
       font-size: 15px;
       font-weight: 700;
       line-height: 1.8;
@@ -301,7 +307,6 @@
 
     #menu .price {
       color: #c97624;
-      font-family: "Yu Mincho", "Hiragino Mincho ProN", "Yu Gothic", serif;
       font-size: 26px;
       text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
     }
@@ -460,6 +465,83 @@
 
     .toolbar input { max-width: 360px; }
 
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 14px;
+    }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #33291f;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .check-row input {
+      width: 18px;
+      min-height: 18px;
+      accent-color: var(--orange);
+    }
+
+    .tag-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag-option {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(20, 63, 44, .18);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: #fffdf8;
+      color: #33291f;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .tag-option input {
+      width: 16px;
+      min-height: 16px;
+      accent-color: var(--orange);
+    }
+
+    .tag-manager {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 192, 122, .22);
+    }
+
+    .tag-manager .control-row {
+      margin-top: 10px;
+    }
+
+    .tag-manager-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .tag-manager-list .btn {
+      min-height: 36px;
+      padding: 7px 11px;
+      font-size: 13px;
+    }
+
+    body.memo-disabled .memo-field,
+    body.memo-disabled .memo-col,
+    body.memo-disabled .memo-cell {
+      display: none;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -590,6 +672,92 @@
       font-weight: 800;
     }
 
+    .result-panel {
+      border: 1px solid rgba(240, 138, 53, .35);
+      border-radius: 8px;
+      margin: 0 0 18px;
+      padding: 14px;
+      background: rgba(255, 247, 232, .82);
+      color: #2f261d;
+      font-weight: 800;
+    }
+
+    .history-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .history-list li {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fffdf8;
+      font-weight: 800;
+    }
+
+    .history-date {
+      color: var(--forest);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .drink-section.hidden {
+      display: none;
+    }
+
+    .drink-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: rgba(240, 138, 53, .16);
+      color: #33291f;
+      font-size: 13px;
+      font-weight: 900;
+      display: inline-flex;
+      margin: 4px 4px 0 0;
+    }
+
+    .drink-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(11, 43, 30, .68);
+    }
+
+    .drink-modal.show {
+      display: flex;
+    }
+
+    .drink-modal-panel {
+      width: min(560px, 100%);
+      max-height: min(760px, calc(100vh - 40px));
+      overflow: auto;
+      border-radius: 8px;
+      padding: 22px;
+      background: #fffdf8;
+      box-shadow: var(--shadow);
+    }
+
+    .drink-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
     .undo-toast {
       position: fixed;
       left: 50%;
@@ -693,6 +861,8 @@
         <a href="#menu">メニュー</a>
         <a href="#favorites">よく歌う曲</a>
         <a href="#customers">曲リスト</a>
+        <a href="#history">歌った記録</a>
+        <a href="#settings">設定</a>
         <a href="#about">店舗情報</a>
         <a href="#features">特徴</a>
         <a href="#contact">問い合わせ</a>
@@ -725,8 +895,9 @@
         <div class="grid">
           <article class="card">
             <span class="tag">Today</span>
-            <h3>本日のご案内</h3>
+            <h3>店からのお知らせ</h3>
             <p>メニュー、料金、曲リストはこのページから確認できます。曲リストはお使いの端末のブラウザ内に保存されます。</p>
+            <p class="menu-note">イベントや本日のおすすめがある場合は、こちらに掲載します。</p>
           </article>
           <article class="card">
             <span class="tag green">Instagram</span>
@@ -923,7 +1094,15 @@
                   <option>高めが歌いやすい</option>
                 </select>
               </label>
-              <label>
+              <label class="check-row">
+                <input id="songDuet" type="checkbox">
+                デュエット曲として登録
+              </label>
+              <div>
+                <div class="small">ジャンルタグ</div>
+                <div class="tag-options" id="songTagOptions"></div>
+              </div>
+              <label class="memo-field">
                 メモ
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
               </label>
@@ -934,8 +1113,20 @@
 
           <div>
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。</p>
+            <div class="result-panel" id="gachaResult">歌う曲に迷ったら、曲リストからおすすめを選べます。</div>
+            <div class="control-row">
+              <button class="btn primary" id="gachaButton" type="button">おすすめ曲ガチャ</button>
+              <label class="check-row">
+                <input id="gachaIncludeDuet" type="checkbox">
+                ガチャにデュエット曲を含める
+              </label>
+              <label class="check-row">
+                <input id="duetOnly" type="checkbox">
+                デュエット曲だけ表示
+              </label>
+            </div>
             <div class="toolbar">
-              <input id="searchBox" placeholder="歌手名・曲名・メモで検索">
+              <input id="searchBox" placeholder="歌手名・曲名・タグ・メモで検索">
               <strong id="countText">0件</strong>
             </div>
             <table aria-label="曲リスト">
@@ -944,13 +1135,99 @@
                   <th>曲名</th>
                   <th>歌手名</th>
                   <th>キー</th>
-                  <th>メモ</th>
+                  <th class="memo-col">メモ</th>
                   <th>操作</th>
                 </tr>
               </thead>
               <tbody id="songList"></tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="history">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>歌った記録</h2>
+            <p class="lead">その日に歌った曲を日記のように残せます。日付を選ぶと、いつ何を歌ったか確認できます。</p>
+          </div>
+          <button class="btn danger" id="clearHistory" type="button">記録を全削除</button>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Calendar</span>
+            <h3>日付で見る</h3>
+            <label>
+              日付
+              <input id="historyDate" type="date">
+            </label>
+            <p class="small">曲リストの「歌った」ボタンを押すと、今日の記録に追加されます。</p>
+          </article>
+          <article class="card">
+            <span class="tag green">Today</span>
+            <h3>今日の記録</h3>
+            <p class="price" id="todaySongCount">0曲</p>
+            <p class="small">同じ曲を何度歌っても、その日の記録として残せます。</p>
+          </article>
+          <article class="card drink-section hidden" id="drinkSection">
+            <span class="tag blue">Drink Log</span>
+            <h3>今日のドリンク記録</h3>
+            <p class="price" id="todayDrinkCount">0杯</p>
+            <button class="btn primary" id="openDrinkModal" type="button">飲んだものを記録</button>
+            <div class="drink-summary" id="drinkSummary"></div>
+            <p class="small">飲みすぎ防止の合言葉は「いい音は、ほどよい一杯から」。</p>
+          </article>
+        </div>
+        <div class="menu-block">
+          <h3>選んだ日の歌った曲</h3>
+          <ul class="history-list" id="historyList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="settings" class="dark-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>設定</h2>
+            <p class="lead">使う人に合わせて、曲リストの表示や記録機能を切り替えられます。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Song List</span>
+            <h3>曲リスト設定</h3>
+            <label class="check-row">
+              <input id="settingMemo" type="checkbox">
+              曲リストにメモ欄を表示する
+            </label>
+            <label class="check-row">
+              <input id="settingDrink" type="checkbox">
+              ドリンク記録を表示する
+            </label>
+            <div class="tag-manager">
+              <h3>タグ設定</h3>
+              <p class="small">曲登録で使うタグを自由に追加・削除できます。</p>
+              <div class="control-row">
+                <input id="newTagName" placeholder="例：懐メロ">
+                <button class="btn primary" id="addTagButton" type="button">タグを追加</button>
+              </div>
+              <div class="tag-manager-list" id="tagManagerList"></div>
+              <p class="small">削除したタグは新しく選ぶ候補から外れます。すでに曲に付いているタグは曲側に残ります。</p>
+            </div>
+          </article>
+          <article class="card">
+            <span class="tag">History</span>
+            <h3>記録について</h3>
+            <p>歌った曲、キー、ドリンク記録はこの端末のブラウザ内に保存されます。別のお客様やお店側へ自動共有されません。</p>
+          </article>
+          <article class="card">
+            <span class="tag">Duet</span>
+            <h3>デュエット検索</h3>
+            <p>曲を保存するときに「デュエット曲として登録」を選ぶと、曲リストでデュエット曲だけを表示できます。</p>
+          </article>
         </div>
       </div>
     </section>
@@ -1130,9 +1407,26 @@
     <button id="undoButton" type="button">元に戻す</button>
   </div>
 
+  <div class="drink-modal" id="drinkModal" aria-hidden="true">
+    <div class="drink-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2>飲んだものを記録</h2>
+          <p class="lead">今日飲んだものを選んでください。</p>
+        </div>
+        <button class="btn ghost" id="closeDrinkModal" type="button">閉じる</button>
+      </div>
+      <div class="drink-buttons" id="drinkButtons"></div>
+    </div>
+  </div>
+
   <script>
     const storageKey = "music-saloon-drum-songs";
     const favoriteStorageKey = "music-saloon-drum-favorites";
+    const historyStorageKey = "music-saloon-drum-history";
+    const drinkStorageKey = "music-saloon-drum-drinks";
+    const settingsStorageKey = "music-saloon-drum-settings";
+    const tagStorageKey = "music-saloon-drum-tags";
     const contactEmail = "drum.sns@gmail.com";
     const form = document.getElementById("songForm");
     const list = document.getElementById("songList");
@@ -1145,6 +1439,27 @@
     const favoriteSearch = document.getElementById("favoriteSearch");
     const favoriteCount = document.getElementById("favoriteCount");
     const clearFavorites = document.getElementById("clearFavorites");
+    const duetOnly = document.getElementById("duetOnly");
+    const gachaIncludeDuet = document.getElementById("gachaIncludeDuet");
+    const songTagOptions = document.getElementById("songTagOptions");
+    const gachaButton = document.getElementById("gachaButton");
+    const gachaResult = document.getElementById("gachaResult");
+    const historyDate = document.getElementById("historyDate");
+    const historyList = document.getElementById("historyList");
+    const todaySongCount = document.getElementById("todaySongCount");
+    const clearHistory = document.getElementById("clearHistory");
+    const settingMemo = document.getElementById("settingMemo");
+    const settingDrink = document.getElementById("settingDrink");
+    const newTagName = document.getElementById("newTagName");
+    const addTagButton = document.getElementById("addTagButton");
+    const tagManagerList = document.getElementById("tagManagerList");
+    const drinkSection = document.getElementById("drinkSection");
+    const todayDrinkCount = document.getElementById("todayDrinkCount");
+    const drinkSummary = document.getElementById("drinkSummary");
+    const openDrinkModal = document.getElementById("openDrinkModal");
+    const closeDrinkModal = document.getElementById("closeDrinkModal");
+    const drinkModal = document.getElementById("drinkModal");
+    const drinkButtons = document.getElementById("drinkButtons");
     const undoToast = document.getElementById("undoToast");
     const undoText = document.getElementById("undoText");
     const undoButton = document.getElementById("undoButton");
@@ -1164,10 +1479,31 @@
       { label: "その他", chars: "" }
     ];
 
+    const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌"];
+
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
     let favorites = JSON.parse(localStorage.getItem(favoriteStorageKey) || "[]");
+    let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
+    let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
+    let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false}');
+    let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let undoTimer = null;
     let undoAction = null;
+
+    const drinkOptions = [
+      "ハイボール",
+      "レモンサワー",
+      "グレープフルーツサワー",
+      "緑茶ハイ",
+      "ウーロンハイ",
+      "生ビール",
+      "梅酒",
+      "グラスワイン",
+      "ウーロン茶",
+      "コーラ（ZERO）",
+      "ジンジャーエール",
+      "コーヒー"
+    ];
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
@@ -1175,6 +1511,22 @@
 
     function saveFavorites() {
       localStorage.setItem(favoriteStorageKey, JSON.stringify(favorites));
+    }
+
+    function saveHistory() {
+      localStorage.setItem(historyStorageKey, JSON.stringify(songHistory));
+    }
+
+    function saveDrinks() {
+      localStorage.setItem(drinkStorageKey, JSON.stringify(drinkHistory));
+    }
+
+    function saveSettings() {
+      localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
+    }
+
+    function saveTags() {
+      localStorage.setItem(tagStorageKey, JSON.stringify(genreTags));
     }
 
     function escapeText(value) {
@@ -1207,6 +1559,77 @@
       return match ? match.label : "その他";
     }
 
+    function todayString() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function applySettings() {
+      document.body.classList.toggle("memo-disabled", !settings.showMemo);
+      settingMemo.checked = settings.showMemo;
+      settingDrink.checked = settings.showDrink;
+      drinkSection.classList.toggle("hidden", !settings.showDrink);
+    }
+
+    function renderHistory() {
+      const selectedDate = historyDate.value || todayString();
+      const selectedItems = songHistory.filter((item) => item.date === selectedDate);
+      const todayItems = songHistory.filter((item) => item.date === todayString());
+      todaySongCount.textContent = `${todayItems.length}曲`;
+
+      if (!selectedItems.length) {
+        historyList.innerHTML = `<li>この日の記録はまだありません</li>`;
+      } else {
+        historyList.innerHTML = selectedItems.map((item) => `
+          <li>
+            <div class="history-date">${escapeText(item.date)}</div>
+            <div>${escapeText(item.title)} / ${escapeText(item.artist || "-")}</div>
+            <div class="favorite-meta">${escapeText(item.key || "キー未設定")}${getSongTags(item).length ? ` / ${getSongTags(item).map(escapeText).join("・")}` : ""}</div>
+            ${item.memo ? `<div class="favorite-meta">${escapeText(item.memo)}</div>` : ""}
+          </li>
+        `).join("");
+      }
+
+      renderDrinks();
+    }
+
+    function renderDrinks() {
+      const today = todayString();
+      const todayDrinks = drinkHistory.filter((item) => item.date === today);
+      todayDrinkCount.textContent = `${todayDrinks.length}杯`;
+      const counts = todayDrinks.reduce((result, item) => {
+        result[item.name] = (result[item.name] || 0) + 1;
+        return result;
+      }, {});
+      const entries = Object.entries(counts);
+      drinkSummary.innerHTML = entries.length
+        ? entries.map(([name, count]) => `<span class="pill">${escapeText(name)} ${count}杯</span>`).join("")
+        : `<span class="pill">まだ記録がありません</span>`;
+    }
+
+    function recordSong(id) {
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      songHistory.unshift({
+        id: createId(),
+        sourceId: item.id,
+        date: todayString(),
+        title: item.title,
+        artist: item.artist,
+        key: item.key,
+        memo: item.memo,
+        duet: Boolean(item.duet),
+        tags: getSongTags(item),
+        createdAt: new Date().toISOString()
+      });
+      saveHistory();
+      renderHistory();
+      showUndo(`${itemLabel(item)}を今日の記録に追加しました`, () => {
+        songHistory.shift();
+        saveHistory();
+        renderHistory();
+      });
+    }
+
     function showUndo(message, callback) {
       clearTimeout(undoTimer);
       undoText.textContent = message;
@@ -1228,6 +1651,56 @@
 
     function itemLabel(item) {
       return item.title ? `「${item.title}」` : "この曲";
+    }
+
+    function getSongTags(item) {
+      const tags = Array.isArray(item.tags) ? [...item.tags] : [];
+      if (item.duet && !tags.includes("デュエット")) tags.push("デュエット");
+      return tags;
+    }
+
+    function renderTagOptions() {
+      if (!genreTags.length) {
+        songTagOptions.innerHTML = `<p class="small">タグは設定から追加できます。</p>`;
+        return;
+      }
+      songTagOptions.innerHTML = genreTags.map((tagName) => `
+        <label class="tag-option">
+          <input type="checkbox" name="songTag" value="${escapeText(tagName)}">
+          ${escapeText(tagName)}
+        </label>
+      `).join("");
+    }
+
+    function renderTagManager() {
+      tagManagerList.innerHTML = genreTags.length
+        ? genreTags.map((tagName) => `
+          <button class="btn ghost" type="button" data-tag-delete="${escapeText(tagName)}">
+            ${escapeText(tagName)} ×
+          </button>
+        `).join("")
+        : `<span class="pill">タグがありません</span>`;
+    }
+
+    function addTag() {
+      const tagName = newTagName.value.trim();
+      if (!tagName) return;
+      if (genreTags.some((tag) => tag.toLowerCase() === tagName.toLowerCase())) {
+        alert("同じタグがすでにあります。");
+        newTagName.value = "";
+        return;
+      }
+      genreTags.push(tagName);
+      saveTags();
+      renderTagOptions();
+      renderTagManager();
+      newTagName.value = "";
+    }
+
+    function selectedSongTags() {
+      const tags = [...document.querySelectorAll('input[name="songTag"]:checked')].map((input) => input.value);
+      if (document.getElementById("songDuet").checked && !tags.includes("デュエット")) tags.push("デュエット");
+      return tags;
     }
 
     function deleteFavorite(id) {
@@ -1341,7 +1814,9 @@
     function renderSongs() {
       const query = searchBox.value.trim().toLowerCase();
       const filtered = songs.filter((item) => {
-        return [item.title, item.artist, item.key, item.memo]
+        const tags = getSongTags(item);
+        if (duetOnly.checked && !tags.includes("デュエット")) return false;
+        return [item.title, item.artist, item.key, item.memo, ...tags]
           .join(" ")
           .toLowerCase()
           .includes(query);
@@ -1357,12 +1832,24 @@
       list.innerHTML = filtered.map((item) => `
         <tr class="swipe-row" data-song-id="${item.id}">
           <td class="song-title-cell" data-label="曲名">${escapeText(item.title)}</td>
-          <td class="artist-cell" data-label="歌手名">${escapeText(item.artist || "-")}</td>
+          <td class="artist-cell" data-label="歌手名">
+            ${escapeText(item.artist || "-")}
+            <div>${getSongTags(item).map((tagName) => `<span class="pill">${escapeText(tagName)}</span>`).join("")}</div>
+          </td>
           <td data-label="キー"><span class="status">${escapeText(item.key || "未設定")}</span></td>
-          <td data-label="メモ">${escapeText(item.memo || "-")}</td>
-          <td class="action-cell" data-label="操作"><button class="btn ghost" type="button" data-delete="${item.id}">削除</button></td>
+          <td class="memo-cell" data-label="メモ">${escapeText(item.memo || "-")}</td>
+          <td class="action-cell" data-label="操作">
+            <button class="btn primary" type="button" data-record="${item.id}">歌った</button>
+            <button class="btn ghost" type="button" data-delete="${item.id}">削除</button>
+          </td>
         </tr>
       `).join("");
+    }
+
+    function renderDrinkButtons() {
+      drinkButtons.innerHTML = drinkOptions.map((name) => (
+        `<button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(name)}</button>`
+      )).join("");
     }
 
     favoriteForm.addEventListener("submit", (event) => {
@@ -1405,7 +1892,9 @@
         title: document.getElementById("songTitle").value.trim(),
         artist: document.getElementById("artistName").value.trim(),
         key: document.getElementById("songKey").value,
-        memo: document.getElementById("memo").value.trim(),
+        memo: settings.showMemo ? document.getElementById("memo").value.trim() : "",
+        duet: selectedSongTags().includes("デュエット"),
+        tags: selectedSongTags(),
         createdAt: new Date().toISOString()
       });
       saveSongs();
@@ -1414,6 +1903,11 @@
     });
 
     list.addEventListener("click", (event) => {
+      const recordButton = event.target.closest("[data-record]");
+      if (recordButton) {
+        recordSong(recordButton.dataset.record);
+        return;
+      }
       const button = event.target.closest("[data-delete]");
       if (!button) return;
       deleteSong(button.dataset.delete);
@@ -1432,6 +1926,105 @@
     });
 
     searchBox.addEventListener("input", renderSongs);
+    duetOnly.addEventListener("change", renderSongs);
+
+    gachaButton.addEventListener("click", () => {
+      const candidates = songs.filter((item) => {
+        const isDuet = getSongTags(item).includes("デュエット");
+        return gachaIncludeDuet.checked || !isDuet;
+      });
+      if (!candidates.length) {
+        gachaResult.textContent = songs.length
+          ? "一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。"
+          : "曲リストに曲を登録すると、ここでおすすめできます。";
+        return;
+      }
+      const item = candidates[Math.floor(Math.random() * candidates.length)];
+      gachaResult.textContent = `次は「${item.title}」はいかがですか？ ${item.artist ? `/${item.artist}` : ""} ${item.key ? `キー: ${item.key}` : ""}`;
+    });
+
+    historyDate.addEventListener("change", renderHistory);
+
+    clearHistory.addEventListener("click", () => {
+      if (!songHistory.length) return;
+      if (confirm("歌った記録をすべて削除しますか？")) {
+        const backup = [...songHistory];
+        songHistory = [];
+        saveHistory();
+        renderHistory();
+        showUndo("歌った記録を削除しました", () => {
+          songHistory = backup;
+          saveHistory();
+          renderHistory();
+        });
+      }
+    });
+
+    settingMemo.addEventListener("change", () => {
+      settings.showMemo = settingMemo.checked;
+      saveSettings();
+      applySettings();
+      renderSongs();
+    });
+
+    settingDrink.addEventListener("change", () => {
+      settings.showDrink = settingDrink.checked;
+      saveSettings();
+      applySettings();
+      renderHistory();
+    });
+
+    addTagButton.addEventListener("click", addTag);
+
+    newTagName.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      addTag();
+    });
+
+    tagManagerList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-tag-delete]");
+      if (!button) return;
+      const tagName = button.dataset.tagDelete;
+      if (!confirm(`「${tagName}」をタグの候補から削除しますか？`)) return;
+      genreTags = genreTags.filter((tag) => tag !== tagName);
+      saveTags();
+      renderTagOptions();
+      renderTagManager();
+    });
+
+    openDrinkModal.addEventListener("click", () => {
+      drinkModal.classList.add("show");
+      drinkModal.setAttribute("aria-hidden", "false");
+    });
+
+    closeDrinkModal.addEventListener("click", () => {
+      drinkModal.classList.remove("show");
+      drinkModal.setAttribute("aria-hidden", "true");
+    });
+
+    drinkModal.addEventListener("click", (event) => {
+      if (event.target === drinkModal) closeDrinkModal.click();
+    });
+
+    drinkButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-drink]");
+      if (!button) return;
+      const drinkName = button.dataset.drink;
+      drinkHistory.push({
+        id: createId(),
+        date: todayString(),
+        name: drinkName,
+        createdAt: new Date().toISOString()
+      });
+      saveDrinks();
+      renderDrinks();
+      showUndo(`${drinkName}を1杯記録しました`, () => {
+        drinkHistory.pop();
+        saveDrinks();
+        renderDrinks();
+      });
+    });
 
     contactForm.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -1444,8 +2037,14 @@
     });
 
     document.getElementById("year").textContent = new Date().getFullYear();
+    historyDate.value = todayString();
+    renderTagOptions();
+    renderTagManager();
+    renderDrinkButtons();
+    applySettings();
     renderFavorites();
     renderSongs();
+    renderHistory();
   </script>
 </body>
 </html>
