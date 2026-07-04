@@ -106,6 +106,17 @@
       background: rgba(240, 138, 53, .18);
     }
 
+    .settings-nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .settings-nav-button .settings-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
     .hero {
       min-height: calc(100vh - 72px);
       display: grid;
@@ -113,7 +124,7 @@
       color: #fff;
       background:
         linear-gradient(100deg, rgba(9, 27, 19, .9), rgba(20, 63, 44, .58) 55%, rgba(20, 63, 44, .18)),
-        url("drum-stage.jpeg") center/cover;
+        var(--hero-image, url("drum-stage.jpeg")) center/cover;
     }
 
     .hero-inner {
@@ -407,6 +418,41 @@
     .dark-section .info-list dt { color: rgba(255, 192, 122, .84); }
     .info-list dd { margin: 0; }
     .info-list dd { color: #30271f; font-weight: 700; }
+
+    .shop-photo,
+    .youtube-placeholder,
+    .youtube-frame {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff7e8;
+    }
+
+    .shop-photo {
+      display: block;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
+    .youtube-placeholder,
+    .youtube-frame {
+      aspect-ratio: 16 / 9;
+    }
+
+    .youtube-placeholder {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: #3b3026;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .youtube-frame {
+      display: block;
+      border: 0;
+    }
 
     .news-gallery {
       display: grid;
@@ -1033,10 +1079,11 @@
         <a href="#customers">曲リスト</a>
         <a href="#history">歌った記録</a>
         <a href="#daily">今日の記録</a>
-        <button id="openSettingsModal" type="button">設定</button>
         <a href="#about">店舗情報</a>
+        <a href="#youtube">YouTube</a>
         <a href="#features">特徴</a>
         <a href="#contact">問い合わせ</a>
+        <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
     </nav>
   </header>
@@ -1274,7 +1321,7 @@
         <div class="section-head">
           <div>
             <h2>曲リスト</h2>
-            <p class="lead">QRコードから開いた方が、自分の歌いたい曲、歌いやすいキー、メモを保存できます。歌手名・曲名で検索できます。</p>
+            <p class="lead">自分の歌いたい曲、キー、メモを保存できます。歌手名・曲名で検索できます。</p>
           </div>
           <button class="btn danger" id="clearAll" type="button">全削除</button>
         </div>
@@ -1402,7 +1449,7 @@
               日付
               <input id="historyDate" type="date">
             </label>
-            <p class="small">曲リストの「歌った」ボタンを押すと、今日の記録に追加されます。</p>
+            <p class="small">曲リストの「記録」ボタンを押すと、今日の記録に追加されます。</p>
           </article>
           <article class="card">
             <span class="tag green">Today</span>
@@ -1412,7 +1459,7 @@
           </article>
         </div>
         <div class="menu-block">
-          <h3>選んだ日の歌った曲</h3>
+          <h3>選んだ日に歌った曲</h3>
           <ul class="history-list" id="historyList"></ul>
         </div>
       </div>
@@ -1489,6 +1536,8 @@
             <span class="tag">History</span>
             <h3>記録について</h3>
             <p>歌った曲、キー、ドリンク記録、今日のメモはこの端末のブラウザ内に保存されます。別のお客様やお店側へ自動共有されません。</p>
+            <button class="btn ghost" id="restoreHistoryBackup" type="button">削除した歌った記録を復元</button>
+            <p class="small" id="restoreHistoryStatus">復元できる記録はありません。</p>
           </article>
           <article class="card">
             <span class="tag">Duet</span>
@@ -1504,7 +1553,7 @@
         <div class="section-head">
           <div>
             <h2>よく歌う曲</h2>
-            <p class="lead">曲リストの「歌った」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
+            <p class="lead">曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
           </div>
         </div>
 
@@ -1512,7 +1561,7 @@
           <div class="card">
             <span class="tag">Ranking</span>
             <h3>歌った回数ランキング</h3>
-            <p>曲リストで「歌った」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
+            <p>曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
             <p class="privacy-note">ランキングもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。</p>
           </div>
 
@@ -1557,13 +1606,44 @@
               <dt>最寄駅</dt>
               <dd>西武池袋線 江古田駅 徒歩1分<br>都営大江戸線 新江古田駅 徒歩7分</dd>
               <dt>道案内</dt>
-              <dd>江古田駅南口、サエラ薬局に向かって左横の通りを進み「ラーメン喜角家」さんがあるビルの3階です。</dd>
+              <dd>江古田駅南口、サエラ薬局に向かって左横の通りを進み「ラーメン壱角家」さんがあるビルの3階です。</dd>
             </dl>
+          </article>
+          <article class="card">
+            <span class="tag">Photo</span>
+            <h3>店内写真</h3>
+            <img class="shop-photo" src="drum-stage.jpeg" alt="Music Saloon DRUM 店内写真">
           </article>
           <article class="card">
             <span class="tag blue">Group</span>
             <h3>団体利用</h3>
             <p>10名様以上のご利用で、お一人様3,500円から承ります。イベントやバンド利用などは電話またはメールでお問い合わせください。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="youtube">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>YouTube</h2>
+            <p class="lead">店内演奏やイベント動画をアプリ内で再生できます。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Movie</span>
+            <h3>Music Saloon DRUM 動画</h3>
+            <div class="youtube-placeholder" id="youtubePlaceholder">動画は準備中です。</div>
+            <div id="youtubeEmbedArea"></div>
+            <p class="small">店内演奏やイベント動画をこちらに掲載できます。</p>
+          </article>
+          <article class="card">
+            <span class="tag green">How to</span>
+            <h3>対応できるURL</h3>
+            <p>YouTubeの通常URL、共有URL、ショート動画URLに対応できます。</p>
+            <p class="small">例: youtube.com/watch?v=... / youtu.be/... / youtube.com/shorts/...</p>
           </article>
         </div>
       </div>
@@ -1699,6 +1779,7 @@
     const storageKey = "music-saloon-drum-songs";
     const favoriteStorageKey = "music-saloon-drum-favorites";
     const historyStorageKey = "music-saloon-drum-history";
+    const historyBackupStorageKey = "music-saloon-drum-history-backup";
     const drinkStorageKey = "music-saloon-drum-drinks";
     const dailyMemoStorageKey = "music-saloon-drum-daily-memos";
     const settingsStorageKey = "music-saloon-drum-settings";
@@ -1707,6 +1788,7 @@
     const browserMarkStorageKey = "music-saloon-drum-browser-mark";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
+    const heroImageCount = 7;
     const form = document.getElementById("songForm");
     const list = document.getElementById("songList");
     const searchBox = document.getElementById("searchBox");
@@ -1742,6 +1824,8 @@
     const openSettingsModal = document.getElementById("openSettingsModal");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
+    const restoreHistoryBackup = document.getElementById("restoreHistoryBackup");
+    const restoreHistoryStatus = document.getElementById("restoreHistoryStatus");
     const newTagName = document.getElementById("newTagName");
     const addTagButton = document.getElementById("addTagButton");
     const tagManagerList = document.getElementById("tagManagerList");
@@ -1779,6 +1863,7 @@
 
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
     let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
+    let historyBackup = JSON.parse(localStorage.getItem(historyBackupStorageKey) || "null");
     let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false}');
@@ -1809,6 +1894,21 @@
 
     function saveHistory() {
       localStorage.setItem(historyStorageKey, JSON.stringify(songHistory));
+    }
+
+    function saveHistoryBackup(items) {
+      historyBackup = {
+        savedAt: new Date().toISOString(),
+        items
+      };
+      localStorage.setItem(historyBackupStorageKey, JSON.stringify(historyBackup));
+      renderHistoryBackupStatus();
+    }
+
+    function clearHistoryBackup() {
+      historyBackup = null;
+      localStorage.removeItem(historyBackupStorageKey);
+      renderHistoryBackupStatus();
     }
 
     function saveDrinks() {
@@ -1980,6 +2080,24 @@
       }
     }
 
+    function renderHeroBackground() {
+      const imageTypes = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"];
+      const index = ((new Date().getDate() - 1) % heroImageCount) + 1;
+
+      function tryHeroImage(typeIndex = 0) {
+        if (typeIndex >= imageTypes.length) return;
+        const image = new Image();
+        const path = `./hero/hero-${index}.${imageTypes[typeIndex]}`;
+        image.addEventListener("load", () => {
+          document.documentElement.style.setProperty("--hero-image", `url("${path}")`);
+        });
+        image.addEventListener("error", () => tryHeroImage(typeIndex + 1));
+        image.src = path;
+      }
+
+      tryHeroImage();
+    }
+
     function applySettings() {
       document.body.classList.toggle("memo-disabled", !settings.showMemo);
       settingMemo.checked = settings.showMemo;
@@ -2026,6 +2144,14 @@
 
     function renderDailyMemo() {
       dailyMemo.value = dailyMemos[todayString()] || "";
+    }
+
+    function renderHistoryBackupStatus() {
+      const count = historyBackup && Array.isArray(historyBackup.items) ? historyBackup.items.length : 0;
+      restoreHistoryBackup.disabled = count === 0;
+      restoreHistoryStatus.textContent = count
+        ? `前回削除した歌った記録を ${count}件 復元できます。`
+        : "復元できる記録はありません。";
     }
 
     function updateDailyMemoStatus(text) {
@@ -2217,7 +2343,7 @@
       favoriteCount.textContent = `${filtered.length}曲`;
 
       if (!filtered.length) {
-        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">まだ歌った記録がありません。曲リストで「歌った」を押すとランキングに反映されます。</div></div>`;
+        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">まだ歌った記録がありません。曲リストで「記録」を押すとランキングに反映されます。</div></div>`;
         return;
       }
 
@@ -2268,7 +2394,7 @@
           <td data-label="キー"><span class="status">${highlightText(item.key || "未設定", query)}</span></td>
           <td class="memo-cell" data-label="メモ">${highlightText(item.memo || "-", query)}</td>
           <td class="action-cell" data-label="操作">
-            <button class="btn primary" type="button" data-record="${item.id}">歌った</button>
+            <button class="btn primary" type="button" data-record="${item.id}">記録</button>
             <button class="btn ghost" type="button" data-delete="${item.id}">削除</button>
           </td>
         </tr>
@@ -2429,17 +2555,40 @@
       if (!songHistory.length) return;
       if (confirm("歌った記録をすべて削除しますか？")) {
         const backup = [...songHistory];
+        saveHistoryBackup(backup);
         songHistory = [];
         saveHistory();
         renderHistory();
         renderFavorites();
         showUndo("歌った記録を削除しました", () => {
           songHistory = backup;
+          clearHistoryBackup();
           saveHistory();
           renderHistory();
           renderFavorites();
         });
       }
+    });
+
+    restoreHistoryBackup.addEventListener("click", () => {
+      const backupItems = historyBackup && Array.isArray(historyBackup.items) ? historyBackup.items : [];
+      if (!backupItems.length) return;
+      if (!confirm("前回削除した歌った記録を復元しますか？")) return;
+
+      const existingIds = new Set(songHistory.map((item) => item.id));
+      const restoredItems = backupItems.filter((item) => !existingIds.has(item.id));
+      songHistory = [...restoredItems, ...songHistory];
+      saveHistory();
+      clearHistoryBackup();
+      renderHistory();
+      renderFavorites();
+      showUndo("歌った記録を復元しました", () => {
+        const restoredIds = new Set(restoredItems.map((item) => item.id));
+        songHistory = songHistory.filter((item) => !restoredIds.has(item.id));
+        saveHistory();
+        renderHistory();
+        renderFavorites();
+      });
     });
 
     settingMemo.addEventListener("change", () => {
@@ -2572,7 +2721,9 @@
     renderTagManager();
     renderDrinkButtons();
     applySettings();
+    renderHistoryBackupStatus();
     renderDailyMemo();
+    renderHeroBackground();
     renderFavorites();
     renderSongs();
     renderHistory();
