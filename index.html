@@ -437,6 +437,15 @@
       font-weight: 800;
     }
 
+    .instagram-qr {
+      width: min(260px, 100%);
+      display: block;
+      margin: 14px auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(20, 33, 25, .08);
+    }
+
     .feature-list {
       display: grid;
       gap: 13px;
@@ -979,10 +988,10 @@
         </div>
         <div class="grid">
           <article class="card">
-            <span class="tag">Today</span>
+            <span class="tag">Notice</span>
             <h3>店からのお知らせ</h3>
-            <p>メニュー、料金、曲リストはこのページから確認できます。曲リストはお使いの端末のブラウザ内に保存されます。</p>
-            <p class="menu-note">本日のお知らせやお願いはこちらに掲載しています。ご利用前にご確認ください。</p>
+            <p>お店からのお願いやご案内を掲載しています。</p>
+            <p class="menu-note">ご利用前にご確認ください。</p>
             <div class="news-gallery" id="newsGallery" aria-label="写真のお知らせ"></div>
             <p class="news-empty" id="newsEmpty">写真のお知らせはまだありません。</p>
           </article>
@@ -990,6 +999,7 @@
             <span class="tag green">Instagram</span>
             <h3>Instagram</h3>
             <p>イベント情報や店内の様子はInstagramでもご案内できます。</p>
+            <img class="instagram-qr" src="instagram-qr.jpg" alt="Music Saloon DRUM Instagram QRコード">
             <a class="btn ghost" href="https://www.instagram.com/musicsaloondrum/" target="_blank" rel="noopener">Instagramを開く</a>
             <p class="small">@musicsaloondrum</p>
           </article>
@@ -1194,7 +1204,7 @@
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
               </label>
               <button class="btn primary" type="submit">保存</button>
-              <p class="small">保存した内容は、この端末のブラウザ内に残ります。</p>
+              <p class="small">曲リストはお使いの端末のブラウザ内に保存されます。</p>
             </form>
           </div>
 
@@ -1325,7 +1335,7 @@
         <div class="section-head">
           <div>
             <h2>よく歌う曲</h2>
-            <p class="lead">自分の定番曲を50音順で整理できます。歌手名・曲名で検索できます。</p>
+            <p class="lead">自分の定番曲を50音順で整理できます。現在はランキングではなく、探しやすい保存リストです。</p>
           </div>
           <button class="btn danger" id="clearFavorites" type="button">全削除</button>
         </div>
