@@ -86,17 +86,22 @@
       gap: 5px;
     }
 
-    .nav-links a {
+    .nav-links a,
+    .nav-links button {
       min-height: 40px;
       padding: 8px 12px;
+      border: 0;
       border-radius: 6px;
+      background: transparent;
       color: rgba(255, 247, 232, .92);
       font-size: 14px;
       font-weight: 800;
       text-decoration: none;
+      cursor: pointer;
     }
 
-    .nav-links a:hover {
+    .nav-links a:hover,
+    .nav-links button:hover {
       color: #fff;
       background: rgba(240, 138, 53, .18);
     }
@@ -114,16 +119,16 @@
     .hero-inner {
       width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 80px 0 96px;
+      padding: 64px 0 82px;
     }
 
     .hero-logo {
-      width: min(340px, 62vw);
+      width: min(140px, 34vw);
       border-radius: 8px;
       border: 2px solid rgba(240, 138, 53, .9);
       box-shadow: var(--shadow);
       display: block;
-      margin-bottom: 24px;
+      margin-bottom: 18px;
     }
 
     .eyebrow {
@@ -134,13 +139,28 @@
       text-transform: uppercase;
     }
 
+    .welcome-line {
+      max-width: 760px;
+      margin: 0 0 14px;
+      color: #fff7e8;
+      font-size: clamp(22px, 3.4vw, 38px);
+      font-weight: 900;
+      line-height: 1.35;
+      text-shadow: 0 12px 34px rgba(0, 0, 0, .38);
+    }
+
     h1 {
       max-width: 860px;
       margin: 0;
-      font-size: clamp(42px, 7vw, 88px);
-      line-height: 1.02;
+      font-size: clamp(36px, 5.8vw, 72px);
+      line-height: 1.12;
       letter-spacing: 0;
+      font-weight: 900;
       text-shadow: 0 18px 44px rgba(0, 0, 0, .34);
+    }
+
+    h1 span {
+      display: block;
     }
 
     .hero p {
@@ -375,6 +395,35 @@
     .dark-section .info-list dt { color: rgba(255, 192, 122, .84); }
     .info-list dd { margin: 0; }
     .info-list dd { color: #30271f; font-weight: 700; }
+
+    .news-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .news-gallery figure {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      box-shadow: 0 10px 24px rgba(20, 33, 25, .08);
+    }
+
+    .news-gallery img {
+      width: 100%;
+      display: block;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .news-empty {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
 
     .feature-list {
       display: grid;
@@ -751,6 +800,26 @@
       box-shadow: var(--shadow);
     }
 
+    .settings-modal-panel {
+      width: min(980px, 100%);
+    }
+
+    .settings-modal-panel .section-head {
+      position: sticky;
+      top: -22px;
+      z-index: 2;
+      margin: -22px -22px 22px;
+      padding: 22px;
+      border-bottom: 1px solid var(--line);
+      background: #fffdf8;
+      align-items: flex-start;
+    }
+
+    #closeSettingsModal {
+      flex: 0 0 auto;
+      box-shadow: 0 10px 24px rgba(20, 33, 25, .16);
+    }
+
     .drink-buttons {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -814,7 +883,7 @@
       }
 
       .nav-links { justify-content: flex-start; }
-      .hero { min-height: 700px; }
+      .hero { min-height: 640px; }
       .section-head { align-items: flex-start; flex-direction: column; }
       .grid,
       .manager,
@@ -862,7 +931,7 @@
         <a href="#favorites">よく歌う曲</a>
         <a href="#customers">曲リスト</a>
         <a href="#history">歌った記録</a>
-        <a href="#settings">設定</a>
+        <button id="openSettingsModal" type="button">設定</button>
         <a href="#about">店舗情報</a>
         <a href="#features">特徴</a>
         <a href="#contact">問い合わせ</a>
@@ -875,7 +944,11 @@
       <div class="hero-inner">
         <img class="hero-logo" src="drum-icon.jpg" alt="Music Saloon DRUM">
         <p class="eyebrow">Menu and song list for your table</p>
-        <h1>メニューと曲リストを、このページで。</h1>
+        <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
+        <h1>
+          <span>メニューと曲リストを</span>
+          <span class="hero-title-sub">このページで。</span>
+        </h1>
         <p>Music Saloon DRUMのメニュー確認と、自分が歌いたい曲の保存に使えるページです。テーブルのQRコードから開いて、そのまま曲リストを管理できます。</p>
         <div class="actions">
           <a class="btn primary" href="#menu">メニューを見る</a>
@@ -897,7 +970,7 @@
             <span class="tag">Today</span>
             <h3>店からのお知らせ</h3>
             <p>メニュー、料金、曲リストはこのページから確認できます。曲リストはお使いの端末のブラウザ内に保存されます。</p>
-            <p class="menu-note">イベントや本日のおすすめがある場合は、こちらに掲載します。</p>
+            <p class="menu-note">写真のお知らせは、GitHubに <strong>news/news-1.jpg</strong> から順番に追加するとここに表示されます。</p>
           </article>
           <article class="card">
             <span class="tag green">Instagram</span>
@@ -917,6 +990,8 @@
             </dl>
           </article>
         </div>
+        <div class="news-gallery" id="newsGallery" aria-label="写真のお知らせ"></div>
+        <p class="news-empty" id="newsEmpty">写真のお知らせはまだありません。</p>
       </div>
     </section>
 
@@ -1187,13 +1262,14 @@
       </div>
     </section>
 
-    <section id="settings" class="dark-section">
-      <div class="wrap">
+    <div class="drink-modal" id="settingsModal" aria-hidden="true">
+      <div class="drink-modal-panel settings-modal-panel">
         <div class="section-head">
           <div>
             <h2>設定</h2>
             <p class="lead">使う人に合わせて、曲リストの表示や記録機能を切り替えられます。</p>
           </div>
+          <button class="btn ghost" id="closeSettingsModal" type="button">閉じる</button>
         </div>
         <div class="grid">
           <article class="card">
@@ -1230,7 +1306,7 @@
           </article>
         </div>
       </div>
-    </section>
+    </div>
 
     <section id="favorites" class="dark-section">
       <div class="wrap">
@@ -1376,7 +1452,7 @@
             <form id="contactForm">
               <label>
                 お名前
-                <input id="contactName" required placeholder="例：山田 太郎">
+                <input id="contactName" required placeholder="例：桑田佳祐">
               </label>
               <label>
                 連絡先
@@ -1428,6 +1504,7 @@
     const settingsStorageKey = "music-saloon-drum-settings";
     const tagStorageKey = "music-saloon-drum-tags";
     const contactEmail = "drum.sns@gmail.com";
+    const newsImageCount = 12;
     const form = document.getElementById("songForm");
     const list = document.getElementById("songList");
     const searchBox = document.getElementById("searchBox");
@@ -1450,6 +1527,9 @@
     const clearHistory = document.getElementById("clearHistory");
     const settingMemo = document.getElementById("settingMemo");
     const settingDrink = document.getElementById("settingDrink");
+    const openSettingsModal = document.getElementById("openSettingsModal");
+    const closeSettingsModal = document.getElementById("closeSettingsModal");
+    const settingsModal = document.getElementById("settingsModal");
     const newTagName = document.getElementById("newTagName");
     const addTagButton = document.getElementById("addTagButton");
     const tagManagerList = document.getElementById("tagManagerList");
@@ -1463,6 +1543,8 @@
     const undoToast = document.getElementById("undoToast");
     const undoText = document.getElementById("undoText");
     const undoButton = document.getElementById("undoButton");
+    const newsGallery = document.getElementById("newsGallery");
+    const newsEmpty = document.getElementById("newsEmpty");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -1561,6 +1643,29 @@
 
     function todayString() {
       return new Date().toISOString().slice(0, 10);
+    }
+
+    function renderNewsImages() {
+      let loadedCount = 0;
+      newsGallery.innerHTML = "";
+
+      for (let index = 1; index <= newsImageCount; index += 1) {
+        const figure = document.createElement("figure");
+        const image = document.createElement("img");
+        image.src = `news/news-${index}.jpg`;
+        image.alt = `Music Saloon DRUM お知らせ ${index}`;
+        image.loading = "lazy";
+        image.addEventListener("load", () => {
+          loadedCount += 1;
+          newsEmpty.hidden = true;
+        });
+        image.addEventListener("error", () => {
+          figure.remove();
+          if (!loadedCount && !newsGallery.children.length) newsEmpty.hidden = false;
+        });
+        figure.appendChild(image);
+        newsGallery.appendChild(figure);
+      }
     }
 
     function applySettings() {
@@ -1974,6 +2079,26 @@
       renderHistory();
     });
 
+    openSettingsModal.addEventListener("click", () => {
+      settingsModal.classList.add("show");
+      settingsModal.setAttribute("aria-hidden", "false");
+    });
+
+    closeSettingsModal.addEventListener("click", () => {
+      settingsModal.classList.remove("show");
+      settingsModal.setAttribute("aria-hidden", "true");
+    });
+
+    settingsModal.addEventListener("click", (event) => {
+      if (event.target === settingsModal) closeSettingsModal.click();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (settingsModal.classList.contains("show")) closeSettingsModal.click();
+      if (drinkModal.classList.contains("show")) closeDrinkModal.click();
+    });
+
     addTagButton.addEventListener("click", addTag);
 
     newTagName.addEventListener("keydown", (event) => {
@@ -2038,6 +2163,7 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
     historyDate.value = todayString();
+    renderNewsImages();
     renderTagOptions();
     renderTagManager();
     renderDrinkButtons();
