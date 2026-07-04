@@ -1583,6 +1583,7 @@
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let undoTimer = null;
     let undoAction = null;
+    let newsRenderRun = 0;
 
     const drinkOptions = [
       "ハイボール",
@@ -1673,6 +1674,7 @@
     }
 
     function renderNewsImages() {
+      const runId = ++newsRenderRun;
       let loadedCount = 0;
       let completedCount = 0;
       const imageTypes = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"];
@@ -1680,11 +1682,13 @@
       newsEmpty.hidden = false;
 
       function finishImageCheck() {
+        if (runId !== newsRenderRun) return;
         completedCount += 1;
         if (completedCount === newsImageCount && !loadedCount) newsEmpty.hidden = false;
       }
 
       function tryNewsImage(index, typeIndex = 0) {
+        if (runId !== newsRenderRun) return;
         if (typeIndex >= imageTypes.length) {
           finishImageCheck();
           return;
@@ -1693,6 +1697,7 @@
         const image = document.createElement("img");
         image.alt = `Music Saloon DRUM お知らせ ${index}`;
         image.addEventListener("load", () => {
+          if (runId !== newsRenderRun) return;
           loadedCount += 1;
           newsEmpty.hidden = true;
           const figure = document.createElement("figure");
@@ -1700,6 +1705,7 @@
           newsGallery.appendChild(figure);
         });
         image.addEventListener("error", () => {
+          if (runId !== newsRenderRun) return;
           tryNewsImage(index, typeIndex + 1);
         });
         image.src = `./news/news-${index}.${imageTypes[typeIndex]}`;
@@ -2218,7 +2224,6 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
     historyDate.value = todayString();
-    renderNewsImages();
     renderTagOptions();
     renderTagManager();
     renderDrinkButtons();
