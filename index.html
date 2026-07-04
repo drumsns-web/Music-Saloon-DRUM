@@ -1667,6 +1667,7 @@
         section.classList.toggle("active-view", section.id === viewId);
       });
 
+      if (viewId === "info") renderNewsImages();
       if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -1675,7 +1676,6 @@
       let loadedCount = 0;
       let completedCount = 0;
       const imageTypes = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"];
-      const cacheToken = Date.now();
       newsGallery.innerHTML = "";
       newsEmpty.hidden = false;
 
@@ -1692,7 +1692,6 @@
 
         const image = document.createElement("img");
         image.alt = `Music Saloon DRUM お知らせ ${index}`;
-        image.loading = "lazy";
         image.addEventListener("load", () => {
           loadedCount += 1;
           newsEmpty.hidden = true;
@@ -1703,7 +1702,7 @@
         image.addEventListener("error", () => {
           tryNewsImage(index, typeIndex + 1);
         });
-        image.src = `news/news-${index}.${imageTypes[typeIndex]}?v=${cacheToken}`;
+        image.src = `./news/news-${index}.${imageTypes[typeIndex]}`;
       }
 
       for (let index = 1; index <= newsImageCount; index += 1) {
