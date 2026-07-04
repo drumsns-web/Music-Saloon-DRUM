@@ -840,6 +840,14 @@
       margin: 4px 4px 0 0;
     }
 
+    mark.search-hit {
+      border-radius: 4px;
+      padding: 0 2px;
+      background: #ffd36b;
+      color: #241a10;
+      font-weight: 900;
+    }
+
     .drink-modal {
       position: fixed;
       inset: 0;
@@ -1244,12 +1252,12 @@
             <h3>本日の運だめし</h3>
             <p>1端末につき1日1回まで回せます。結果が出たら、その画面をスタッフにお見せください。</p>
             <button class="btn primary" id="drumGachaButton" type="button">DRUMガチャを回す</button>
-            <p class="menu-note" id="drumGachaRate">平日 5% / 土曜 2% / 日曜 0%</p>
+            <p class="menu-note" id="drumGachaRate">平日 3% / 土曜 1% / 日曜 0%</p>
           </article>
           <article class="card">
             <span class="tag green">Service</span>
             <h3>サービス内容</h3>
-            <p>結果によって、ドリンク1杯サービスまたはおつまみサービスが表示されます。</p>
+            <p>サービス表示が出た場合は、ドリンク1杯・おつまみサービス・500円割引のいずれかとしてご利用できます。</p>
             <p class="small">サービス内容は営業状況によりスタッフ判断となる場合があります。</p>
           </article>
           <article class="card">
@@ -1573,7 +1581,7 @@
           <article class="card">
             <span class="tag">Instruments</span>
             <h3>当店の楽器を使用できます</h3>
-            <p>ギター、アンプ、ベースアンプ、エレピ、ドラム、カホンなどを使って楽しめます。</p>
+            <p>ギター、アンプ、ベースアンプ、ピアノ、ドラム、カホンなどを使って楽しめます。</p>
           </article>
           <article class="card">
             <span class="tag">Live</span>
@@ -1829,6 +1837,28 @@
       }[char]));
     }
 
+    function highlightText(value, query) {
+      const text = String(value || "");
+      const keyword = String(query || "").trim();
+      if (!keyword) return escapeText(text);
+
+      const lowerText = normalizeKana(text);
+      const lowerKeyword = normalizeKana(keyword);
+      let cursor = 0;
+      let html = "";
+      let index = lowerText.indexOf(lowerKeyword, cursor);
+
+      while (index !== -1) {
+        html += escapeText(text.slice(cursor, index));
+        html += `<mark class="search-hit">${escapeText(text.slice(index, index + keyword.length))}</mark>`;
+        cursor = index + keyword.length;
+        index = lowerText.indexOf(lowerKeyword, cursor);
+      }
+
+      html += escapeText(text.slice(cursor));
+      return html;
+    }
+
     function createId() {
       if (crypto && crypto.randomUUID) return crypto.randomUUID();
       return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -1856,8 +1886,8 @@
     function drumGachaRateForToday() {
       const day = new Date().getDay();
       if (day === 0) return 0;
-      if (day === 6) return 0.02;
-      return 0.05;
+      if (day === 6) return 0.01;
+      return 0.03;
     }
 
     function drumGachaRateLabel(rate) {
@@ -2154,7 +2184,8 @@
     }
 
     function renderFavorites() {
-      const query = favoriteSearch.value.trim().toLowerCase();
+      const query = favoriteSearch.value.trim();
+      const normalizedQuery = normalizeKana(query);
       const rankingMap = songHistory.reduce((result, item) => {
         const key = `${normalizeKana(item.title)}|${normalizeKana(item.artist)}`;
         if (!result[key]) {
@@ -2177,7 +2208,7 @@
       }, {});
 
       const filtered = Object.values(rankingMap)
-        .filter((item) => [item.title, item.artist, item.key, item.memo, ...item.tags].join(" ").toLowerCase().includes(query))
+        .filter((item) => normalizeKana([item.title, item.artist, item.key, item.memo, ...item.tags].join(" ")).includes(normalizedQuery))
         .sort((a, b) => {
           if (b.count !== a.count) return b.count - a.count;
           return (b.lastDate || "").localeCompare(a.lastDate || "");
@@ -2198,11 +2229,11 @@
               <li class="favorite-item">
                 <span class="rank-badge">${index + 1}</span>
                 <div>
-                  <p class="favorite-title">${escapeText(item.title)}</p>
-                  <p class="favorite-meta">${escapeText(item.artist || "-")}${item.key ? ` / ${escapeText(item.key)}` : ""}</p>
+                  <p class="favorite-title">${highlightText(item.title, query)}</p>
+                  <p class="favorite-meta">${highlightText(item.artist || "-", query)}${item.key ? ` / ${highlightText(item.key, query)}` : ""}</p>
                   <p class="favorite-meta">${item.count}回歌唱${item.lastDate ? ` / 最終: ${escapeText(item.lastDate)}` : ""}</p>
-                  ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${escapeText(tagName)}</span>`).join("")}</div>` : ""}
-                  ${item.memo ? `<p class="favorite-meta">${escapeText(item.memo)}</p>` : ""}
+                  ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${highlightText(tagName, query)}</span>`).join("")}</div>` : ""}
+                  ${item.memo ? `<p class="favorite-meta">${highlightText(item.memo, query)}</p>` : ""}
                 </div>
               </li>
             `).join("")}
@@ -2212,14 +2243,12 @@
     }
 
     function renderSongs() {
-      const query = searchBox.value.trim().toLowerCase();
+      const query = searchBox.value.trim();
+      const normalizedQuery = normalizeKana(query);
       const filtered = songs.filter((item) => {
         const tags = getSongTags(item);
         if (duetOnly.checked && !tags.includes("デュエット")) return false;
-        return [item.title, item.artist, item.key, item.memo, ...tags]
-          .join(" ")
-          .toLowerCase()
-          .includes(query);
+        return normalizeKana([item.title, item.artist, item.key, item.memo, ...tags].join(" ")).includes(normalizedQuery);
       });
 
       countText.textContent = `${filtered.length}件`;
@@ -2231,13 +2260,13 @@
 
       list.innerHTML = filtered.map((item) => `
         <tr class="swipe-row" data-song-id="${item.id}">
-          <td class="song-title-cell" data-label="曲名">${escapeText(item.title)}</td>
+          <td class="song-title-cell" data-label="曲名">${highlightText(item.title, query)}</td>
           <td class="artist-cell" data-label="歌手名">
-            ${escapeText(item.artist || "-")}
-            <div>${getSongTags(item).map((tagName) => `<span class="pill">${escapeText(tagName)}</span>`).join("")}</div>
+            ${highlightText(item.artist || "-", query)}
+            <div>${getSongTags(item).map((tagName) => `<span class="pill">${highlightText(tagName, query)}</span>`).join("")}</div>
           </td>
-          <td data-label="キー"><span class="status">${escapeText(item.key || "未設定")}</span></td>
-          <td class="memo-cell" data-label="メモ">${escapeText(item.memo || "-")}</td>
+          <td data-label="キー"><span class="status">${highlightText(item.key || "未設定", query)}</span></td>
+          <td class="memo-cell" data-label="メモ">${highlightText(item.memo || "-", query)}</td>
           <td class="action-cell" data-label="操作">
             <button class="btn primary" type="button" data-record="${item.id}">歌った</button>
             <button class="btn ghost" type="button" data-delete="${item.id}">削除</button>
@@ -2358,7 +2387,7 @@
       if (saved && saved.date === today) {
         openDrumGachaResult(
           "本日は確認済み",
-          saved.won ? saved.message : "DRUMガチャは1端末につき1日1回までです。また明日お楽しみください。",
+          saved.won ? saved.message : "今日のDRUMガチャは確認済みです。明日以降のご来店時に、またお楽しみください。",
           Boolean(saved.won)
         );
         return;
@@ -2371,14 +2400,17 @@
         return;
       }
 
-      const prizes = ["ドリンク1杯サービス", "おつまみサービス"];
+      const prizes = [
+        "ドリンク1杯またはおつまみサービスが出ました。スタッフにこの画面をお見せください。",
+        "500円割引サービスが出ました。スタッフにこの画面をお見せください。"
+      ];
       const won = Math.random() < rate;
       const message = won
-        ? `${prizes[Math.floor(Math.random() * prizes.length)]}が出ました。スタッフにこの画面をお見せください。`
-        : "今回はサービス表示なしです。また次回お楽しみください。";
+        ? prizes[Math.floor(Math.random() * prizes.length)]
+        : "今日は惜しくもサービス表示なしでした。歌もお酒も、引き続きゆっくりお楽しみください。";
 
       localStorage.setItem(drumGachaStorageKey, JSON.stringify({ date: today, won, message }));
-      openDrumGachaResult(won ? "出ました！" : "また次回", message, won);
+      openDrumGachaResult(won ? "出ました！" : "お楽しみは続きます", message, won);
     });
 
     closeDrumGachaModal.addEventListener("click", () => {
