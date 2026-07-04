@@ -762,6 +762,16 @@
       background: rgba(255, 247, 232, .82);
       color: #2f261d;
       font-weight: 800;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .result-panel.spinning {
+      background: linear-gradient(90deg, rgba(255, 247, 232, .96), rgba(255, 192, 122, .28), rgba(255, 247, 232, .96));
+      box-shadow: 0 12px 28px rgba(240, 138, 53, .22);
+      transform: translateY(-1px);
     }
 
     .history-list {
@@ -2043,6 +2053,7 @@
     duetOnly.addEventListener("change", renderSongs);
 
     gachaButton.addEventListener("click", () => {
+      if (gachaButton.disabled) return;
       const candidates = songs.filter((item) => {
         const isDuet = getSongTags(item).includes("デュエット");
         return gachaIncludeDuet.checked || !isDuet;
@@ -2053,8 +2064,25 @@
           : "曲リストに曲を登録すると、ここでおすすめできます。";
         return;
       }
-      const item = candidates[Math.floor(Math.random() * candidates.length)];
-      gachaResult.textContent = `次は「${item.title}」はいかがですか？ ${item.artist ? `/${item.artist}` : ""} ${item.key ? `キー: ${item.key}` : ""}`;
+      gachaButton.disabled = true;
+      gachaResult.classList.add("spinning");
+      gachaResult.textContent = "選曲中...";
+
+      let spinCount = 0;
+      const maxSpin = 18;
+      const spin = setInterval(() => {
+        const rollingItem = candidates[Math.floor(Math.random() * candidates.length)];
+        gachaResult.textContent = `♪ ${rollingItem.title}${rollingItem.artist ? ` / ${rollingItem.artist}` : ""}`;
+        spinCount += 1;
+
+        if (spinCount >= maxSpin) {
+          clearInterval(spin);
+          const item = candidates[Math.floor(Math.random() * candidates.length)];
+          gachaResult.classList.remove("spinning");
+          gachaResult.textContent = `次は「${item.title}」はいかがですか？ ${item.artist ? `/${item.artist}` : ""} ${item.key ? `キー: ${item.key}` : ""}`;
+          gachaButton.disabled = false;
+        }
+      }, 80);
     });
 
     historyDate.addEventListener("change", renderHistory);
