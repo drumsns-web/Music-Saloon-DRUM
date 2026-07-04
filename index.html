@@ -851,6 +851,32 @@
       width: min(980px, 100%);
     }
 
+    .gacha-modal-panel {
+      width: min(640px, 100%);
+      text-align: center;
+    }
+
+    .gacha-hit {
+      display: none;
+      margin: 4px 0 14px;
+      color: var(--orange);
+      font-size: clamp(34px, 8vw, 68px);
+      font-weight: 900;
+      line-height: 1;
+      text-shadow: 0 10px 24px rgba(240, 138, 53, .26);
+    }
+
+    .gacha-hit.show {
+      display: block;
+    }
+
+    .gacha-modal-panel .result-panel {
+      justify-content: center;
+      min-height: 120px;
+      font-size: clamp(20px, 4vw, 32px);
+      line-height: 1.5;
+    }
+
     .settings-modal-panel .section-head {
       position: sticky;
       top: -22px;
@@ -977,6 +1003,7 @@
         <a href="#menu">メニュー</a>
         <a href="#favorites">よく歌う曲</a>
         <a href="#gacha">曲ガチャ</a>
+        <a href="#drum-gacha">DRUMガチャ</a>
         <a href="#customers">曲リスト</a>
         <a href="#history">歌った記録</a>
         <button id="openSettingsModal" type="button">設定</button>
@@ -1184,6 +1211,37 @@
       </div>
     </section>
 
+    <section id="drum-gacha">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>DRUMガチャ</h2>
+            <p class="lead">ご来店中のお楽しみ。ドリンクまたはおつまみサービスが出るかもしれません。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Lucky</span>
+            <h3>本日の運だめし</h3>
+            <p>1端末につき1日1回まで回せます。結果が出たら、その画面をスタッフにお見せください。</p>
+            <button class="btn primary" id="drumGachaButton" type="button">DRUMガチャを回す</button>
+            <p class="menu-note" id="drumGachaRate">平日 5% / 土曜 2% / 日曜 0%</p>
+          </article>
+          <article class="card">
+            <span class="tag green">Service</span>
+            <h3>サービス内容</h3>
+            <p>結果によって、ドリンク1杯サービスまたはおつまみサービスが表示されます。</p>
+            <p class="small">サービス内容は営業状況によりスタッフ判断となる場合があります。</p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Limit</span>
+            <h3>回数制限</h3>
+            <p>同じスマホでは、その日一度回すと翌日まで回せません。日付は端末のブラウザ内に保存されます。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section id="customers">
       <div class="wrap">
         <div class="section-head">
@@ -1277,7 +1335,6 @@
             <span class="tag">Slot</span>
             <h3>おすすめ曲ガチャ</h3>
             <p>歌う曲に迷った時に使えます。デュエット曲を候補に入れるかどうかも選べます。</p>
-            <div class="result-panel" id="gachaResult">歌う曲に迷ったら、曲リストからおすすめを選べます。</div>
             <div class="control-row">
               <button class="btn primary" id="gachaButton" type="button">ガチャを回す</button>
               <label class="check-row">
@@ -1554,6 +1611,35 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="gachaModal" aria-hidden="true">
+    <div class="drink-modal-panel gacha-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2>曲ガチャ</h2>
+          <p class="lead">次に歌う曲を選曲中...</p>
+        </div>
+        <button class="btn ghost" id="closeGachaModal" type="button">閉じる</button>
+      </div>
+      <div class="gacha-hit" id="gachaHit">出ました！</div>
+      <div class="result-panel" id="gachaResult">歌う曲に迷ったら、曲リストからおすすめを選べます。</div>
+    </div>
+  </div>
+
+  <div class="drink-modal" id="drumGachaModal" aria-hidden="true">
+    <div class="drink-modal-panel gacha-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2>DRUMガチャ</h2>
+          <p class="lead" id="drumGachaDate">本日限り</p>
+        </div>
+        <button class="btn ghost" id="closeDrumGachaModal" type="button">閉じる</button>
+      </div>
+      <div class="gacha-hit" id="drumGachaLabel">結果発表</div>
+      <div class="result-panel" id="drumGachaResult">結果を表示します。</div>
+      <p class="privacy-note" id="drumGachaStaffNote">サービス表示が出た場合は、この画面をスタッフにお見せください。</p>
+    </div>
+  </div>
+
   <script>
     const storageKey = "music-saloon-drum-songs";
     const favoriteStorageKey = "music-saloon-drum-favorites";
@@ -1561,6 +1647,7 @@
     const drinkStorageKey = "music-saloon-drum-drinks";
     const settingsStorageKey = "music-saloon-drum-settings";
     const tagStorageKey = "music-saloon-drum-tags";
+    const drumGachaStorageKey = "music-saloon-drum-drum-gacha";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
     const form = document.getElementById("songForm");
@@ -1577,6 +1664,17 @@
     const songTagOptions = document.getElementById("songTagOptions");
     const gachaButton = document.getElementById("gachaButton");
     const gachaResult = document.getElementById("gachaResult");
+    const gachaModal = document.getElementById("gachaModal");
+    const closeGachaModal = document.getElementById("closeGachaModal");
+    const gachaHit = document.getElementById("gachaHit");
+    const drumGachaButton = document.getElementById("drumGachaButton");
+    const drumGachaModal = document.getElementById("drumGachaModal");
+    const closeDrumGachaModal = document.getElementById("closeDrumGachaModal");
+    const drumGachaLabel = document.getElementById("drumGachaLabel");
+    const drumGachaResult = document.getElementById("drumGachaResult");
+    const drumGachaDate = document.getElementById("drumGachaDate");
+    const drumGachaRate = document.getElementById("drumGachaRate");
+    const drumGachaStaffNote = document.getElementById("drumGachaStaffNote");
     const historyDate = document.getElementById("historyDate");
     const historyList = document.getElementById("historyList");
     const todaySongCount = document.getElementById("todaySongCount");
@@ -1627,6 +1725,7 @@
     let undoTimer = null;
     let undoAction = null;
     let newsRenderRun = 0;
+    let gachaSpinTimer = null;
 
     const drinkOptions = [
       "ハイボール",
@@ -1695,6 +1794,28 @@
 
     function todayString() {
       return new Date().toISOString().slice(0, 10);
+    }
+
+    function drumGachaRateForToday() {
+      const day = new Date().getDay();
+      if (day === 0) return 0;
+      if (day === 6) return 0.02;
+      return 0.05;
+    }
+
+    function drumGachaRateLabel(rate) {
+      if (rate === 0) return "本日のDRUMガチャはお休みです";
+      return `本日のサービス確率: ${Math.round(rate * 100)}%`;
+    }
+
+    function openDrumGachaResult(label, message, showServiceNote = false) {
+      drumGachaDate.textContent = `${todayString()} 本日限り`;
+      drumGachaLabel.textContent = label;
+      drumGachaLabel.classList.add("show");
+      drumGachaResult.textContent = message;
+      drumGachaStaffNote.hidden = !showServiceNote;
+      drumGachaModal.classList.add("show");
+      drumGachaModal.setAttribute("aria-hidden", "false");
     }
 
     function showView(targetId, shouldUpdateHash = true) {
@@ -2095,30 +2216,92 @@
         return gachaIncludeDuet.checked || !isDuet;
       });
       if (!candidates.length) {
+        gachaModal.classList.add("show");
+        gachaModal.setAttribute("aria-hidden", "false");
+        gachaHit.classList.remove("show");
         gachaResult.textContent = songs.length
           ? "一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。"
           : "曲リストに曲を登録すると、ここでおすすめできます。";
         return;
       }
+      gachaModal.classList.add("show");
+      gachaModal.setAttribute("aria-hidden", "false");
+      gachaHit.classList.remove("show");
       gachaButton.disabled = true;
       gachaResult.classList.add("spinning");
       gachaResult.textContent = "選曲中...";
 
       let spinCount = 0;
       const maxSpin = 18;
-      const spin = setInterval(() => {
+      clearInterval(gachaSpinTimer);
+      gachaSpinTimer = setInterval(() => {
         const rollingItem = candidates[Math.floor(Math.random() * candidates.length)];
         gachaResult.textContent = `♪ ${rollingItem.title}${rollingItem.artist ? ` / ${rollingItem.artist}` : ""}`;
         spinCount += 1;
 
         if (spinCount >= maxSpin) {
-          clearInterval(spin);
+          clearInterval(gachaSpinTimer);
+          gachaSpinTimer = null;
           const item = candidates[Math.floor(Math.random() * candidates.length)];
           gachaResult.classList.remove("spinning");
+          gachaHit.classList.add("show");
           gachaResult.textContent = `次は「${item.title}」はいかがですか？ ${item.artist ? `/${item.artist}` : ""} ${item.key ? `キー: ${item.key}` : ""}`;
           gachaButton.disabled = false;
         }
       }, 80);
+    });
+
+    closeGachaModal.addEventListener("click", () => {
+      clearInterval(gachaSpinTimer);
+      gachaSpinTimer = null;
+      gachaModal.classList.remove("show");
+      gachaModal.setAttribute("aria-hidden", "true");
+      gachaResult.classList.remove("spinning");
+      gachaHit.classList.remove("show");
+      gachaButton.disabled = false;
+    });
+
+    gachaModal.addEventListener("click", (event) => {
+      if (event.target === gachaModal) closeGachaModal.click();
+    });
+
+    drumGachaButton.addEventListener("click", () => {
+      const today = todayString();
+      const saved = JSON.parse(localStorage.getItem(drumGachaStorageKey) || "null");
+      if (saved && saved.date === today) {
+        openDrumGachaResult(
+          "本日は確認済み",
+          saved.won ? saved.message : "DRUMガチャは1端末につき1日1回までです。また明日お楽しみください。",
+          Boolean(saved.won)
+        );
+        return;
+      }
+
+      const rate = drumGachaRateForToday();
+      if (!rate) {
+        localStorage.setItem(drumGachaStorageKey, JSON.stringify({ date: today, won: false, message: "本日のDRUMガチャはお休みです。" }));
+        openDrumGachaResult("今日はお休み", "本日のDRUMガチャはお休みです。また営業日にお楽しみください。", false);
+        return;
+      }
+
+      const prizes = ["ドリンク1杯サービス", "おつまみサービス"];
+      const won = Math.random() < rate;
+      const message = won
+        ? `${prizes[Math.floor(Math.random() * prizes.length)]}が出ました。スタッフにこの画面をお見せください。`
+        : "今回はサービス表示なしです。また次回お楽しみください。";
+
+      localStorage.setItem(drumGachaStorageKey, JSON.stringify({ date: today, won, message }));
+      openDrumGachaResult(won ? "出ました！" : "また次回", message, won);
+    });
+
+    closeDrumGachaModal.addEventListener("click", () => {
+      drumGachaModal.classList.remove("show");
+      drumGachaModal.setAttribute("aria-hidden", "true");
+      drumGachaLabel.classList.remove("show");
+    });
+
+    drumGachaModal.addEventListener("click", (event) => {
+      if (event.target === drumGachaModal) closeDrumGachaModal.click();
     });
 
     historyDate.addEventListener("change", renderHistory);
@@ -2172,6 +2355,8 @@
       if (event.key !== "Escape") return;
       if (settingsModal.classList.contains("show")) closeSettingsModal.click();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
+      if (gachaModal.classList.contains("show")) closeGachaModal.click();
+      if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
     });
 
     addTagButton.addEventListener("click", addTag);
@@ -2251,6 +2436,7 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
     historyDate.value = todayString();
+    drumGachaRate.textContent = drumGachaRateLabel(drumGachaRateForToday());
     renderTagOptions();
     renderTagManager();
     renderDrinkButtons();
