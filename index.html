@@ -552,6 +552,10 @@
       font-weight: 900;
     }
 
+    .dark-section .check-row {
+      color: var(--cream);
+    }
+
     .check-row input {
       width: 18px;
       min-height: 18px;
@@ -972,6 +976,7 @@
         <a href="#info">お知らせ</a>
         <a href="#menu">メニュー</a>
         <a href="#favorites">よく歌う曲</a>
+        <a href="#gacha">曲ガチャ</a>
         <a href="#customers">曲リスト</a>
         <a href="#history">歌った記録</a>
         <button id="openSettingsModal" type="button">設定</button>
@@ -1232,13 +1237,7 @@
 
           <div>
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。</p>
-            <div class="result-panel" id="gachaResult">歌う曲に迷ったら、曲リストからおすすめを選べます。</div>
             <div class="control-row">
-              <button class="btn primary" id="gachaButton" type="button">おすすめ曲ガチャ</button>
-              <label class="check-row">
-                <input id="gachaIncludeDuet" type="checkbox">
-                ガチャにデュエット曲を含める
-              </label>
               <label class="check-row">
                 <input id="duetOnly" type="checkbox">
                 デュエット曲だけ表示
@@ -1261,6 +1260,43 @@
               <tbody id="songList"></tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gacha" class="dark-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>曲ガチャ</h2>
+            <p class="lead">曲リストに保存した曲から、次に歌う曲をスロット風におすすめします。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Slot</span>
+            <h3>おすすめ曲ガチャ</h3>
+            <p>歌う曲に迷った時に使えます。デュエット曲を候補に入れるかどうかも選べます。</p>
+            <div class="result-panel" id="gachaResult">歌う曲に迷ったら、曲リストからおすすめを選べます。</div>
+            <div class="control-row">
+              <button class="btn primary" id="gachaButton" type="button">ガチャを回す</button>
+              <label class="check-row">
+                <input id="gachaIncludeDuet" type="checkbox">
+                デュエット曲も候補に入れる
+              </label>
+            </div>
+          </article>
+          <article class="card">
+            <span class="tag green">Hint</span>
+            <h3>候補について</h3>
+            <p>曲リストに登録している曲が候補になります。まだ曲がない場合は、先に曲リストへ歌いたい曲を保存してください。</p>
+            <a class="btn ghost" href="#customers">曲リストを開く</a>
+          </article>
+          <article class="card">
+            <span class="tag blue">Duet</span>
+            <h3>一人で歌う時</h3>
+            <p>チェックを外しておくと、デュエット曲は候補から外れます。二人で歌う時だけオンにできます。</p>
+          </article>
         </div>
       </div>
     </section>
