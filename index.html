@@ -216,6 +216,18 @@
       border-bottom: 1px solid var(--line);
     }
 
+    body.page-mode main > section {
+      display: none;
+    }
+
+    body.page-mode main > section.active-view {
+      display: block;
+    }
+
+    body.page-mode main > section.hero.active-view {
+      display: grid;
+    }
+
     .dark-section {
       color: var(--cream);
       background:
@@ -939,8 +951,8 @@
     </nav>
   </header>
 
-  <main id="top">
-    <section class="hero" aria-label="Music Saloon DRUM">
+  <main>
+    <section id="top" class="hero" aria-label="Music Saloon DRUM">
       <div class="hero-inner">
         <img class="hero-logo" src="drum-icon.jpg" alt="Music Saloon DRUM">
         <p class="eyebrow">Menu and song list for your table</p>
@@ -971,6 +983,8 @@
             <h3>店からのお知らせ</h3>
             <p>メニュー、料金、曲リストはこのページから確認できます。曲リストはお使いの端末のブラウザ内に保存されます。</p>
             <p class="menu-note">本日のお知らせやお願いはこちらに掲載しています。ご利用前にご確認ください。</p>
+            <div class="news-gallery" id="newsGallery" aria-label="写真のお知らせ"></div>
+            <p class="news-empty" id="newsEmpty">写真のお知らせはまだありません。</p>
           </article>
           <article class="card">
             <span class="tag green">Instagram</span>
@@ -990,8 +1004,6 @@
             </dl>
           </article>
         </div>
-        <div class="news-gallery" id="newsGallery" aria-label="写真のお知らせ"></div>
-        <p class="news-empty" id="newsEmpty">写真のお知らせはまだありません。</p>
       </div>
     </section>
 
@@ -1645,6 +1657,20 @@
       return new Date().toISOString().slice(0, 10);
     }
 
+    function showView(targetId, shouldUpdateHash = true) {
+      const viewId = targetId || "top";
+      const target = document.getElementById(viewId);
+      if (!target || target.tagName.toLowerCase() !== "section") return;
+
+      document.body.classList.add("page-mode");
+      document.querySelectorAll("main > section").forEach((section) => {
+        section.classList.toggle("active-view", section.id === viewId);
+      });
+
+      if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
     function renderNewsImages() {
       let loadedCount = 0;
       let completedCount = 0;
@@ -2168,6 +2194,19 @@
       });
     });
 
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const viewId = link.getAttribute("href").slice(1) || "top";
+        if (!document.getElementById(viewId)) return;
+        event.preventDefault();
+        showView(viewId);
+      });
+    });
+
+    window.addEventListener("popstate", () => {
+      showView(location.hash.replace("#", "") || "top", false);
+    });
+
     contactForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const name = document.getElementById("contactName").value.trim();
@@ -2188,6 +2227,7 @@
     renderFavorites();
     renderSongs();
     renderHistory();
+    showView(location.hash.replace("#", "") || "top", false);
   </script>
 </body>
 </html>
