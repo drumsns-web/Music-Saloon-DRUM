@@ -753,9 +753,27 @@
       border-radius: 8px;
       margin: 0 0 18px;
       padding: 12px 14px;
-      background: rgba(240, 138, 53, .12);
-      color: #2f261d;
-      font-weight: 800;
+      background: #fff7e8;
+      color: #241a10;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(22, 47, 34, .08);
+    }
+
+    .dark-section .privacy-note {
+      background: #fff7e8;
+      color: #241a10;
+      border-left-color: var(--orange-2);
+    }
+
+    .verify-code {
+      border: 1px solid rgba(240, 138, 53, .45);
+      border-radius: 8px;
+      margin: 12px 0 0;
+      padding: 10px 12px;
+      background: #fff7e8;
+      color: #241a10;
+      font-weight: 900;
+      text-align: center;
     }
 
     .result-panel {
@@ -1006,6 +1024,7 @@
         <a href="#drum-gacha">DRUMガチャ</a>
         <a href="#customers">曲リスト</a>
         <a href="#history">歌った記録</a>
+        <a href="#daily">今日の記録</a>
         <button id="openSettingsModal" type="button">設定</button>
         <a href="#about">店舗情報</a>
         <a href="#features">特徴</a>
@@ -1024,7 +1043,7 @@
           <span>メニューと曲リストを</span>
           <span class="hero-title-sub">このページで。</span>
         </h1>
-        <p>Music Saloon DRUMのメニュー確認と、自分が歌いたい曲の保存に使えるページです。テーブルのQRコードから開いて、そのまま曲リストを管理できます。</p>
+        <p>Music Saloon DRUMのメニュー確認と、自分の曲リストの管理に使えるページです。テーブルのQRコードから開いて、そのまま曲リストを管理できます。</p>
         <div class="actions">
           <a class="btn primary" href="#menu">メニューを見る</a>
           <a class="btn secondary" href="#customers">曲リストを作る</a>
@@ -1289,12 +1308,12 @@
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
               </label>
               <button class="btn primary" type="submit">保存</button>
-              <p class="small">曲リストはお使いの端末のブラウザ内に保存されます。</p>
+            <p class="small">曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             </form>
           </div>
 
           <div>
-            <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。</p>
+            <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="control-row">
               <label class="check-row">
                 <input id="duetOnly" type="checkbox">
@@ -1327,7 +1346,7 @@
         <div class="section-head">
           <div>
             <h2>曲ガチャ</h2>
-            <p class="lead">曲リストに保存した曲から、次に歌う曲をスロット風におすすめします。</p>
+            <p class="lead">曲リストに保存した曲から、次に歌う曲をおすすめします。</p>
           </div>
         </div>
         <div class="grid">
@@ -1383,18 +1402,45 @@
             <p class="price" id="todaySongCount">0曲</p>
             <p class="small">同じ曲を何度歌っても、その日の記録として残せます。</p>
           </article>
-          <article class="card drink-section hidden" id="drinkSection">
+        </div>
+        <div class="menu-block">
+          <h3>選んだ日の歌った曲</h3>
+          <ul class="history-list" id="historyList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="daily">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>今日の記録</h2>
+            <p class="lead">ご来店中のドリンクや、ちょっとしたメモを残せます。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card drink-section" id="drinkSection">
             <span class="tag blue">Drink Log</span>
-            <h3>今日のドリンク記録</h3>
+            <h3>ドリンク記録</h3>
             <p class="price" id="todayDrinkCount">0杯</p>
             <button class="btn primary" id="openDrinkModal" type="button">飲んだものを記録</button>
             <div class="drink-summary" id="drinkSummary"></div>
             <p class="small">飲みすぎ防止の合言葉は「いい音は、ほどよい一杯から」。</p>
           </article>
-        </div>
-        <div class="menu-block">
-          <h3>選んだ日の歌った曲</h3>
-          <ul class="history-list" id="historyList"></ul>
+          <article class="card">
+            <span class="tag green">Memo</span>
+            <h3>今日のメモ</h3>
+            <label>
+              メモ
+              <textarea id="dailyMemo" placeholder="例：今日は高めのキーが調子よかった。次はこの曲を歌いたい。"></textarea>
+            </label>
+            <p class="small" id="dailyMemoStatus">この端末のブラウザ内に保存されます。</p>
+          </article>
+          <article class="card">
+            <span class="tag">Private</span>
+            <h3>保存について</h3>
+            <p>ドリンク記録とメモは、この端末のブラウザ内に保存されます。他のお客様やお店側へ自動共有されません。</p>
+          </article>
         </div>
       </div>
     </section>
@@ -1417,8 +1463,8 @@
               曲リストにメモ欄を表示する
             </label>
             <label class="check-row">
-              <input id="settingDrink" type="checkbox">
-              ドリンク記録を表示する
+              <input id="settingDrink" type="checkbox" checked>
+              ドリンク記録は「今日の記録」に表示する
             </label>
             <div class="tag-manager">
               <h3>タグ設定</h3>
@@ -1434,7 +1480,7 @@
           <article class="card">
             <span class="tag">History</span>
             <h3>記録について</h3>
-            <p>歌った曲、キー、ドリンク記録はこの端末のブラウザ内に保存されます。別のお客様やお店側へ自動共有されません。</p>
+            <p>歌った曲、キー、ドリンク記録、今日のメモはこの端末のブラウザ内に保存されます。別のお客様やお店側へ自動共有されません。</p>
           </article>
           <article class="card">
             <span class="tag">Duet</span>
@@ -1636,6 +1682,7 @@
       </div>
       <div class="gacha-hit" id="drumGachaLabel">結果発表</div>
       <div class="result-panel" id="drumGachaResult">結果を表示します。</div>
+      <p class="verify-code" id="drumGachaVerifyCode" hidden>端末保存コード</p>
       <p class="privacy-note" id="drumGachaStaffNote">サービス表示が出た場合は、この画面をスタッフにお見せください。</p>
     </div>
   </div>
@@ -1645,9 +1692,11 @@
     const favoriteStorageKey = "music-saloon-drum-favorites";
     const historyStorageKey = "music-saloon-drum-history";
     const drinkStorageKey = "music-saloon-drum-drinks";
+    const dailyMemoStorageKey = "music-saloon-drum-daily-memos";
     const settingsStorageKey = "music-saloon-drum-settings";
     const tagStorageKey = "music-saloon-drum-tags";
     const drumGachaStorageKey = "music-saloon-drum-drum-gacha";
+    const browserMarkStorageKey = "music-saloon-drum-browser-mark";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
     const form = document.getElementById("songForm");
@@ -1675,6 +1724,7 @@
     const drumGachaDate = document.getElementById("drumGachaDate");
     const drumGachaRate = document.getElementById("drumGachaRate");
     const drumGachaStaffNote = document.getElementById("drumGachaStaffNote");
+    const drumGachaVerifyCode = document.getElementById("drumGachaVerifyCode");
     const historyDate = document.getElementById("historyDate");
     const historyList = document.getElementById("historyList");
     const todaySongCount = document.getElementById("todaySongCount");
@@ -1694,6 +1744,8 @@
     const closeDrinkModal = document.getElementById("closeDrinkModal");
     const drinkModal = document.getElementById("drinkModal");
     const drinkButtons = document.getElementById("drinkButtons");
+    const dailyMemo = document.getElementById("dailyMemo");
+    const dailyMemoStatus = document.getElementById("dailyMemoStatus");
     const undoToast = document.getElementById("undoToast");
     const undoText = document.getElementById("undoText");
     const undoButton = document.getElementById("undoButton");
@@ -1720,6 +1772,7 @@
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
     let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
     let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
+    let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false}');
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let undoTimer = null;
@@ -1752,6 +1805,10 @@
 
     function saveDrinks() {
       localStorage.setItem(drinkStorageKey, JSON.stringify(drinkHistory));
+    }
+
+    function saveDailyMemos() {
+      localStorage.setItem(dailyMemoStorageKey, JSON.stringify(dailyMemos));
     }
 
     function saveSettings() {
@@ -1808,12 +1865,29 @@
       return `本日のサービス確率: ${Math.round(rate * 100)}%`;
     }
 
+    function getBrowserMark() {
+      let mark = JSON.parse(localStorage.getItem(browserMarkStorageKey) || "null");
+      if (!mark || !mark.code || !mark.createdAt) {
+        const first = Math.random().toString(36).slice(2, 6).toUpperCase();
+        const second = Math.random().toString(36).slice(2, 6).toUpperCase();
+        mark = {
+          code: `${first}-${second}`,
+          createdAt: todayString()
+        };
+        localStorage.setItem(browserMarkStorageKey, JSON.stringify(mark));
+      }
+      return mark;
+    }
+
     function openDrumGachaResult(label, message, showServiceNote = false) {
+      const mark = getBrowserMark();
       drumGachaDate.textContent = `${todayString()} 本日限り`;
       drumGachaLabel.textContent = label;
       drumGachaLabel.classList.add("show");
       drumGachaResult.textContent = message;
       drumGachaStaffNote.hidden = !showServiceNote;
+      drumGachaVerifyCode.textContent = `端末保存コード: ${mark.code} / 保存開始: ${mark.createdAt}`;
+      drumGachaVerifyCode.hidden = !showServiceNote;
       drumGachaModal.classList.add("show");
       drumGachaModal.setAttribute("aria-hidden", "false");
     }
@@ -1879,8 +1953,9 @@
     function applySettings() {
       document.body.classList.toggle("memo-disabled", !settings.showMemo);
       settingMemo.checked = settings.showMemo;
-      settingDrink.checked = settings.showDrink;
-      drinkSection.classList.toggle("hidden", !settings.showDrink);
+      settings.showDrink = true;
+      settingDrink.checked = true;
+      drinkSection.classList.remove("hidden");
     }
 
     function renderHistory() {
@@ -1917,6 +1992,18 @@
       drinkSummary.innerHTML = entries.length
         ? entries.map(([name, count]) => `<span class="pill">${escapeText(name)} ${count}杯</span>`).join("")
         : `<span class="pill">まだ記録がありません</span>`;
+    }
+
+    function renderDailyMemo() {
+      dailyMemo.value = dailyMemos[todayString()] || "";
+    }
+
+    function updateDailyMemoStatus(text) {
+      dailyMemoStatus.textContent = text;
+      window.clearTimeout(updateDailyMemoStatus.timer);
+      updateDailyMemoStatus.timer = window.setTimeout(() => {
+        dailyMemoStatus.textContent = "この端末のブラウザ内に保存されます。";
+      }, 1600);
     }
 
     function recordSong(id) {
@@ -2411,6 +2498,18 @@
       });
     });
 
+    dailyMemo.addEventListener("input", () => {
+      const today = todayString();
+      const value = dailyMemo.value.trim();
+      if (value) {
+        dailyMemos[today] = value;
+      } else {
+        delete dailyMemos[today];
+      }
+      saveDailyMemos();
+      updateDailyMemoStatus("保存しました。");
+    });
+
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener("click", (event) => {
         const viewId = link.getAttribute("href").slice(1) || "top";
@@ -2441,6 +2540,7 @@
     renderTagManager();
     renderDrinkButtons();
     applySettings();
+    renderDailyMemo();
     renderFavorites();
     renderSongs();
     renderHistory();
