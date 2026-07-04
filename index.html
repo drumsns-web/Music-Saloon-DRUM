@@ -686,7 +686,7 @@
 
     .favorite-item {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: auto 1fr;
       gap: 14px;
       padding: 14px;
       border-top: 1px solid var(--line);
@@ -711,6 +711,18 @@
       font-weight: 900;
       font-size: 18px;
       overflow-wrap: anywhere;
+    }
+
+    .rank-badge {
+      min-width: 42px;
+      min-height: 42px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--forest-2);
+      background: var(--orange);
+      font-weight: 900;
     }
 
     .favorite-meta {
@@ -1335,43 +1347,21 @@
         <div class="section-head">
           <div>
             <h2>よく歌う曲</h2>
-            <p class="lead">自分の定番曲を50音順で整理できます。現在はランキングではなく、探しやすい保存リストです。</p>
+            <p class="lead">曲リストの「歌った」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
           </div>
-          <button class="btn danger" id="clearFavorites" type="button">全削除</button>
         </div>
 
         <div class="manager">
           <div class="card">
-            <form id="favoriteForm">
-              <label>
-                曲名
-                <input id="favoriteTitle" required placeholder="例：いとしのエリー">
-              </label>
-              <label>
-                歌手名
-                <input id="favoriteArtist" required placeholder="例：サザンオールスターズ">
-              </label>
-              <label>
-                よみがな
-                <input id="favoriteKana" placeholder="例：いとしのえりー">
-              </label>
-              <label>
-                キー
-                <input id="favoriteKey" placeholder="例：原曲キー / -1">
-              </label>
-              <label>
-                補足
-                <textarea id="favoriteMemo" placeholder="例：最後に歌う定番。キーは少し低めが歌いやすい。"></textarea>
-              </label>
-              <button class="btn primary" type="submit">曲を保存</button>
-              <p class="small">よみがなは検索・並び替え用です。最初の数文字だけでもかまいません。</p>
-            </form>
+            <span class="tag">Ranking</span>
+            <h3>歌った回数ランキング</h3>
+            <p>曲リストで「歌った」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
+            <p class="privacy-note">ランキングもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。</p>
           </div>
 
           <div>
-            <p class="privacy-note">よく歌う曲リストもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。</p>
             <div class="toolbar">
-              <input id="favoriteSearch" placeholder="歌手名・曲名で検索">
+              <input id="favoriteSearch" placeholder="歌手名・曲名・タグで検索">
               <strong id="favoriteCount">0曲</strong>
             </div>
             <div class="song-groups" id="favoriteGroups"></div>
@@ -1533,11 +1523,9 @@
     const countText = document.getElementById("countText");
     const clearAll = document.getElementById("clearAll");
     const contactForm = document.getElementById("contactForm");
-    const favoriteForm = document.getElementById("favoriteForm");
     const favoriteGroups = document.getElementById("favoriteGroups");
     const favoriteSearch = document.getElementById("favoriteSearch");
     const favoriteCount = document.getElementById("favoriteCount");
-    const clearFavorites = document.getElementById("clearFavorites");
     const duetOnly = document.getElementById("duetOnly");
     const gachaIncludeDuet = document.getElementById("gachaIncludeDuet");
     const songTagOptions = document.getElementById("songTagOptions");
@@ -1586,7 +1574,6 @@
     const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌"];
 
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
-    let favorites = JSON.parse(localStorage.getItem(favoriteStorageKey) || "[]");
     let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
     let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false}');
@@ -1612,10 +1599,6 @@
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
-    }
-
-    function saveFavorites() {
-      localStorage.setItem(favoriteStorageKey, JSON.stringify(favorites));
     }
 
     function saveHistory() {
@@ -1786,10 +1769,12 @@
       });
       saveHistory();
       renderHistory();
+      renderFavorites();
       showUndo(`${itemLabel(item)}を今日の記録に追加しました`, () => {
         songHistory.shift();
         saveHistory();
         renderHistory();
+        renderFavorites();
       });
     }
 
@@ -1866,21 +1851,6 @@
       return tags;
     }
 
-    function deleteFavorite(id) {
-      const index = favorites.findIndex((item) => item.id === id);
-      if (index === -1) return;
-      const item = favorites[index];
-      if (!confirm(`${itemLabel(item)}を削除してもよろしいですか？`)) return;
-      favorites.splice(index, 1);
-      saveFavorites();
-      renderFavorites();
-      showUndo(`${itemLabel(item)}を削除しました`, () => {
-        favorites.splice(index, 0, item);
-        saveFavorites();
-        renderFavorites();
-      });
-    }
-
     function deleteSong(id) {
       const index = songs.findIndex((item) => item.id === id);
       if (index === -1) return;
@@ -1931,47 +1901,60 @@
 
     function renderFavorites() {
       const query = favoriteSearch.value.trim().toLowerCase();
-      const filtered = favorites
-        .filter((item) => [item.title, item.artist, item.kana, item.key, item.memo].join(" ").toLowerCase().includes(query))
+      const rankingMap = songHistory.reduce((result, item) => {
+        const key = `${normalizeKana(item.title)}|${normalizeKana(item.artist)}`;
+        if (!result[key]) {
+          result[key] = {
+            title: item.title,
+            artist: item.artist,
+            key: item.key,
+            memo: item.memo,
+            tags: getSongTags(item),
+            count: 0,
+            lastDate: item.date || ""
+          };
+        }
+        result[key].count += 1;
+        if ((item.date || "") > result[key].lastDate) result[key].lastDate = item.date || "";
+        if (item.key) result[key].key = item.key;
+        if (item.memo) result[key].memo = item.memo;
+        result[key].tags = [...new Set([...result[key].tags, ...getSongTags(item)])];
+        return result;
+      }, {});
+
+      const filtered = Object.values(rankingMap)
+        .filter((item) => [item.title, item.artist, item.key, item.memo, ...item.tags].join(" ").toLowerCase().includes(query))
         .sort((a, b) => {
-          const groupDiff = kanaGroups.findIndex((group) => group.label === getKanaGroup(a)) - kanaGroups.findIndex((group) => group.label === getKanaGroup(b));
-          if (groupDiff) return groupDiff;
-          return normalizeKana(a.kana || a.title).localeCompare(normalizeKana(b.kana || b.title), "ja");
+          if (b.count !== a.count) return b.count - a.count;
+          return (b.lastDate || "").localeCompare(a.lastDate || "");
         });
 
       favoriteCount.textContent = `${filtered.length}曲`;
 
       if (!filtered.length) {
-        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">まだ登録がありません</div></div>`;
+        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">まだ歌った記録がありません。曲リストで「歌った」を押すとランキングに反映されます。</div></div>`;
         return;
       }
 
-      const grouped = filtered.reduce((groups, item) => {
-        const groupName = getKanaGroup(item);
-        if (!groups[groupName]) groups[groupName] = [];
-        groups[groupName].push(item);
-        return groups;
-      }, {});
-
-      favoriteGroups.innerHTML = kanaGroups
-        .filter((group) => grouped[group.label])
-        .map((group) => `
-          <div class="kana-group">
-            <div class="kana-head"><span>${group.label}行</span><span>${grouped[group.label].length}曲</span></div>
-            <ul class="favorite-list">
-              ${grouped[group.label].map((item) => `
-                <li class="favorite-item" data-favorite-id="${item.id}">
-                  <div>
-                    <p class="favorite-title">${escapeText(item.title)}</p>
-                    <p class="favorite-meta">${escapeText(item.artist)}${item.key ? ` / ${escapeText(item.key)}` : ""}</p>
-                    ${item.memo ? `<p class="favorite-meta">${escapeText(item.memo)}</p>` : ""}
-                  </div>
-                  <button class="btn ghost" type="button" data-favorite-delete="${item.id}">削除</button>
-                </li>
-              `).join("")}
-            </ul>
-          </div>
-        `).join("");
+      favoriteGroups.innerHTML = `
+        <div class="kana-group">
+          <div class="kana-head"><span>よく歌うランキング</span><span>${filtered.length}曲</span></div>
+          <ul class="favorite-list">
+            ${filtered.map((item, index) => `
+              <li class="favorite-item">
+                <span class="rank-badge">${index + 1}</span>
+                <div>
+                  <p class="favorite-title">${escapeText(item.title)}</p>
+                  <p class="favorite-meta">${escapeText(item.artist || "-")}${item.key ? ` / ${escapeText(item.key)}` : ""}</p>
+                  <p class="favorite-meta">${item.count}回歌唱${item.lastDate ? ` / 最終: ${escapeText(item.lastDate)}` : ""}</p>
+                  ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${escapeText(tagName)}</span>`).join("")}</div>` : ""}
+                  ${item.memo ? `<p class="favorite-meta">${escapeText(item.memo)}</p>` : ""}
+                </div>
+              </li>
+            `).join("")}
+          </ul>
+        </div>
+      `;
     }
 
     function renderSongs() {
@@ -2015,37 +1998,6 @@
       )).join("");
     }
 
-    favoriteForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      favorites.push({
-        id: createId(),
-        title: document.getElementById("favoriteTitle").value.trim(),
-        artist: document.getElementById("favoriteArtist").value.trim(),
-        kana: document.getElementById("favoriteKana").value.trim(),
-        key: document.getElementById("favoriteKey").value.trim(),
-        memo: document.getElementById("favoriteMemo").value.trim(),
-        createdAt: new Date().toISOString()
-      });
-      saveFavorites();
-      favoriteForm.reset();
-      renderFavorites();
-    });
-
-    favoriteGroups.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-favorite-delete]");
-      if (!button) return;
-      deleteFavorite(button.dataset.favoriteDelete);
-    });
-
-    clearFavorites.addEventListener("click", () => {
-      if (!favorites.length) return;
-      if (confirm("登録済みのよく歌う曲をすべて削除しますか？")) {
-        favorites = [];
-        saveFavorites();
-        renderFavorites();
-      }
-    });
-
     favoriteSearch.addEventListener("input", renderFavorites);
 
     form.addEventListener("submit", (event) => {
@@ -2076,7 +2028,6 @@
       deleteSong(button.dataset.delete);
     });
 
-    enableSwipeDelete(favoriteGroups, "[data-favorite-id]", "favoriteId", deleteFavorite);
     enableSwipeDelete(list, "[data-song-id]", "songId", deleteSong);
 
     clearAll.addEventListener("click", () => {
@@ -2115,10 +2066,12 @@
         songHistory = [];
         saveHistory();
         renderHistory();
+        renderFavorites();
         showUndo("歌った記録を削除しました", () => {
           songHistory = backup;
           saveHistory();
           renderHistory();
+          renderFavorites();
         });
       }
     });
