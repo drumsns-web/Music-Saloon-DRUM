@@ -970,7 +970,7 @@
             <span class="tag">Today</span>
             <h3>店からのお知らせ</h3>
             <p>メニュー、料金、曲リストはこのページから確認できます。曲リストはお使いの端末のブラウザ内に保存されます。</p>
-            <p class="menu-note">写真のお知らせは、GitHubに <strong>news/news-1.jpg</strong> から順番に追加するとここに表示されます。</p>
+            <p class="menu-note">本日のお知らせやお願いはこちらに掲載しています。ご利用前にご確認ください。</p>
           </article>
           <article class="card">
             <span class="tag green">Instagram</span>
@@ -1647,24 +1647,41 @@
 
     function renderNewsImages() {
       let loadedCount = 0;
+      let completedCount = 0;
+      const imageTypes = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"];
+      const cacheToken = Date.now();
       newsGallery.innerHTML = "";
+      newsEmpty.hidden = false;
 
-      for (let index = 1; index <= newsImageCount; index += 1) {
-        const figure = document.createElement("figure");
+      function finishImageCheck() {
+        completedCount += 1;
+        if (completedCount === newsImageCount && !loadedCount) newsEmpty.hidden = false;
+      }
+
+      function tryNewsImage(index, typeIndex = 0) {
+        if (typeIndex >= imageTypes.length) {
+          finishImageCheck();
+          return;
+        }
+
         const image = document.createElement("img");
-        image.src = `news/news-${index}.jpg`;
         image.alt = `Music Saloon DRUM お知らせ ${index}`;
         image.loading = "lazy";
         image.addEventListener("load", () => {
           loadedCount += 1;
           newsEmpty.hidden = true;
+          const figure = document.createElement("figure");
+          figure.appendChild(image);
+          newsGallery.appendChild(figure);
         });
         image.addEventListener("error", () => {
-          figure.remove();
-          if (!loadedCount && !newsGallery.children.length) newsEmpty.hidden = false;
+          tryNewsImage(index, typeIndex + 1);
         });
-        figure.appendChild(image);
-        newsGallery.appendChild(figure);
+        image.src = `news/news-${index}.${imageTypes[typeIndex]}?v=${cacheToken}`;
+      }
+
+      for (let index = 1; index <= newsImageCount; index += 1) {
+        tryNewsImage(index);
       }
     }
 
