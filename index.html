@@ -708,6 +708,42 @@
       accent-color: var(--orange);
     }
 
+    .tag-filter {
+      position: relative;
+    }
+
+    .tag-filter-panel {
+      position: absolute;
+      z-index: 12;
+      top: calc(100% + 8px);
+      right: 0;
+      width: min(320px, calc(100vw - 32px));
+      display: none;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      box-shadow: var(--shadow);
+    }
+
+    .tag-filter.open .tag-filter-panel {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .tag-filter-panel button {
+      min-height: 34px;
+      border: 1px solid rgba(20, 63, 44, .18);
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #fff7e8;
+      color: #30271f;
+      font-size: 13px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
     .tag-manager {
       margin-top: 18px;
       padding-top: 18px;
@@ -833,9 +869,13 @@
 
     .favorite-title {
       margin: 0;
+      color: #241d17;
       font-weight: 900;
       font-size: 18px;
+      line-height: 1.45;
+      white-space: normal;
       overflow-wrap: anywhere;
+      word-break: normal;
     }
 
     .rank-badge {
@@ -852,9 +892,11 @@
 
     .favorite-meta {
       margin: 3px 0 0;
-      color: var(--muted);
+      color: #3d3329;
       font-size: 14px;
       font-weight: 700;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     .contact-grid {
@@ -1464,6 +1506,10 @@
             </div>
             <div class="toolbar">
               <input id="searchBox" placeholder="歌手名・曲名・タグ・メモで検索">
+              <div class="tag-filter" id="songTagFilter">
+                <button class="btn ghost" id="songTagFilterButton" type="button">タグを選ぶ</button>
+                <div class="tag-filter-panel" id="songTagFilterPanel"></div>
+              </div>
               <strong id="countText">0件</strong>
             </div>
           </div>
@@ -1725,6 +1771,10 @@
           <div>
             <div class="toolbar">
               <input id="favoriteSearch" placeholder="歌手名・曲名・タグで検索">
+              <div class="tag-filter" id="favoriteTagFilter">
+                <button class="btn ghost" id="favoriteTagFilterButton" type="button">タグを選ぶ</button>
+                <div class="tag-filter-panel" id="favoriteTagFilterPanel"></div>
+              </div>
               <strong id="favoriteCount">0曲</strong>
             </div>
             <div class="song-groups" id="favoriteGroups"></div>
@@ -1967,6 +2017,12 @@
     const exportSongsButton = document.getElementById("exportSongsButton");
     const copySongsButton = document.getElementById("copySongsButton");
     const importSongsButton = document.getElementById("importSongsButton");
+    const songTagFilter = document.getElementById("songTagFilter");
+    const songTagFilterButton = document.getElementById("songTagFilterButton");
+    const songTagFilterPanel = document.getElementById("songTagFilterPanel");
+    const favoriteTagFilter = document.getElementById("favoriteTagFilter");
+    const favoriteTagFilterButton = document.getElementById("favoriteTagFilterButton");
+    const favoriteTagFilterPanel = document.getElementById("favoriteTagFilterPanel");
     const contactForm = document.getElementById("contactForm");
     const favoriteGroups = document.getElementById("favoriteGroups");
     const favoriteSearch = document.getElementById("favoriteSearch");
@@ -2313,6 +2369,21 @@
       drinkSection.classList.remove("hidden");
     }
 
+    function renderTagFilterPanels() {
+      const buttons = genreTags.map((tagName) => (
+        `<button type="button" data-filter-tag="${escapeText(tagName)}">${escapeText(tagName)}</button>`
+      )).join("");
+      songTagFilterPanel.innerHTML = buttons;
+      favoriteTagFilterPanel.innerHTML = buttons;
+    }
+
+    function setSearchByTag(input, tagName, renderCallback, filterElement) {
+      input.value = tagName;
+      filterElement.classList.remove("open");
+      renderCallback();
+      input.focus();
+    }
+
     function renderHistory() {
       const selectedDate = historyDate.value || todayString();
       const selectedItems = songHistory.filter((item) => item.date === selectedDate);
@@ -2427,6 +2498,7 @@
     function renderTagOptions() {
       if (!genreTags.length) {
         songTagOptions.innerHTML = `<p class="small">タグは設定から追加できます。</p>`;
+        renderTagFilterPanels();
         return;
       }
       songTagOptions.innerHTML = genreTags.map((tagName) => `
@@ -2435,6 +2507,7 @@
           ${escapeText(tagName)}
         </label>
       `).join("");
+      renderTagFilterPanels();
     }
 
     function renderTagManager() {
@@ -2693,6 +2766,35 @@
 
     searchBox.addEventListener("input", renderSongs);
     duetOnly.addEventListener("change", renderSongs);
+
+    songTagFilterButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      songTagFilter.classList.toggle("open");
+      favoriteTagFilter.classList.remove("open");
+    });
+
+    favoriteTagFilterButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      favoriteTagFilter.classList.toggle("open");
+      songTagFilter.classList.remove("open");
+    });
+
+    songTagFilterPanel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter-tag]");
+      if (!button) return;
+      setSearchByTag(searchBox, button.dataset.filterTag, renderSongs, songTagFilter);
+    });
+
+    favoriteTagFilterPanel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter-tag]");
+      if (!button) return;
+      setSearchByTag(favoriteSearch, button.dataset.filterTag, renderFavorites, favoriteTagFilter);
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!songTagFilter.contains(event.target)) songTagFilter.classList.remove("open");
+      if (!favoriteTagFilter.contains(event.target)) favoriteTagFilter.classList.remove("open");
+    });
 
     gachaButton.addEventListener("click", () => {
       if (gachaButton.disabled) return;
