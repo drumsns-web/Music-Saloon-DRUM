@@ -83,27 +83,46 @@
       align-items: center;
       justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: 8px;
     }
 
     .nav-links a,
     .nav-links button {
-      min-height: 40px;
-      padding: 8px 12px;
-      border: 0;
-      border-radius: 6px;
-      background: transparent;
-      color: rgba(255, 247, 232, .92);
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 14px;
+      border: 1px solid rgba(255, 192, 122, .28);
+      border-radius: 999px;
+      background: rgba(255, 247, 232, .08);
+      color: rgba(255, 247, 232, .95);
       font-size: 14px;
-      font-weight: 800;
+      font-weight: 900;
+      line-height: 1.1;
       text-decoration: none;
       cursor: pointer;
+      white-space: nowrap;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 8px 18px rgba(0, 0, 0, .08);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
     }
 
     .nav-links a:hover,
-    .nav-links button:hover {
-      color: #fff;
-      background: rgba(240, 138, 53, .18);
+    .nav-links button:hover,
+    .nav-links a:focus-visible,
+    .nav-links button:focus-visible {
+      color: #fff7e8;
+      border-color: rgba(255, 192, 122, .7);
+      background: rgba(240, 138, 53, .24);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .nav-links a.active-nav {
+      color: var(--forest-2);
+      border-color: rgba(255, 192, 122, .9);
+      background: var(--orange);
+      box-shadow: 0 10px 22px rgba(240, 138, 53, .22);
     }
 
     .settings-nav-button {
@@ -383,10 +402,15 @@
       font-weight: 700;
     }
 
+    .menu-list li span:first-child {
+      flex: 0 0 auto;
+      font-weight: 900;
+    }
+
     .menu-list span:last-child {
       color: #c97624;
       font-weight: 900;
-      white-space: nowrap;
+      text-align: right;
     }
 
     .menu-note {
@@ -1021,13 +1045,41 @@
 
     @media (max-width: 880px) {
       nav {
+        width: min(100%, calc(100% - 24px));
         min-height: auto;
         align-items: flex-start;
         flex-direction: column;
         padding: 12px 0;
+        gap: 12px;
       }
 
-      .nav-links { justify-content: flex-start; }
+      .brand {
+        gap: 10px;
+      }
+
+      .brand img {
+        width: 44px;
+        height: 44px;
+      }
+
+      .nav-links {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        justify-content: stretch;
+        gap: 10px;
+      }
+
+      .nav-links a,
+      .nav-links button {
+        width: 100%;
+        min-height: 46px;
+        padding: 10px 8px;
+        font-size: 14px;
+        white-space: normal;
+        text-align: center;
+      }
+
       .hero { min-height: 640px; }
       .section-head { align-items: flex-start; flex-direction: column; }
       .grid,
@@ -1160,14 +1212,14 @@
             <article class="card">
               <span class="tag">Standard</span>
               <h3>スタンダードプラン</h3>
-              <p>ご来店から90分。焼酎、ウイスキー、ソフトドリンクが飲み放題。ハイボールやサワー類もあります。</p>
+              <p>ご来店から90分。焼酎、ウイスキーの割りもの、ソフトドリンクが飲み放題。サワーはレモン・グレープフルーツが対象です。</p>
               <p class="price">男性 3,500円<br>女性 2,500円</p>
               <p class="menu-note">延長1時間 1名様につき1,000円</p>
             </article>
             <article class="card">
               <span class="tag green">Super</span>
               <h3>スーパープラン</h3>
-              <p>スタンダードプランに加えて、カルピス、梅酒、芋焼酎、麦焼酎も楽しめます。</p>
+              <p>スタンダードプランに加えて、カルピス、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。</p>
               <p class="price">男性 4,000円<br>女性 3,000円</p>
             </article>
             <article class="card">
@@ -1186,14 +1238,25 @@
             <article class="card">
               <span class="tag">Standard</span>
               <h3>スタンダード</h3>
-              <p>焼酎、ウイスキー、ソフトドリンク</p>
-              <p class="menu-note">焼酎水割り、ハイボール、レモンサワー、グレープフルーツサワー、緑茶ハイ、ウーロンハイなど。</p>
+              <p>焼酎・ウイスキーの割りもの、ソフトドリンク、対象サワーが飲めます。</p>
+              <ul class="menu-list">
+                <li><span>焼酎・ウイスキー</span><span>ロック／水／お湯</span></li>
+                <li><span>割りもの</span><span>炭酸水／緑茶／ウーロン茶／紅茶（無糖）</span></li>
+                <li><span>ソフトドリンク</span><span>コーラ（ZERO）／ジンジャーエール／緑茶／ウーロン茶／麦茶／紅茶（無糖）／ジャスミン茶</span></li>
+                <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
+              </ul>
+              <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
             </article>
             <article class="card">
               <span class="tag green">Super</span>
               <h3>スーパープラン</h3>
-              <p>スタンダード対象メニューに追加</p>
-              <p class="menu-note">カルピス、梅酒、芋焼酎、麦焼酎。</p>
+              <p>スタンダード対象メニューに追加で楽しめます。</p>
+              <ul class="menu-list">
+                <li><span>追加ドリンク</span><span>カルピス／梅酒／芋焼酎／麦焼酎</span></li>
+                <li><span>GINON</span><span>レモンサワー／グレープフルーツサワー</span></li>
+                <li><span>追加サワー</span><span>男梅／カルピス／巨峰／ライチ／桃／梅</span></li>
+              </ul>
+              <p class="menu-note">レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。</p>
             </article>
             <article class="card">
               <span class="tag purple">Premium</span>
@@ -1470,7 +1533,7 @@
         <div class="section-head">
           <div>
             <h2>今日の記録</h2>
-            <p class="lead">ご来店中のドリンクや、ちょっとしたメモを残せます。</p>
+            <p class="lead">ご来店中のドリンクや、ちょっとしたメモを残せます。健康管理や飲みすぎ防止が気になる方にも使えます。</p>
           </div>
         </div>
         <div class="grid">
@@ -1480,7 +1543,7 @@
             <p class="price" id="todayDrinkCount">0杯</p>
             <button class="btn primary" id="openDrinkModal" type="button">飲んだものを記録</button>
             <div class="drink-summary" id="drinkSummary"></div>
-            <p class="small">飲みすぎ防止の合言葉は「いい音は、ほどよい一杯から」。</p>
+            <p class="small">健康管理や飲みすぎ防止の目安として、自分用に今日飲んだものを残せます。</p>
           </article>
           <article class="card">
             <span class="tag green">Memo</span>
@@ -1628,22 +1691,21 @@
         <div class="section-head">
           <div>
             <h2>YouTube</h2>
-            <p class="lead">店内演奏やイベント動画をアプリ内で再生できます。</p>
           </div>
         </div>
         <div class="grid">
           <article class="card">
             <span class="tag">Movie</span>
-            <h3>Music Saloon DRUM 動画</h3>
+            <h3>動画 1</h3>
             <div class="youtube-placeholder" id="youtubePlaceholder">動画は準備中です。</div>
             <div id="youtubeEmbedArea"></div>
-            <p class="small">店内演奏やイベント動画をこちらに掲載できます。</p>
+            <p class="small">ここに動画ごとの説明を掲載できます。</p>
           </article>
           <article class="card">
-            <span class="tag green">How to</span>
-            <h3>対応できるURL</h3>
-            <p>YouTubeの通常URL、共有URL、ショート動画URLに対応できます。</p>
-            <p class="small">例: youtube.com/watch?v=... / youtu.be/... / youtube.com/shorts/...</p>
+            <span class="tag green">Movie</span>
+            <h3>動画 2</h3>
+            <div class="youtube-placeholder">動画は準備中です。</div>
+            <p class="small">動画URLをいただいたら、タイトルと説明文を添えて表示できます。</p>
           </article>
         </div>
       </div>
@@ -2030,6 +2092,9 @@
       document.body.classList.add("page-mode");
       document.querySelectorAll("main > section").forEach((section) => {
         section.classList.toggle("active-view", section.id === viewId);
+      });
+      document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
+        link.classList.toggle("active-nav", link.getAttribute("href") === `#${viewId}`);
       });
 
       if (viewId === "info") renderNewsImages();
