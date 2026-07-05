@@ -125,13 +125,6 @@
       box-shadow: 0 10px 22px rgba(240, 138, 53, .22);
     }
 
-    .nav-links a::before,
-    .nav-links button::before {
-      content: attr(data-icon);
-      display: none;
-      line-height: 1;
-    }
-
     .settings-nav-button {
       display: inline-flex;
       align-items: center;
@@ -1051,22 +1044,13 @@
     footer strong { color: #fff; }
 
     @media (max-width: 880px) {
-      body {
-        padding-bottom: calc(88px + env(safe-area-inset-bottom));
-      }
-
-      header {
-        position: sticky;
-        border-bottom-color: rgba(255, 192, 122, .16);
-      }
-
       nav {
         width: min(100%, calc(100% - 24px));
-        min-height: 62px;
-        align-items: center;
-        flex-direction: row;
-        padding: 8px 0;
-        gap: 8px;
+        min-height: auto;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 10px 0;
+        gap: 10px;
       }
 
       .brand {
@@ -1080,55 +1064,26 @@
       }
 
       .nav-links {
-        position: fixed;
-        z-index: 30;
-        left: 10px;
-        right: 10px;
-        bottom: calc(10px + env(safe-area-inset-bottom));
-        width: auto;
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: flex-start;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        justify-content: stretch;
         gap: 7px;
-        padding: 8px;
-        overflow-x: auto;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none;
-        border: 1px solid rgba(255, 192, 122, .26);
-        border-radius: 22px;
-        background: rgba(9, 31, 22, .93);
-        box-shadow: 0 18px 46px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .08);
-        backdrop-filter: blur(18px);
-      }
-
-      .nav-links::-webkit-scrollbar {
-        display: none;
       }
 
       .nav-links a,
       .nav-links button {
-        flex: 0 0 76px;
-        min-height: 54px;
-        padding: 7px 6px;
-        flex-direction: column;
-        gap: 3px;
-        border-radius: 17px;
-        font-size: 11px;
+        width: 100%;
+        min-height: 34px;
+        padding: 7px 5px;
+        font-size: 12px;
         line-height: 1.12;
         white-space: normal;
         text-align: center;
-        background: rgba(255, 247, 232, .1);
-        box-shadow: none;
-      }
-
-      .nav-links a::before,
-      .nav-links button::before {
-        display: block;
-        font-size: 17px;
       }
 
       .settings-nav-button .settings-icon {
-        display: none;
+        font-size: 15px;
       }
 
       .hero { min-height: 600px; }
@@ -1164,6 +1119,12 @@
         font-weight: 900;
       }
     }
+
+    @media (max-width: 390px) {
+      .nav-links {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
   </style>
 </head>
 <body>
@@ -1174,15 +1135,15 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
-        <a href="#info" data-icon="告">お知らせ</a>
-        <a href="#menu" data-icon="飲">メニュー</a>
-        <a href="#customers" data-icon="♪">曲リスト</a>
-        <a href="#history" data-icon="履">歌った記録</a>
-        <a href="#daily" data-icon="日">今日の記録</a>
-        <a href="#drum-gacha" data-icon="運">DRUMガチャ</a>
-        <a href="#about" data-icon="店">店舗情報</a>
-        <a href="#youtube" data-icon="▶">YouTube</a>
-        <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く" data-icon="⚙"><span class="settings-icon">⚙</span><span>設定</span></button>
+        <a href="#info">お知らせ</a>
+        <a href="#menu">メニュー</a>
+        <a href="#customers">曲リスト</a>
+        <a href="#history">歌った記録</a>
+        <a href="#daily">今日の記録</a>
+        <a href="#drum-gacha">DRUMガチャ</a>
+        <a href="#about">店舗情報</a>
+        <a href="#youtube">YouTube</a>
+        <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
     </nav>
   </header>
