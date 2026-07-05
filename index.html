@@ -1578,6 +1578,7 @@
                 <div class="control-row">
                   <button class="btn primary" id="exportJsonButton" type="button">JSONを書き出す</button>
                   <button class="btn ghost" id="copyJsonButton" type="button">JSONをコピー</button>
+                  <button class="btn ghost" id="saveJsonFileButton" type="button">JSONファイルを保存</button>
                 </div>
               </div>
               <div>
@@ -1585,6 +1586,8 @@
                 <textarea id="songJsonRestoreText" placeholder="保存しておいたJSONを貼り付け"></textarea>
                 <div class="control-row">
                   <button class="btn ghost" id="restoreJsonButton" type="button">JSONから復元</button>
+                  <button class="btn ghost" id="chooseJsonFileButton" type="button">JSONファイルから復元</button>
+                  <input id="songJsonFileInput" type="file" accept=".json,application/json" hidden>
                 </div>
               </div>
               <div>
@@ -2090,7 +2093,10 @@
     const songImportText = document.getElementById("songImportText");
     const exportJsonButton = document.getElementById("exportJsonButton");
     const copyJsonButton = document.getElementById("copyJsonButton");
+    const saveJsonFileButton = document.getElementById("saveJsonFileButton");
     const restoreJsonButton = document.getElementById("restoreJsonButton");
+    const chooseJsonFileButton = document.getElementById("chooseJsonFileButton");
+    const songJsonFileInput = document.getElementById("songJsonFileInput");
     const exportSongsButton = document.getElementById("exportSongsButton");
     const copySongsButton = document.getElementById("copySongsButton");
     const importSongsButton = document.getElementById("importSongsButton");
@@ -2239,6 +2245,44 @@
           createdAt: item.createdAt || new Date().toISOString()
         }))
         .filter((item) => item.title);
+    }
+
+    function jsonBackupFilename() {
+      return `music-saloon-drum-songs-${todayString()}.json`;
+    }
+
+    function downloadBlob(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    async function saveJsonBackupFile() {
+      const jsonText = createSongJsonBackup();
+      const filename = jsonBackupFilename();
+      const blob = new Blob([jsonText], { type: "application/json" });
+
+      if (navigator.share && navigator.canShare) {
+        const file = new File([blob], filename, { type: "application/json" });
+        if (navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: "Music Saloon DRUM 曲リストバックアップ"
+            });
+            return;
+          } catch (error) {
+            if (error.name === "AbortError") return;
+          }
+        }
+      }
+
+      downloadBlob(blob, filename);
     }
 
     function parseSongImportText(text) {
@@ -2860,6 +2904,11 @@
       }, 1600);
     });
 
+    saveJsonFileButton.addEventListener("click", async () => {
+      songJsonBackupText.value = createSongJsonBackup();
+      await saveJsonBackupFile();
+    });
+
     restoreJsonButton.addEventListener("click", () => {
       let restoredSongs = [];
       try {
@@ -2879,6 +2928,26 @@
       songJsonRestoreText.value = "";
       songJsonBackupText.value = createSongJsonBackup();
       songExportText.value = createSongExportText();
+    });
+
+    chooseJsonFileButton.addEventListener("click", () => {
+      songJsonFileInput.click();
+    });
+
+    songJsonFileInput.addEventListener("change", () => {
+      const file = songJsonFileInput.files && songJsonFileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        songJsonRestoreText.value = String(reader.result || "");
+        restoreJsonButton.click();
+        songJsonFileInput.value = "";
+      });
+      reader.addEventListener("error", () => {
+        alert("ファイルの読み込みに失敗しました。");
+        songJsonFileInput.value = "";
+      });
+      reader.readAsText(file);
     });
 
     exportSongsButton.addEventListener("click", () => {
