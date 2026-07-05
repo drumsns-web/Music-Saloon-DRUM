@@ -546,9 +546,57 @@
 
     .manager {
       display: grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 1fr 360px;
       gap: 22px;
       align-items: start;
+    }
+
+    .manager > .card {
+      order: 2;
+    }
+
+    .manager > div:not(.card) {
+      order: 1;
+    }
+
+    .song-tools {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .song-tool-card {
+      padding: 18px;
+    }
+
+    .song-primary-actions .btn {
+      min-width: 128px;
+      min-height: 48px;
+      font-size: 16px;
+    }
+
+    .song-backup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .song-backup-grid textarea {
+      min-height: 150px;
+      font-family: "BIZ UDPGothic", "Yu Gothic", Meiryo, sans-serif;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .subtle-actions {
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+
+    .subtle-actions .btn {
+      min-height: 38px;
+      padding: 7px 12px;
+      font-size: 13px;
     }
 
     form { display: grid; gap: 14px; }
@@ -603,7 +651,10 @@
       margin-bottom: 14px;
     }
 
-    .toolbar input { max-width: 360px; }
+    .toolbar input {
+      flex: 1 1 240px;
+      max-width: none;
+    }
 
     .control-row {
       display: flex;
@@ -1090,6 +1141,7 @@
       .section-head { align-items: flex-start; flex-direction: column; }
       .grid,
       .manager,
+      .song-backup-grid,
       .contact-grid { grid-template-columns: 1fr; }
       .info-list { grid-template-columns: 1fr; }
       .favorite-item { grid-template-columns: 1fr; }
@@ -1395,7 +1447,48 @@
             <h2>曲リスト</h2>
             <p class="lead">自分の歌いたい曲、キー、メモを保存できます。歌手名・曲名で検索できます。</p>
           </div>
-          <button class="btn danger" id="clearAll" type="button">全削除</button>
+        </div>
+
+        <div class="song-tools">
+          <div class="card song-tool-card">
+            <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <div class="control-row song-primary-actions">
+              <a class="btn primary" href="#gacha">曲ガチャ</a>
+              <a class="btn primary" href="#favorites">よく歌う曲</a>
+            </div>
+            <div class="control-row">
+              <label class="check-row">
+                <input id="duetOnly" type="checkbox">
+                デュエット曲だけ表示
+              </label>
+            </div>
+            <div class="toolbar">
+              <input id="searchBox" placeholder="歌手名・曲名・タグ・メモで検索">
+              <strong id="countText">0件</strong>
+            </div>
+          </div>
+
+          <details class="card song-tool-card">
+            <summary><strong>バックアップ・コピペ用</strong></summary>
+            <p class="small">曲名・歌手名・キーをテキストで出力できます。機種変更やメモアプリへの保存に使えます。</p>
+            <div class="song-backup-grid">
+              <div>
+                <label for="songExportText">書き出し</label>
+                <textarea id="songExportText" readonly placeholder="ここに曲リストを書き出します"></textarea>
+                <div class="control-row">
+                  <button class="btn primary" id="exportSongsButton" type="button">曲リストを書き出す</button>
+                  <button class="btn ghost" id="copySongsButton" type="button">コピー</button>
+                </div>
+              </div>
+              <div>
+                <label for="songImportText">読み込み</label>
+                <textarea id="songImportText" placeholder="曲名、歌手名、キーの順で貼り付け"></textarea>
+                <div class="control-row">
+                  <button class="btn ghost" id="importSongsButton" type="button">貼り付けた曲を読み込む</button>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
 
         <div class="manager">
@@ -1440,21 +1533,6 @@
           </div>
 
           <div>
-            <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
-            <div class="control-row">
-              <a class="btn primary" href="#gacha">曲ガチャ</a>
-              <a class="btn ghost" href="#favorites">よく歌う曲</a>
-            </div>
-            <div class="control-row">
-              <label class="check-row">
-                <input id="duetOnly" type="checkbox">
-                デュエット曲だけ表示
-              </label>
-            </div>
-            <div class="toolbar">
-              <input id="searchBox" placeholder="歌手名・曲名・タグ・メモで検索">
-              <strong id="countText">0件</strong>
-            </div>
             <table aria-label="曲リスト">
               <thead>
                 <tr>
@@ -1467,6 +1545,9 @@
               </thead>
               <tbody id="songList"></tbody>
             </table>
+            <div class="control-row subtle-actions">
+              <button class="btn danger" id="clearAll" type="button">曲リストを全削除</button>
+            </div>
           </div>
         </div>
       </div>
@@ -1881,6 +1962,11 @@
     const searchBox = document.getElementById("searchBox");
     const countText = document.getElementById("countText");
     const clearAll = document.getElementById("clearAll");
+    const songExportText = document.getElementById("songExportText");
+    const songImportText = document.getElementById("songImportText");
+    const exportSongsButton = document.getElementById("exportSongsButton");
+    const copySongsButton = document.getElementById("copySongsButton");
+    const importSongsButton = document.getElementById("importSongsButton");
     const contactForm = document.getElementById("contactForm");
     const favoriteGroups = document.getElementById("favoriteGroups");
     const favoriteSearch = document.getElementById("favoriteSearch");
@@ -1977,6 +2063,37 @@
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
+    }
+
+    function createSongExportText() {
+      const header = "曲名\t歌手名\tキー";
+      const rows = songs.map((item) => [
+        item.title || "",
+        item.artist || "",
+        item.key || ""
+      ].join("\t"));
+      return [header, ...rows].join("\n");
+    }
+
+    function parseSongImportText(text) {
+      return text.split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line, index) => !(index === 0 && line.includes("曲名") && line.includes("歌手名")))
+        .map((line) => {
+          const parts = line.includes("\t") ? line.split("\t") : line.split(/,|、/);
+          const title = (parts[0] || "").trim();
+          if (!title) return null;
+          return {
+            id: createId(),
+            title,
+            artist: (parts[1] || "").trim(),
+            key: (parts[2] || "").trim(),
+            memo: "",
+            tags: []
+          };
+        })
+        .filter(Boolean);
     }
 
     function saveHistory() {
@@ -2536,6 +2653,42 @@
         saveSongs();
         renderSongs();
       }
+    });
+
+    exportSongsButton.addEventListener("click", () => {
+      songExportText.value = createSongExportText();
+      songExportText.focus();
+      songExportText.select();
+    });
+
+    copySongsButton.addEventListener("click", async () => {
+      if (!songExportText.value) songExportText.value = createSongExportText();
+      try {
+        await navigator.clipboard.writeText(songExportText.value);
+        copySongsButton.textContent = "コピーしました";
+      } catch (error) {
+        songExportText.focus();
+        songExportText.select();
+        document.execCommand("copy");
+        copySongsButton.textContent = "コピーしました";
+      }
+      setTimeout(() => {
+        copySongsButton.textContent = "コピー";
+      }, 1600);
+    });
+
+    importSongsButton.addEventListener("click", () => {
+      const imported = parseSongImportText(songImportText.value);
+      if (!imported.length) {
+        alert("読み込める曲がありません。曲名、歌手名、キーの順で貼り付けてください。");
+        return;
+      }
+      if (!confirm(`${imported.length}曲を曲リストに追加しますか？`)) return;
+      songs = [...imported, ...songs];
+      saveSongs();
+      renderSongs();
+      songImportText.value = "";
+      songExportText.value = createSongExportText();
     });
 
     searchBox.addEventListener("input", renderSongs);
