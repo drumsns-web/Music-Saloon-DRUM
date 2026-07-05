@@ -1544,7 +1544,7 @@
           <div class="card song-tool-card">
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="backup-recommend">
-              <p>曲が増えてきたら、念のためバックアップをおすすめします。曲名・歌手名・キーをテキストで保存できます。</p>
+              <p>曲が増えてきたら、念のためバックアップをおすすめします。完全復元用のJSONと、見やすいコピペ用テキストを保存できます。</p>
               <button class="btn ghost" id="openSongBackupButton" type="button">バックアップを開く</button>
             </div>
             <div class="control-row song-primary-actions">
@@ -1570,10 +1570,25 @@
 
           <details class="card song-tool-card" id="songBackupPanel">
             <summary><strong>バックアップ・コピペ用</strong></summary>
-            <p class="small">曲名・歌手名・キーをテキストで出力できます。機種変更やメモアプリへの保存に使えます。</p>
+            <p class="small">JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。</p>
             <div class="song-backup-grid">
               <div>
-                <label for="songExportText">書き出し</label>
+                <label for="songJsonBackupText">JSONバックアップ</label>
+                <textarea id="songJsonBackupText" readonly placeholder="ここに復元用JSONを書き出します"></textarea>
+                <div class="control-row">
+                  <button class="btn primary" id="exportJsonButton" type="button">JSONを書き出す</button>
+                  <button class="btn ghost" id="copyJsonButton" type="button">JSONをコピー</button>
+                </div>
+              </div>
+              <div>
+                <label for="songJsonRestoreText">JSON読み込み</label>
+                <textarea id="songJsonRestoreText" placeholder="保存しておいたJSONを貼り付け"></textarea>
+                <div class="control-row">
+                  <button class="btn ghost" id="restoreJsonButton" type="button">JSONから復元</button>
+                </div>
+              </div>
+              <div>
+                <label for="songExportText">コピペ用テキスト</label>
                 <textarea id="songExportText" readonly placeholder="ここに曲リストを書き出します"></textarea>
                 <div class="control-row">
                   <button class="btn primary" id="exportSongsButton" type="button">曲リストを書き出す</button>
@@ -1581,7 +1596,7 @@
                 </div>
               </div>
               <div>
-                <label for="songImportText">読み込み</label>
+                <label for="songImportText">テキスト読み込み</label>
                 <textarea id="songImportText" placeholder="曲名、歌手名、キーの順で貼り付け"></textarea>
                 <div class="control-row">
                   <button class="btn ghost" id="importSongsButton" type="button">貼り付けた曲を読み込む</button>
@@ -2069,8 +2084,13 @@
     const searchBox = document.getElementById("searchBox");
     const countText = document.getElementById("countText");
     const clearAll = document.getElementById("clearAll");
+    const songJsonBackupText = document.getElementById("songJsonBackupText");
+    const songJsonRestoreText = document.getElementById("songJsonRestoreText");
     const songExportText = document.getElementById("songExportText");
     const songImportText = document.getElementById("songImportText");
+    const exportJsonButton = document.getElementById("exportJsonButton");
+    const copyJsonButton = document.getElementById("copyJsonButton");
+    const restoreJsonButton = document.getElementById("restoreJsonButton");
     const exportSongsButton = document.getElementById("exportSongsButton");
     const copySongsButton = document.getElementById("copySongsButton");
     const importSongsButton = document.getElementById("importSongsButton");
@@ -2190,6 +2210,35 @@
         item.key || ""
       ].join("\t"));
       return [header, ...rows].join("\n");
+    }
+
+    function createSongJsonBackup() {
+      return JSON.stringify({
+        app: "Music Saloon DRUM",
+        type: "song-list-backup",
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        songs,
+        genreTags
+      }, null, 2);
+    }
+
+    function parseSongJsonBackup(text) {
+      const data = JSON.parse(text);
+      const backupSongs = Array.isArray(data) ? data : data.songs;
+      if (!Array.isArray(backupSongs)) throw new Error("songs not found");
+      return backupSongs
+        .map((item) => ({
+          id: item.id || createId(),
+          title: String(item.title || "").trim(),
+          artist: String(item.artist || "").trim(),
+          key: String(item.key || "").trim(),
+          memo: String(item.memo || "").trim(),
+          duet: Boolean(item.duet),
+          tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
+          createdAt: item.createdAt || new Date().toISOString()
+        }))
+        .filter((item) => item.title);
     }
 
     function parseSongImportText(text) {
@@ -2789,6 +2838,49 @@
       }
     });
 
+    exportJsonButton.addEventListener("click", () => {
+      songJsonBackupText.value = createSongJsonBackup();
+      songJsonBackupText.focus();
+      songJsonBackupText.select();
+    });
+
+    copyJsonButton.addEventListener("click", async () => {
+      if (!songJsonBackupText.value) songJsonBackupText.value = createSongJsonBackup();
+      try {
+        await navigator.clipboard.writeText(songJsonBackupText.value);
+        copyJsonButton.textContent = "コピーしました";
+      } catch (error) {
+        songJsonBackupText.focus();
+        songJsonBackupText.select();
+        document.execCommand("copy");
+        copyJsonButton.textContent = "コピーしました";
+      }
+      setTimeout(() => {
+        copyJsonButton.textContent = "JSONをコピー";
+      }, 1600);
+    });
+
+    restoreJsonButton.addEventListener("click", () => {
+      let restoredSongs = [];
+      try {
+        restoredSongs = parseSongJsonBackup(songJsonRestoreText.value);
+      } catch (error) {
+        alert("JSONを読み込めませんでした。保存したJSONをそのまま貼り付けてください。");
+        return;
+      }
+      if (!restoredSongs.length) {
+        alert("復元できる曲がありません。");
+        return;
+      }
+      if (!confirm(`現在の曲リストを、JSON内の${restoredSongs.length}曲に置き換えますか？`)) return;
+      songs = restoredSongs;
+      saveSongs();
+      renderSongs();
+      songJsonRestoreText.value = "";
+      songJsonBackupText.value = createSongJsonBackup();
+      songExportText.value = createSongExportText();
+    });
+
     exportSongsButton.addEventListener("click", () => {
       songExportText.value = createSongExportText();
       songExportText.focus();
@@ -2813,11 +2905,12 @@
 
     openSongBackupButton.addEventListener("click", () => {
       songBackupPanel.open = true;
+      songJsonBackupText.value = createSongJsonBackup();
       songExportText.value = createSongExportText();
       songBackupPanel.scrollIntoView({ behavior: "smooth", block: "start" });
       setTimeout(() => {
-        songExportText.focus();
-        songExportText.select();
+        songJsonBackupText.focus();
+        songJsonBackupText.select();
       }, 320);
     });
 
