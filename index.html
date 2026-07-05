@@ -1623,17 +1623,23 @@
                 <input id="artistName" placeholder="例：サザンオールスターズ">
               </label>
               <label>
-                キー
-                <select id="songKey">
+                キーの基準
+                <select id="songKeyBase">
                   <option value="">未設定</option>
                   <option>カラオケ標準キー</option>
                   <option>原曲キー</option>
+                </select>
+              </label>
+              <label>
+                キー調整
+                <select id="songKeyAdjust">
+                  <option value="">そのまま</option>
                   <option>+1</option>
                   <option>+2</option>
+                  <option>+3</option>
                   <option>-1</option>
                   <option>-2</option>
-                  <option>低めが歌いやすい</option>
-                  <option>高めが歌いやすい</option>
+                  <option>-3</option>
                 </select>
               </label>
               <label class="check-row">
@@ -2206,6 +2212,15 @@
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
+    }
+
+    function getSongKeyLabel() {
+      const base = document.getElementById("songKeyBase").value;
+      const adjust = document.getElementById("songKeyAdjust").value;
+      if (!base && !adjust) return "";
+      if (!base) return `基準未設定 ${adjust}`;
+      if (!adjust) return base;
+      return `${base} ${adjust}`;
     }
 
     function createSongExportText() {
@@ -2849,7 +2864,7 @@
         id: createId(),
         title: document.getElementById("songTitle").value.trim(),
         artist: document.getElementById("artistName").value.trim(),
-        key: document.getElementById("songKey").value,
+        key: getSongKeyLabel(),
         memo: settings.showMemo ? document.getElementById("memo").value.trim() : "",
         duet: selectedSongTags().includes("デュエット"),
         tags: selectedSongTags(),
