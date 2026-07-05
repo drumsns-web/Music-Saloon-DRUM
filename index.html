@@ -83,27 +83,27 @@
       align-items: center;
       justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
 
     .nav-links a,
     .nav-links button {
-      min-height: 42px;
+      min-height: 36px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 9px 14px;
+      padding: 7px 11px;
       border: 1px solid rgba(255, 192, 122, .28);
       border-radius: 999px;
       background: rgba(255, 247, 232, .08);
       color: rgba(255, 247, 232, .95);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 900;
       line-height: 1.1;
       text-decoration: none;
       cursor: pointer;
       white-space: nowrap;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 8px 18px rgba(0, 0, 0, .08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 5px 12px rgba(0, 0, 0, .08);
       transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease;
     }
 
@@ -123,6 +123,13 @@
       border-color: rgba(255, 192, 122, .9);
       background: var(--orange);
       box-shadow: 0 10px 22px rgba(240, 138, 53, .22);
+    }
+
+    .nav-links a::before,
+    .nav-links button::before {
+      content: attr(data-icon);
+      display: none;
+      line-height: 1;
     }
 
     .settings-nav-button {
@@ -1044,43 +1051,87 @@
     footer strong { color: #fff; }
 
     @media (max-width: 880px) {
+      body {
+        padding-bottom: calc(88px + env(safe-area-inset-bottom));
+      }
+
+      header {
+        position: sticky;
+        border-bottom-color: rgba(255, 192, 122, .16);
+      }
+
       nav {
         width: min(100%, calc(100% - 24px));
-        min-height: auto;
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 12px 0;
-        gap: 12px;
+        min-height: 62px;
+        align-items: center;
+        flex-direction: row;
+        padding: 8px 0;
+        gap: 8px;
       }
 
       .brand {
-        gap: 10px;
+        gap: 9px;
+        font-size: 18px;
       }
 
       .brand img {
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
       }
 
       .nav-links {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        justify-content: stretch;
-        gap: 10px;
+        position: fixed;
+        z-index: 30;
+        left: 10px;
+        right: 10px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        width: auto;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 7px;
+        padding: 8px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        border: 1px solid rgba(255, 192, 122, .26);
+        border-radius: 22px;
+        background: rgba(9, 31, 22, .93);
+        box-shadow: 0 18px 46px rgba(0, 0, 0, .34), inset 0 1px 0 rgba(255, 255, 255, .08);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-links::-webkit-scrollbar {
+        display: none;
       }
 
       .nav-links a,
       .nav-links button {
-        width: 100%;
-        min-height: 46px;
-        padding: 10px 8px;
-        font-size: 14px;
+        flex: 0 0 76px;
+        min-height: 54px;
+        padding: 7px 6px;
+        flex-direction: column;
+        gap: 3px;
+        border-radius: 17px;
+        font-size: 11px;
+        line-height: 1.12;
         white-space: normal;
         text-align: center;
+        background: rgba(255, 247, 232, .1);
+        box-shadow: none;
       }
 
-      .hero { min-height: 640px; }
+      .nav-links a::before,
+      .nav-links button::before {
+        display: block;
+        font-size: 17px;
+      }
+
+      .settings-nav-button .settings-icon {
+        display: none;
+      }
+
+      .hero { min-height: 600px; }
       .section-head { align-items: flex-start; flex-direction: column; }
       .grid,
       .manager,
@@ -1123,19 +1174,15 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
-        <a href="#info">お知らせ</a>
-        <a href="#menu">メニュー</a>
-        <a href="#favorites">よく歌う曲</a>
-        <a href="#gacha">曲ガチャ</a>
-        <a href="#drum-gacha">DRUMガチャ</a>
-        <a href="#customers">曲リスト</a>
-        <a href="#history">歌った記録</a>
-        <a href="#daily">今日の記録</a>
-        <a href="#about">店舗情報</a>
-        <a href="#youtube">YouTube</a>
-        <a href="#features">特徴</a>
-        <a href="#contact">問い合わせ</a>
-        <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
+        <a href="#info" data-icon="告">お知らせ</a>
+        <a href="#menu" data-icon="飲">メニュー</a>
+        <a href="#customers" data-icon="♪">曲リスト</a>
+        <a href="#history" data-icon="履">歌った記録</a>
+        <a href="#daily" data-icon="日">今日の記録</a>
+        <a href="#drum-gacha" data-icon="運">DRUMガチャ</a>
+        <a href="#about" data-icon="店">店舗情報</a>
+        <a href="#youtube" data-icon="▶">YouTube</a>
+        <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く" data-icon="⚙"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
     </nav>
   </header>
@@ -1360,7 +1407,7 @@
           <article class="card">
             <span class="tag">Lucky</span>
             <h3>本日の運だめし</h3>
-            <p>1端末につき1日1回まで回せます。結果が出たら、その画面をスタッフにお見せください。</p>
+            <p>1端末につき1日1回まで回せます。サービス表示が出た場合は、当日中にその画面をスタッフにお見せください。</p>
             <button class="btn primary" id="drumGachaButton" type="button">DRUMガチャを回す</button>
             <p class="menu-note" id="drumGachaRate">平日 3% / 土曜 1% / 日曜 0%</p>
           </article>
@@ -1368,6 +1415,7 @@
             <span class="tag green">Service</span>
             <h3>サービス内容</h3>
             <p>サービス表示が出た場合は、ドリンク1杯・おつまみサービス・500円割引のいずれかとしてご利用できます。</p>
+            <p class="menu-note">サービスの有効期限は、表示された当日限りです。</p>
             <p class="small">サービス内容は営業状況によりスタッフ判断となる場合があります。</p>
           </article>
           <article class="card">
@@ -1432,6 +1480,10 @@
 
           <div>
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <div class="control-row">
+              <a class="btn primary" href="#gacha">曲ガチャ</a>
+              <a class="btn ghost" href="#favorites">よく歌う曲</a>
+            </div>
             <div class="control-row">
               <label class="check-row">
                 <input id="duetOnly" type="checkbox">
@@ -1682,6 +1734,18 @@
             <h3>団体利用</h3>
             <p>10名様以上のご利用で、お一人様3,500円から承ります。イベントやバンド利用などは電話またはメールでお問い合わせください。</p>
           </article>
+          <article class="card">
+            <span class="tag green">Contact</span>
+            <h3>問い合わせ</h3>
+            <p>予約、貸切、イベント利用などはこちらからお問い合わせできます。</p>
+            <a class="btn primary" href="#contact">問い合わせを開く</a>
+          </article>
+          <article class="card">
+            <span class="tag">Feature</span>
+            <h3>お店の特徴</h3>
+            <p>楽器、カラオケ、生演奏など、DRUMの楽しみ方はこちらにまとめています。</p>
+            <a class="btn ghost" href="#features">特徴を見る</a>
+          </article>
         </div>
       </div>
     </section>
@@ -1826,14 +1890,14 @@
       <div class="section-head">
         <div>
           <h2>DRUMガチャ</h2>
-          <p class="lead" id="drumGachaDate">本日限り</p>
+          <p class="lead" id="drumGachaDate">当日限り</p>
         </div>
         <button class="btn ghost" id="closeDrumGachaModal" type="button">閉じる</button>
       </div>
       <div class="gacha-hit" id="drumGachaLabel">結果発表</div>
       <div class="result-panel" id="drumGachaResult">結果を表示します。</div>
       <p class="verify-code" id="drumGachaVerifyCode" hidden>端末保存コード</p>
-      <p class="privacy-note" id="drumGachaStaffNote">サービス表示が出た場合は、この画面をスタッフにお見せください。</p>
+      <p class="privacy-note" id="drumGachaStaffNote">サービス表示は当日限り有効です。この画面をスタッフにお見せください。</p>
     </div>
   </div>
 
@@ -2073,7 +2137,7 @@
 
     function openDrumGachaResult(label, message, showServiceNote = false) {
       const mark = getBrowserMark();
-      drumGachaDate.textContent = `${todayString()} 本日限り`;
+      drumGachaDate.textContent = `${todayString()} 当日限り`;
       drumGachaLabel.textContent = label;
       drumGachaLabel.classList.add("show");
       drumGachaResult.textContent = message;
@@ -2592,8 +2656,8 @@
       }
 
       const prizes = [
-        "ドリンク1杯またはおつまみサービスが出ました。スタッフにこの画面をお見せください。",
-        "500円割引サービスが出ました。スタッフにこの画面をお見せください。"
+        "ドリンク1杯またはおつまみサービスが出ました。本日中にスタッフへこの画面をお見せください。",
+        "500円割引サービスが出ました。本日中にスタッフへこの画面をお見せください。"
       ];
       const won = Math.random() < rate;
       const message = won
