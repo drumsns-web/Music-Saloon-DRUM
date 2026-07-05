@@ -575,6 +575,35 @@
       font-size: 16px;
     }
 
+    .song-primary-actions .register-jump {
+      color: var(--forest-2);
+      background: var(--orange-2);
+      box-shadow: 0 12px 26px rgba(240, 138, 53, .24);
+    }
+
+    .song-form-card {
+      border: 2px solid rgba(240, 138, 53, .72);
+      box-shadow: 0 18px 44px rgba(240, 138, 53, .14);
+    }
+
+    .song-form-card h3 {
+      margin: 0 0 4px;
+      color: var(--forest);
+      font-size: 24px;
+    }
+
+    .song-form-card .form-lead {
+      margin: 0 0 16px;
+      color: #4c4035;
+      font-weight: 800;
+    }
+
+    .song-form-card .btn.primary {
+      width: 100%;
+      min-height: 52px;
+      font-size: 17px;
+    }
+
     .song-backup-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1495,6 +1524,7 @@
           <div class="card song-tool-card">
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="control-row song-primary-actions">
+              <button class="btn register-jump" id="focusSongFormButton" type="button">曲を登録する</button>
               <a class="btn primary" href="#gacha">曲ガチャ</a>
               <a class="btn primary" href="#favorites">よく歌う曲</a>
             </div>
@@ -1538,7 +1568,9 @@
         </div>
 
         <div class="manager">
-          <div class="card">
+          <div class="card song-form-card" id="songRegister">
+            <h3>曲を登録する</h3>
+            <p class="form-lead">歌いたい曲名・歌手名・キーを入力して保存できます。</p>
             <form id="songForm">
               <label>
                 曲名
@@ -1573,7 +1605,7 @@
                 メモ
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
               </label>
-              <button class="btn primary" type="submit">保存</button>
+              <button class="btn primary" type="submit">曲リストに保存</button>
             <p class="small">曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             </form>
           </div>
@@ -2017,6 +2049,8 @@
     const exportSongsButton = document.getElementById("exportSongsButton");
     const copySongsButton = document.getElementById("copySongsButton");
     const importSongsButton = document.getElementById("importSongsButton");
+    const focusSongFormButton = document.getElementById("focusSongFormButton");
+    const songRegister = document.getElementById("songRegister");
     const songTagFilter = document.getElementById("songTagFilter");
     const songTagFilterButton = document.getElementById("songTagFilterButton");
     const songTagFilterPanel = document.getElementById("songTagFilterPanel");
@@ -2766,6 +2800,13 @@
 
     searchBox.addEventListener("input", renderSongs);
     duetOnly.addEventListener("change", renderSongs);
+
+    focusSongFormButton.addEventListener("click", () => {
+      songRegister.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        document.getElementById("songTitle").focus();
+      }, 320);
+    });
 
     songTagFilterButton.addEventListener("click", (event) => {
       event.stopPropagation();
