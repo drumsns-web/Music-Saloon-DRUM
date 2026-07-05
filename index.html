@@ -2089,6 +2089,8 @@
     const newsImageCount = 12;
     const heroImageCount = 7;
     const form = document.getElementById("songForm");
+    const songKeyBase = document.getElementById("songKeyBase");
+    const songKeyAdjust = document.getElementById("songKeyAdjust");
     const list = document.getElementById("songList");
     const searchBox = document.getElementById("searchBox");
     const countText = document.getElementById("countText");
@@ -2214,9 +2216,21 @@
       localStorage.setItem(storageKey, JSON.stringify(songs));
     }
 
+    function updateKeyAdjustLabel() {
+      const straightOption = songKeyAdjust.querySelector('option[value=""]');
+      if (!straightOption) return;
+      if (songKeyBase.value === "原曲キー") {
+        straightOption.textContent = "そのまま（原曲キー）";
+      } else if (songKeyBase.value === "カラオケ標準キー") {
+        straightOption.textContent = "そのまま（標準キー）";
+      } else {
+        straightOption.textContent = "そのまま";
+      }
+    }
+
     function getSongKeyLabel() {
-      const base = document.getElementById("songKeyBase").value;
-      const adjust = document.getElementById("songKeyAdjust").value;
+      const base = songKeyBase.value;
+      const adjust = songKeyAdjust.value;
       if (!base && !adjust) return "";
       if (!base) return `基準未設定 ${adjust}`;
       if (!adjust) return base;
@@ -2872,6 +2886,7 @@
       });
       saveSongs();
       form.reset();
+      updateKeyAdjustLabel();
       renderSongs();
     });
 
@@ -3014,6 +3029,7 @@
 
     searchBox.addEventListener("input", renderSongs);
     duetOnly.addEventListener("change", renderSongs);
+    songKeyBase.addEventListener("change", updateKeyAdjustLabel);
 
     focusSongFormButton.addEventListener("click", () => {
       songRegister.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -3321,6 +3337,7 @@
     renderTagManager();
     renderDrinkButtons();
     applySettings();
+    updateKeyAdjustLabel();
     renderHistoryBackupStatus();
     renderDailyMemo();
     renderHeroBackground();
