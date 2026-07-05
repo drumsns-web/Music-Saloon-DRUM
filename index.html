@@ -604,6 +604,26 @@
       font-size: 17px;
     }
 
+    .backup-recommend {
+      margin: 12px 0 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      background: rgba(255, 247, 232, .82);
+    }
+
+    .backup-recommend p {
+      margin: 0 0 10px;
+      color: #34291f;
+      font-weight: 800;
+    }
+
+    .backup-recommend .btn {
+      min-height: 38px;
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+
     .song-backup-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1523,6 +1543,10 @@
         <div class="song-tools">
           <div class="card song-tool-card">
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <div class="backup-recommend">
+              <p>曲が増えてきたら、念のためバックアップをおすすめします。曲名・歌手名・キーをテキストで保存できます。</p>
+              <button class="btn ghost" id="openSongBackupButton" type="button">バックアップを開く</button>
+            </div>
             <div class="control-row song-primary-actions">
               <button class="btn register-jump" id="focusSongFormButton" type="button">曲を登録する</button>
               <a class="btn primary" href="#gacha">曲ガチャ</a>
@@ -1544,7 +1568,7 @@
             </div>
           </div>
 
-          <details class="card song-tool-card">
+          <details class="card song-tool-card" id="songBackupPanel">
             <summary><strong>バックアップ・コピペ用</strong></summary>
             <p class="small">曲名・歌手名・キーをテキストで出力できます。機種変更やメモアプリへの保存に使えます。</p>
             <div class="song-backup-grid">
@@ -2051,6 +2075,8 @@
     const importSongsButton = document.getElementById("importSongsButton");
     const focusSongFormButton = document.getElementById("focusSongFormButton");
     const songRegister = document.getElementById("songRegister");
+    const openSongBackupButton = document.getElementById("openSongBackupButton");
+    const songBackupPanel = document.getElementById("songBackupPanel");
     const songTagFilter = document.getElementById("songTagFilter");
     const songTagFilterButton = document.getElementById("songTagFilterButton");
     const songTagFilterPanel = document.getElementById("songTagFilterPanel");
@@ -2782,6 +2808,16 @@
       setTimeout(() => {
         copySongsButton.textContent = "コピー";
       }, 1600);
+    });
+
+    openSongBackupButton.addEventListener("click", () => {
+      songBackupPanel.open = true;
+      songExportText.value = createSongExportText();
+      songBackupPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        songExportText.focus();
+        songExportText.select();
+      }, 320);
     });
 
     importSongsButton.addEventListener("click", () => {
