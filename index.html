@@ -136,6 +136,10 @@
       line-height: 1;
     }
 
+    .language-toggle {
+      min-width: 76px;
+    }
+
     .hero {
       min-height: calc(100vh - 72px);
       display: grid;
@@ -351,7 +355,9 @@
     .dark-section .price { color: var(--orange-2); }
 
     #menu .card {
-      background: linear-gradient(180deg, rgba(255, 253, 248, .98), rgba(255, 247, 232, .96));
+      border-color: rgba(20, 63, 44, .2);
+      background: #fffdf8;
+      box-shadow: 0 14px 34px rgba(20, 33, 25, .1);
     }
 
     #menu .card h3 {
@@ -368,13 +374,14 @@
     }
 
     #menu .price {
-      color: #c97624;
+      color: #8f4f18;
       font-size: 26px;
       text-shadow: 0 1px 0 rgba(255, 255, 255, .65);
     }
 
     .menu-block {
       margin-top: 34px;
+      scroll-margin-top: 96px;
     }
 
     .menu-block h3 {
@@ -386,7 +393,7 @@
 
     .menu-list {
       display: grid;
-      gap: 10px;
+      gap: 8px;
       margin: 0;
       padding: 0;
       list-style: none;
@@ -396,19 +403,24 @@
       display: flex;
       justify-content: space-between;
       gap: 16px;
-      border-bottom: 1px dashed rgba(20, 63, 44, .22);
-      padding-bottom: 8px;
-      color: #33291f;
-      font-weight: 700;
+      align-items: flex-start;
+      border: 1px solid rgba(20, 63, 44, .13);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #2a2118;
+      background: #fffaf0;
+      font-weight: 800;
     }
 
     .menu-list li span:first-child {
       flex: 0 0 auto;
+      max-width: 58%;
+      color: var(--forest-2);
       font-weight: 900;
     }
 
     .menu-list span:last-child {
-      color: #c97624;
+      color: #2f261d;
       font-weight: 900;
       text-align: right;
     }
@@ -422,15 +434,16 @@
 
     .menu-detail {
       margin-top: 14px;
-      border: 1px solid rgba(20, 63, 44, .14);
+      border: 1px solid rgba(20, 63, 44, .22);
       border-radius: 8px;
-      background: rgba(255, 253, 248, .78);
+      background: #f7eedc;
       overflow: hidden;
     }
 
     .menu-detail summary {
-      padding: 10px 12px;
-      color: var(--forest);
+      padding: 12px 14px;
+      color: #fffdf8;
+      background: var(--forest);
       font-weight: 900;
       cursor: pointer;
     }
@@ -444,6 +457,81 @@
       font-size: 14px;
       font-weight: 700;
       line-height: 1.7;
+    }
+
+    #menu .wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-shortcuts {
+      order: 0;
+      margin-top: 18px;
+      padding: 18px;
+      border-color: rgba(240, 138, 53, .34);
+      background: linear-gradient(180deg, #fffdf8, #fff5e3);
+    }
+
+    .menu-shortcuts h3 {
+      margin: 0 0 6px;
+      color: var(--forest);
+      font-size: 20px;
+    }
+
+    .menu-shortcuts p {
+      margin: 0 0 12px;
+      color: #43372b;
+      font-weight: 800;
+    }
+
+    .menu-shortcut-buttons {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .menu-shortcut-buttons .btn {
+      min-height: 52px;
+      border-color: rgba(20, 63, 44, .2);
+      background: #fffdf8;
+      color: var(--forest);
+      box-shadow: 0 8px 18px rgba(20, 33, 25, .08);
+    }
+
+    .menu-shortcut-buttons .btn.primary {
+      color: var(--forest-2);
+      border-color: rgba(240, 138, 53, .42);
+      background: var(--orange);
+    }
+
+    #regularMenu { order: 1; }
+    #menuPlans { order: 3; }
+    #freeDrinkMenu { order: 4; }
+
+    .menu-sub-back {
+      display: none;
+      align-self: flex-start;
+      margin-top: 18px;
+    }
+
+    body.menu-subview #menu .menu-sub-back {
+      display: inline-flex;
+    }
+
+    #menu .menu-page {
+      display: none;
+    }
+
+    body.menu-subview #menu .menu-shortcuts {
+      display: none;
+    }
+
+    body.menu-subview #menu .menu-page.active-menu-page {
+      display: block;
+    }
+
+    body.menu-subview #regularMenu.menu-charge-only .card:not(.menu-charge-card) {
+      display: none;
     }
 
     .info-list {
@@ -1282,6 +1370,7 @@
       .manager,
       .song-backup-grid,
       .contact-grid { grid-template-columns: 1fr; }
+      .menu-shortcut-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .info-list { grid-template-columns: 1fr; }
       .favorite-item { grid-template-columns: 1fr; }
 
@@ -1334,6 +1423,7 @@
         <a href="#drum-gacha">DRUMガチャ</a>
         <a href="#about">店舗情報</a>
         <a href="#youtube">YouTube</a>
+        <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
         <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
     </nav>
@@ -1410,11 +1500,24 @@
         <div class="section-head">
           <div>
             <h2>メニュー・料金</h2>
-            <p class="lead">ご利用中に確認しやすいよう、飲み放題プランと通常メニューを分けて掲載しています。</p>
+            <p class="lead">飲み物、飲み放題、ボトル、フードを用途別に確認できます。</p>
+            <p class="menu-note">価格はすべて税込みです。</p>
+          </div>
+        </div>
+        <button class="btn ghost menu-sub-back" id="menuBackButton" type="button">← メニュー一覧に戻る</button>
+
+        <div class="card menu-shortcuts">
+          <h3>見たいメニューを選ぶ</h3>
+          <p>飲み物を先に見たい方、飲み放題プランを確認したい方、それぞれすぐ移動できます。</p>
+          <div class="menu-shortcut-buttons">
+            <button class="btn primary" type="button" data-menu-page="regularMenu">ドリンクを見る</button>
+            <button class="btn ghost" type="button" data-menu-page="menuPlans">飲み放題プラン</button>
+            <button class="btn ghost" type="button" data-menu-page="freeDrinkMenu">飲み放題メニュー</button>
+            <button class="btn ghost" type="button" data-menu-page="chargeFoodMenu">チャージ・フード</button>
           </div>
         </div>
 
-        <div class="menu-block">
+        <div class="menu-block menu-page" id="menuPlans">
           <h3>飲み放題♪歌い放題♪コース</h3>
           <div class="grid">
             <article class="card">
@@ -1428,7 +1531,7 @@
                 <ul class="menu-list">
                   <li><span>焼酎・ウイスキー</span><span>ロック／水割り／お湯割り</span></li>
                   <li><span>割りもの</span><span>水／お湯／緑茶／ウーロン茶／ジャスミン茶／紅茶（無糖）／麦茶／炭酸水</span></li>
-                  <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶</span></li>
+                  <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶／カルピス</span></li>
                   <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
                 </ul>
                 <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
@@ -1437,15 +1540,15 @@
             <article class="card">
               <span class="tag green">Super</span>
               <h3>スーパープラン</h3>
-              <p>スタンダードプランに加えて、カルピス、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。</p>
+              <p>スタンダードプランに加えて、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。</p>
               <p class="price">男性 4,000円<br>女性 3,000円</p>
               <details class="menu-detail">
                 <summary>追加メニューを見る</summary>
                 <ul class="menu-list">
                   <li><span>スタンダード対象</span><span>スタンダードプランの飲み放題メニューすべて</span></li>
-                  <li><span>追加ドリンク</span><span>カルピス／梅酒／芋焼酎／麦焼酎</span></li>
+                  <li><span>追加ドリンク</span><span>梅酒／芋焼酎／麦焼酎</span></li>
                   <li><span>GINON</span><span>レモンサワー／グレープフルーツサワー</span></li>
-                  <li><span>追加サワー</span><span>男梅／カルピス／巨峰／ライチ／桃／梅</span></li>
+                  <li><span>追加サワー</span><span>男梅／カルピス／巨峰／ライチ／桃／梅酒／マンゴー</span></li>
                 </ul>
                 <p class="menu-note">レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。</p>
               </details>
@@ -1468,7 +1571,7 @@
           <p class="menu-note">22時半以降のご来店でも料金は同じです。営業は0時までのため、飲み放題ご利用のお客様はお早目のご来店をおすすめします。</p>
         </div>
 
-        <div class="menu-block">
+        <div class="menu-block menu-page" id="freeDrinkMenu">
           <h3>飲み放題メニュー</h3>
           <div class="grid">
             <article class="card">
@@ -1478,7 +1581,7 @@
               <ul class="menu-list">
                 <li><span>焼酎・ウイスキー</span><span>ロック／水割り／お湯割り</span></li>
                 <li><span>割りもの</span><span>水／お湯／緑茶／ウーロン茶／ジャスミン茶／紅茶（無糖）／麦茶／炭酸水</span></li>
-                <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶</span></li>
+                <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶／カルピス</span></li>
                 <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
               </ul>
               <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
@@ -1488,9 +1591,9 @@
               <h3>スーパープラン</h3>
               <p>スタンダード対象メニューに追加で楽しめます。</p>
               <ul class="menu-list">
-                <li><span>追加ドリンク</span><span>カルピス／梅酒／芋焼酎／麦焼酎</span></li>
+                <li><span>追加ドリンク</span><span>梅酒／芋焼酎／麦焼酎</span></li>
                 <li><span>GINON</span><span>レモンサワー／グレープフルーツサワー</span></li>
-                <li><span>追加サワー</span><span>男梅／カルピス／巨峰／ライチ／桃／梅</span></li>
+                <li><span>追加サワー</span><span>男梅／カルピス／巨峰／ライチ／桃／梅酒／マンゴー</span></li>
               </ul>
               <p class="menu-note">レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。</p>
             </article>
@@ -1503,10 +1606,11 @@
           </div>
         </div>
 
+        <div class="menu-page" id="regularMenu">
         <div class="menu-block">
-          <h3>通常メニュー</h3>
+          <h3 id="regularMenuHeading">通常ドリンク・ボトル</h3>
         </div>
-        <div class="grid">
+        <div class="grid menu-regular-grid">
           <article class="card">
             <span class="tag">Beer</span>
             <h3>ビール</h3>
@@ -1558,7 +1662,7 @@
             <p class="price">各 500円</p>
             <p>ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、ジンジャーエール</p>
           </article>
-          <article class="card">
+          <article class="card menu-charge-card">
             <span class="tag green">Charge</span>
             <h3>チャージ・カラオケ</h3>
             <ul class="menu-list">
@@ -1569,7 +1673,7 @@
             </ul>
             <p class="menu-note">楽器使用料は無料です。セット料金にはアイス・ミネラル・緑茶・ウーロン茶などが含まれます。</p>
           </article>
-          <article class="card">
+          <article class="card menu-charge-card">
             <span class="tag">Food</span>
             <h3>食べ物</h3>
             <ul class="menu-list">
@@ -1580,6 +1684,7 @@
               <li><span>チーズ盛り合わせ</span><span>1,000円</span></li>
             </ul>
           </article>
+        </div>
         </div>
       </div>
     </section>
@@ -2183,6 +2288,7 @@
     const tagStorageKey = "music-saloon-drum-tags";
     const drumGachaStorageKey = "music-saloon-drum-drum-gacha";
     const browserMarkStorageKey = "music-saloon-drum-browser-mark";
+    const languageStorageKey = "music-saloon-drum-language";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
     const heroImageCount = 7;
@@ -2267,6 +2373,9 @@
     const undoButton = document.getElementById("undoButton");
     const newsGallery = document.getElementById("newsGallery");
     const newsEmpty = document.getElementById("newsEmpty");
+    const languageToggle = document.getElementById("languageToggle");
+    const menuBackButton = document.getElementById("menuBackButton");
+    const regularMenuHeading = document.getElementById("regularMenuHeading");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -2284,6 +2393,229 @@
     ];
 
     const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌", "十八番", "練習中", "盛り上がる", "しっとり"];
+
+    const textOriginals = new WeakMap();
+    const attrOriginals = new WeakMap();
+    let currentLanguage = localStorage.getItem(languageStorageKey) || "ja";
+    let isApplyingLanguage = false;
+
+    const exactTranslations = {
+      "お知らせ": "Info",
+      "メニュー": "Menu",
+      "曲リスト": "Song List",
+      "歌った記録": "Song History",
+      "今日の記録": "Today",
+      "店舗情報": "Shop Info",
+      "設定": "Settings",
+      "インフォメーション": "Information",
+      "店からのお知らせ": "Shop Notices",
+      "ご利用前にご確認ください。": "Please check before use.",
+      "カラオケ予約のお願い": "Karaoke Reservation Request",
+      "Instagramを開く": "Open Instagram",
+      "営業時間": "Hours",
+      "定休日": "Closed",
+      "毎週日曜日": "Every Sunday",
+      "メニュー・料金": "Menu & Prices",
+      "価格はすべて税込みです。": "All prices include tax.",
+      "見たいメニューを選ぶ": "Choose a Menu",
+      "ドリンクを見る": "Drinks",
+      "飲み放題プラン": "All-you-can-drink Plans",
+      "飲み放題メニュー": "All-you-can-drink Menu",
+      "チャージ・フード": "Charge & Food",
+      "← メニュー一覧に戻る": "← Back to Menu",
+      "飲み放題♪歌い放題♪コース": "All-you-can-drink & Karaoke Plans",
+      "スタンダードプラン": "Standard Plan",
+      "スーパープラン": "Super Plan",
+      "プレミアムプラン": "Premium Plan",
+      "飲めるメニューを見る": "View Included Drinks",
+      "追加メニューを見る": "View Extra Items",
+      "スタンダード": "Standard",
+      "プレミアム": "Premium",
+      "通常ドリンク・ボトル": "Drinks & Bottles",
+      "ビール": "Beer",
+      "焼酎": "Shochu",
+      "ウイスキー": "Whisky",
+      "その他お酒": "Other Alcohol",
+      "ソフトドリンク": "Soft Drinks",
+      "チャージ・カラオケ": "Charge & Karaoke",
+      "食べ物": "Food",
+      "焼酎・ウイスキー": "Shochu / Whisky",
+      "割りもの": "Mixers",
+      "サワー": "Sours",
+      "スタンダード対象": "Standard items",
+      "スーパー対象": "Super items",
+      "追加ドリンク": "Extra drinks",
+      "追加サワー": "Extra sours",
+      "追加ドリンク": "Extra drinks",
+      "生ビール：アサヒスーパードライ": "Draft beer: Asahi Super Dry",
+      "瓶ビール：アサヒスーパードライ": "Bottled beer: Asahi Super Dry",
+      "瓶ビール：ハートランド": "Bottled beer: Heartland",
+      "ロック／水割り／お湯割り": "On the rocks / with water / with hot water",
+      "水／お湯／緑茶／ウーロン茶／ジャスミン茶／紅茶（無糖）／麦茶／炭酸水": "Water / hot water / green tea / oolong tea / jasmine tea / unsweetened black tea / barley tea / soda water",
+      "ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶／カルピス": "Oolong tea / jasmine tea / unsweetened black tea / Cola Zero / green tea / ginger ale / barley tea / Calpis",
+      "レモンサワー／グレープフルーツサワー": "Lemon sour / grapefruit sour",
+      "スタンダードプランの飲み放題メニューすべて": "All Standard Plan drinks",
+      "梅酒／芋焼酎／麦焼酎": "Plum wine / sweet potato shochu / barley shochu",
+      "男梅／カルピス／巨峰／ライチ／桃／梅酒／マンゴー": "Otoko Ume / Calpis / Kyoho grape / lychee / peach / plum wine / mango",
+      "スーパープランの追加メニューすべて": "All Super Plan extras",
+      "生ビール／ワイン（赤・白）": "Draft beer / wine (red & white)",
+      "生ビール、ワイン（赤・白）。": "Draft beer and wine (red & white).",
+      "各 500円": "500 yen each",
+      "ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、ジンジャーエール": "Oolong tea, jasmine tea, unsweetened black tea, Cola Zero, green tea, ginger ale",
+      "ヘネシー V.S": "Hennessy V.S",
+      "日本酒": "Sake",
+      "グラスワイン 赤・白": "Glass wine red / white",
+      "梅酒": "Plum wine",
+      "梅酒ソーダ割り": "Plum wine with soda",
+      "カクテル各種": "Cocktails",
+      "サワー各種": "Sours",
+      "カレーライス": "Curry rice",
+      "スパゲッティ": "Spaghetti",
+      "乾き物 小": "Dry snacks small",
+      "乾き物 大": "Dry snacks large",
+      "チーズ盛り合わせ": "Cheese plate",
+      "DRUMガチャを回す": "Try DRUM Gacha",
+      "サービス内容": "Prize Details",
+      "回数制限": "Limit",
+      "バックアップを開く": "Open Backup",
+      "曲を登録する": "Add a Song",
+      "曲ガチャ": "Song Gacha",
+      "よく歌う曲": "Frequently Sung",
+      "タグを選ぶ": "Choose Tags",
+      "次回歌いたい曲": "Next Songs",
+      "JSONを書き出す": "Export JSON",
+      "JSONをコピー": "Copy JSON",
+      "JSONファイルを保存": "Save JSON File",
+      "JSONから復元": "Restore from JSON",
+      "JSONファイルから復元": "Restore from JSON File",
+      "曲リストを書き出す": "Export Song List",
+      "コピー": "Copy",
+      "貼り付けた曲を読み込む": "Import Pasted Songs",
+      "曲リストに保存": "Save to Song List",
+      "曲リストを全削除": "Delete All Songs",
+      "おすすめ曲ガチャ": "Song Recommendation Gacha",
+      "ガチャを回す": "Spin Gacha",
+      "候補について": "About Candidates",
+      "一人で歌う時": "When Singing Solo",
+      "記録を全削除": "Delete All Records",
+      "日付で見る": "View by Date",
+      "選んだ日に歌った曲": "Songs Sung on Selected Date",
+      "今日のセットリスト": "Today's Set List",
+      "ドリンク記録": "Drink Log",
+      "飲んだものを記録": "Log a Drink",
+      "来店メモ": "Visit Memo",
+      "保存について": "About Saving",
+      "閉じる": "Close",
+      "曲リスト設定": "Song List Settings",
+      "タグ設定": "Tag Settings",
+      "タグを追加": "Add Tag",
+      "記録について": "About Records",
+      "削除した歌った記録を復元": "Restore Deleted Song History",
+      "デュエット検索": "Duet Search",
+      "歌った回数ランキング": "Singing Frequency Ranking",
+      "アクセス": "Access",
+      "店内写真": "Shop Photo",
+      "団体利用": "Group Use",
+      "問い合わせ": "Contact",
+      "お店の特徴": "Features",
+      "当店の楽器を使用できます": "Use Our Instruments",
+      "生演奏も弾き語りもOK": "Live Playing and Singing Are Welcome",
+      "DAM通信カラオケと音響": "DAM Karaoke and Sound System",
+      "連絡先": "Contact",
+      "お名前": "Name",
+      "内容": "Message",
+      "メールを作成": "Create Email",
+      "元に戻す": "Undo",
+      "今日飲んだものを選んでください。": "Choose what you drank today.",
+      "次に歌う曲を選曲中...": "Choosing your next song...",
+      "出ました！": "Here it is!",
+      "当日限り": "Valid today only",
+      "結果発表": "Result",
+      "結果を表示します。": "Your result will appear here.",
+      "端末保存コード": "Device save code",
+      "曲名": "Song Title",
+      "歌手名": "Artist",
+      "キー": "Key",
+      "メモ": "Memo",
+      "操作": "Actions",
+      "未設定": "Not set",
+      "次回": "Next",
+      "次回解除": "Remove Next",
+      "記録": "Log",
+      "削除": "Delete",
+      "まだ登録がありません": "No songs yet",
+      "よく歌うランキング": "Frequently Sung Ranking",
+      "デュエット": "Duet",
+      "アニソン": "Anime Song",
+      "洋楽": "Western",
+      "ロック": "Rock",
+      "バラード": "Ballad",
+      "昭和歌謡": "Showa Pop",
+      "演歌": "Enka",
+      "十八番": "Favorite",
+      "練習中": "Practicing",
+      "盛り上がる": "Crowd Pleaser",
+      "しっとり": "Mellow"
+    };
+
+    const phraseTranslations = [
+      ["ご来店ありがとうございます♪", "Thank you for visiting♪"],
+      ["本日もお楽しみください♪", "Enjoy your time today♪"],
+      ["DRUMの情報も、曲リストも", "DRUM info and your song list"],
+      ["このアプリで。", "in this app."],
+      ["Music Saloon DRUMのお知らせやメニュー確認と、自分の曲リストの管理に使えるアプリです。テーブルのQRコードから開いて、そのまま曲リストを管理できます。", "Use this app to check Music Saloon DRUM notices and menus, and manage your own song list. Open it from the table QR code and manage your list right away."],
+      ["ご来店中に確認していただきたいお知らせや、SNSへのリンクをまとめています。", "Notices to check during your visit and links to our social media."],
+      ["イベント情報や店内の様子はInstagramでもご案内できます。", "You can also see event information and shop updates on Instagram."],
+      ["飲み物、飲み放題、ボトル、フードを用途別に確認できます。", "Check drinks, all-you-can-drink plans, bottles, and food by category."],
+      ["飲み物を先に見たい方、飲み放題プランを確認したい方、それぞれすぐ移動できます。", "Jump straight to drinks, all-you-can-drink plans, or other menu sections."],
+      ["ご来店から90分。焼酎、ウイスキーの割りもの、ソフトドリンクが飲み放題。サワーはレモン・グレープフルーツが対象です。", "90 minutes from arrival. Includes shochu, whisky mixers, and soft drinks. Sours include lemon and grapefruit."],
+      ["スタンダードプランに加えて、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。", "Includes the Standard Plan plus plum wine, sweet potato shochu, barley shochu, and additional sours."],
+      ["スタンダード・スーパープランに加えて、生ビール、ワイン（赤・白）も対象です。", "Includes the Standard and Super Plans plus draft beer and wine (red & white)."],
+      ["スタンダードのサワーは、レモン・グレープフルーツのみ対象です。", "Standard Plan sours are lemon and grapefruit only."],
+      ["レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。", "Sours other than lemon and grapefruit are included from the Super Plan."],
+      ["22時半以降のご来店でも料金は同じです。営業は0時までのため、飲み放題ご利用のお客様はお早目のご来店をおすすめします。", "The price is the same even after 10:30 PM. Since we close at midnight, we recommend arriving early for all-you-can-drink."],
+      ["焼酎・ウイスキーの割りもの、ソフトドリンク、対象サワーが飲めます。", "Includes shochu and whisky mixers, soft drinks, and selected sours."],
+      ["スタンダード対象メニューに追加で楽しめます。", "Additional items on top of the Standard menu."],
+      ["スタンダード・スーパー対象メニューに追加", "Additional items on top of Standard and Super menus."],
+      ["楽器使用料は無料です。セット料金にはアイス・ミネラル・緑茶・ウーロン茶などが含まれます。", "Instrument use is free. Set fee includes ice, mineral water, green tea, oolong tea, and more."],
+      ["ご来店中のお楽しみ。ドリンクまたはおつまみサービスが出るかもしれません。", "A little fun during your visit. You might win a drink or snack service."],
+      ["サービスの有効期限は、表示された当日限りです。", "Prize results are valid only on the day shown."],
+      ["自分の歌いたい曲、キー、メモを保存できます。歌手名・曲名で検索できます。", "Save songs you want to sing, keys, and notes. Search by artist or song title."],
+      ["歌いたい曲名・歌手名・キーを入力して保存できます。", "Enter a song title, artist, and key, then save it."],
+      ["曲リストに保存した曲から、次に歌う曲をおすすめします。", "Choose a recommended next song from your saved song list."],
+      ["その日に歌った曲を日記のように残せます。日付を選ぶと、いつ何を歌ったか確認できます。", "Keep a diary-like record of songs you sang. Choose a date to see what you sang."],
+      ["ご来店中のドリンクや、ちょっとしたメモを残せます。健康管理や飲みすぎ防止が気になる方にも使えます。", "Log drinks and small notes during your visit. Useful for people who want to keep an eye on drinking."],
+      ["使う人に合わせて、曲リストの表示や記録機能を切り替えられます。", "Adjust song list display and logging features to suit your use."],
+      ["営業時間やアクセスなど、必要なときに確認できます。", "Check hours, access, and shop information when needed."],
+      ["必要なときにだけ確認できる、DRUMの楽しみ方です。", "A quick guide to enjoying DRUM whenever you need it."],
+      ["電話またはメールでお問い合わせください。フォームからはメールアプリが開きます。", "Contact us by phone or email. The form opens your email app."],
+      ["送信ボタンを押すと、お使いのメールアプリが開きます。", "Press the send button to open your email app."],
+      ["サービス表示は当日限り有効です。この画面をスタッフにお見せください。", "Prize screens are valid only today. Please show this screen to staff."],
+      ["歌手名・曲名・タグ・メモで検索", "Search artist, song, tag, or memo"],
+      ["ここに復元用JSONを書き出します", "Backup JSON will appear here"],
+      ["保存しておいたJSONを貼り付け", "Paste saved JSON here"],
+      ["ここに曲リストを書き出します", "Song list export will appear here"],
+      ["曲名、歌手名、キーの順で貼り付け", "Paste song title, artist, and key"],
+      ["例：いとしのエリー", "Ex: Itoshi no Ellie"],
+      ["例：サザンオールスターズ", "Ex: Southern All Stars"],
+      ["例：サビ前から入る。次に歌いたい曲。", "Ex: Start before the chorus. Sing next time."],
+      ["例：今日は高めのキーが調子よかった。次回来たらこの曲を歌いたい。", "Ex: Higher keys felt good today. Sing this song next time."],
+      ["例：懐メロ、十八番、練習中", "Ex: Classics, favorite, practicing"],
+      ["例：桑田佳祐", "Ex: Keisuke Kuwata"],
+      ["電話番号またはメールアドレス", "Phone number or email address"],
+      ["予約、貸切、メニューについてなど", "Reservation, private event, menu questions, etc."],
+      ["男性", "Men"],
+      ["女性", "Women"],
+      ["円", " yen"],
+      ["平日", "Weekdays"],
+      ["土曜", "Saturday"],
+      ["日曜", "Sunday"],
+      ["曲", " songs"],
+      ["件", " items"],
+      ["杯", " drinks"],
+      ["回歌唱", " times sung"],
+      ["最終:", "Last:"]
+    ];
 
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
     let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
@@ -2493,6 +2825,101 @@
       }[char]));
     }
 
+    function translateString(value) {
+      const source = String(value || "");
+      const trimmed = source.trim();
+      if (!trimmed) return source;
+
+      if (exactTranslations[trimmed]) {
+        return source.replace(trimmed, exactTranslations[trimmed]);
+      }
+
+      let translated = trimmed;
+      phraseTranslations
+        .slice()
+        .sort((a, b) => b[0].length - a[0].length)
+        .forEach(([from, to]) => {
+          translated = translated.split(from).join(to);
+        });
+
+      translated = translated
+        .replace(/(\d+)件/g, "$1 items")
+        .replace(/(\d+)曲/g, "$1 songs")
+        .replace(/(\d+)杯/g, "$1 drinks")
+        .replace(/(\d+)回歌唱/g, "$1 times sung")
+        .replace(/男性\s*([0-9,]+)円/g, "Men $1 yen")
+        .replace(/女性\s*([0-9,]+)円/g, "Women $1 yen")
+        .replace(/([0-9,]+)円/g, "$1 yen")
+        .replace(/平日\s*([0-9.]+)%/g, "Weekdays $1%")
+        .replace(/土曜\s*([0-9.]+)%/g, "Saturday $1%")
+        .replace(/日曜\s*([0-9.]+)%/g, "Sunday $1%");
+
+      return source.replace(trimmed, translated);
+    }
+
+    function rememberAttributeOriginal(element, attributeName) {
+      let stored = attrOriginals.get(element);
+      if (!stored) {
+        stored = {};
+        attrOriginals.set(element, stored);
+      }
+      if (!stored[attributeName]) stored[attributeName] = element.getAttribute(attributeName);
+      return stored[attributeName];
+    }
+
+    function updateLanguageButton() {
+      if (!languageToggle) return;
+      languageToggle.textContent = currentLanguage === "en" ? "日本語" : "English";
+      languageToggle.setAttribute("aria-label", currentLanguage === "en" ? "日本語表示に切り替え" : "英語表示に切り替え");
+    }
+
+    function applyLanguage() {
+      if (isApplyingLanguage) return;
+      isApplyingLanguage = true;
+      document.documentElement.lang = currentLanguage === "en" ? "en" : "ja";
+
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent) return NodeFilter.FILTER_REJECT;
+          if (["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
+          if (parent.closest("#languageToggle")) return NodeFilter.FILTER_REJECT;
+          if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      const textNodes = [];
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+      textNodes.forEach((node) => {
+        if (!textOriginals.has(node)) textOriginals.set(node, node.nodeValue);
+        const original = textOriginals.get(node);
+        node.nodeValue = currentLanguage === "en" ? translateString(original) : original;
+      });
+
+      document.querySelectorAll("[placeholder], [aria-label], [data-label], option").forEach((element) => {
+        ["placeholder", "aria-label", "data-label"].forEach((attributeName) => {
+          if (!element.hasAttribute(attributeName)) return;
+          const original = rememberAttributeOriginal(element, attributeName);
+          element.setAttribute(attributeName, currentLanguage === "en" ? translateString(original) : original);
+        });
+      });
+
+      document.querySelectorAll("option").forEach((option) => {
+        if (!textOriginals.has(option)) textOriginals.set(option, option.textContent);
+        const original = textOriginals.get(option);
+        option.textContent = currentLanguage === "en" ? translateString(original) : original;
+      });
+
+      updateLanguageButton();
+      isApplyingLanguage = false;
+    }
+
+    function refreshLanguageSoon() {
+      if (currentLanguage !== "en") return;
+      window.requestAnimationFrame(applyLanguage);
+    }
+
     function highlightText(value, query) {
       const text = String(value || "");
       const keyword = String(query || "").trim();
@@ -2578,8 +3005,51 @@
       drumGachaModal.setAttribute("aria-hidden", "false");
     }
 
+    const menuPageMap = {
+      "menu-drinks": "regularMenu",
+      "menu-plans": "menuPlans",
+      "menu-free-drinks": "freeDrinkMenu",
+      "menu-charge-food": "chargeFoodMenu"
+    };
+
+    const menuPageHashes = Object.fromEntries(
+      Object.entries(menuPageMap).map(([hash, pageId]) => [pageId, hash])
+    );
+
+    function clearMenuSubpage() {
+      document.body.classList.remove("menu-subview");
+      document.querySelectorAll("#menu .menu-page").forEach((page) => {
+        page.classList.remove("active-menu-page", "menu-charge-only");
+      });
+      if (regularMenuHeading) regularMenuHeading.textContent = "通常ドリンク・ボトル";
+    }
+
+    function showMenuSubpage(pageId, shouldUpdateHash = true) {
+      const resolvedPageId = pageId === "chargeFoodMenu" ? "regularMenu" : pageId;
+      const page = document.getElementById(resolvedPageId);
+      if (!page) return;
+
+      document.body.classList.add("menu-subview");
+      document.querySelectorAll("#menu .menu-page").forEach((item) => {
+        item.classList.toggle("active-menu-page", item.id === resolvedPageId);
+        item.classList.remove("menu-charge-only");
+      });
+
+      if (pageId === "chargeFoodMenu") {
+        page.classList.add("menu-charge-only");
+        if (regularMenuHeading) regularMenuHeading.textContent = "チャージ・フード";
+      } else if (regularMenuHeading) {
+        regularMenuHeading.textContent = "通常ドリンク・ボトル";
+      }
+
+      if (shouldUpdateHash) history.pushState(null, "", `#${menuPageHashes[pageId] || "menu-drinks"}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      refreshLanguageSoon();
+    }
+
     function showView(targetId, shouldUpdateHash = true) {
-      const viewId = targetId || "top";
+      const menuPageId = menuPageMap[targetId];
+      const viewId = menuPageId ? "menu" : (targetId || "top");
       const target = document.getElementById(viewId);
       if (!target || target.tagName.toLowerCase() !== "section") return;
 
@@ -2592,8 +3062,13 @@
       });
 
       if (viewId === "info") renderNewsImages();
-      if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (viewId === "menu" && menuPageId) {
+        showMenuSubpage(menuPageId, false);
+      } else {
+        clearMenuSubpage();
+        if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
     }
 
     function renderNewsImages() {
@@ -3423,6 +3898,22 @@
       if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
     });
 
+    languageToggle.addEventListener("click", () => {
+      currentLanguage = currentLanguage === "en" ? "ja" : "en";
+      localStorage.setItem(languageStorageKey, currentLanguage);
+      applyLanguage();
+    });
+
+    const languageObserver = new MutationObserver(() => {
+      refreshLanguageSoon();
+    });
+
+    languageObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
+
     addTagButton.addEventListener("click", addTag);
 
     newTagName.addEventListener("keydown", (event) => {
@@ -3487,10 +3978,21 @@
       updateDailyMemoStatus("保存しました。");
     });
 
+    document.querySelectorAll("[data-menu-page]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showMenuSubpage(button.dataset.menuPage);
+      });
+    });
+
+    menuBackButton.addEventListener("click", () => {
+      history.replaceState(null, "", "#menu");
+      showView("menu", false);
+    });
+
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener("click", (event) => {
         const viewId = link.getAttribute("href").slice(1) || "top";
-        if (!document.getElementById(viewId)) return;
+        if (!document.getElementById(viewId) && !menuPageMap[viewId]) return;
         event.preventDefault();
         showView(viewId);
       });
@@ -3525,6 +4027,7 @@
     renderSongs();
     renderHistory();
     showView(location.hash.replace("#", "") || "top", false);
+    applyLanguage();
   </script>
 </body>
 </html>
