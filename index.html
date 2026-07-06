@@ -861,8 +861,15 @@
     }
 
     .action-cell {
-      width: 88px;
-      white-space: nowrap;
+      width: 190px;
+      white-space: normal;
+    }
+
+    .action-cell .btn {
+      min-height: 38px;
+      margin: 2px;
+      padding: 7px 10px;
+      font-size: 13px;
     }
 
     .song-groups {
@@ -946,6 +953,28 @@
       font-weight: 700;
       white-space: normal;
       overflow-wrap: anywhere;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mini-list li {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      color: #2e251d;
+      font-weight: 800;
+    }
+
+    .mini-list .empty {
+      padding: 12px;
+      text-align: left;
     }
 
     .contact-grid {
@@ -1327,6 +1356,15 @@
             <p class="news-empty" id="newsEmpty">写真のお知らせはまだありません。</p>
           </article>
           <article class="card">
+            <span class="tag">Karaoke</span>
+            <h3>カラオケ予約のお願い</h3>
+            <ul class="mini-list">
+              <li>歌い終わったあとに、次の1曲をご予約ください。</li>
+              <li>混雑時は順番を調整する場合があります。</li>
+              <li>順番の入れ替えが必要な時は、スタッフが対応いたします。</li>
+            </ul>
+          </article>
+          <article class="card">
             <span class="tag green">Instagram</span>
             <h3>Instagram</h3>
             <p>イベント情報や店内の様子はInstagramでもご案内できます。</p>
@@ -1568,6 +1606,13 @@
             </div>
           </div>
 
+          <div class="card song-tool-card">
+            <span class="tag green">Next</span>
+            <h3>次回歌いたい曲</h3>
+            <p class="small">曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。</p>
+            <ul class="mini-list" id="nextSongList"></ul>
+          </div>
+
           <details class="card song-tool-card" id="songBackupPanel">
             <summary><strong>バックアップ・コピペ用</strong></summary>
             <p class="small">JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。</p>
@@ -1647,7 +1692,7 @@
                 デュエット曲として登録
               </label>
               <div>
-                <div class="small">ジャンルタグ</div>
+                <div class="small">タグ</div>
                 <div class="tag-options" id="songTagOptions"></div>
               </div>
               <label class="memo-field">
@@ -1758,6 +1803,12 @@
           </div>
         </div>
         <div class="grid">
+          <article class="card">
+            <span class="tag">Set List</span>
+            <h3>今日のセットリスト</h3>
+            <p class="small">曲リストで「記録」を押した曲が、今日のセットリストとして残ります。</p>
+            <ul class="mini-list" id="todaySetlist"></ul>
+          </article>
           <article class="card drink-section" id="drinkSection">
             <span class="tag blue">Drink Log</span>
             <h3>ドリンク記録</h3>
@@ -1768,10 +1819,10 @@
           </article>
           <article class="card">
             <span class="tag green">Memo</span>
-            <h3>今日のメモ</h3>
+            <h3>来店メモ</h3>
             <label>
               メモ
-              <textarea id="dailyMemo" placeholder="例：今日は高めのキーが調子よかった。次はこの曲を歌いたい。"></textarea>
+              <textarea id="dailyMemo" placeholder="例：今日は高めのキーが調子よかった。次回来たらこの曲を歌いたい。"></textarea>
             </label>
             <p class="small" id="dailyMemoStatus">この端末のブラウザ内に保存されます。</p>
           </article>
@@ -1807,9 +1858,9 @@
             </label>
             <div class="tag-manager">
               <h3>タグ設定</h3>
-              <p class="small">曲登録で使うタグを自由に追加・削除できます。</p>
+              <p class="small">ジャンルだけでなく、十八番・練習中・盛り上がる曲など、自分用の印も追加できます。</p>
               <div class="control-row">
-                <input id="newTagName" placeholder="例：懐メロ">
+                <input id="newTagName" placeholder="例：懐メロ、十八番、練習中">
                 <button class="btn primary" id="addTagButton" type="button">タグを追加</button>
               </div>
               <div class="tag-manager-list" id="tagManagerList"></div>
@@ -2092,6 +2143,7 @@
     const songKeyBase = document.getElementById("songKeyBase");
     const songKeyAdjust = document.getElementById("songKeyAdjust");
     const list = document.getElementById("songList");
+    const nextSongList = document.getElementById("nextSongList");
     const searchBox = document.getElementById("searchBox");
     const countText = document.getElementById("countText");
     const clearAll = document.getElementById("clearAll");
@@ -2141,6 +2193,7 @@
     const drumGachaVerifyCode = document.getElementById("drumGachaVerifyCode");
     const historyDate = document.getElementById("historyDate");
     const historyList = document.getElementById("historyList");
+    const todaySetlist = document.getElementById("todaySetlist");
     const todaySongCount = document.getElementById("todaySongCount");
     const clearHistory = document.getElementById("clearHistory");
     const settingMemo = document.getElementById("settingMemo");
@@ -2183,7 +2236,7 @@
       { label: "その他", chars: "" }
     ];
 
-    const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌"];
+    const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌", "十八番", "練習中", "盛り上がる", "しっとり"];
 
     let songs = JSON.parse(localStorage.getItem(storageKey) || "[]");
     let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
@@ -2192,6 +2245,14 @@
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false}');
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
+    let didAddDefaultTags = false;
+    defaultGenreTags.forEach((tagName) => {
+      if (!genreTags.includes(tagName)) {
+        genreTags.push(tagName);
+        didAddDefaultTags = true;
+      }
+    });
+    if (didAddDefaultTags) localStorage.setItem(tagStorageKey, JSON.stringify(genreTags));
     let undoTimer = null;
     let undoAction = null;
     let newsRenderRun = 0;
@@ -2262,7 +2323,7 @@
       const data = JSON.parse(text);
       const backupSongs = Array.isArray(data) ? data : data.songs;
       if (!Array.isArray(backupSongs)) throw new Error("songs not found");
-      return backupSongs
+      const parsedSongs = backupSongs
         .map((item) => ({
           id: item.id || createId(),
           title: String(item.title || "").trim(),
@@ -2270,10 +2331,15 @@
           key: String(item.key || "").trim(),
           memo: String(item.memo || "").trim(),
           duet: Boolean(item.duet),
+          nextWish: Boolean(item.nextWish),
           tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
           createdAt: item.createdAt || new Date().toISOString()
         }))
         .filter((item) => item.title);
+      return {
+        songs: parsedSongs,
+        genreTags: Array.isArray(data.genreTags) ? data.genreTags.map(String) : []
+      };
     }
 
     function jsonBackupFilename() {
@@ -2329,6 +2395,7 @@
             artist: (parts[1] || "").trim(),
             key: (parts[2] || "").trim(),
             memo: "",
+            nextWish: false,
             tags: []
           };
         })
@@ -2567,6 +2634,30 @@
       input.focus();
     }
 
+    function renderNextSongs() {
+      const nextItems = songs.filter((item) => item.nextWish);
+      nextSongList.innerHTML = nextItems.length
+        ? nextItems.slice(0, 8).map((item) => `
+          <li>
+            <strong>${escapeText(item.title)}</strong>
+            <div class="favorite-meta">${escapeText(item.artist || "-")}${item.key ? ` / ${escapeText(item.key)}` : ""}</div>
+          </li>
+        `).join("")
+        : `<li class="empty">次回歌いたい曲はまだありません。</li>`;
+    }
+
+    function renderTodaySetlist() {
+      const todayItems = songHistory.filter((item) => item.date === todayString());
+      todaySetlist.innerHTML = todayItems.length
+        ? todayItems.map((item) => `
+          <li>
+            <strong>${escapeText(item.title)}</strong>
+            <div class="favorite-meta">${escapeText(item.artist || "-")}${item.key ? ` / ${escapeText(item.key)}` : ""}</div>
+          </li>
+        `).join("")
+        : `<li class="empty">今日のセットリストはまだありません。</li>`;
+    }
+
     function renderHistory() {
       const selectedDate = historyDate.value || todayString();
       const selectedItems = songHistory.filter((item) => item.date === selectedDate);
@@ -2587,6 +2678,7 @@
       }
 
       renderDrinks();
+      renderTodaySetlist();
     }
 
     function renderDrinks() {
@@ -2626,6 +2718,7 @@
     function recordSong(id) {
       const item = songs.find((song) => song.id === id);
       if (!item) return;
+      const wasNextWish = Boolean(item.nextWish);
       songHistory.unshift({
         id: createId(),
         sourceId: item.id,
@@ -2638,14 +2731,24 @@
         tags: getSongTags(item),
         createdAt: new Date().toISOString()
       });
+      if (item.nextWish) {
+        item.nextWish = false;
+        saveSongs();
+      }
       saveHistory();
       renderHistory();
       renderFavorites();
+      renderSongs();
       showUndo(`${itemLabel(item)}を今日の記録に追加しました`, () => {
         songHistory.shift();
+        if (wasNextWish) {
+          item.nextWish = true;
+          saveSongs();
+        }
         saveHistory();
         renderHistory();
         renderFavorites();
+        renderSongs();
       });
     }
 
@@ -2734,6 +2837,19 @@
       renderSongs();
       showUndo(`${itemLabel(item)}を削除しました`, () => {
         songs.splice(index, 0, item);
+        saveSongs();
+        renderSongs();
+      });
+    }
+
+    function toggleNextWish(id) {
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      item.nextWish = !item.nextWish;
+      saveSongs();
+      renderSongs();
+      showUndo(item.nextWish ? `${itemLabel(item)}を次回歌いたい曲に追加しました` : `${itemLabel(item)}を次回候補から外しました`, () => {
+        item.nextWish = !item.nextWish;
         saveSongs();
         renderSongs();
       });
@@ -2844,6 +2960,7 @@
 
       if (!filtered.length) {
         list.innerHTML = `<tr><td class="empty" colspan="5">まだ登録がありません</td></tr>`;
+        renderNextSongs();
         return;
       }
 
@@ -2857,11 +2974,13 @@
           <td data-label="キー"><span class="status">${highlightText(item.key || "未設定", query)}</span></td>
           <td class="memo-cell" data-label="メモ">${highlightText(item.memo || "-", query)}</td>
           <td class="action-cell" data-label="操作">
+            <button class="btn ghost" type="button" data-next="${item.id}">${item.nextWish ? "次回解除" : "次回"}</button>
             <button class="btn primary" type="button" data-record="${item.id}">記録</button>
             <button class="btn ghost" type="button" data-delete="${item.id}">削除</button>
           </td>
         </tr>
       `).join("");
+      renderNextSongs();
     }
 
     function renderDrinkButtons() {
@@ -2881,6 +3000,7 @@
         key: getSongKeyLabel(),
         memo: settings.showMemo ? document.getElementById("memo").value.trim() : "",
         duet: selectedSongTags().includes("デュエット"),
+        nextWish: false,
         tags: selectedSongTags(),
         createdAt: new Date().toISOString()
       });
@@ -2891,6 +3011,11 @@
     });
 
     list.addEventListener("click", (event) => {
+      const nextButton = event.target.closest("[data-next]");
+      if (nextButton) {
+        toggleNextWish(nextButton.dataset.next);
+        return;
+      }
       const recordButton = event.target.closest("[data-record]");
       if (recordButton) {
         recordSong(recordButton.dataset.record);
@@ -2941,8 +3066,11 @@
 
     restoreJsonButton.addEventListener("click", () => {
       let restoredSongs = [];
+      let restoredTags = [];
       try {
-        restoredSongs = parseSongJsonBackup(songJsonRestoreText.value);
+        const restored = parseSongJsonBackup(songJsonRestoreText.value);
+        restoredSongs = restored.songs;
+        restoredTags = restored.genreTags;
       } catch (error) {
         alert("JSONを読み込めませんでした。保存したJSONをそのまま貼り付けてください。");
         return;
@@ -2953,6 +3081,12 @@
       }
       if (!confirm(`現在の曲リストを、JSON内の${restoredSongs.length}曲に置き換えますか？`)) return;
       songs = restoredSongs;
+      if (restoredTags.length) {
+        genreTags = [...new Set([...restoredTags, ...defaultGenreTags])];
+        saveTags();
+        renderTagOptions();
+        renderTagManager();
+      }
       saveSongs();
       renderSongs();
       songJsonRestoreText.value = "";
