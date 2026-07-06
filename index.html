@@ -420,6 +420,25 @@
       font-weight: 700;
     }
 
+    .menu-detail {
+      margin-top: 14px;
+      border: 1px solid rgba(20, 63, 44, .14);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, .78);
+      overflow: hidden;
+    }
+
+    .menu-detail summary {
+      padding: 10px 12px;
+      color: var(--forest);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .menu-detail .menu-list {
+      padding: 0 12px 12px;
+    }
+
     #menu .card > .menu-note {
       color: var(--muted);
       font-size: 14px;
@@ -1404,18 +1423,46 @@
               <p>ご来店から90分。焼酎、ウイスキーの割りもの、ソフトドリンクが飲み放題。サワーはレモン・グレープフルーツが対象です。</p>
               <p class="price">男性 3,500円<br>女性 2,500円</p>
               <p class="menu-note">延長1時間 1名様につき1,000円</p>
+              <details class="menu-detail">
+                <summary>飲めるメニューを見る</summary>
+                <ul class="menu-list">
+                  <li><span>焼酎・ウイスキー</span><span>ロック／水割り／お湯割り</span></li>
+                  <li><span>割りもの</span><span>水／お湯／緑茶／ウーロン茶／ジャスミン茶／紅茶（無糖）／麦茶／炭酸水</span></li>
+                  <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶</span></li>
+                  <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
+                </ul>
+                <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
+              </details>
             </article>
             <article class="card">
               <span class="tag green">Super</span>
               <h3>スーパープラン</h3>
               <p>スタンダードプランに加えて、カルピス、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。</p>
               <p class="price">男性 4,000円<br>女性 3,000円</p>
+              <details class="menu-detail">
+                <summary>追加メニューを見る</summary>
+                <ul class="menu-list">
+                  <li><span>スタンダード対象</span><span>スタンダードプランの飲み放題メニューすべて</span></li>
+                  <li><span>追加ドリンク</span><span>カルピス／梅酒／芋焼酎／麦焼酎</span></li>
+                  <li><span>GINON</span><span>レモンサワー／グレープフルーツサワー</span></li>
+                  <li><span>追加サワー</span><span>男梅／カルピス／巨峰／ライチ／桃／梅</span></li>
+                </ul>
+                <p class="menu-note">レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。</p>
+              </details>
             </article>
             <article class="card">
               <span class="tag purple">Premium</span>
               <h3>プレミアムプラン</h3>
               <p>スタンダード・スーパープランに加えて、生ビール、ワイン（赤・白）も対象です。</p>
               <p class="price">男性 5,000円<br>女性 4,000円</p>
+              <details class="menu-detail">
+                <summary>追加メニューを見る</summary>
+                <ul class="menu-list">
+                  <li><span>スタンダード対象</span><span>スタンダードプランの飲み放題メニューすべて</span></li>
+                  <li><span>スーパー対象</span><span>スーパープランの追加メニューすべて</span></li>
+                  <li><span>追加ドリンク</span><span>生ビール／ワイン（赤・白）</span></li>
+                </ul>
+              </details>
             </article>
           </div>
           <p class="menu-note">22時半以降のご来店でも料金は同じです。営業は0時までのため、飲み放題ご利用のお客様はお早目のご来店をおすすめします。</p>
@@ -1429,9 +1476,9 @@
               <h3>スタンダード</h3>
               <p>焼酎・ウイスキーの割りもの、ソフトドリンク、対象サワーが飲めます。</p>
               <ul class="menu-list">
-                <li><span>焼酎・ウイスキー</span><span>ロック／水／お湯</span></li>
-                <li><span>割りもの</span><span>炭酸水／緑茶／ウーロン茶／紅茶（無糖）</span></li>
-                <li><span>ソフトドリンク</span><span>コーラ（ZERO）／ジンジャーエール／緑茶／ウーロン茶／麦茶／紅茶（無糖）／ジャスミン茶</span></li>
+                <li><span>焼酎・ウイスキー</span><span>ロック／水割り／お湯割り</span></li>
+                <li><span>割りもの</span><span>水／お湯／緑茶／ウーロン茶／ジャスミン茶／紅茶（無糖）／麦茶／炭酸水</span></li>
+                <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶</span></li>
                 <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
               </ul>
               <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
@@ -1509,7 +1556,7 @@
             <span class="tag blue">Soft Drink</span>
             <h3>ソフトドリンク</h3>
             <p class="price">各 500円</p>
-            <p>ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、コーヒー、ジンジャーエール</p>
+            <p>ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、ジンジャーエール</p>
           </article>
           <article class="card">
             <span class="tag green">Charge</span>
@@ -2269,8 +2316,7 @@
       "グラスワイン",
       "ウーロン茶",
       "コーラ（ZERO）",
-      "ジンジャーエール",
-      "コーヒー"
+      "ジンジャーエール"
     ];
 
     function saveSongs() {
