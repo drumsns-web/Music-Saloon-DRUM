@@ -1854,6 +1854,7 @@
             <span class="tag">Lucky</span>
             <h3>本日の運だめし</h3>
             <p>1端末につき1日1回まで回せます。サービス表示が出た場合は、当日中にその画面をスタッフにお見せください。</p>
+            <p class="menu-note">曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。</p>
             <button class="btn primary" id="drumGachaButton" type="button">DRUMガチャを回す</button>
             <p class="menu-note" id="drumGachaRate">平日 3% / 土曜 1% / 日曜 0%</p>
           </article>
@@ -1959,7 +1960,8 @@
               </div>
               <div>
                 <label for="songImportText">テキスト読み込み</label>
-                <textarea id="songImportText" placeholder="曲名、歌手名、キーの順で貼り付け"></textarea>
+                <p class="small">1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみを入れる場合は4つ目に入れてください。</p>
+                <textarea id="songImportText" placeholder="例：海　サザンオールスターズ　原曲キー　うみ さざん"></textarea>
                 <div class="control-row">
                   <button class="btn ghost" id="importSongsButton" type="button">貼り付けた曲を読み込む</button>
                 </div>
@@ -1981,6 +1983,10 @@
               <label>
                 歌手名 <span class="optional-label">任意</span>
                 <input id="artistName" placeholder="例：サザンオールスターズ">
+              </label>
+              <label>
+                検索用よみ <span class="optional-label">任意</span>
+                <input id="songKana" placeholder="例：さざんおーるすたーず いとしのえりー">
               </label>
               <label>
                 キーの基準 <span class="optional-label">任意</span>
@@ -2689,6 +2695,7 @@
       "スーパーニッカ": "Super Nikka",
       "DRUMガチャを回す": "Try DRUM Gacha",
       "本日の運だめし": "Today's Luck Try",
+      "曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。": "As your song list grows, today's service chance rises a little.",
       "本日のDRUMガチャはお休みです": "DRUM Gacha is closed today",
       "本日は確認済み": "Already Checked Today",
       "今日はお休み": "Closed Today",
@@ -2790,6 +2797,7 @@
       "基準未設定": "Base not set",
       "キーの基準": "Key base",
       "キー調整": "Key adjustment",
+      "検索用よみ": "Search reading",
       "タグ": "Tags",
       "任意": "Optional",
       "曲リストにメモ欄を表示する": "Show memo field in song list",
@@ -2862,6 +2870,7 @@
       ["曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved in this device's browser. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
       ["曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。", "Use the “Next” button in the song list to save songs you want to sing next time."],
       ["JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。", "JSON can restore song titles, artists, keys, tags, notes, and more. Text export is useful for pasting into notes or LINE for checking."],
+      ["1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみを入れる場合は4つ目に入れてください。", "Paste one song per line. Example: Umi Southern All Stars Original key. You can also register only the song title. If you add a search reading, put it fourth."],
       ["JSONバックアップ", "JSON Backup"],
       ["JSON読み込み", "JSON Import"],
       ["コピペ用テキスト", "Copy/Paste Text"],
@@ -2998,6 +3007,7 @@
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
+      updateDrumGachaRateLabel();
     }
 
     function updateKeyAdjustLabel() {
@@ -3023,11 +3033,12 @@
     }
 
     function createSongExportText() {
-      const header = "曲名\t歌手名\tキー";
+      const header = "曲名\t歌手名\tキー\t検索用よみ";
       const rows = songs.map((item) => [
         item.title || "",
         item.artist || "",
-        item.key || ""
+        item.key || "",
+        item.kana || ""
       ].join("\t"));
       return [header, ...rows].join("\n");
     }
@@ -3052,6 +3063,7 @@
           id: item.id || createId(),
           title: String(item.title || "").trim(),
           artist: String(item.artist || "").trim(),
+          kana: String(item.kana || "").trim(),
           key: String(item.key || "").trim(),
           memo: String(item.memo || "").trim(),
           duet: Boolean(item.duet),
@@ -3110,7 +3122,9 @@
         .filter(Boolean)
         .filter((line, index) => !(index === 0 && line.includes("曲名") && line.includes("歌手名")))
         .map((line) => {
-          const parts = line.includes("\t") ? line.split("\t") : line.split(/,|、/);
+          const parts = line.includes("\t")
+            ? line.split("\t")
+            : (/[／/,、]/.test(line) ? line.split(/\s*[/／,、]\s*/) : line.split(/\s+/));
           const title = (parts[0] || "").trim();
           if (!title) return null;
           return {
@@ -3118,6 +3132,7 @@
             title,
             artist: (parts[1] || "").trim(),
             key: (parts[2] || "").trim(),
+            kana: (parts[3] || "").trim(),
             memo: "",
             nextWish: false,
             tags: []
@@ -3283,7 +3298,7 @@
       renderFavorites();
       renderSongs();
       renderHistory();
-      drumGachaRate.textContent = drumGachaRateLabel(drumGachaRateForToday());
+      updateDrumGachaRateLabel();
     }
 
     function refreshLanguageSoon() {
@@ -3323,6 +3338,10 @@
         .trim()
         .toLowerCase()
         .replace(/[ァ-ン]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 96));
+    }
+
+    function songSearchText(item) {
+      return [item.title, item.artist, item.kana, item.key, item.memo, ...getSongTags(item)].join(" ");
     }
 
     function getKanaGroup(item) {
@@ -3367,15 +3386,39 @@
     function drumGachaRateForToday() {
       const day = new Date().getDay();
       if (day === 0) return 0;
-      if (day === 6) return 0.01;
-      return 0.03;
+      const baseRate = day === 6 ? 0.01 : 0.03;
+      const maxRate = day === 6 ? 0.02 : 0.04;
+      return Math.min(baseRate + drumGachaSongBonus(), maxRate);
+    }
+
+    function drumGachaSongBonus() {
+      const count = songs.length;
+      if (count >= 50) return 0.01;
+      if (count >= 30) return 0.007;
+      if (count >= 15) return 0.005;
+      if (count >= 5) return 0.002;
+      return 0;
+    }
+
+    function formatRatePercent(rate) {
+      const value = rate * 100;
+      return Number.isInteger(value) ? String(value) : value.toFixed(1);
     }
 
     function drumGachaRateLabel(rate) {
       if (rate === 0) return uiText("本日のDRUMガチャはお休みです");
+      const bonus = drumGachaSongBonus();
+      const bonusText = bonus > 0
+        ? (currentLanguage === "en" ? ` (song-list bonus +${formatRatePercent(bonus)}%)` : `（曲リストボーナス +${formatRatePercent(bonus)}%）`)
+        : "";
       return currentLanguage === "en"
-        ? `Today's service chance: ${Math.round(rate * 100)}%`
-        : `本日のサービス確率: ${Math.round(rate * 100)}%`;
+        ? `Today's service chance: ${formatRatePercent(rate)}%${bonusText}`
+        : `本日のサービス確率: ${formatRatePercent(rate)}%${bonusText}`;
+    }
+
+    function updateDrumGachaRateLabel() {
+      if (!drumGachaRate) return;
+      drumGachaRate.textContent = drumGachaRateLabel(drumGachaRateForToday());
     }
 
     function getBrowserMark() {
@@ -3685,6 +3728,7 @@
         date: todayString(),
         title: item.title,
         artist: item.artist,
+        kana: item.kana || "",
         key: item.key,
         memo: item.memo,
         duet: Boolean(item.duet),
@@ -3859,6 +3903,7 @@
           result[key] = {
             title: item.title,
             artist: item.artist,
+            kana: item.kana || "",
             key: item.key,
             memo: item.memo,
             tags: getSongTags(item),
@@ -3868,6 +3913,7 @@
         }
         result[key].count += 1;
         if ((item.date || "") > result[key].lastDate) result[key].lastDate = item.date || "";
+        if (item.kana) result[key].kana = item.kana;
         if (item.key) result[key].key = item.key;
         if (item.memo) result[key].memo = item.memo;
         result[key].tags = [...new Set([...result[key].tags, ...getSongTags(item)])];
@@ -3875,7 +3921,7 @@
       }, {});
 
       const filtered = Object.values(rankingMap)
-        .filter((item) => normalizeKana([item.title, item.artist, item.key, item.memo, ...item.tags].join(" ")).includes(normalizedQuery))
+        .filter((item) => normalizeKana(songSearchText(item)).includes(normalizedQuery))
         .sort((a, b) => {
           if (b.count !== a.count) return b.count - a.count;
           return (b.lastDate || "").localeCompare(a.lastDate || "");
@@ -3915,11 +3961,12 @@
       const filtered = songs.filter((item) => {
         const tags = getSongTags(item);
         if (duetOnly.checked && !tags.includes("デュエット")) return false;
-        return normalizeKana([item.title, item.artist, item.key, item.memo, ...tags].join(" ")).includes(normalizedQuery);
+        return normalizeKana(songSearchText(item)).includes(normalizedQuery);
       });
 
       totalSongCount.textContent = currentLanguage === "en" ? `${songs.length} songs` : `${songs.length}曲`;
       countText.textContent = currentLanguage === "en" ? `${filtered.length} items` : `${filtered.length}件`;
+      updateDrumGachaRateLabel();
 
       if (!filtered.length) {
         list.innerHTML = `<tr><td class="empty" colspan="5">${escapeText(uiText("まだ登録がありません"))}</td></tr>`;
@@ -3960,6 +4007,7 @@
         id: createId(),
         title: document.getElementById("songTitle").value.trim(),
         artist: document.getElementById("artistName").value.trim(),
+        kana: document.getElementById("songKana").value.trim(),
         key: getSongKeyLabel(),
         memo: settings.showMemo ? document.getElementById("memo").value.trim() : "",
         duet: selectedSongTags().includes("デュエット"),
@@ -4492,7 +4540,7 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
     historyDate.value = todayString();
-    drumGachaRate.textContent = drumGachaRateLabel(drumGachaRateForToday());
+    updateDrumGachaRateLabel();
     renderTagOptions();
     renderTagManager();
     renderDrinkButtons();
