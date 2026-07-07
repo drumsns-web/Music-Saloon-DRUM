@@ -465,6 +465,34 @@
       text-align: right;
     }
 
+    .drink-name-list {
+      display: grid;
+      gap: 6px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .drink-name-list li {
+      border: 1px solid rgba(20, 63, 44, .12);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: rgba(255, 253, 248, .92);
+      color: #2f261d;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .menu-list .drink-menu-row {
+      display: block;
+    }
+
+    .menu-list .drink-menu-row > span:first-child {
+      display: block;
+      max-width: none;
+      margin-bottom: 4px;
+    }
+
     .menu-note {
       margin: 12px 0 0;
       color: var(--muted);
@@ -1691,10 +1719,10 @@
               <details class="menu-detail">
                 <summary>飲めるメニューを見る</summary>
                 <ul class="menu-list">
-                  <li><span>焼酎系</span><span>焼酎ロック／焼酎水割り／焼酎お湯割り／緑茶ハイ／ウーロンハイ／ジャスミンハイ／無糖紅茶ハイ／麦茶ハイ／焼酎ソーダ割り／カルピスサワー</span></li>
-                  <li><span>ウイスキー系</span><span>ウイスキーロック／ウイスキー水割り／ウイスキーお湯割り／ハイボール／コークハイ／ジンジャーハイ／カルピスハイボール</span></li>
-                  <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶／カルピス</span></li>
-                  <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
+                  <li class="drink-menu-row"><span>焼酎系</span><ul class="drink-name-list"><li>焼酎ロック</li><li>焼酎水割り</li><li>焼酎お湯割り</li><li>緑茶ハイ</li><li>ウーロンハイ</li><li>ジャスミンハイ</li><li>無糖紅茶ハイ</li><li>麦茶ハイ</li><li>焼酎ソーダ割り</li><li>カルピスサワー</li></ul></li>
+                  <li class="drink-menu-row"><span>ウイスキー系</span><ul class="drink-name-list"><li>ウイスキーロック</li><li>ウイスキー水割り</li><li>ウイスキーお湯割り</li><li>ハイボール</li><li>コークハイ</li><li>ジンジャーハイ</li><li>カルピスハイボール</li></ul></li>
+                  <li class="drink-menu-row"><span>ソフトドリンク</span><ul class="drink-name-list"><li>ウーロン茶</li><li>ジャスミン茶</li><li>紅茶（無糖）</li><li>コーラ（ZERO）</li><li>緑茶</li><li>ジンジャーエール</li><li>麦茶</li><li>カルピス</li></ul></li>
+                  <li class="drink-menu-row"><span>サワー</span><ul class="drink-name-list"><li>レモンサワー</li><li>グレープフルーツサワー</li></ul></li>
                 </ul>
                 <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
               </details>
@@ -1709,8 +1737,8 @@
                 <ul class="menu-list">
                   <li><span>スタンダード対象</span><span>スタンダードプランの飲み放題メニューすべて</span></li>
                   <li><span>追加ドリンク</span><span>梅酒／芋焼酎／麦焼酎</span></li>
-                  <li><span>GINON</span><span>GINONレモンサワー／GINONグレープフルーツサワー</span></li>
-                  <li><span>追加サワー</span><span>男梅サワー／カルピスサワー／巨峰サワー／ライチサワー／桃サワー／梅酒サワー／マンゴーサワー</span></li>
+                  <li class="drink-menu-row"><span>GINON</span><ul class="drink-name-list"><li>GINONレモンサワー</li><li>GINONグレープフルーツサワー</li></ul></li>
+                  <li class="drink-menu-row"><span>追加サワー</span><ul class="drink-name-list"><li>男梅サワー</li><li>カルピスサワー</li><li>巨峰サワー</li><li>ライチサワー</li><li>桃サワー</li><li>梅酒サワー</li><li>マンゴーサワー</li></ul></li>
                 </ul>
                 <p class="menu-note">レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。</p>
               </details>
@@ -1741,10 +1769,10 @@
               <h3>スタンダード</h3>
               <p>焼酎系、ウイスキー系、ソフトドリンク、対象サワーが飲めます。</p>
               <ul class="menu-list">
-                <li><span>焼酎系</span><span>焼酎ロック／焼酎水割り／焼酎お湯割り／緑茶ハイ／ウーロンハイ／ジャスミンハイ／無糖紅茶ハイ／麦茶ハイ／焼酎ソーダ割り／カルピスサワー</span></li>
-                <li><span>ウイスキー系</span><span>ウイスキーロック／ウイスキー水割り／ウイスキーお湯割り／ハイボール／コークハイ／ジンジャーハイ／カルピスハイボール</span></li>
-                <li><span>ソフトドリンク</span><span>ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶／カルピス</span></li>
-                <li><span>サワー</span><span>レモンサワー／グレープフルーツサワー</span></li>
+                <li class="drink-menu-row"><span>焼酎系</span><ul class="drink-name-list"><li>焼酎ロック</li><li>焼酎水割り</li><li>焼酎お湯割り</li><li>緑茶ハイ</li><li>ウーロンハイ</li><li>ジャスミンハイ</li><li>無糖紅茶ハイ</li><li>麦茶ハイ</li><li>焼酎ソーダ割り</li><li>カルピスサワー</li></ul></li>
+                <li class="drink-menu-row"><span>ウイスキー系</span><ul class="drink-name-list"><li>ウイスキーロック</li><li>ウイスキー水割り</li><li>ウイスキーお湯割り</li><li>ハイボール</li><li>コークハイ</li><li>ジンジャーハイ</li><li>カルピスハイボール</li></ul></li>
+                <li class="drink-menu-row"><span>ソフトドリンク</span><ul class="drink-name-list"><li>ウーロン茶</li><li>ジャスミン茶</li><li>紅茶（無糖）</li><li>コーラ（ZERO）</li><li>緑茶</li><li>ジンジャーエール</li><li>麦茶</li><li>カルピス</li></ul></li>
+                <li class="drink-menu-row"><span>サワー</span><ul class="drink-name-list"><li>レモンサワー</li><li>グレープフルーツサワー</li></ul></li>
               </ul>
               <p class="menu-note">スタンダードのサワーは、レモン・グレープフルーツのみ対象です。</p>
             </article>
@@ -1754,8 +1782,8 @@
               <p>スタンダード対象メニューに追加で楽しめます。</p>
               <ul class="menu-list">
                 <li><span>追加ドリンク</span><span>梅酒／芋焼酎／麦焼酎</span></li>
-                <li><span>GINON</span><span>GINONレモンサワー／GINONグレープフルーツサワー</span></li>
-                <li><span>追加サワー</span><span>男梅サワー／カルピスサワー／巨峰サワー／ライチサワー／桃サワー／梅酒サワー／マンゴーサワー</span></li>
+                <li class="drink-menu-row"><span>GINON</span><ul class="drink-name-list"><li>GINONレモンサワー</li><li>GINONグレープフルーツサワー</li></ul></li>
+                <li class="drink-menu-row"><span>追加サワー</span><ul class="drink-name-list"><li>男梅サワー</li><li>カルピスサワー</li><li>巨峰サワー</li><li>ライチサワー</li><li>桃サワー</li><li>梅酒サワー</li><li>マンゴーサワー</li></ul></li>
               </ul>
               <p class="menu-note">レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。</p>
             </article>
@@ -2683,6 +2711,35 @@
       "梅酒／芋焼酎／麦焼酎": "Plum wine / sweet potato shochu / barley shochu",
       "GINONレモンサワー／GINONグレープフルーツサワー": "GINON Lemon Sour / GINON Grapefruit Sour",
       "男梅サワー／カルピスサワー／巨峰サワー／ライチサワー／桃サワー／梅酒サワー／マンゴーサワー": "Otoko Ume Sour / Calpis Sour / Kyoho Grape Sour / Lychee Sour / Peach Sour / Plum Wine Sour / Mango Sour",
+      "焼酎ロック": "Shochu on the rocks",
+      "焼酎水割り": "Shochu with water",
+      "焼酎お湯割り": "Shochu with hot water",
+      "緑茶ハイ": "Green tea high",
+      "ウーロンハイ": "Oolong high",
+      "ジャスミンハイ": "Jasmine high",
+      "無糖紅茶ハイ": "Unsweetened black tea high",
+      "麦茶ハイ": "Barley tea high",
+      "焼酎ソーダ割り": "Shochu soda",
+      "カルピスサワー": "Calpis Sour",
+      "ウイスキーロック": "Whisky on the rocks",
+      "ウイスキー水割り": "Whisky with water",
+      "ウイスキーお湯割り": "Whisky with hot water",
+      "ハイボール": "Highball",
+      "コークハイ": "Whisky cola",
+      "ジンジャーハイ": "Whisky ginger",
+      "カルピスハイボール": "Calpis highball",
+      "紅茶（無糖）": "Unsweetened black tea",
+      "コーラ（ZERO）": "Cola Zero",
+      "ジンジャーエール": "Ginger ale",
+      "カルピス": "Calpis",
+      "GINONレモンサワー": "GINON Lemon Sour",
+      "GINONグレープフルーツサワー": "GINON Grapefruit Sour",
+      "男梅サワー": "Otoko Ume Sour",
+      "巨峰サワー": "Kyoho Grape Sour",
+      "ライチサワー": "Lychee Sour",
+      "桃サワー": "Peach Sour",
+      "梅酒サワー": "Plum Wine Sour",
+      "マンゴーサワー": "Mango Sour",
       "男梅／カルピス／巨峰／ライチ／桃／梅酒／マンゴー": "Otoko Ume / Calpis / Kyoho grape / lychee / peach / plum wine / mango",
       "スーパープランの追加メニューすべて": "All Super Plan extras",
       "生ビール／ワイン（赤・白）": "Draft beer / wine (red & white)",
