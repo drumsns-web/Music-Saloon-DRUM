@@ -1972,7 +1972,7 @@
 
         <div class="manager">
           <div class="card song-form-card" id="songRegister">
-            <h3>曲を登録する</h3>
+            <h3 id="songFormTitle">曲を登録する</h3>
             <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
             <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「曲リストに保存」を押してください。</p>
             <form id="songForm">
@@ -2020,7 +2020,10 @@
                 メモ <span class="optional-label">任意</span>
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
               </label>
-              <button class="btn primary" type="submit">曲リストに保存</button>
+              <div class="control-row">
+                <button class="btn primary" id="songSubmitButton" type="submit">曲リストに保存</button>
+                <button class="btn ghost" id="songEditCancelButton" type="button" hidden>編集をやめる</button>
+              </div>
             <p class="small">曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             </form>
           </div>
@@ -2487,6 +2490,9 @@
     const newsImageCount = 12;
     const heroImageCount = 7;
     const form = document.getElementById("songForm");
+    const songFormTitle = document.getElementById("songFormTitle");
+    const songSubmitButton = document.getElementById("songSubmitButton");
+    const songEditCancelButton = document.getElementById("songEditCancelButton");
     const songKeyBase = document.getElementById("songKeyBase");
     const songKeyAdjust = document.getElementById("songKeyAdjust");
     const list = document.getElementById("songList");
@@ -2783,6 +2789,10 @@
       "キー": "Key",
       "メモ": "Memo",
       "操作": "Actions",
+      "編集": "Edit",
+      "曲を編集する": "Edit Song",
+      "変更を保存": "Save Changes",
+      "編集をやめる": "Cancel Edit",
       "未設定": "Not set",
       "次回": "Next",
       "次回解除": "Remove Next",
@@ -2978,6 +2988,7 @@
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false,"showSongCount":true}');
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
+    let editingSongId = null;
     let didAddDefaultTags = false;
     defaultGenreTags.forEach((tagName) => {
       if (!genreTags.includes(tagName)) {
@@ -3122,17 +3133,27 @@
         .filter(Boolean)
         .filter((line, index) => !(index === 0 && line.includes("曲名") && line.includes("歌手名")))
         .map((line) => {
+          const usesLooseSpace = !line.includes("\t") && !/[／/,、]/.test(line);
           const parts = line.includes("\t")
             ? line.split("\t")
-            : (/[／/,、]/.test(line) ? line.split(/\s*[/／,、]\s*/) : line.split(/\s+/));
+            : (usesLooseSpace ? line.split(/\s+/) : line.split(/\s*[/／,、]\s*/));
           const title = (parts[0] || "").trim();
           if (!title) return null;
+          let artist = (parts[1] || "").trim();
+          let key = (parts[2] || "").trim();
+          let kana = (parts[3] || "").trim();
+          if (usesLooseSpace && parts[3] && /^[+-][123]$/.test(parts[3].trim())) {
+            key = `${key} ${parts[3].trim()}`.trim();
+            kana = parts.slice(4).join(" ").trim();
+          } else if (usesLooseSpace && parts.length > 4) {
+            kana = parts.slice(3).join(" ").trim();
+          }
           return {
             id: createId(),
             title,
-            artist: (parts[1] || "").trim(),
-            key: (parts[2] || "").trim(),
-            kana: (parts[3] || "").trim(),
+            artist,
+            key,
+            kana,
             memo: "",
             nextWish: false,
             tags: []
@@ -3831,6 +3852,55 @@
       return tags;
     }
 
+    function parseSongKeyLabel(keyLabel) {
+      const value = String(keyLabel || "").trim();
+      const adjustMatch = value.match(/([+-][123])$/);
+      const adjust = adjustMatch ? adjustMatch[1] : "";
+      const baseText = adjust ? value.slice(0, -adjust.length).trim() : value;
+      let base = "";
+      if (baseText.includes("カラオケ標準キー")) base = "カラオケ標準キー";
+      if (baseText.includes("原曲キー")) base = "原曲キー";
+      return { base, adjust };
+    }
+
+    function setSongTagSelection(tags) {
+      const selected = new Set(tags || []);
+      document.querySelectorAll('input[name="songTag"]').forEach((input) => {
+        input.checked = selected.has(input.value);
+      });
+    }
+
+    function resetSongFormMode() {
+      editingSongId = null;
+      songFormTitle.textContent = uiText("曲を登録する");
+      songSubmitButton.textContent = uiText("曲リストに保存");
+      songEditCancelButton.hidden = true;
+      form.reset();
+      setSongTagSelection([]);
+      updateKeyAdjustLabel();
+    }
+
+    function startEditSong(id) {
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      editingSongId = id;
+      showView("song-register");
+      document.getElementById("songTitle").value = item.title || "";
+      document.getElementById("artistName").value = item.artist || "";
+      document.getElementById("songKana").value = item.kana || "";
+      const parsedKey = parseSongKeyLabel(item.key);
+      songKeyBase.value = parsedKey.base;
+      updateKeyAdjustLabel();
+      songKeyAdjust.value = parsedKey.adjust;
+      document.getElementById("songDuet").checked = getSongTags(item).includes("デュエット");
+      setSongTagSelection(getSongTags(item));
+      document.getElementById("memo").value = item.memo || "";
+      songFormTitle.textContent = uiText("曲を編集する");
+      songSubmitButton.textContent = uiText("変更を保存");
+      songEditCancelButton.hidden = false;
+      setTimeout(() => document.getElementById("songTitle").focus(), 160);
+    }
+
     function deleteSong(id) {
       const index = songs.findIndex((item) => item.id === id);
       if (index === -1) return;
@@ -3986,6 +4056,7 @@
           <td class="action-cell" data-label="${escapeText(uiText("操作"))}">
             <button class="btn ghost" type="button" data-next="${item.id}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
             <button class="btn primary" type="button" data-record="${item.id}">${escapeText(uiText("記録"))}</button>
+            <button class="btn ghost" type="button" data-edit="${item.id}">${escapeText(uiText("編集"))}</button>
             <button class="btn ghost" type="button" data-delete="${item.id}">${escapeText(uiText("削除"))}</button>
           </td>
         </tr>
@@ -4003,21 +4074,28 @@
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
-      songs.unshift({
-        id: createId(),
+      const formData = {
         title: document.getElementById("songTitle").value.trim(),
         artist: document.getElementById("artistName").value.trim(),
         kana: document.getElementById("songKana").value.trim(),
         key: getSongKeyLabel(),
         memo: settings.showMemo ? document.getElementById("memo").value.trim() : "",
         duet: selectedSongTags().includes("デュエット"),
-        nextWish: false,
-        tags: selectedSongTags(),
-        createdAt: new Date().toISOString()
-      });
+        tags: selectedSongTags()
+      };
+      if (editingSongId) {
+        const item = songs.find((song) => song.id === editingSongId);
+        if (item) Object.assign(item, formData);
+      } else {
+        songs.unshift({
+          id: createId(),
+          ...formData,
+          nextWish: false,
+          createdAt: new Date().toISOString()
+        });
+      }
       saveSongs();
-      form.reset();
-      updateKeyAdjustLabel();
+      resetSongFormMode();
       renderSongs();
     });
 
@@ -4030,6 +4108,11 @@
       const recordButton = event.target.closest("[data-record]");
       if (recordButton) {
         recordSong(recordButton.dataset.record);
+        return;
+      }
+      const editButton = event.target.closest("[data-edit]");
+      if (editButton) {
+        startEditSong(editButton.dataset.edit);
         return;
       }
       const button = event.target.closest("[data-delete]");
@@ -4172,8 +4255,10 @@
     searchBox.addEventListener("input", renderSongs);
     duetOnly.addEventListener("change", renderSongs);
     songKeyBase.addEventListener("change", updateKeyAdjustLabel);
+    songEditCancelButton.addEventListener("click", resetSongFormMode);
 
     focusSongFormButton.addEventListener("click", () => {
+      resetSongFormMode();
       showView("song-register");
       setTimeout(() => {
         document.getElementById("songTitle").focus();
