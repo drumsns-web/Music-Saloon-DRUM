@@ -262,6 +262,42 @@
       display: grid;
     }
 
+    .customers-sub-back {
+      display: none;
+      min-height: 52px;
+      margin: 0 0 22px;
+      padding: 12px 18px;
+      color: #fffdf8;
+      background: var(--forest);
+      border-color: rgba(240, 138, 53, .7);
+      box-shadow: 0 12px 26px rgba(11, 49, 33, .18);
+    }
+
+    #customers .song-form-card,
+    #customers #songBackupPanel {
+      display: none;
+    }
+
+    body.customer-subview #customers .section-head,
+    body.customer-subview #customers .song-tools .song-tool-card,
+    body.customer-subview #customers .song-list-card {
+      display: none;
+    }
+
+    body.customer-subview #customers .customers-sub-back {
+      display: inline-flex;
+    }
+
+    body.customer-register #customers .song-form-card,
+    body.customer-backup #customers #songBackupPanel {
+      display: block;
+    }
+
+    body.customer-register #customers .manager,
+    body.customer-backup #customers .song-tools {
+      display: block;
+    }
+
     .dark-section {
       color: var(--cream);
       background:
@@ -682,6 +718,42 @@
       padding: 18px;
     }
 
+    .song-search-card {
+      border-color: rgba(240, 138, 53, .55);
+      background: linear-gradient(135deg, #fffdf8, #fff3dc);
+      box-shadow: 0 18px 44px rgba(240, 138, 53, .13);
+    }
+
+    .song-search-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 8px;
+      color: var(--forest);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .song-search-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--forest-2);
+      background: var(--orange);
+      font-size: 20px;
+      box-shadow: 0 10px 20px rgba(240, 138, 53, .24);
+    }
+
+    .song-search-help {
+      margin: 0 0 14px;
+      color: #514235;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
     .song-primary-actions .btn {
       min-width: 128px;
       min-height: 48px;
@@ -816,6 +888,32 @@
     .toolbar input {
       flex: 1 1 240px;
       max-width: none;
+    }
+
+    .song-search-card .toolbar {
+      align-items: stretch;
+      margin-bottom: 0;
+    }
+
+    .song-search-card #searchBox {
+      min-height: 58px;
+      border: 2px solid rgba(20, 63, 44, .34);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 18px;
+      font-weight: 900;
+      box-shadow: inset 0 2px 0 rgba(20, 63, 44, .04);
+    }
+
+    .song-search-card #searchBox:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 4px rgba(240, 138, 53, .16);
+      outline: none;
+    }
+
+    .song-search-card .tag-filter .btn {
+      min-height: 58px;
+      padding-inline: 18px;
     }
 
     .control-row {
@@ -1735,9 +1833,10 @@
             <p class="lead">自分の歌いたい曲、キー、メモを保存できます。歌手名・曲名で検索できます。</p>
           </div>
         </div>
+        <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← 曲リストに戻る</button>
 
         <div class="song-tools">
-          <div class="card song-tool-card">
+          <div class="card song-tool-card customers-home-card">
             <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="backup-recommend">
               <p>曲が増えてきたら、念のためバックアップをおすすめします。完全復元用のJSONと、見やすいコピペ用テキストを保存できます。</p>
@@ -1748,6 +1847,11 @@
               <a class="btn primary" href="#gacha">曲ガチャ</a>
               <a class="btn primary" href="#favorites">よく歌う曲</a>
             </div>
+          </div>
+
+          <div class="card song-tool-card song-search-card">
+            <div class="song-search-heading"><span class="song-search-icon" aria-hidden="true">⌕</span><span>曲を検索する</span></div>
+            <p class="song-search-help">曲名・歌手名・タグ・メモから探せます。タグはボタンから選択できます。</p>
             <div class="control-row">
               <label class="check-row">
                 <input id="duetOnly" type="checkbox">
@@ -1764,7 +1868,7 @@
             </div>
           </div>
 
-          <div class="card song-tool-card">
+          <div class="card song-tool-card next-song-card">
             <span class="tag green">Next</span>
             <h3>次回歌いたい曲</h3>
             <p class="small">曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。</p>
@@ -1862,7 +1966,7 @@
             </form>
           </div>
 
-          <div>
+          <div class="song-list-card">
             <table aria-label="曲リスト">
               <thead>
                 <tr>
@@ -2381,6 +2485,7 @@
     const newsEmpty = document.getElementById("newsEmpty");
     const languageToggle = document.getElementById("languageToggle");
     const menuBackButton = document.getElementById("menuBackButton");
+    const customersBackButton = document.getElementById("customersBackButton");
     const regularMenuHeading = document.getElementById("regularMenuHeading");
 
     const kanaGroups = [
@@ -2432,6 +2537,7 @@
       "飲み放題メニュー": "All-you-can-drink Menu",
       "チャージ・フード": "Charge & Food",
       "← メニュー一覧に戻る": "← Back to Menu",
+      "← 曲リストに戻る": "← Back to Song List",
       "飲み放題♪歌い放題♪コース": "All-you-can-drink & Karaoke Plans",
       "スタンダードプラン": "Standard Plan",
       "スーパープラン": "Super Plan",
@@ -2511,6 +2617,7 @@
       "曲ガチャ": "Song Gacha",
       "よく歌う曲": "Frequently Sung",
       "タグを選ぶ": "Choose Tags",
+      "曲を検索する": "Search Songs",
       "次回歌いたい曲": "Next Songs",
       "JSONを書き出す": "Export JSON",
       "JSONをコピー": "Copy JSON",
@@ -2665,6 +2772,7 @@
       ["コピペ用テキスト", "Copy/Paste Text"],
       ["テキスト読み込み", "Text Import"],
       ["曲リストを開く", "Open Song List"],
+      ["曲名・歌手名・タグ・メモから探せます。タグはボタンから選択できます。", "Search by song title, artist, tag, or memo. You can also choose tags from the button."],
       ["曲リストに保存した曲から、次に歌う曲をおすすめします。", "Choose a recommended next song from your saved song list."],
       ["歌う曲に迷った時に使えます。デュエット曲を候補に入れるかどうかも選べます。", "Use this when you are not sure what to sing. You can choose whether to include duet songs."],
       ["歌う曲に迷ったら、曲リストからおすすめを選べます。", "If you are not sure what to sing, this can choose a recommendation from your song list."],
@@ -3183,6 +3291,11 @@
       "menu-charge-food": "chargeFoodMenu"
     };
 
+    const customerPageMap = {
+      "song-register": "songRegister",
+      "song-backup": "songBackupPanel"
+    };
+
     const menuPageHashes = Object.fromEntries(
       Object.entries(menuPageMap).map(([hash, pageId]) => [pageId, hash])
     );
@@ -3193,6 +3306,30 @@
         page.classList.remove("active-menu-page", "menu-charge-only");
       });
       if (regularMenuHeading) regularMenuHeading.textContent = "通常ドリンク・ボトル";
+    }
+
+    function clearCustomerSubpage() {
+      document.body.classList.remove("customer-subview", "customer-register", "customer-backup");
+      if (songBackupPanel) songBackupPanel.open = false;
+    }
+
+    function showCustomerSubpage(pageId, shouldUpdateHash = true) {
+      document.body.classList.add("customer-subview");
+      document.body.classList.toggle("customer-register", pageId === "songRegister");
+      document.body.classList.toggle("customer-backup", pageId === "songBackupPanel");
+
+      if (pageId === "songBackupPanel") {
+        songBackupPanel.open = true;
+        songJsonBackupText.value = createSongJsonBackup();
+        songExportText.value = createSongExportText();
+      }
+
+      if (shouldUpdateHash) {
+        const hash = pageId === "songBackupPanel" ? "song-backup" : "song-register";
+        history.pushState(null, "", `#${hash}`);
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      refreshLanguageSoon();
     }
 
     function showMenuSubpage(pageId, shouldUpdateHash = true) {
@@ -3220,7 +3357,8 @@
 
     function showView(targetId, shouldUpdateHash = true) {
       const menuPageId = menuPageMap[targetId];
-      const viewId = menuPageId ? "menu" : (targetId || "top");
+      const customerPageId = customerPageMap[targetId];
+      const viewId = menuPageId ? "menu" : (customerPageId ? "customers" : (targetId || "top"));
       const target = document.getElementById(viewId);
       if (!target || target.tagName.toLowerCase() !== "section") return;
 
@@ -3234,9 +3372,14 @@
 
       if (viewId === "info") renderNewsImages();
       if (viewId === "menu" && menuPageId) {
+        clearCustomerSubpage();
         showMenuSubpage(menuPageId, false);
+      } else if (viewId === "customers" && customerPageId) {
+        clearMenuSubpage();
+        showCustomerSubpage(customerPageId, false);
       } else {
         clearMenuSubpage();
+        clearCustomerSubpage();
         if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -3831,10 +3974,7 @@
     });
 
     openSongBackupButton.addEventListener("click", () => {
-      songBackupPanel.open = true;
-      songJsonBackupText.value = createSongJsonBackup();
-      songExportText.value = createSongExportText();
-      songBackupPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      showView("song-backup");
       setTimeout(() => {
         songJsonBackupText.focus();
         songJsonBackupText.select();
@@ -3860,7 +4000,7 @@
     songKeyBase.addEventListener("change", updateKeyAdjustLabel);
 
     focusSongFormButton.addEventListener("click", () => {
-      songRegister.scrollIntoView({ behavior: "smooth", block: "start" });
+      showView("song-register");
       setTimeout(() => {
         document.getElementById("songTitle").focus();
       }, 320);
@@ -4165,10 +4305,15 @@
       showView("menu", false);
     });
 
+    customersBackButton.addEventListener("click", () => {
+      history.replaceState(null, "", "#customers");
+      showView("customers", false);
+    });
+
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener("click", (event) => {
         const viewId = link.getAttribute("href").slice(1) || "top";
-        if (!document.getElementById(viewId) && !menuPageMap[viewId]) return;
+        if (!document.getElementById(viewId) && !menuPageMap[viewId] && !customerPageMap[viewId]) return;
         event.preventDefault();
         showView(viewId);
       });
