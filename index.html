@@ -1679,6 +1679,12 @@
               <li>順番の調整が必要な場合は、必ずスタッフが対応いたします。</li>
             </ul>
           </article>
+          <article class="card news-image-card" id="newsImageCard" hidden>
+            <span class="tag orange">Notice</span>
+            <h3>お店からのお知らせ</h3>
+            <div class="news-gallery" id="newsGallery" aria-live="polite"></div>
+            <p class="news-empty" id="newsEmpty" hidden>現在、画像のお知らせはありません。</p>
+          </article>
           <article class="card">
             <span class="tag green">Instagram</span>
             <h3>Instagram</h3>
@@ -2638,6 +2644,7 @@
     const undoToast = document.getElementById("undoToast");
     const undoText = document.getElementById("undoText");
     const undoButton = document.getElementById("undoButton");
+    const newsImageCard = document.getElementById("newsImageCard");
     const newsGallery = document.getElementById("newsGallery");
     const newsEmpty = document.getElementById("newsEmpty");
     const languageToggle = document.getElementById("languageToggle");
@@ -2679,6 +2686,8 @@
       "日本語": "Japanese",
       "インフォメーション": "Information",
       "店からのお知らせ": "Shop Notices",
+      "お店からのお知らせ": "Shop Notices",
+      "現在、画像のお知らせはありません。": "There are currently no image notices.",
       "ご利用前にご確認ください。": "Please check before use.",
       "カラオケ予約のお願い": "Karaoke Reservation Request",
       "Instagramを開く": "Open Instagram",
@@ -3692,23 +3701,29 @@
       } else {
         clearMenuSubpage();
         clearCustomerSubpage();
+        if (viewId === "info") renderNewsImages();
         if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
 
     function renderNewsImages() {
+      if (!newsImageCard || !newsGallery || !newsEmpty) return;
       const runId = ++newsRenderRun;
       let loadedCount = 0;
       let completedCount = 0;
       const imageTypes = ["jpg", "jpeg", "png", "JPG", "JPEG", "PNG"];
       newsGallery.innerHTML = "";
-      newsEmpty.hidden = false;
+      newsImageCard.hidden = true;
+      newsEmpty.hidden = true;
 
       function finishImageCheck() {
         if (runId !== newsRenderRun) return;
         completedCount += 1;
-        if (completedCount === newsImageCount && !loadedCount) newsEmpty.hidden = false;
+        if (completedCount === newsImageCount && !loadedCount) {
+          newsImageCard.hidden = true;
+          newsEmpty.hidden = false;
+        }
       }
 
       function tryNewsImage(index, typeIndex = 0) {
@@ -3723,6 +3738,7 @@
         image.addEventListener("load", () => {
           if (runId !== newsRenderRun) return;
           loadedCount += 1;
+          newsImageCard.hidden = false;
           newsEmpty.hidden = true;
           const figure = document.createElement("figure");
           figure.appendChild(image);
