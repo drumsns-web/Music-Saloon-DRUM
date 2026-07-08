@@ -583,11 +583,13 @@
       align-self: flex-start;
       margin-top: 18px;
       min-height: 52px;
-      padding: 12px 18px;
-      color: #fffdf8;
-      background: var(--forest);
-      border-color: rgba(240, 138, 53, .7);
-      box-shadow: 0 12px 26px rgba(11, 49, 33, .18);
+      padding: 13px 22px;
+      color: var(--forest-2);
+      background: var(--orange);
+      border: 2px solid rgba(255, 253, 248, .9);
+      box-shadow: 0 14px 28px rgba(11, 49, 33, .26);
+      font-size: 17px;
+      font-weight: 950;
     }
 
     body.menu-subview #menu .menu-sub-back {
@@ -1696,7 +1698,7 @@
             <p class="menu-note">価格はすべて税込みです。</p>
           </div>
         </div>
-        <button class="btn ghost menu-sub-back" id="menuBackButton" type="button">← メニュー一覧に戻る</button>
+        <button class="btn ghost menu-sub-back" id="menuBackButton" type="button">← メニュー一覧へ戻る</button>
 
         <div class="card menu-shortcuts">
           <h3>見たいメニューを選ぶ</h3>
@@ -1748,14 +1750,14 @@
             <article class="card">
               <span class="tag purple">Premium</span>
               <h3>プレミアムプラン</h3>
-              <p>スタンダード・スーパープランに加えて、生ビール、ワイン（赤）、ワイン（白）も対象です。</p>
+              <p>スタンダード・スーパープランに加えて、生ビールも対象です。</p>
               <p class="price">男性 5,000円<br>女性 4,000円</p>
               <details class="menu-detail">
                 <summary>追加メニューを見る</summary>
                 <ul class="menu-list">
                   <li><span>スタンダード対象</span><span>スタンダード全メニュー</span></li>
                   <li><span>スーパー対象</span><span>スーパー全メニュー</span></li>
-                  <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>生ビール</li><li>ワイン（赤）</li><li>ワイン（白）</li></ul></li>
+                  <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>生ビール</li></ul></li>
                 </ul>
               </details>
             </article>
@@ -1794,7 +1796,7 @@
               <h3>プレミアム</h3>
               <p>スタンダード・スーパー対象メニューに追加</p>
               <ul class="menu-list">
-                <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>生ビール</li><li>ワイン（赤）</li><li>ワイン（白）</li></ul></li>
+                <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>生ビール</li></ul></li>
               </ul>
             </article>
           </div>
@@ -1843,9 +1845,12 @@
             <ul class="menu-list">
               <li><span>ヘネシー V.S</span><span>12,000円</span></li>
               <li><span>日本酒</span><span>1,000円</span></li>
-              <li><span>グラスワイン 赤・白</span><span>800円</span></li>
+              <li><span>グラスワイン 赤・白</span><span>1,000円</span></li>
+              <li><span>イエローテイル 赤・白 187ml</span><span>1,000円</span></li>
               <li><span>梅酒</span><span>800円</span></li>
               <li><span>梅酒ソーダ割り</span><span>800円</span></li>
+              <li><span>テキーラ</span><span>1,000円</span></li>
+              <li><span>モエ・エ・シャンドン（白）</span><span>20,000円</span></li>
               <li><span>カクテル各種</span><span>800円</span></li>
               <li><span>サワー各種</span><span>800円</span></li>
             </ul>
@@ -1860,8 +1865,8 @@
             <span class="tag green">Charge</span>
             <h3>チャージ・カラオケ</h3>
             <ul class="menu-list">
-              <li><span>チャージ 男性（お通し付・時間制限なし）</span><span>2,500円</span></li>
-              <li><span>チャージ 女性（お通し付・時間制限なし）</span><span>1,500円</span></li>
+              <li><span>チャージ 男性（時間制限なし）</span><span>2,500円</span></li>
+              <li><span>チャージ 女性（時間制限なし）</span><span>1,500円</span></li>
               <li><span>カラオケ1曲</span><span>200円</span></li>
               <li><span>セット料金（水割りなどの場合・お一人様）</span><span>1,500円</span></li>
             </ul>
@@ -1875,6 +1880,7 @@
               <li><span>スパゲッティ</span><span>1,000円</span></li>
               <li><span>乾き物 小</span><span>500円</span></li>
               <li><span>乾き物 大</span><span>1,000円</span></li>
+              <li><span>ミックスナッツ</span><span>1,000円</span></li>
               <li><span>チーズ盛り合わせ</span><span>1,000円</span></li>
             </ul>
           </article>
@@ -2675,6 +2681,7 @@
       "飲み放題メニュー": "All-you-can-drink Menu",
       "チャージ・フード": "Charge & Food",
       "← メニュー一覧に戻る": "← Back to Menu",
+      "← メニュー一覧へ戻る": "← Back to Menu",
       "← 曲リストに戻る": "← Back to Song List",
       "飲み放題♪歌い放題♪コース": "All-you-can-drink & Karaoke Plans",
       "スタンダードプラン": "Standard Plan",
@@ -2755,6 +2762,9 @@
       "生ビール": "Draft beer",
       "ワイン（赤）": "Red wine",
       "ワイン（白）": "White wine",
+      "イエローテイル 赤・白 187ml": "Yellow Tail red / white 187ml",
+      "テキーラ": "Tequila",
+      "モエ・エ・シャンドン（白）": "Moet & Chandon (white)",
       "芋焼酎": "Sweet potato shochu",
       "麦焼酎": "Barley shochu",
       "各 500円": "500 yen each",
@@ -2770,9 +2780,12 @@
       "スパゲッティ": "Spaghetti",
       "乾き物 小": "Dry snacks small",
       "乾き物 大": "Dry snacks large",
+      "ミックスナッツ": "Mixed nuts",
       "チーズ盛り合わせ": "Cheese plate",
       "チャージ 男性（お通し付・時間制限なし）": "Charge men (with appetizer / no time limit)",
       "チャージ 女性（お通し付・時間制限なし）": "Charge women (with appetizer / no time limit)",
+      "チャージ 男性（時間制限なし）": "Charge men (no time limit)",
+      "チャージ 女性（時間制限なし）": "Charge women (no time limit)",
       "カラオケ1曲": "Karaoke per song",
       "セット料金（水割りなどの場合・お一人様）": "Set fee (for mizuwari etc. / per person)",
       "Japan（甲類）": "Japan (korui shochu)",
@@ -2946,6 +2959,7 @@
       ["スタンダードプランに加えて、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。", "Includes the Standard Plan plus plum wine, sweet potato shochu, barley shochu, and additional sours."],
       ["スタンダード・スーパープランに加えて、生ビール、ワイン（赤・白）も対象です。", "Includes the Standard and Super Plans plus draft beer and wine (red & white)."],
       ["スタンダード・スーパープランに加えて、生ビール、ワイン（赤）、ワイン（白）も対象です。", "Includes the Standard and Super Plans plus draft beer, red wine, and white wine."],
+      ["スタンダード・スーパープランに加えて、生ビールも対象です。", "Includes the Standard and Super Plans plus draft beer."],
       ["スタンダードのサワーは、レモン・グレープフルーツのみ対象です。", "Standard Plan sours are lemon and grapefruit only."],
       ["レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。", "Sours other than lemon and grapefruit are included from the Super Plan."],
       ["22時半以降のご来店でも料金は同じです。営業は0時までのため、飲み放題ご利用のお客様はお早目のご来店をおすすめします。", "The price is the same even after 10:30 PM. Since we close at midnight, we recommend arriving early for all-you-can-drink."],
