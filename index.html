@@ -1735,8 +1735,8 @@
               <details class="menu-detail">
                 <summary>追加メニューを見る</summary>
                 <ul class="menu-list">
-                  <li><span>スタンダード対象</span><span>スタンダードプランの飲み放題メニューすべて</span></li>
-                  <li><span>追加ドリンク</span><span>梅酒／芋焼酎／麦焼酎</span></li>
+                  <li><span>スタンダード対象</span><span>スタンダードプラン全メニュー</span></li>
+                  <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>梅酒</li><li>芋焼酎</li><li>麦焼酎</li></ul></li>
                   <li class="drink-menu-row"><span>GINON</span><ul class="drink-name-list"><li>GINONレモンサワー</li><li>GINONグレープフルーツサワー</li></ul></li>
                   <li class="drink-menu-row"><span>追加サワー</span><ul class="drink-name-list"><li>男梅サワー</li><li>カルピスサワー</li><li>巨峰サワー</li><li>ライチサワー</li><li>桃サワー</li><li>梅酒サワー</li><li>マンゴーサワー</li></ul></li>
                 </ul>
@@ -1746,14 +1746,14 @@
             <article class="card">
               <span class="tag purple">Premium</span>
               <h3>プレミアムプラン</h3>
-              <p>スタンダード・スーパープランに加えて、生ビール、ワイン（赤・白）も対象です。</p>
+              <p>スタンダード・スーパープランに加えて、生ビール、ワイン（赤）、ワイン（白）も対象です。</p>
               <p class="price">男性 5,000円<br>女性 4,000円</p>
               <details class="menu-detail">
                 <summary>追加メニューを見る</summary>
                 <ul class="menu-list">
-                  <li><span>スタンダード対象</span><span>スタンダードプランの飲み放題メニューすべて</span></li>
-                  <li><span>スーパー対象</span><span>スーパープランの追加メニューすべて</span></li>
-                  <li><span>追加ドリンク</span><span>生ビール／ワイン（赤・白）</span></li>
+                  <li><span>スタンダード対象</span><span>スタンダードプラン全メニュー</span></li>
+                  <li><span>スーパー対象</span><span>スーパープラン全メニュー</span></li>
+                  <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>生ビール</li><li>ワイン（赤）</li><li>ワイン（白）</li></ul></li>
                 </ul>
               </details>
             </article>
@@ -1781,7 +1781,7 @@
               <h3>スーパープラン</h3>
               <p>スタンダード対象メニューに追加で楽しめます。</p>
               <ul class="menu-list">
-                <li><span>追加ドリンク</span><span>梅酒／芋焼酎／麦焼酎</span></li>
+                <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>梅酒</li><li>芋焼酎</li><li>麦焼酎</li></ul></li>
                 <li class="drink-menu-row"><span>GINON</span><ul class="drink-name-list"><li>GINONレモンサワー</li><li>GINONグレープフルーツサワー</li></ul></li>
                 <li class="drink-menu-row"><span>追加サワー</span><ul class="drink-name-list"><li>男梅サワー</li><li>カルピスサワー</li><li>巨峰サワー</li><li>ライチサワー</li><li>桃サワー</li><li>梅酒サワー</li><li>マンゴーサワー</li></ul></li>
               </ul>
@@ -1791,7 +1791,9 @@
               <span class="tag purple">Premium</span>
               <h3>プレミアム</h3>
               <p>スタンダード・スーパー対象メニューに追加</p>
-              <p class="menu-note">生ビール、ワイン（赤・白）。</p>
+              <ul class="menu-list">
+                <li class="drink-menu-row"><span>追加ドリンク</span><ul class="drink-name-list"><li>生ビール</li><li>ワイン（赤）</li><li>ワイン（白）</li></ul></li>
+              </ul>
             </article>
           </div>
         </div>
@@ -2708,6 +2710,8 @@
       "ウーロン茶／ジャスミン茶／紅茶（無糖）／コーラ（ZERO）／緑茶／ジンジャーエール／麦茶／カルピス": "Oolong tea / jasmine tea / unsweetened black tea / Cola Zero / green tea / ginger ale / barley tea / Calpis",
       "レモンサワー／グレープフルーツサワー": "Lemon sour / grapefruit sour",
       "スタンダードプランの飲み放題メニューすべて": "All Standard Plan drinks",
+      "スタンダードプラン全メニュー": "All Standard Plan items",
+      "スーパープラン全メニュー": "All Super Plan items",
       "梅酒／芋焼酎／麦焼酎": "Plum wine / sweet potato shochu / barley shochu",
       "GINONレモンサワー／GINONグレープフルーツサワー": "GINON Lemon Sour / GINON Grapefruit Sour",
       "男梅サワー／カルピスサワー／巨峰サワー／ライチサワー／桃サワー／梅酒サワー／マンゴーサワー": "Otoko Ume Sour / Calpis Sour / Kyoho Grape Sour / Lychee Sour / Peach Sour / Plum Wine Sour / Mango Sour",
@@ -2744,6 +2748,11 @@
       "スーパープランの追加メニューすべて": "All Super Plan extras",
       "生ビール／ワイン（赤・白）": "Draft beer / wine (red & white)",
       "生ビール、ワイン（赤・白）。": "Draft beer and wine (red & white).",
+      "生ビール": "Draft beer",
+      "ワイン（赤）": "Red wine",
+      "ワイン（白）": "White wine",
+      "芋焼酎": "Sweet potato shochu",
+      "麦焼酎": "Barley shochu",
       "各 500円": "500 yen each",
       "ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、ジンジャーエール": "Oolong tea, jasmine tea, unsweetened black tea, Cola Zero, green tea, ginger ale",
       "ヘネシー V.S": "Hennessy V.S",
@@ -2932,6 +2941,7 @@
       ["ご来店から90分。焼酎系、ウイスキー系、ソフトドリンクが飲み放題。サワーはレモン・グレープフルーツが対象です。", "90 minutes from arrival. Includes shochu drinks, whisky drinks, and soft drinks. Sours include lemon and grapefruit."],
       ["スタンダードプランに加えて、梅酒、芋焼酎、麦焼酎、追加サワーも楽しめます。", "Includes the Standard Plan plus plum wine, sweet potato shochu, barley shochu, and additional sours."],
       ["スタンダード・スーパープランに加えて、生ビール、ワイン（赤・白）も対象です。", "Includes the Standard and Super Plans plus draft beer and wine (red & white)."],
+      ["スタンダード・スーパープランに加えて、生ビール、ワイン（赤）、ワイン（白）も対象です。", "Includes the Standard and Super Plans plus draft beer, red wine, and white wine."],
       ["スタンダードのサワーは、レモン・グレープフルーツのみ対象です。", "Standard Plan sours are lemon and grapefruit only."],
       ["レモン・グレープフルーツ以外のサワー系はスーパープランから対象です。", "Sours other than lemon and grapefruit are included from the Super Plan."],
       ["22時半以降のご来店でも料金は同じです。営業は0時までのため、飲み放題ご利用のお客様はお早目のご来店をおすすめします。", "The price is the same even after 10:30 PM. Since we close at midnight, we recommend arriving early for all-you-can-drink."],
