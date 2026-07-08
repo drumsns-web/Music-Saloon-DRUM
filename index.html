@@ -1660,20 +1660,23 @@
         </div>
         <div class="grid">
           <article class="card">
-            <span class="tag">Notice</span>
-            <h3>店からのお知らせ</h3>
-            <p>お店からのお願いやご案内を掲載しています。</p>
-            <p class="menu-note">ご利用前にご確認ください。</p>
-            <div class="news-gallery" id="newsGallery" aria-label="写真のお知らせ"></div>
-            <p class="news-empty" id="newsEmpty">写真のお知らせはまだありません。</p>
+            <span class="tag green">LINE</span>
+            <h3>公式LINE</h3>
+            <p>最新情報やお知らせは公式LINEからもご案内できます。</p>
+            <img class="social-qr" src="line-qr.jpg" alt="Music Saloon DRUM 公式LINE QRコード">
+            <a class="btn ghost" href="https://lin.ee/Od9ZnYR" target="_blank" rel="noopener">公式LINEを開く</a>
+            <p class="small">@music_saloon_drum</p>
           </article>
           <article class="card">
             <span class="tag">Karaoke</span>
             <h3>カラオケ予約のお願い</h3>
             <ul class="mini-list">
-              <li>歌い終わったあとに、次の1曲をご予約ください。</li>
-              <li>混雑時は順番を調整する場合があります。</li>
-              <li>順番の入れ替えが必要な時は、スタッフが対応いたします。</li>
+              <li>より多くのお客様に気持ちよく歌っていただくため、カラオケ予約は1曲ずつお願いいたします。</li>
+              <li>歌い終わったあとに、次の1曲をご予約ください。まとめて複数曲の予約はご遠慮ください。</li>
+              <li>混雑時はデンモクを1台にして、席順で順番に回していただく場合があります。</li>
+              <li>後からご来店のお客様にも歌っていただけるよう、店側で順番を調整する場合があります。</li>
+              <li>トラブル防止のため、お客様同士で勝手に順番を入れ替える行為はご遠慮ください。</li>
+              <li>順番の調整が必要な場合は、必ずスタッフが対応いたします。</li>
             </ul>
           </article>
           <article class="card">
@@ -1683,14 +1686,6 @@
             <img class="social-qr" src="instagram-qr.jpg" alt="Music Saloon DRUM Instagram QRコード">
             <a class="btn ghost" href="https://www.instagram.com/musicsaloondrum/" target="_blank" rel="noopener">Instagramを開く</a>
             <p class="small">@musicsaloondrum</p>
-          </article>
-          <article class="card">
-            <span class="tag green">LINE</span>
-            <h3>公式LINE</h3>
-            <p>最新情報やお知らせは公式LINEからもご案内できます。</p>
-            <img class="social-qr" src="line-qr.jpg" alt="Music Saloon DRUM 公式LINE QRコード">
-            <a class="btn ghost" href="https://lin.ee/Od9ZnYR" target="_blank" rel="noopener">公式LINEを開く</a>
-            <p class="small">@music_saloon_drum</p>
           </article>
           <article class="card">
             <span class="tag blue">Hours</span>
@@ -1919,6 +1914,7 @@
             <span class="tag">Lucky</span>
             <h3>本日の運だめし</h3>
             <p>1端末につき1日1回まで回せます。サービス表示が出た場合は、当日中にその画面をスタッフにお見せください。</p>
+            <p class="menu-note">月曜から金曜は、土曜日より少しサービス確率が高めです。</p>
             <p class="menu-note">曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。</p>
             <button class="btn primary" id="drumGachaButton" type="button">DRUMガチャを回す</button>
             <p class="menu-note" id="drumGachaRate">平日 3% / 土曜 1% / 日曜 0%</p>
@@ -2819,11 +2815,12 @@
       "スーパーニッカ": "Super Nikka",
       "DRUMガチャを回す": "Try DRUM Gacha",
       "本日の運だめし": "Today's Luck Try",
+      "月曜から金曜は、土曜日より少しサービス確率が高めです。": "Monday to Friday have a slightly higher service chance than Saturday.",
       "曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。": "As your song list grows, today's service chance rises a little.",
       "本日のDRUMガチャはお休みです": "DRUM Gacha is closed today",
       "本日は確認済み": "Already Checked Today",
       "今日はお休み": "Closed Today",
-      "お楽しみは続きます": "Keep Enjoying",
+      "残念でした": "Not This Time",
       "サービス内容": "Prize Details",
       "回数制限": "Limit",
       "バックアップを開く": "Open Backup",
@@ -2972,6 +2969,12 @@
       ["歌い終わったあとに、次の1曲をご予約ください。", "After you finish singing, please reserve your next song."],
       ["混雑時は順番を調整する場合があります。", "When it is busy, the singing order may be adjusted."],
       ["順番の入れ替えが必要な時は、スタッフが対応いたします。", "If the order needs to be changed, staff will handle it."],
+      ["より多くのお客様に気持ちよく歌っていただくため、カラオケ予約は1曲ずつお願いいたします。", "To help everyone enjoy singing comfortably, please reserve karaoke one song at a time."],
+      ["歌い終わったあとに、次の1曲をご予約ください。まとめて複数曲の予約はご遠慮ください。", "After you finish singing, please reserve your next song. Please do not reserve multiple songs at once."],
+      ["混雑時はデンモクを1台にして、席順で順番に回していただく場合があります。", "When it is busy, we may use one karaoke remote and pass it around by seating order."],
+      ["後からご来店のお客様にも歌っていただけるよう、店側で順番を調整する場合があります。", "To let customers who arrive later sing as well, staff may adjust the singing order."],
+      ["トラブル防止のため、お客様同士で勝手に順番を入れ替える行為はご遠慮ください。", "To prevent trouble, please do not change the order between customers without staff."],
+      ["順番の調整が必要な場合は、必ずスタッフが対応いたします。", "If the order needs to be adjusted, staff will handle it."],
       ["飲み物、飲み放題、ボトル、フードを用途別に確認できます。", "Check drinks, all-you-can-drink plans, bottles, and food by category."],
       ["飲み物を先に見たい方、飲み放題プランを確認したい方、それぞれすぐ移動できます。", "Jump straight to drinks, all-you-can-drink plans, or other menu sections."],
       ["ご来店から90分。焼酎、ウイスキーの割りもの、ソフトドリンクが飲み放題。サワーはレモン・グレープフルーツが対象です。", "90 minutes from arrival. Includes shochu, whisky mixers, and soft drinks. Sours include lemon and grapefruit."],
@@ -3027,12 +3030,12 @@
       ["サービス表示が出た場合は、ドリンク1杯・おつまみサービス・500円割引のいずれかとしてご利用できます。", "If a prize screen appears, it can be used for one drink, a snack service, or 500 yen off."],
       ["サービス内容は営業状況によりスタッフ判断となる場合があります。", "Prize details may be adjusted by staff depending on shop conditions."],
       ["1端末につき1日1回までです。ブラウザのデータを削除すると記録も消えますが、曲リストなども同時に消えるためご注意ください。", "Limited to once per device per day. If browser data is deleted, this record is also deleted, but your song list and other data may also be deleted."],
-      ["今日のDRUMガチャは確認済みです。明日以降のご来店時に、またお楽しみください。", "You have already checked today's DRUM Gacha. Please enjoy it again on a future visit."],
+      ["今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね！", "You have already checked today's DRUM Gacha. Please try again on a future visit!"],
       ["本日のDRUMガチャはお休みです。", "DRUM Gacha is closed today."],
       ["本日のDRUMガチャはお休みです。また営業日にお楽しみください。", "DRUM Gacha is closed today. Please enjoy it again on a business day."],
       ["ドリンク1杯またはおつまみサービスが出ました。本日中にスタッフへこの画面をお見せください。", "You got one drink or a snack service. Please show this screen to staff today."],
       ["500円割引サービスが出ました。本日中にスタッフへこの画面をお見せください。", "You got 500 yen off. Please show this screen to staff today."],
-      ["今日は惜しくもサービス表示なしでした。歌もお酒も、引き続きゆっくりお楽しみください。", "No service prize this time. Please keep enjoying the music and drinks."],
+      ["残念でした。またチャレンジしてね！今日もゆっくりお楽しみください。", "Not this time. Please try again next time, and enjoy your visit today!"],
       ["一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。", "No solo songs are registered yet. Check the duet option to include duet songs."],
       ["曲リストに曲を登録すると、ここでおすすめできます。", "Add songs to your song list to get recommendations here."],
       ["選曲中...", "Choosing..."],
@@ -3680,7 +3683,6 @@
         link.classList.toggle("active-nav", link.getAttribute("href") === `#${viewId}`);
       });
 
-      if (viewId === "info") renderNewsImages();
       if (viewId === "menu" && menuPageId) {
         clearCustomerSubpage();
         showMenuSubpage(menuPageId, false);
@@ -4481,7 +4483,7 @@
       if (saved && saved.date === today) {
         openDrumGachaResult(
           "本日は確認済み",
-          saved.won ? saved.message : "今日のDRUMガチャは確認済みです。明日以降のご来店時に、またお楽しみください。",
+          saved.message || "今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね！",
           Boolean(saved.won)
         );
         return;
@@ -4501,10 +4503,10 @@
       const won = Math.random() < rate;
       const message = won
         ? prizes[Math.floor(Math.random() * prizes.length)]
-        : "今日は惜しくもサービス表示なしでした。歌もお酒も、引き続きゆっくりお楽しみください。";
+        : "残念でした。またチャレンジしてね！今日もゆっくりお楽しみください。";
 
       localStorage.setItem(drumGachaStorageKey, JSON.stringify({ date: today, won, message }));
-      openDrumGachaResult(won ? "出ました！" : "お楽しみは続きます", message, won);
+      openDrumGachaResult(won ? "出ました！" : "残念でした", message, won);
     });
 
     closeDrumGachaModal.addEventListener("click", () => {
