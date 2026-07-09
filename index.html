@@ -644,6 +644,16 @@
       object-fit: cover;
     }
 
+    .staff-drink-image {
+      width: 100%;
+      display: block;
+      margin: 12px 0 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 10px 24px rgba(20, 33, 25, .08);
+    }
+
     .youtube-placeholder,
     .youtube-frame {
       aspect-ratio: 16 / 9;
@@ -1693,16 +1703,6 @@
             <a class="btn ghost" href="https://www.instagram.com/musicsaloondrum/" target="_blank" rel="noopener">Instagramを開く</a>
             <p class="small">@musicsaloondrum</p>
           </article>
-          <article class="card">
-            <span class="tag blue">Hours</span>
-            <h3>営業時間</h3>
-            <dl class="info-list">
-              <dt>営業時間</dt>
-              <dd>19:00 - 00:00</dd>
-              <dt>定休日</dt>
-              <dd>毎週日曜日</dd>
-            </dl>
-          </article>
         </div>
       </div>
     </section>
@@ -1878,6 +1878,12 @@
             <h3>ソフトドリンク</h3>
             <p class="price">各 500円</p>
             <p>ウーロン茶、ジャスミン茶、紅茶 無糖、コーラ（ZERO）、緑茶、ジンジャーエール</p>
+          </article>
+          <article class="card">
+            <span class="tag orange">Staff Drink</span>
+            <h3>スタッフドリンク</h3>
+            <p>スタッフドリンクもご用意しています。よろしければ一緒に乾杯しましょう。</p>
+            <img class="staff-drink-image" src="staff-drink.jpg" alt="スタッフドリンク 1,000円">
           </article>
           <article class="card menu-charge-card">
             <span class="tag green">Charge</span>
@@ -2136,17 +2142,8 @@
                 デュエット曲も候補に入れる
               </label>
             </div>
-          </article>
-          <article class="card">
-            <span class="tag green">Hint</span>
-            <h3>候補について</h3>
-            <p>曲リストに登録している曲が候補になります。まだ曲がない場合は、先に曲リストへ歌いたい曲を保存してください。</p>
+            <p class="small">一人で歌う時はチェックを外しておくと、デュエット曲は候補から外れます。</p>
             <a class="btn ghost" href="#customers">曲リストを開く</a>
-          </article>
-          <article class="card">
-            <span class="tag blue">Duet</span>
-            <h3>一人で歌う時</h3>
-            <p>チェックを外しておくと、デュエット曲は候補から外れます。二人で歌う時だけオンにできます。</p>
           </article>
         </div>
       </div>
@@ -2176,6 +2173,46 @@
             <h3>今日の記録</h3>
             <p class="price" id="todaySongCount">0曲</p>
             <p class="small">同じ曲を何度歌っても、その日の記録として残せます。</p>
+          </article>
+          <article class="card">
+            <span class="tag orange">Edit</span>
+            <h3>選んだ日に追加</h3>
+            <label>
+              曲リストから選ぶ
+              <select id="historySongSelect"></select>
+            </label>
+            <button class="btn primary" id="addHistoryFromSong" type="button">選んだ日に追加</button>
+            <hr>
+            <p class="small">曲リストにない曲は、曲名だけでも登録しながら記録できます。</p>
+            <label>
+              曲名
+              <input id="historyNewTitle" type="text" placeholder="例：いとしのエリー">
+            </label>
+            <label>
+              歌手名 <span class="optional-label">任意</span>
+              <input id="historyNewArtist" type="text" placeholder="例：サザンオールスターズ">
+            </label>
+            <label>
+              キー <span class="optional-label">任意</span>
+              <select id="historyNewKey">
+                <option value="">未設定</option>
+                <option>カラオケ標準キー</option>
+                <option>原曲キー</option>
+                <option>カラオケ標準キー +1</option>
+                <option>カラオケ標準キー +2</option>
+                <option>カラオケ標準キー +3</option>
+                <option>カラオケ標準キー -1</option>
+                <option>カラオケ標準キー -2</option>
+                <option>カラオケ標準キー -3</option>
+                <option>原曲キー +1</option>
+                <option>原曲キー +2</option>
+                <option>原曲キー +3</option>
+                <option>原曲キー -1</option>
+                <option>原曲キー -2</option>
+                <option>原曲キー -3</option>
+              </select>
+            </label>
+            <button class="btn ghost" id="addHistoryNewSong" type="button">曲リストにも保存して追加</button>
           </article>
         </div>
         <div class="menu-block">
@@ -2361,9 +2398,9 @@
           </article>
           <article class="card">
             <span class="tag">Feature</span>
-            <h3>お店の特徴</h3>
-            <p>楽器、カラオケ、生演奏など、DRUMの楽しみ方はこちらにまとめています。</p>
-            <a class="btn ghost" href="#features">特徴を見る</a>
+            <h3>お店の特徴・遊び方</h3>
+            <p>カラオケと楽器を一緒に楽しむためのルールやマナーをまとめています。</p>
+            <a class="btn ghost" href="#features">遊び方を見る</a>
           </article>
         </div>
       </div>
@@ -2398,25 +2435,38 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <h2>お店の特徴</h2>
-            <p class="lead">必要なときにだけ確認できる、DRUMの楽しみ方です。</p>
+            <h2>お店の特徴・遊び方</h2>
+            <p class="lead">カラオケと楽器が共存するDRUMで、みんなが気持ちよく楽しむためのルール＆マナーです。</p>
           </div>
         </div>
         <div class="grid">
           <article class="card">
-            <span class="tag">Instruments</span>
-            <h3>当店の楽器を使用できます</h3>
-            <p>ギター、アンプ、ベースアンプ、ピアノ、ドラム、カホンなどを使って楽しめます。</p>
+            <span class="tag">Style</span>
+            <h3>カラオケと楽器で楽しめるお店です</h3>
+            <p>当店はカラオケと楽器が共存する空間です。カラオケに合わせて店主やスタッフ、お客様が楽器で参加し、一緒に盛り上がれるのがDRUMの楽しさです。</p>
           </article>
           <article class="card">
-            <span class="tag">Live</span>
-            <h3>生演奏も弾き語りもOK</h3>
-            <p>バンドでの演奏、弾き語り、カラオケと生演奏の組み合わせにも対応します。</p>
+            <span class="tag green">Respect</span>
+            <h3>歌う方の1曲を大切に</h3>
+            <p>歌う方にとって、その1曲は大切な1曲です。楽器で参加する方は、歌う方の気持ちや雰囲気に寄り添って演奏してください。</p>
           </article>
           <article class="card">
-            <span class="tag">Sound</span>
-            <h3>DAM通信カラオケと音響</h3>
-            <p>ミキサーも使用したこだわりの音響。カラオケだけでも十分楽しめます。</p>
+            <span class="tag blue">Q&A</span>
+            <h3>楽器を演奏したい時</h3>
+            <p><strong>Q. 楽器を演奏したいんですが…</strong></p>
+            <p>A. カラオケを一時停止しての生演奏、またはカラオケや音源に合わせて演奏できます。他のお客様の歌に合わせて演奏する時は、挨拶やアイコンタクトで「一緒にやります」というコミュニケーションを心がけてください。</p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Q&A</span>
+            <h3>コーラスやハモリについて</h3>
+            <p><strong>Q. 他のお客様の歌に合わせてコーラスやハモリを入れたい。</strong></p>
+            <p>A. いきなり入るのではなく、事前の確認やアイコンタクトを心がけてください。気心の知れた方同士の場合は、その限りではありません。</p>
+          </article>
+          <article class="card">
+            <span class="tag blue">Q&A</span>
+            <h3>他のお客様の歌を一緒に歌いたい時</h3>
+            <p><strong>Q. 知っている曲なので、主旋律を一緒に歌いたい。</strong></p>
+            <p>A. マイクを持って主旋律を歌うことは、基本的にご遠慮ください。歌っている方の1曲を大切にしながら、拍手や手拍子などで一緒に楽しんでください。</p>
           </article>
         </div>
       </div>
@@ -2614,6 +2664,12 @@
     const drumGachaVerifyCode = document.getElementById("drumGachaVerifyCode");
     const historyDate = document.getElementById("historyDate");
     const historyList = document.getElementById("historyList");
+    const historySongSelect = document.getElementById("historySongSelect");
+    const addHistoryFromSong = document.getElementById("addHistoryFromSong");
+    const historyNewTitle = document.getElementById("historyNewTitle");
+    const historyNewArtist = document.getElementById("historyNewArtist");
+    const historyNewKey = document.getElementById("historyNewKey");
+    const addHistoryNewSong = document.getElementById("addHistoryNewSong");
     const todaySetlist = document.getElementById("todaySetlist");
     const todaySongCount = document.getElementById("todaySongCount");
     const clearHistory = document.getElementById("clearHistory");
@@ -2789,6 +2845,8 @@
       "イエローテイル 赤・白 187ml": "Yellow Tail red / white 187ml",
       "テキーラ": "Tequila",
       "モエ・エ・シャンドン（白）": "Moet & Chandon (white)",
+      "スタッフドリンク": "Staff Drink",
+      "スタッフドリンク 1,000円": "Staff Drink 1,000 yen",
       "芋焼酎": "Sweet potato shochu",
       "麦焼酎": "Barley shochu",
       "各 500円": "500 yen each",
@@ -2860,6 +2918,11 @@
       "一人で歌う時": "When Singing Solo",
       "記録を全削除": "Delete All Records",
       "日付で見る": "View by Date",
+      "選んだ日に追加": "Add to Selected Date",
+      "曲リストから選ぶ": "Choose from Song List",
+      "曲リストに曲がありません": "No songs in your song list",
+      "曲リストにも保存して追加": "Save to Song List and Add",
+      "曲名未設定": "Untitled Song",
       "選んだ日に歌った曲": "Songs Sung on Selected Date",
       "今日のセットリスト": "Today's Set List",
       "ドリンク記録": "Drink Log",
@@ -2880,7 +2943,9 @@
       "問い合わせ": "Contact",
       "問い合わせを開く": "Open Contact",
       "特徴を見る": "View Features",
+      "遊び方を見る": "View Guide",
       "お店の特徴": "Features",
+      "お店の特徴・遊び方": "Features & How to Enjoy",
       "電話": "Phone",
       "メール": "Email",
       "最寄駅": "Nearest Station",
@@ -2888,6 +2953,11 @@
       "貸切やイベント時は営業いたします。": "Open for private bookings and events.",
       "Music Saloon DRUM 店内写真": "Music Saloon DRUM shop photo",
       "当店の楽器を使用できます": "Use Our Instruments",
+      "カラオケと楽器で楽しめるお店です": "Enjoy Karaoke and Instruments",
+      "歌う方の1曲を大切に": "Respect Each Singer's Song",
+      "楽器を演奏したい時": "When You Want to Play an Instrument",
+      "コーラスやハモリについて": "About Chorus and Harmony",
+      "他のお客様の歌を一緒に歌いたい時": "When You Want to Sing Along",
       "生演奏も弾き語りもOK": "Live Playing and Singing Are Welcome",
       "DAM通信カラオケと音響": "DAM Karaoke and Sound System",
       "動画 1": "Video 1",
@@ -3000,6 +3070,7 @@
       ["スタンダード対象メニューに追加で楽しめます。", "Additional items on top of the Standard menu."],
       ["スタンダード・スーパー対象メニューに追加", "Additional items on top of Standard and Super menus."],
       ["楽器使用料は無料です。セット料金にはアイス・ミネラル・緑茶・ウーロン茶などが含まれます。", "Instrument use is free. Set fee includes ice, mineral water, green tea, oolong tea, and more."],
+      ["スタッフドリンクもご用意しています。よろしければ一緒に乾杯しましょう。", "Staff drinks are also available. If you like, let's have a toast together."],
       ["ご来店中のお楽しみ。ドリンクまたはおつまみサービスが出るかもしれません。", "A little fun during your visit. You might win a drink or snack service."],
       ["サービスの有効期限は、表示された当日限りです。", "Prize results are valid only on the day shown."],
       ["同じスマホでは、その日一度回すと翌日まで回せません。日付は端末のブラウザ内に保存されます。", "On the same smartphone, you can try once per day. The date is saved in this device's browser."],
@@ -3024,10 +3095,12 @@
       ["曲名・歌手名・タグ・メモから探せます。タグはボタンから選択できます。", "Search by song title, artist, tag, or memo. You can also choose tags from the button."],
       ["曲リストに保存した曲から、次に歌う曲をおすすめします。", "Choose a recommended next song from your saved song list."],
       ["歌う曲に迷った時に使えます。デュエット曲を候補に入れるかどうかも選べます。", "Use this when you are not sure what to sing. You can choose whether to include duet songs."],
+      ["一人で歌う時はチェックを外しておくと、デュエット曲は候補から外れます。", "When singing solo, leave this unchecked to exclude duet songs."],
       ["歌う曲に迷ったら、曲リストからおすすめを選べます。", "If you are not sure what to sing, this can choose a recommendation from your song list."],
       ["その日に歌った曲を日記のように残せます。日付を選ぶと、いつ何を歌ったか確認できます。", "Keep a diary-like record of songs you sang. Choose a date to see what you sang."],
       ["曲リストの「記録」ボタンを押すと、今日の記録に追加されます。", "Press the “Log” button in the song list to add a song to today's record."],
       ["同じ曲を何度歌っても、その日の記録として残せます。", "Even if you sing the same song multiple times, it will be saved as a record for that day."],
+      ["曲リストにない曲は、曲名だけでも登録しながら記録できます。", "For songs not in your song list, you can save them with just the title and add them to your record."],
       ["ご来店中のドリンクや、ちょっとしたメモを残せます。健康管理や飲みすぎ防止が気になる方にも使えます。", "Log drinks and small notes during your visit. Useful for people who want to keep an eye on drinking."],
       ["使う人に合わせて、曲リストの表示や記録機能を切り替えられます。", "Adjust song list display and logging features to suit your use."],
       ["営業時間やアクセスなど、必要なときに確認できます。", "Check hours, access, and shop information when needed."],
@@ -3039,12 +3112,12 @@
       ["サービス表示が出た場合は、ドリンク1杯・おつまみサービス・500円割引のいずれかとしてご利用できます。", "If a prize screen appears, it can be used for one drink, a snack service, or 500 yen off."],
       ["サービス内容は営業状況によりスタッフ判断となる場合があります。", "Prize details may be adjusted by staff depending on shop conditions."],
       ["1端末につき1日1回までです。ブラウザのデータを削除すると記録も消えますが、曲リストなども同時に消えるためご注意ください。", "Limited to once per device per day. If browser data is deleted, this record is also deleted, but your song list and other data may also be deleted."],
-      ["今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね！", "You have already checked today's DRUM Gacha. Please try again on a future visit!"],
+      ["今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね♪", "You have already checked today's DRUM Gacha. Please try again on a future visit!"],
       ["本日のDRUMガチャはお休みです。", "DRUM Gacha is closed today."],
       ["本日のDRUMガチャはお休みです。また営業日にお楽しみください。", "DRUM Gacha is closed today. Please enjoy it again on a business day."],
       ["ドリンク1杯またはおつまみサービスが出ました。本日中にスタッフへこの画面をお見せください。", "You got one drink or a snack service. Please show this screen to staff today."],
       ["500円割引サービスが出ました。本日中にスタッフへこの画面をお見せください。", "You got 500 yen off. Please show this screen to staff today."],
-      ["残念でした。またチャレンジしてね！今日もゆっくりお楽しみください。", "Not this time. Please try again next time, and enjoy your visit today!"],
+      ["残念でした。またチャレンジしてね♪今日もゆっくりお楽しみください。", "Not this time. Please try again next time, and enjoy your visit today!"],
       ["一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。", "No solo songs are registered yet. Check the duet option to include duet songs."],
       ["曲リストに曲を登録すると、ここでおすすめできます。", "Add songs to your song list to get recommendations here."],
       ["選曲中...", "Choosing..."],
@@ -3066,11 +3139,21 @@
       ["10名様以上のご利用で、お一人様3,500円から承ります。イベントやバンド利用などは電話またはメールでお問い合わせください。", "For groups of 10 or more, plans start from 3,500 yen per person. Please contact us by phone or email for events or band use."],
       ["予約、貸切、イベント利用などはこちらからお問い合わせできます。", "Use this page for reservations, private bookings, events, and other inquiries."],
       ["楽器、カラオケ、生演奏など、DRUMの楽しみ方はこちらにまとめています。", "This section explains ways to enjoy DRUM, including instruments, karaoke, and live performance."],
+      ["カラオケと楽器を一緒に楽しむためのルールやマナーをまとめています。", "Rules and manners for enjoying karaoke and instruments together are collected here."],
       ["ここに動画ごとの説明を掲載できます。", "A description for each video can be shown here."],
       ["動画URLをいただいたら、タイトルと説明文を添えて表示できます。", "When you provide a video URL, it can be displayed with a title and description."],
       ["ギター、アンプ、ベースアンプ、ピアノ、ドラム、カホンなどを使って楽しめます。", "Enjoy using guitars, amps, bass amps, piano, drums, cajon, and more."],
       ["バンドでの演奏、弾き語り、カラオケと生演奏の組み合わせにも対応します。", "Band performances, singing while playing, and karaoke with live instruments are all welcome."],
       ["ミキサーも使用したこだわりの音響。カラオケだけでも十分楽しめます。", "Carefully tuned sound using a mixer. Karaoke alone is also plenty of fun."],
+      ["カラオケと楽器が共存するDRUMで、みんなが気持ちよく楽しむためのルール＆マナーです。", "Rules and manners for everyone to enjoy DRUM, where karaoke and instruments share the same space."],
+      ["当店はカラオケと楽器が共存する空間です。カラオケに合わせて店主やスタッフ、お客様が楽器で参加し、一緒に盛り上がれるのがDRUMの楽しさです。", "DRUM is a space where karaoke and instruments coexist. The owner, staff, and customers may join karaoke with instruments, creating a shared live atmosphere."],
+      ["歌う方にとって、その1曲は大切な1曲です。楽器で参加する方は、歌う方の気持ちや雰囲気に寄り添って演奏してください。", "For the person singing, each song matters. If you join with an instrument, please play in a way that supports the singer's feeling and atmosphere."],
+      ["Q. 楽器を演奏したいんですが…", "Q. Can I play an instrument?"],
+      ["A. カラオケを一時停止しての生演奏、またはカラオケや音源に合わせて演奏できます。他のお客様の歌に合わせて演奏する時は、挨拶やアイコンタクトで「一緒にやります」というコミュニケーションを心がけてください。", "A. You can pause karaoke for live performance, or play along with karaoke or backing tracks. When playing along with another customer's song, please communicate first with a greeting or eye contact."],
+      ["Q. 他のお客様の歌に合わせてコーラスやハモリを入れたい。", "Q. Can I add chorus or harmony to another customer's song?"],
+      ["A. いきなり入るのではなく、事前の確認やアイコンタクトを心がけてください。気心の知れた方同士の場合は、その限りではありません。", "A. Please do not jump in suddenly. Try to confirm first or use eye contact. This may be more flexible between people who know each other well."],
+      ["Q. 知っている曲なので、主旋律を一緒に歌いたい。", "Q. I know the song. Can I sing the main melody too?"],
+      ["A. マイクを持って主旋律を歌うことは、基本的にご遠慮ください。歌っている方の1曲を大切にしながら、拍手や手拍子などで一緒に楽しんでください。", "A. As a rule, please avoid taking a microphone and singing the main melody. Please enjoy together with applause, clapping, and respect for the singer's song."],
       ["同じタグがすでにあります。", "That tag already exists."],
       ["登録済みの曲リストをすべて削除しますか？", "Delete all saved songs?"],
       ["JSONを読み込めませんでした。保存したJSONをそのまま貼り付けてください。", "Could not read the JSON. Please paste the saved JSON exactly as it is."],
@@ -3591,12 +3674,20 @@
       return mark;
     }
 
+    function cleanDrumGachaMessage(message) {
+      const value = String(message || "");
+      if (!value || value.includes("お楽しみは続きます") || value.includes("サービス表示なし")) {
+        return "残念でした。またチャレンジしてね♪今日もゆっくりお楽しみください。";
+      }
+      return value.replace("またチャレンジしてね！", "またチャレンジしてね♪");
+    }
+
     function openDrumGachaResult(label, message, showServiceNote = false) {
       const mark = getBrowserMark();
       drumGachaDate.textContent = currentLanguage === "en" ? `${todayString()} valid today only` : `${todayString()} 当日限り`;
       drumGachaLabel.textContent = uiText(label);
       drumGachaLabel.classList.add("show");
-      drumGachaResult.textContent = uiText(message);
+      drumGachaResult.textContent = uiText(cleanDrumGachaMessage(message));
       drumGachaStaffNote.hidden = !showServiceNote;
       drumGachaVerifyCode.textContent = currentLanguage === "en"
         ? `Device save code: ${mark.code} / Saved since: ${mark.createdAt}`
@@ -3828,6 +3919,7 @@
       const selectedItems = songHistory.filter((item) => item.date === selectedDate);
       const todayItems = songHistory.filter((item) => item.date === todayString());
       todaySongCount.textContent = currentLanguage === "en" ? `${todayItems.length} songs` : `${todayItems.length}曲`;
+      renderHistorySongSelect();
 
       if (!selectedItems.length) {
         historyList.innerHTML = `<li>${escapeText(uiText("この日の記録はまだありません"))}</li>`;
@@ -3844,6 +3936,88 @@
 
       renderDrinks();
       renderTodaySetlist();
+    }
+
+    function renderHistorySongSelect() {
+      if (!historySongSelect) return;
+      historySongSelect.innerHTML = songs.length
+        ? songs.map((item) => `<option value="${escapeText(item.id)}">${escapeText(itemLabelText(item))}</option>`).join("")
+        : `<option value="">${escapeText(uiText("曲リストに曲がありません"))}</option>`;
+      addHistoryFromSong.disabled = songs.length === 0;
+    }
+
+    function addHistoryRecordFromSong(item, date) {
+      if (!item || !date) return false;
+      songHistory.unshift({
+        id: createId(),
+        sourceId: item.id,
+        date,
+        title: item.title,
+        artist: item.artist,
+        kana: item.kana || "",
+        key: item.key,
+        memo: item.memo,
+        duet: Boolean(item.duet),
+        tags: getSongTags(item),
+        createdAt: new Date().toISOString()
+      });
+      saveHistory();
+      renderHistory();
+      renderFavorites();
+      return true;
+    }
+
+    function addHistoryForSelectedDate() {
+      const item = songs.find((song) => song.id === historySongSelect.value);
+      const selectedDate = historyDate.value || todayString();
+      if (!addHistoryRecordFromSong(item, selectedDate)) return;
+      showUndo(currentLanguage === "en"
+        ? `Added ${itemLabel(item)} to ${selectedDate}`
+        : `${selectedDate}に${itemLabel(item)}を追加しました`, () => {
+        songHistory.shift();
+        saveHistory();
+        renderHistory();
+        renderFavorites();
+      });
+    }
+
+    function addNewSongToHistory() {
+      const title = historyNewTitle.value.trim();
+      if (!title) {
+        historyNewTitle.focus();
+        return;
+      }
+      const selectedDate = historyDate.value || todayString();
+      const item = {
+        id: createId(),
+        title,
+        artist: historyNewArtist.value.trim(),
+        kana: "",
+        key: historyNewKey.value || "キー未設定",
+        memo: "",
+        duet: false,
+        tags: [],
+        nextWish: false,
+        createdAt: new Date().toISOString()
+      };
+      songs.unshift(item);
+      saveSongs();
+      addHistoryRecordFromSong(item, selectedDate);
+      renderSongs();
+      historyNewTitle.value = "";
+      historyNewArtist.value = "";
+      historyNewKey.value = "";
+      showUndo(currentLanguage === "en"
+        ? `Saved and added ${itemLabel(item)} to ${selectedDate}`
+        : `${itemLabel(item)}を曲リストに保存して、${selectedDate}に追加しました`, () => {
+        songs = songs.filter((song) => song.id !== item.id);
+        songHistory = songHistory.filter((record) => record.sourceId !== item.id);
+        saveSongs();
+        saveHistory();
+        renderSongs();
+        renderHistory();
+        renderFavorites();
+      });
     }
 
     function renderDrinks() {
@@ -3939,6 +4113,12 @@
 
     function itemLabel(item) {
       return item.title ? `「${item.title}」` : "この曲";
+    }
+
+    function itemLabelText(item) {
+      const artist = item.artist ? ` / ${item.artist}` : "";
+      const key = item.key ? ` / ${uiKey(item.key)}` : "";
+      return `${item.title || "曲名未設定"}${artist}${key}`;
     }
 
     function getSongTags(item) {
@@ -4499,7 +4679,7 @@
       if (saved && saved.date === today) {
         openDrumGachaResult(
           "本日は確認済み",
-          saved.message || "今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね！",
+          saved.message || "今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね♪",
           Boolean(saved.won)
         );
         return;
@@ -4519,7 +4699,7 @@
       const won = Math.random() < rate;
       const message = won
         ? prizes[Math.floor(Math.random() * prizes.length)]
-        : "残念でした。またチャレンジしてね！今日もゆっくりお楽しみください。";
+        : "残念でした。またチャレンジしてね♪今日もゆっくりお楽しみください。";
 
       localStorage.setItem(drumGachaStorageKey, JSON.stringify({ date: today, won, message }));
       openDrumGachaResult(won ? "出ました！" : "残念でした", message, won);
@@ -4536,6 +4716,9 @@
     });
 
     historyDate.addEventListener("change", renderHistory);
+
+    addHistoryFromSong.addEventListener("click", addHistoryForSelectedDate);
+    addHistoryNewSong.addEventListener("click", addNewSongToHistory);
 
     clearHistory.addEventListener("click", () => {
       if (!songHistory.length) return;
