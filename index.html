@@ -1630,7 +1630,7 @@
       <div class="nav-links">
         <a href="#info">お知らせ</a>
         <a href="#menu">メニュー</a>
-        <a href="#customers">曲リスト</a>
+        <a href="#customers">マイ曲リスト</a>
         <a href="#history">歌った記録</a>
         <a href="#daily">今日の記録</a>
         <a href="#drum-gacha">DRUMガチャ</a>
@@ -1649,13 +1649,13 @@
         <p class="eyebrow">Menu and song list for your table</p>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <h1>
-          <span>DRUMの情報も、曲リストも</span>
+          <span>DRUMの情報も、マイ曲リストも</span>
           <span class="hero-title-sub">このアプリで。</span>
         </h1>
-        <p>Music Saloon DRUMのお知らせやメニュー確認と、自分の曲リストの管理に使えるアプリです。テーブルのQRコードから開いて、そのまま曲リストを管理できます。</p>
+        <p>Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。</p>
         <div class="actions">
           <a class="btn primary" href="#menu">メニューを見る</a>
-          <a class="btn secondary" href="#customers">曲リストを作る</a>
+          <a class="btn secondary" href="#customers">マイ曲リストを作る</a>
         </div>
       </div>
     </section>
@@ -1927,7 +1927,7 @@
             <h3>本日の運だめし</h3>
             <p>1端末につき1日1回まで回せます。サービス表示が出た場合は、当日中にその画面をスタッフにお見せください。</p>
             <p class="menu-note">月曜から金曜は、土曜日より少しサービス確率が高めです。</p>
-            <p class="menu-note">曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。</p>
+            <p class="menu-note">マイ曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。</p>
             <button class="btn primary" id="drumGachaButton" type="button">DRUMガチャを回す</button>
             <p class="menu-note" id="drumGachaRate">平日 3% / 土曜 1% / 日曜 0%</p>
           </article>
@@ -1951,11 +1951,11 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <h2>曲リスト</h2>
+            <h2>マイ曲リスト</h2>
             <p class="lead">曲名だけでも登録できます。歌手名・キー・メモはあとから追加できます。</p>
           </div>
         </div>
-        <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← 曲リストに戻る</button>
+        <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← マイ曲リストに戻る</button>
 
         <div class="song-tools">
           <div class="card song-tool-card customers-home-card">
@@ -1963,7 +1963,7 @@
               <strong>登録曲数</strong>
               <span class="song-count-number" id="totalSongCount">0曲</span>
             </div>
-            <p class="privacy-note">曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <p class="privacy-note">マイ曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="backup-recommend">
               <p>曲が増えてきたら、念のためバックアップをおすすめします。完全復元用のJSONと、見やすいコピペ用テキストを保存できます。</p>
               <button class="btn ghost" id="openSongBackupButton" type="button">バックアップを開く</button>
@@ -1997,7 +1997,7 @@
           <div class="card song-tool-card next-song-card">
             <span class="tag green">Next</span>
             <h3>次回歌いたい曲</h3>
-            <p class="small">曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。</p>
+            <p class="small">マイ曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。</p>
             <ul class="mini-list" id="nextSongList"></ul>
           </div>
 
@@ -2025,9 +2025,9 @@
               </div>
               <div>
                 <label for="songExportText">コピペ用テキスト</label>
-                <textarea id="songExportText" readonly placeholder="ここに曲リストを書き出します"></textarea>
+                <textarea id="songExportText" readonly placeholder="ここにマイ曲リストを書き出します"></textarea>
                 <div class="control-row">
-                  <button class="btn primary" id="exportSongsButton" type="button">曲リストを書き出す</button>
+                  <button class="btn primary" id="exportSongsButton" type="button">マイ曲リストを書き出す</button>
                   <button class="btn ghost" id="copySongsButton" type="button">コピー</button>
                 </div>
               </div>
@@ -2047,7 +2047,7 @@
           <div class="card song-form-card" id="songRegister">
             <h3 id="songFormTitle">曲を登録する</h3>
             <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
-            <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「曲リストに保存」を押してください。</p>
+            <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。</p>
             <form id="songForm">
               <label>
                 曲名
@@ -2094,15 +2094,15 @@
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
               </label>
               <div class="control-row">
-                <button class="btn primary" id="songSubmitButton" type="submit">曲リストに保存</button>
+                <button class="btn primary" id="songSubmitButton" type="submit">マイ曲リストに保存</button>
                 <button class="btn ghost" id="songEditCancelButton" type="button" hidden>編集をやめる</button>
               </div>
-            <p class="small">曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <p class="small">マイ曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             </form>
           </div>
 
           <div class="song-list-card">
-            <table aria-label="曲リスト">
+            <table aria-label="マイ曲リスト">
               <thead>
                 <tr>
                   <th>曲名</th>
@@ -2115,7 +2115,7 @@
               <tbody id="songList"></tbody>
             </table>
             <div class="control-row subtle-actions">
-              <button class="btn danger" id="clearAll" type="button">曲リストを全削除</button>
+              <button class="btn danger" id="clearAll" type="button">マイ曲リストを全削除</button>
             </div>
           </div>
         </div>
@@ -2127,7 +2127,7 @@
         <div class="section-head">
           <div>
             <h2>曲ガチャ</h2>
-            <p class="lead">曲リストに保存した曲から、次に歌う曲をおすすめします。</p>
+            <p class="lead">マイ曲リストに保存した曲から、次に歌う曲をおすすめします。</p>
           </div>
         </div>
         <div class="grid">
@@ -2143,7 +2143,7 @@
               </label>
             </div>
             <p class="small">一人で歌う時はチェックを外しておくと、デュエット曲は候補から外れます。</p>
-            <a class="btn ghost" href="#customers">曲リストを開く</a>
+            <a class="btn ghost" href="#customers">マイ曲リストを開く</a>
           </article>
         </div>
       </div>
@@ -2166,7 +2166,7 @@
               日付
               <input id="historyDate" type="date">
             </label>
-            <p class="small">曲リストの「記録」ボタンを押すと、今日の記録に追加されます。</p>
+            <p class="small">マイ曲リストの「記録」ボタンを押すと、今日の記録に追加されます。</p>
           </article>
           <article class="card">
             <span class="tag green">Today</span>
@@ -2178,12 +2178,12 @@
             <span class="tag orange">Edit</span>
             <h3>選んだ日に追加</h3>
             <label>
-              曲リストから選ぶ
+              マイ曲リストから選ぶ
               <select id="historySongSelect"></select>
             </label>
             <button class="btn primary" id="addHistoryFromSong" type="button">選んだ日に追加</button>
             <hr>
-            <p class="small">曲リストにない曲は、曲名だけでも登録しながら記録できます。</p>
+            <p class="small">マイ曲リストにない曲は、曲名だけでも登録しながら記録できます。</p>
             <label>
               曲名
               <input id="historyNewTitle" type="text" placeholder="例：いとしのエリー">
@@ -2212,7 +2212,7 @@
                 <option>原曲キー -3</option>
               </select>
             </label>
-            <button class="btn ghost" id="addHistoryNewSong" type="button">曲リストにも保存して追加</button>
+            <button class="btn ghost" id="addHistoryNewSong" type="button">マイ曲リストにも保存して追加</button>
           </article>
         </div>
         <div class="menu-block">
@@ -2234,7 +2234,7 @@
           <article class="card">
             <span class="tag">Set List</span>
             <h3>今日のセットリスト</h3>
-            <p class="small">曲リストで「記録」を押した曲が、今日のセットリストとして残ります。</p>
+            <p class="small">マイ曲リストで「記録」を押した曲が、今日のセットリストとして残ります。</p>
             <ul class="mini-list" id="todaySetlist"></ul>
           </article>
           <article class="card drink-section" id="drinkSection">
@@ -2268,21 +2268,21 @@
         <div class="section-head">
           <div>
             <h2>設定</h2>
-            <p class="lead">使う人に合わせて、曲リストの表示や記録機能を切り替えられます。</p>
+            <p class="lead">使う人に合わせて、マイ曲リストの表示や記録機能を切り替えられます。</p>
           </div>
           <button class="btn ghost" id="closeSettingsModal" type="button">閉じる</button>
         </div>
         <div class="grid">
           <article class="card">
             <span class="tag">Song List</span>
-            <h3>曲リスト設定</h3>
+            <h3>マイ曲リスト設定</h3>
             <label class="check-row">
               <input id="settingMemo" type="checkbox">
-              曲リストにメモ欄を表示する
+              マイ曲リストにメモ欄を表示する
             </label>
             <label class="check-row">
               <input id="settingSongCount" type="checkbox" checked>
-              曲リストに登録曲数を表示する
+              マイ曲リストに登録曲数を表示する
             </label>
             <label class="check-row">
               <input id="settingDrink" type="checkbox" checked>
@@ -2309,7 +2309,7 @@
           <article class="card">
             <span class="tag">Duet</span>
             <h3>デュエット検索</h3>
-            <p>曲を保存するときに「デュエット曲として登録」を選ぶと、曲リストでデュエット曲だけを表示できます。</p>
+            <p>曲を保存するときに「デュエット曲として登録」を選ぶと、マイ曲リストでデュエット曲だけを表示できます。</p>
           </article>
         </div>
       </div>
@@ -2320,7 +2320,7 @@
         <div class="section-head">
           <div>
             <h2>よく歌う曲</h2>
-            <p class="lead">曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
+            <p class="lead">マイ曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
           </div>
         </div>
 
@@ -2328,7 +2328,7 @@
           <div class="card">
             <span class="tag">Ranking</span>
             <h3>歌った回数ランキング</h3>
-            <p>曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
+            <p>マイ曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
             <p class="privacy-note">ランキングもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。</p>
           </div>
 
@@ -2538,7 +2538,7 @@
       </div>
       <div class="result-panel">
         <p>iPhoneは共有ボタンから「ホーム画面に追加」、Androidはブラウザのメニューから「ホーム画面に追加」を選べます。</p>
-        <p class="small">曲リストや記録は、この端末のブラウザ内に保存されます。</p>
+        <p class="small">マイ曲リストや記録は、この端末のブラウザ内に保存されます。</p>
       </div>
       <div class="control-row">
         <button class="btn primary" id="dismissHomePromptToday" type="button">今日は閉じる</button>
@@ -2570,7 +2570,7 @@
         <button class="btn ghost" id="closeGachaModal" type="button">閉じる</button>
       </div>
       <div class="gacha-hit" id="gachaHit">出ました！</div>
-      <div class="result-panel" id="gachaResult">歌う曲に迷ったら、曲リストからおすすめを選べます。</div>
+      <div class="result-panel" id="gachaResult">歌う曲に迷ったら、マイ曲リストからおすすめを選べます。</div>
     </div>
   </div>
 
@@ -2733,7 +2733,7 @@
     const exactTranslations = {
       "お知らせ": "Info",
       "メニュー": "Menu",
-      "曲リスト": "Song List",
+      "マイ曲リスト": "Song List",
       "歌った記録": "Song History",
       "今日の記録": "Today",
       "店舗情報": "Shop Info",
@@ -2762,7 +2762,7 @@
       "チャージ・フード": "Charge & Food",
       "← メニュー一覧に戻る": "← Back to Menu",
       "← メニュー一覧へ戻る": "← Back to Menu",
-      "← 曲リストに戻る": "← Back to Song List",
+      "← マイ曲リストに戻る": "← Back to Song List",
       "飲み放題♪歌い放題♪コース": "All-you-can-drink & Karaoke Plans",
       "スタンダードプラン": "Standard Plan",
       "スーパープラン": "Super Plan",
@@ -2883,7 +2883,7 @@
       "DRUMガチャを回す": "Try DRUM Gacha",
       "本日の運だめし": "Today's Luck Try",
       "月曜から金曜は、土曜日より少しサービス確率が高めです。": "Monday to Friday have a slightly higher service chance than Saturday.",
-      "曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。": "As your song list grows, today's service chance rises a little.",
+      "マイ曲リストの登録曲が増えると、本日のサービス確率が少しだけ上がります。": "As your song list grows, today's service chance rises a little.",
       "本日のDRUMガチャはお休みです": "DRUM Gacha is closed today",
       "本日は確認済み": "Already Checked Today",
       "今日はお休み": "Closed Today",
@@ -2892,7 +2892,7 @@
       "回数制限": "Limit",
       "バックアップを開く": "Open Backup",
       "曲を登録する": "Add a Song",
-      "曲リストを作る": "Create Song List",
+      "マイ曲リストを作る": "Create Song List",
       "曲ガチャ": "Song Gacha",
       "よく歌う曲": "Frequently Sung",
       "タグを選ぶ": "Choose Tags",
@@ -2904,11 +2904,11 @@
       "JSONファイルを保存": "Save JSON File",
       "JSONから復元": "Restore from JSON",
       "JSONファイルから復元": "Restore from JSON File",
-      "曲リストを書き出す": "Export Song List",
+      "マイ曲リストを書き出す": "Export Song List",
       "コピー": "Copy",
       "貼り付けた曲を読み込む": "Import Pasted Songs",
-      "曲リストに保存": "Save to Song List",
-      "曲リストを全削除": "Delete All Songs",
+      "マイ曲リストに保存": "Save to Song List",
+      "マイ曲リストを全削除": "Delete All Songs",
       "ホーム画面に追加できます": "Add to Home Screen",
       "今日は閉じる": "Close for Today",
       "今後は表示しない": "Do Not Show Again",
@@ -2919,9 +2919,9 @@
       "記録を全削除": "Delete All Records",
       "日付で見る": "View by Date",
       "選んだ日に追加": "Add to Selected Date",
-      "曲リストから選ぶ": "Choose from Song List",
-      "曲リストに曲がありません": "No songs in your song list",
-      "曲リストにも保存して追加": "Save to Song List and Add",
+      "マイ曲リストから選ぶ": "Choose from Song List",
+      "マイ曲リストに曲がありません": "No songs in your song list",
+      "マイ曲リストにも保存して追加": "Save to Song List and Add",
       "曲名未設定": "Untitled Song",
       "選んだ日に歌った曲": "Songs Sung on Selected Date",
       "今日のセットリスト": "Today's Set List",
@@ -2930,7 +2930,7 @@
       "来店メモ": "Visit Memo",
       "保存について": "About Saving",
       "閉じる": "Close",
-      "曲リスト設定": "Song List Settings",
+      "マイ曲リスト設定": "Song List Settings",
       "タグ設定": "Tag Settings",
       "タグを追加": "Add Tag",
       "記録について": "About Records",
@@ -3004,8 +3004,8 @@
       "検索用よみ": "Search reading",
       "タグ": "Tags",
       "任意": "Optional",
-      "曲リストにメモ欄を表示する": "Show memo field in song list",
-      "曲リストに登録曲数を表示する": "Show saved song count",
+      "マイ曲リストにメモ欄を表示する": "Show memo field in song list",
+      "マイ曲リストに登録曲数を表示する": "Show saved song count",
       "ドリンク記録は「今日の記録」に表示する": "Show drink log in Today",
       "デュエット曲として登録": "Mark as duet",
       "ジャンルタグ": "Genre tags",
@@ -3037,9 +3037,9 @@
     const phraseTranslations = [
       ["ご来店ありがとうございます♪", "Thank you for visiting♪"],
       ["本日もお楽しみください♪", "Enjoy your time today♪"],
-      ["DRUMの情報も、曲リストも", "DRUM info and your song list"],
+      ["DRUMの情報も、マイ曲リストも", "DRUM info and your song list"],
       ["このアプリで。", "in this app."],
-      ["Music Saloon DRUMのお知らせやメニュー確認と、自分の曲リストの管理に使えるアプリです。テーブルのQRコードから開いて、そのまま曲リストを管理できます。", "Use this app to check Music Saloon DRUM notices and menus, and manage your own song list. Open it from the table QR code and manage your list right away."],
+      ["Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。", "Use this app to check Music Saloon DRUM notices and menus, and manage your own song list. Open it from the table QR code and manage your list right away."],
       ["ご来店中に確認していただきたいお知らせや、SNSへのリンクをまとめています。", "Notices to check during your visit and links to our social media."],
       ["イベント情報や店内の様子はInstagramでもご案内できます。", "You can also see event information and shop updates on Instagram."],
       ["最新情報やお知らせは公式LINEからもご案内できます。", "You can also get the latest updates and notices through our Official LINE."],
@@ -3076,33 +3076,33 @@
       ["同じスマホでは、その日一度回すと翌日まで回せません。日付は端末のブラウザ内に保存されます。", "On the same smartphone, you can try once per day. The date is saved in this device's browser."],
       ["自分の歌いたい曲、キー、メモを保存できます。歌手名・曲名で検索できます。", "Save songs you want to sing, keys, and notes. Search by artist or song title."],
       ["曲名だけでも登録できます。歌手名・キー・メモはあとから追加できます。", "You can save a song with only the title. Artist, key, and memo can be added later."],
-      ["曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved only in this device's browser. Other customers cannot see it, and it is not automatically shared with the shop. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
+      ["マイ曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved only in this device's browser. Other customers cannot see it, and it is not automatically shared with the shop. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
       ["曲が増えてきたら、念のためバックアップをおすすめします。完全復元用のJSONと、見やすいコピペ用テキストを保存できます。", "As your list grows, we recommend making a backup. You can save a full-restore JSON file and an easy-to-read copy-and-paste text list."],
       ["歌いたい曲名・歌手名・キーを入力して保存できます。", "Enter a song title, artist, and key, then save it."],
       ["まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。", "You can start by saving only the song title. Artist, key, tags, and memo can be filled in later as needed."],
-      ["入力が面倒な時は、曲名だけ入れて「曲リストに保存」を押してください。", "If entering everything feels like too much, just type the song title and press “Save to Song List.”"],
+      ["入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。", "If entering everything feels like too much, just type the song title and press “Save to Song List.”"],
       ["スマホのホーム画面に追加しておくと、次回からすぐに開けます。", "Add this app to your phone's home screen so you can open it quickly next time."],
       ["iPhoneは共有ボタンから「ホーム画面に追加」、Androidはブラウザのメニューから「ホーム画面に追加」を選べます。", "On iPhone, use the Share button and choose “Add to Home Screen.” On Android, use the browser menu and choose “Add to Home screen.”"],
-      ["曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved in this device's browser. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
-      ["曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。", "Use the “Next” button in the song list to save songs you want to sing next time."],
+      ["マイ曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved in this device's browser. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
+      ["マイ曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。", "Use the “Next” button in the song list to save songs you want to sing next time."],
       ["JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。", "JSON can restore song titles, artists, keys, tags, notes, and more. Text export is useful for pasting into notes or LINE for checking."],
       ["1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみを入れる場合は4つ目に入れてください。", "Paste one song per line. Example: Umi Southern All Stars Original key. You can also register only the song title. If you add a search reading, put it fourth."],
       ["JSONバックアップ", "JSON Backup"],
       ["JSON読み込み", "JSON Import"],
       ["コピペ用テキスト", "Copy/Paste Text"],
       ["テキスト読み込み", "Text Import"],
-      ["曲リストを開く", "Open Song List"],
+      ["マイ曲リストを開く", "Open Song List"],
       ["曲名・歌手名・タグ・メモから探せます。タグはボタンから選択できます。", "Search by song title, artist, tag, or memo. You can also choose tags from the button."],
-      ["曲リストに保存した曲から、次に歌う曲をおすすめします。", "Choose a recommended next song from your saved song list."],
+      ["マイ曲リストに保存した曲から、次に歌う曲をおすすめします。", "Choose a recommended next song from your saved song list."],
       ["歌う曲に迷った時に使えます。デュエット曲を候補に入れるかどうかも選べます。", "Use this when you are not sure what to sing. You can choose whether to include duet songs."],
       ["一人で歌う時はチェックを外しておくと、デュエット曲は候補から外れます。", "When singing solo, leave this unchecked to exclude duet songs."],
-      ["歌う曲に迷ったら、曲リストからおすすめを選べます。", "If you are not sure what to sing, this can choose a recommendation from your song list."],
+      ["歌う曲に迷ったら、マイ曲リストからおすすめを選べます。", "If you are not sure what to sing, this can choose a recommendation from your song list."],
       ["その日に歌った曲を日記のように残せます。日付を選ぶと、いつ何を歌ったか確認できます。", "Keep a diary-like record of songs you sang. Choose a date to see what you sang."],
-      ["曲リストの「記録」ボタンを押すと、今日の記録に追加されます。", "Press the “Log” button in the song list to add a song to today's record."],
+      ["マイ曲リストの「記録」ボタンを押すと、今日の記録に追加されます。", "Press the “Log” button in the song list to add a song to today's record."],
       ["同じ曲を何度歌っても、その日の記録として残せます。", "Even if you sing the same song multiple times, it will be saved as a record for that day."],
-      ["曲リストにない曲は、曲名だけでも登録しながら記録できます。", "For songs not in your song list, you can save them with just the title and add them to your record."],
+      ["マイ曲リストにない曲は、曲名だけでも登録しながら記録できます。", "For songs not in your song list, you can save them with just the title and add them to your record."],
       ["ご来店中のドリンクや、ちょっとしたメモを残せます。健康管理や飲みすぎ防止が気になる方にも使えます。", "Log drinks and small notes during your visit. Useful for people who want to keep an eye on drinking."],
-      ["使う人に合わせて、曲リストの表示や記録機能を切り替えられます。", "Adjust song list display and logging features to suit your use."],
+      ["使う人に合わせて、マイ曲リストの表示や記録機能を切り替えられます。", "Adjust song list display and logging features to suit your use."],
       ["営業時間やアクセスなど、必要なときに確認できます。", "Check hours, access, and shop information when needed."],
       ["必要なときにだけ確認できる、DRUMの楽しみ方です。", "A quick guide to enjoying DRUM whenever you need it."],
       ["電話またはメールでお問い合わせください。フォームからはメールアプリが開きます。", "Contact us by phone or email. The form opens your email app."],
@@ -3111,7 +3111,7 @@
       ["1端末につき1日1回まで回せます。サービス表示が出た場合は、当日中にその画面をスタッフにお見せください。", "You can try once per device per day. If a prize screen appears, please show it to staff on the same day."],
       ["サービス表示が出た場合は、ドリンク1杯・おつまみサービス・500円割引のいずれかとしてご利用できます。", "If a prize screen appears, it can be used for one drink, a snack service, or 500 yen off."],
       ["サービス内容は営業状況によりスタッフ判断となる場合があります。", "Prize details may be adjusted by staff depending on shop conditions."],
-      ["1端末につき1日1回までです。ブラウザのデータを削除すると記録も消えますが、曲リストなども同時に消えるためご注意ください。", "Limited to once per device per day. If browser data is deleted, this record is also deleted, but your song list and other data may also be deleted."],
+      ["1端末につき1日1回までです。ブラウザのデータを削除すると記録も消えますが、マイ曲リストなども同時に消えるためご注意ください。", "Limited to once per device per day. If browser data is deleted, this record is also deleted, but your song list and other data may also be deleted."],
       ["今日のDRUMガチャは確認済みです。また明日以降のご来店時にチャレンジしてね♪", "You have already checked today's DRUM Gacha. Please try again on a future visit!"],
       ["本日のDRUMガチャはお休みです。", "DRUM Gacha is closed today."],
       ["本日のDRUMガチャはお休みです。また営業日にお楽しみください。", "DRUM Gacha is closed today. Please enjoy it again on a business day."],
@@ -3119,19 +3119,19 @@
       ["500円割引サービスが出ました。本日中にスタッフへこの画面をお見せください。", "You got 500 yen off. Please show this screen to staff today."],
       ["残念でした。またチャレンジしてね♪今日もゆっくりお楽しみください。", "Not this time. Please try again next time, and enjoy your visit today!"],
       ["一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。", "No solo songs are registered yet. Check the duet option to include duet songs."],
-      ["曲リストに曲を登録すると、ここでおすすめできます。", "Add songs to your song list to get recommendations here."],
+      ["マイ曲リストに曲を登録すると、ここでおすすめできます。", "Add songs to your song list to get recommendations here."],
       ["選曲中...", "Choosing..."],
-      ["曲リストに登録している曲が候補になります。まだ曲がない場合は、先に曲リストへ歌いたい曲を保存してください。", "Songs in your song list become candidates. If there are no songs yet, add songs to your song list first."],
+      ["マイ曲リストに登録している曲が候補になります。まだ曲がない場合は、先にマイ曲リストへ歌いたい曲を保存してください。", "Songs in your song list become candidates. If there are no songs yet, add songs to your song list first."],
       ["チェックを外しておくと、デュエット曲は候補から外れます。二人で歌う時だけオンにできます。", "Leave this unchecked to exclude duet songs. Turn it on only when singing with two people."],
-      ["曲リストで「記録」を押した曲が、今日のセットリストとして残ります。", "Songs you press “Log” for in the song list are saved as today's set list."],
+      ["マイ曲リストで「記録」を押した曲が、今日のセットリストとして残ります。", "Songs you press “Log” for in the song list are saved as today's set list."],
       ["健康管理や飲みすぎ防止の目安として、自分用に今日飲んだものを残せます。", "You can keep a personal drink log as a guide for health management or preventing overdrinking."],
       ["ドリンク記録とメモは、この端末のブラウザ内に保存されます。他のお客様やお店側へ自動共有されません。", "Drink logs and notes are saved only in this device's browser. They are not automatically shared with other customers or the shop."],
       ["ジャンルだけでなく、十八番・練習中・盛り上がる曲など、自分用の印も追加できます。", "You can add personal tags such as favorite, practicing, or crowd pleaser, not just genres."],
       ["削除したタグは新しく選ぶ候補から外れます。すでに曲に付いているタグは曲側に残ります。", "Deleted tags are removed from new tag choices. Tags already attached to songs remain on those songs."],
       ["歌った曲、キー、ドリンク記録、今日のメモはこの端末のブラウザ内に保存されます。別のお客様やお店側へ自動共有されません。", "Sung songs, keys, drink logs, and today's notes are saved only in this device's browser. They are not automatically shared with other customers or the shop."],
-      ["曲を保存するときに「デュエット曲として登録」を選ぶと、曲リストでデュエット曲だけを表示できます。", "When saving a song, choose “Mark as duet” to show only duet songs in the song list."],
-      ["曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。", "When you press “Log” in the song list, that song's count increases. Songs you sing more often are shown higher based on your history."],
-      ["曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。", "The “Log” button in the song list automatically creates a ranking of songs you sing often."],
+      ["曲を保存するときに「デュエット曲として登録」を選ぶと、マイ曲リストでデュエット曲だけを表示できます。", "When saving a song, choose “Mark as duet” to show only duet songs in the song list."],
+      ["マイ曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。", "When you press “Log” in the song list, that song's count increases. Songs you sing more often are shown higher based on your history."],
+      ["マイ曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。", "The “Log” button in the song list automatically creates a ranking of songs you sing often."],
       ["ランキングもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。", "Rankings are saved only in this device's browser. Other seats and customers cannot see them."],
       ["西武池袋線 江古田駅 徒歩1分", "Seibu Ikebukuro Line: Ekoda Station, 1 minute on foot"],
       ["都営大江戸線 新江古田駅 徒歩7分", "Toei Oedo Line: Shin-Ekoda Station, 7 minutes on foot"],
@@ -3155,7 +3155,7 @@
       ["Q. 知っている曲なので、主旋律を一緒に歌いたい。", "Q. I know the song. Can I sing the main melody too?"],
       ["A. マイクを持って主旋律を歌うことは、基本的にご遠慮ください。歌っている方の1曲を大切にしながら、拍手や手拍子などで一緒に楽しんでください。", "A. As a rule, please avoid taking a microphone and singing the main melody. Please enjoy together with applause, clapping, and respect for the singer's song."],
       ["同じタグがすでにあります。", "That tag already exists."],
-      ["登録済みの曲リストをすべて削除しますか？", "Delete all saved songs?"],
+      ["登録済みのマイ曲リストをすべて削除しますか？", "Delete all saved songs?"],
       ["JSONを読み込めませんでした。保存したJSONをそのまま貼り付けてください。", "Could not read the JSON. Please paste the saved JSON exactly as it is."],
       ["復元できる曲がありません。", "There are no songs to restore."],
       ["ファイルの読み込みに失敗しました。", "Could not read the file."],
@@ -3175,7 +3175,7 @@
       ["歌手名・曲名・タグ・メモで検索", "Search artist, song, tag, or memo"],
       ["ここに復元用JSONを書き出します", "Backup JSON will appear here"],
       ["保存しておいたJSONを貼り付け", "Paste saved JSON here"],
-      ["ここに曲リストを書き出します", "Song list export will appear here"],
+      ["ここにマイ曲リストを書き出します", "Song list export will appear here"],
       ["曲名、歌手名、キーの順で貼り付け", "Paste song title, artist, and key"],
       ["例：いとしのエリー", "Ex: Itoshi no Ellie"],
       ["例：サザンオールスターズ", "Ex: Southern All Stars"],
@@ -3333,7 +3333,7 @@
           try {
             await navigator.share({
               files: [file],
-              title: "Music Saloon DRUM 曲リストバックアップ"
+              title: "Music Saloon DRUM マイ曲リストバックアップ"
             });
             return;
           } catch (error) {
@@ -3648,7 +3648,7 @@
       if (rate === 0) return uiText("本日のDRUMガチャはお休みです");
       const bonus = drumGachaSongBonus();
       const bonusText = bonus > 0
-        ? (currentLanguage === "en" ? ` (song-list bonus +${formatRatePercent(bonus)}%)` : `（曲リストボーナス +${formatRatePercent(bonus)}%）`)
+        ? (currentLanguage === "en" ? ` (song-list bonus +${formatRatePercent(bonus)}%)` : `（マイ曲リストボーナス +${formatRatePercent(bonus)}%）`)
         : "";
       return currentLanguage === "en"
         ? `Today's service chance: ${formatRatePercent(rate)}%${bonusText}`
@@ -3942,7 +3942,7 @@
       if (!historySongSelect) return;
       historySongSelect.innerHTML = songs.length
         ? songs.map((item) => `<option value="${escapeText(item.id)}">${escapeText(itemLabelText(item))}</option>`).join("")
-        : `<option value="">${escapeText(uiText("曲リストに曲がありません"))}</option>`;
+        : `<option value="">${escapeText(uiText("マイ曲リストに曲がありません"))}</option>`;
       addHistoryFromSong.disabled = songs.length === 0;
     }
 
@@ -4009,7 +4009,7 @@
       historyNewKey.value = "";
       showUndo(currentLanguage === "en"
         ? `Saved and added ${itemLabel(item)} to ${selectedDate}`
-        : `${itemLabel(item)}を曲リストに保存して、${selectedDate}に追加しました`, () => {
+        : `${itemLabel(item)}をマイ曲リストに保存して、${selectedDate}に追加しました`, () => {
         songs = songs.filter((song) => song.id !== item.id);
         songHistory = songHistory.filter((record) => record.sourceId !== item.id);
         saveSongs();
@@ -4194,7 +4194,7 @@
     function resetSongFormMode() {
       editingSongId = null;
       songFormTitle.textContent = uiText("曲を登録する");
-      songSubmitButton.textContent = uiText("曲リストに保存");
+      songSubmitButton.textContent = uiText("マイ曲リストに保存");
       songEditCancelButton.hidden = true;
       form.reset();
       setSongTagSelection([]);
@@ -4321,7 +4321,7 @@
       favoriteCount.textContent = currentLanguage === "en" ? `${filtered.length} songs` : `${filtered.length}曲`;
 
       if (!filtered.length) {
-        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText("まだ歌った記録がありません。曲リストで「記録」を押すとランキングに反映されます。"))}</div></div>`;
+        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText("まだ歌った記録がありません。マイ曲リストで「記録」を押すとランキングに反映されます。"))}</div></div>`;
         return;
       }
 
@@ -4445,7 +4445,7 @@
 
     clearAll.addEventListener("click", () => {
       if (!songs.length) return;
-      if (confirm(uiText("登録済みの曲リストをすべて削除しますか？"))) {
+      if (confirm(uiText("登録済みのマイ曲リストをすべて削除しますか？"))) {
         songs = [];
         saveSongs();
         renderSongs();
@@ -4494,7 +4494,7 @@
         alert(uiText("復元できる曲がありません。"));
         return;
       }
-      if (!confirm(currentLanguage === "en" ? `Replace the current song list with ${restoredSongs.length} songs from the JSON?` : `現在の曲リストを、JSON内の${restoredSongs.length}曲に置き換えますか？`)) return;
+      if (!confirm(currentLanguage === "en" ? `Replace the current song list with ${restoredSongs.length} songs from the JSON?` : `現在のマイ曲リストを、JSON内の${restoredSongs.length}曲に置き換えますか？`)) return;
       songs = restoredSongs;
       if (restoredTags.length) {
         genreTags = [...new Set([...restoredTags, ...defaultGenreTags])];
@@ -4565,7 +4565,7 @@
         alert(uiText("読み込める曲がありません。曲名、歌手名、キーの順で貼り付けてください。"));
         return;
       }
-      if (!confirm(currentLanguage === "en" ? `Add ${imported.length} songs to the song list?` : `${imported.length}曲を曲リストに追加しますか？`)) return;
+      if (!confirm(currentLanguage === "en" ? `Add ${imported.length} songs to the song list?` : `${imported.length}曲をマイ曲リストに追加しますか？`)) return;
       songs = [...imported, ...songs];
       saveSongs();
       renderSongs();
@@ -4627,7 +4627,7 @@
         gachaHit.classList.remove("show");
         gachaResult.textContent = songs.length
           ? uiText("一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。")
-          : uiText("曲リストに曲を登録すると、ここでおすすめできます。");
+          : uiText("マイ曲リストに曲を登録すると、ここでおすすめできます。");
         return;
       }
       gachaModal.classList.add("show");
@@ -4967,4 +4967,5 @@
   </script>
 </body>
 </html>
+
 
