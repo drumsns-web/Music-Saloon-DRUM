@@ -368,6 +368,41 @@
       line-height: 1.35;
     }
 
+    #guide .card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #guide .card .btn {
+      width: 100%;
+      min-height: 54px;
+      justify-content: space-between;
+      margin-top: auto;
+      border: 2px solid rgba(20, 63, 44, .24);
+      background: linear-gradient(135deg, var(--orange), #ffb15f);
+      color: var(--forest-2);
+      box-shadow: 0 12px 24px rgba(240, 138, 53, .24);
+      font-size: 16px;
+    }
+
+    #guide .card .btn::after {
+      content: "›";
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(11, 43, 30, .14);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    #guide .card .btn:hover {
+      background: linear-gradient(135deg, var(--orange-2), #ffc17a);
+      border-color: rgba(20, 63, 44, .34);
+    }
+
     .tag {
       display: inline-flex;
       min-height: 28px;
