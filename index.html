@@ -1506,6 +1506,27 @@
       margin-top: 14px;
     }
 
+    .drink-choice {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 44px;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .drink-choice .favorite-toggle {
+      padding: 8px 0;
+      min-height: 42px;
+      font-size: 18px;
+    }
+
+    .favorite-drink-panel {
+      border: 1px solid rgba(240, 138, 53, .28);
+      border-radius: 8px;
+      padding: 14px;
+      margin: 0 0 16px;
+      background: rgba(255, 247, 232, .75);
+    }
+
     .undo-toast {
       position: fixed;
       left: 50%;
@@ -1653,6 +1674,7 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
+        <a href="#guide">できること</a>
         <a href="#info">お知らせ</a>
         <a href="#menu">メニュー</a>
         <a href="#customers">マイ曲リスト</a>
@@ -1681,6 +1703,67 @@
         <div class="actions">
           <a class="btn primary" href="#menu">メニューを見る</a>
           <a class="btn secondary" href="#customers">マイ曲リストを作る</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="guide">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <h2>このアプリでできること</h2>
+            <p class="lead">使いたい機能を選ぶと、そのページへ移動できます。</p>
+          </div>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag orange">Menu</span>
+            <h3>メニューを見る</h3>
+            <p>飲み放題、ボトル、グラス、フードなどを確認できます。</p>
+            <a class="btn primary" href="#menu">メニューへ</a>
+          </article>
+          <article class="card">
+            <span class="tag green">Song</span>
+            <h3>マイ曲リストを作る</h3>
+            <p>曲名だけでも登録できます。キー、タグ、メモはあとから編集できます。</p>
+            <a class="btn primary" href="#song-register">曲を登録する</a>
+          </article>
+          <article class="card">
+            <span class="tag">Search</span>
+            <h3>曲を探す</h3>
+            <p>曲名、歌手名、タグ、メモで検索できます。タグ選択から探すこともできます。</p>
+            <a class="btn ghost" href="#customers">マイ曲リストへ</a>
+          </article>
+          <article class="card">
+            <span class="tag blue">Gacha</span>
+            <h3>曲ガチャを使う</h3>
+            <p>歌う曲に迷った時、マイ曲リストから次の候補を選べます。</p>
+            <a class="btn ghost" href="#gacha">曲ガチャへ</a>
+          </article>
+          <article class="card">
+            <span class="tag green">History</span>
+            <h3>歌った曲を記録する</h3>
+            <p>日付ごとに歌った曲を残せます。記録ごとのメモも使えます。</p>
+            <a class="btn ghost" href="#history">歌った記録へ</a>
+          </article>
+          <article class="card">
+            <span class="tag blue">Today</span>
+            <h3>今日の記録を残す</h3>
+            <p>今日のセットリスト、ドリンク記録、来店メモを残せます。</p>
+            <a class="btn ghost" href="#daily">今日の記録へ</a>
+          </article>
+          <article class="card">
+            <span class="tag orange">DRUM</span>
+            <h3>DRUMガチャを回す</h3>
+            <p>ご来店中の運だめしです。サービス表示は当日限り有効です。</p>
+            <a class="btn ghost" href="#drum-gacha">DRUMガチャへ</a>
+          </article>
+          <article class="card">
+            <span class="tag">Shop</span>
+            <h3>店舗情報を見る</h3>
+            <p>アクセス、営業時間、公式LINE、問い合わせ先などを確認できます。</p>
+            <a class="btn ghost" href="#about">店舗情報へ</a>
+          </article>
         </div>
       </div>
     </section>
@@ -2603,6 +2686,11 @@
         </div>
         <button class="btn ghost" id="closeDrinkModal" type="button">閉じる</button>
       </div>
+      <div class="favorite-drink-panel">
+        <h3>お気に入りドリンク</h3>
+        <p class="small">よく飲むものは下の一覧の星ボタンで登録できます。</p>
+        <div class="drink-buttons" id="favoriteDrinkButtons"></div>
+      </div>
       <div class="drink-buttons" id="drinkButtons"></div>
     </div>
   </div>
@@ -2643,6 +2731,7 @@
     const historyStorageKey = "music-saloon-drum-history";
     const historyBackupStorageKey = "music-saloon-drum-history-backup";
     const drinkStorageKey = "music-saloon-drum-drinks";
+    const favoriteDrinkStorageKey = "music-saloon-drum-favorite-drinks";
     const dailyMemoStorageKey = "music-saloon-drum-daily-memos";
     const settingsStorageKey = "music-saloon-drum-settings";
     const tagStorageKey = "music-saloon-drum-tags";
@@ -2746,6 +2835,7 @@
     const closeDrinkModal = document.getElementById("closeDrinkModal");
     const drinkModal = document.getElementById("drinkModal");
     const drinkButtons = document.getElementById("drinkButtons");
+    const favoriteDrinkButtons = document.getElementById("favoriteDrinkButtons");
     const homePromptModal = document.getElementById("homePromptModal");
     const closeHomePrompt = document.getElementById("closeHomePrompt");
     const dismissHomePromptToday = document.getElementById("dismissHomePromptToday");
@@ -2787,6 +2877,8 @@
 
     const exactTranslations = {
       "お知らせ": "Info",
+      "できること": "Guide",
+      "このアプリでできること": "What You Can Do",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "歌った記録": "Song History",
@@ -2823,6 +2915,16 @@
       "今日のセットリストをコピー": "Copy Today's Set List",
       "コピーしました": "Copied",
       "この記録のメモ": "Note for this song",
+      "お気に入りドリンク": "Favorite Drinks",
+      "まだお気に入りドリンクがありません。": "No favorite drinks yet.",
+      "メニューへ": "Go to Menu",
+      "曲を登録する": "Add a Song",
+      "マイ曲リストへ": "Go to My Song List",
+      "曲ガチャへ": "Go to Song Gacha",
+      "歌った記録へ": "Go to Song History",
+      "今日の記録へ": "Go to Today",
+      "DRUMガチャへ": "Go to DRUM Gacha",
+      "店舗情報へ": "Go to Shop Info",
       "ドリンク記録に合計杯数を表示する": "Show total drink count",
       "今日のセットリストをコピーできるようにする": "Enable set list copy",
       "歌った記録ごとにメモ欄を表示する": "Show notes for each sung song",
@@ -3137,6 +3239,16 @@
       ["本日もお楽しみください♪", "Enjoy your time today♪"],
       ["DRUMの情報も、マイ曲リストも", "DRUM info and your personal song list"],
       ["このアプリで。", "all in this app."],
+      ["使いたい機能を選ぶと、そのページへ移動できます。", "Choose a feature to open that page."],
+      ["飲み放題、ボトル、グラス、フードなどを確認できます。", "Check all-you-can-drink plans, bottles, glass drinks, and food."],
+      ["曲名だけでも登録できます。キー、タグ、メモはあとから編集できます。", "You can save just the song title first. Keys, tags, and notes can be edited later."],
+      ["曲名、歌手名、タグ、メモで検索できます。タグ選択から探すこともできます。", "Search by song title, artist, tag, or note. You can also search by choosing tags."],
+      ["歌う曲に迷った時、マイ曲リストから次の候補を選べます。", "When you are not sure what to sing, choose from My Song List."],
+      ["日付ごとに歌った曲を残せます。記録ごとのメモも使えます。", "Save sung songs by date. You can also add notes to each record."],
+      ["今日のセットリスト、ドリンク記録、来店メモを残せます。", "Save today's set list, drink log, and visit memo."],
+      ["ご来店中の運だめしです。サービス表示は当日限り有効です。", "Try your luck during your visit. Prize screens are valid only today."],
+      ["アクセス、営業時間、公式LINE、問い合わせ先などを確認できます。", "Check access, hours, Official LINE, and contact information."],
+      ["よく飲むものは下の一覧の星ボタンで登録できます。", "Use the star buttons below to save drinks you often order."],
       ["Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。", "Use this app to check Music Saloon DRUM notices and menus, and manage your personal song list. Open it from the table QR code and start using it right away."],
       ["ご来店中に確認していただきたいお知らせや、SNSへのリンクをまとめています。", "Notices to check during your visit and links to our social media."],
       ["イベント情報や店内の様子はInstagramでもご案内できます。", "You can also see event information and shop updates on Instagram."],
@@ -3302,6 +3414,7 @@
     let songHistory = JSON.parse(localStorage.getItem(historyStorageKey) || "[]");
     let historyBackup = JSON.parse(localStorage.getItem(historyBackupStorageKey) || "null");
     let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
+    let favoriteDrinks = JSON.parse(localStorage.getItem(favoriteDrinkStorageKey) || "[]");
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     if (settings.showSongCount === undefined) settings.showSongCount = true;
@@ -3523,6 +3636,10 @@
 
     function saveDrinks() {
       localStorage.setItem(drinkStorageKey, JSON.stringify(drinkHistory));
+    }
+
+    function saveFavoriteDrinks() {
+      localStorage.setItem(favoriteDrinkStorageKey, JSON.stringify(favoriteDrinks));
     }
 
     function saveDailyMemos() {
@@ -4544,16 +4661,54 @@
     }
 
     function renderDrinkButtons() {
+      renderFavoriteDrinkButtons();
       drinkButtons.innerHTML = drinkOptionGroups.map((group) => `
         <div class="menu-block">
           <h3>${escapeText(uiText(group.label))}</h3>
           <div class="drink-buttons">
             ${group.items.map((name) => (
-              `<button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>`
+              `<div class="drink-choice">
+                <button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>
+                <button class="btn ghost favorite-toggle" type="button" data-favorite-drink="${escapeText(name)}" aria-label="${escapeText(uiText(name))}をお気に入り登録">${favoriteDrinks.includes(name) ? "★" : "☆"}</button>
+              </div>`
             )).join("")}
           </div>
         </div>
       `).join("");
+    }
+
+    function renderFavoriteDrinkButtons() {
+      favoriteDrinkButtons.innerHTML = favoriteDrinks.length
+        ? favoriteDrinks.map((name) => `<button class="btn primary" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>`).join("")
+        : `<p class="small">${escapeText(uiText("まだお気に入りドリンクがありません。"))}</p>`;
+    }
+
+    function toggleFavoriteDrink(name) {
+      if (!name) return;
+      if (favoriteDrinks.includes(name)) {
+        favoriteDrinks = favoriteDrinks.filter((item) => item !== name);
+      } else {
+        favoriteDrinks.unshift(name);
+      }
+      saveFavoriteDrinks();
+      renderDrinkButtons();
+    }
+
+    function recordDrinkByName(drinkName) {
+      if (!drinkName) return;
+      drinkHistory.push({
+        id: createId(),
+        date: todayString(),
+        name: drinkName,
+        createdAt: new Date().toISOString()
+      });
+      saveDrinks();
+      renderDrinks();
+      showUndo(currentLanguage === "en" ? `Logged 1 ${uiText(drinkName)}` : `${drinkName}を1杯記録しました`, () => {
+        drinkHistory.pop();
+        saveDrinks();
+        renderDrinks();
+      });
     }
 
     favoriteSearch.addEventListener("input", renderFavorites);
@@ -5105,22 +5260,20 @@
     });
 
     drinkButtons.addEventListener("click", (event) => {
+      const favoriteButton = event.target.closest("[data-favorite-drink]");
+      if (favoriteButton) {
+        toggleFavoriteDrink(favoriteButton.dataset.favoriteDrink);
+        return;
+      }
       const button = event.target.closest("[data-drink]");
       if (!button) return;
-      const drinkName = button.dataset.drink;
-      drinkHistory.push({
-        id: createId(),
-        date: todayString(),
-        name: drinkName,
-        createdAt: new Date().toISOString()
-      });
-      saveDrinks();
-      renderDrinks();
-      showUndo(currentLanguage === "en" ? `Logged 1 ${uiText(drinkName)}` : `${drinkName}を1杯記録しました`, () => {
-        drinkHistory.pop();
-        saveDrinks();
-        renderDrinks();
-      });
+      recordDrinkByName(button.dataset.drink);
+    });
+
+    favoriteDrinkButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-drink]");
+      if (!button) return;
+      recordDrinkByName(button.dataset.drink);
     });
 
     dailyMemo.addEventListener("input", () => {
