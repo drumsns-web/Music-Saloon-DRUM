@@ -1377,6 +1377,10 @@
       display: none;
     }
 
+    .feature-hidden {
+      display: none !important;
+    }
+
     .drink-summary {
       display: flex;
       flex-wrap: wrap;
@@ -1393,6 +1397,27 @@
       font-weight: 900;
       display: inline-flex;
       margin: 4px 4px 0 0;
+    }
+
+    .history-note-box {
+      margin-top: 10px;
+    }
+
+    .history-note-box textarea {
+      min-height: 72px;
+      margin-top: 6px;
+      font-size: 15px;
+    }
+
+    .copy-output {
+      white-space: pre-wrap;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 10px;
+      background: #fffdf8;
+      color: #2b241c;
+      font-weight: 800;
     }
 
     mark.search-hit {
@@ -2241,12 +2266,17 @@
             <h3>今日のセットリスト</h3>
             <p class="small">マイ曲リストで「記録」を押した曲が、今日のセットリストとして残ります。</p>
             <ul class="mini-list" id="todaySetlist"></ul>
+            <div id="todaySetlistCopyBlock">
+              <button class="btn ghost" id="copyTodaySetlist" type="button">今日のセットリストをコピー</button>
+              <div class="copy-output feature-hidden" id="todaySetlistCopyText"></div>
+            </div>
           </article>
           <article class="card drink-section" id="drinkSection">
             <span class="tag blue">Drink Log</span>
             <h3>ドリンク記録</h3>
             <p class="price" id="todayDrinkCount">0杯</p>
             <button class="btn primary" id="openDrinkModal" type="button">飲んだものを記録</button>
+            <div id="drinkTotalText" class="copy-output">合計 0杯</div>
             <div class="drink-summary" id="drinkSummary"></div>
             <p class="small">健康管理や飲みすぎ防止の目安として、自分用に今日飲んだものを残せます。</p>
           </article>
@@ -2292,6 +2322,18 @@
             <label class="check-row">
               <input id="settingDrink" type="checkbox" checked>
               ドリンク記録は「今日の記録」に表示する
+            </label>
+            <label class="check-row">
+              <input id="settingDrinkTotal" type="checkbox" checked>
+              ドリンク記録に合計杯数を表示する
+            </label>
+            <label class="check-row">
+              <input id="settingSetlistCopy" type="checkbox" checked>
+              今日のセットリストをコピーできるようにする
+            </label>
+            <label class="check-row">
+              <input id="settingHistoryMemo" type="checkbox" checked>
+              歌った記録ごとにメモ欄を表示する
             </label>
             <div class="tag-manager">
               <h3>タグ設定</h3>
@@ -2677,11 +2719,17 @@
     const historyNewKey = document.getElementById("historyNewKey");
     const addHistoryNewSong = document.getElementById("addHistoryNewSong");
     const todaySetlist = document.getElementById("todaySetlist");
+    const todaySetlistCopyBlock = document.getElementById("todaySetlistCopyBlock");
+    const copyTodaySetlist = document.getElementById("copyTodaySetlist");
+    const todaySetlistCopyText = document.getElementById("todaySetlistCopyText");
     const todaySongCount = document.getElementById("todaySongCount");
     const clearHistory = document.getElementById("clearHistory");
     const settingMemo = document.getElementById("settingMemo");
     const settingSongCount = document.getElementById("settingSongCount");
     const settingDrink = document.getElementById("settingDrink");
+    const settingDrinkTotal = document.getElementById("settingDrinkTotal");
+    const settingSetlistCopy = document.getElementById("settingSetlistCopy");
+    const settingHistoryMemo = document.getElementById("settingHistoryMemo");
     const openSettingsModal = document.getElementById("openSettingsModal");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
@@ -2692,6 +2740,7 @@
     const tagManagerList = document.getElementById("tagManagerList");
     const drinkSection = document.getElementById("drinkSection");
     const todayDrinkCount = document.getElementById("todayDrinkCount");
+    const drinkTotalText = document.getElementById("drinkTotalText");
     const drinkSummary = document.getElementById("drinkSummary");
     const openDrinkModal = document.getElementById("openDrinkModal");
     const closeDrinkModal = document.getElementById("closeDrinkModal");
@@ -2765,6 +2814,47 @@
       "ドリンクを見る": "Drinks",
       "飲み放題プラン": "All-you-can-drink Plans",
       "飲み放題メニュー": "All-you-can-drink Menu",
+      "飲み放題・焼酎系": "All-you-can-drink Shochu",
+      "飲み放題・ウイスキー系": "All-you-can-drink Whisky",
+      "飲み放題・サワー": "All-you-can-drink Sours",
+      "ソフトドリンク": "Soft Drinks",
+      "グラス・その他": "Glass & Others",
+      "ボトル": "Bottle Drinks",
+      "今日のセットリストをコピー": "Copy Today's Set List",
+      "コピーしました": "Copied",
+      "この記録のメモ": "Note for this song",
+      "ドリンク記録に合計杯数を表示する": "Show total drink count",
+      "今日のセットリストをコピーできるようにする": "Enable set list copy",
+      "歌った記録ごとにメモ欄を表示する": "Show notes for each sung song",
+      "焼酎ロック": "Shochu on the rocks",
+      "焼酎水割り": "Shochu with water",
+      "焼酎お湯割り": "Shochu with hot water",
+      "焼酎ソーダ割り": "Shochu with soda",
+      "ウイスキーロック": "Whisky on the rocks",
+      "ウイスキー水割り": "Whisky with water",
+      "ウイスキーお湯割り": "Whisky with hot water",
+      "ハイボール": "Highball",
+      "コークハイ": "Whisky and cola",
+      "ジンジャーハイ": "Whisky and ginger ale",
+      "カルピスハイボール": "Calpis highball",
+      "カルピスサワー": "Calpis Sour",
+      "無糖紅茶ハイ": "Unsweetened Tea High",
+      "麦茶ハイ": "Barley Tea High",
+      "ジャスミンハイ": "Jasmine Tea High",
+      "GINONレモンサワー": "GINON Lemon Sour",
+      "GINONグレープフルーツサワー": "GINON Grapefruit Sour",
+      "男梅サワー": "Otoko Ume Sour",
+      "巨峰サワー": "Kyoho Grape Sour",
+      "ライチサワー": "Lychee Sour",
+      "桃サワー": "Peach Sour",
+      "梅酒サワー": "Plum Wine Sour",
+      "マンゴーサワー": "Mango Sour",
+      "瓶ビール": "Bottled Beer",
+      "イエローテイル（赤）": "Yellow Tail Red",
+      "イエローテイル（白）": "Yellow Tail White",
+      "テキーラ": "Tequila",
+      "カクテル": "Cocktail",
+      "スタッフドリンク": "Staff Drink",
       "チャージ・フード": "Charge & Food",
       "← メニュー一覧に戻る": "← Back to Menu",
       "← メニュー一覧へ戻る": "← Back to Menu",
@@ -3190,6 +3280,7 @@
       ["例：サザンオールスターズ", "Ex: Southern All Stars"],
       ["例：サビ前から入る。次に歌いたい曲。", "Ex: Start before the chorus. Sing next time."],
       ["例：今日は高めのキーが調子よかった。次回来たらこの曲を歌いたい。", "Ex: Higher keys felt good today. Sing this song next time."],
+      ["例：今日は歌いやすかった。次はキーを下げる。", "Ex: Easy to sing today. Lower the key next time."],
       ["例：懐メロ、お気に入り、練習中", "Ex: Classics, favorite, practicing"],
       ["例：桑田佳祐", "Ex: Keisuke Kuwata"],
       ["電話番号またはメールアドレス", "Phone number or email address"],
@@ -3212,8 +3303,17 @@
     let historyBackup = JSON.parse(localStorage.getItem(historyBackupStorageKey) || "null");
     let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
-    let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":false,"showSongCount":true}');
+    let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     if (settings.showSongCount === undefined) settings.showSongCount = true;
+    if (settings.settingsVersion === undefined) {
+      settings.showDrink = true;
+      settings.settingsVersion = 2;
+    }
+    if (settings.showDrink === undefined) settings.showDrink = true;
+    if (settings.showSetlistCopy === undefined) settings.showSetlistCopy = true;
+    if (settings.showHistoryMemo === undefined) settings.showHistoryMemo = true;
+    if (settings.showDrinkTotal === undefined) settings.showDrinkTotal = true;
+    localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let editingSongId = null;
     let didAddDefaultTags = false;
@@ -3229,18 +3329,31 @@
     let newsRenderRun = 0;
     let gachaSpinTimer = null;
 
-    const drinkOptions = [
-      "ハイボール",
-      "レモンサワー",
-      "グレープフルーツサワー",
-      "緑茶ハイ",
-      "ウーロンハイ",
-      "生ビール",
-      "梅酒",
-      "グラスワイン",
-      "ウーロン茶",
-      "コーラ（ZERO）",
-      "ジンジャーエール"
+    const drinkOptionGroups = [
+      {
+        label: "飲み放題・焼酎系",
+        items: ["焼酎ロック", "焼酎水割り", "焼酎お湯割り", "緑茶ハイ", "ウーロンハイ", "ジャスミンハイ", "無糖紅茶ハイ", "麦茶ハイ", "焼酎ソーダ割り", "カルピスサワー"]
+      },
+      {
+        label: "飲み放題・ウイスキー系",
+        items: ["ウイスキーロック", "ウイスキー水割り", "ウイスキーお湯割り", "ハイボール", "コークハイ", "ジンジャーハイ", "カルピスハイボール"]
+      },
+      {
+        label: "飲み放題・サワー",
+        items: ["レモンサワー", "グレープフルーツサワー", "GINONレモンサワー", "GINONグレープフルーツサワー", "男梅サワー", "カルピスサワー", "巨峰サワー", "ライチサワー", "桃サワー", "梅酒サワー", "マンゴーサワー"]
+      },
+      {
+        label: "ソフトドリンク",
+        items: ["ウーロン茶", "ジャスミン茶", "紅茶（無糖）", "コーラ（ZERO）", "緑茶", "ジンジャーエール", "麦茶", "カルピス"]
+      },
+      {
+        label: "グラス・その他",
+        items: ["生ビール", "瓶ビール", "日本酒", "イエローテイル（赤）", "イエローテイル（白）", "テキーラ", "梅酒", "カクテル", "スタッフドリンク"]
+      },
+      {
+        label: "ボトル",
+        items: ["Japan ロック", "Japan 水割り", "Japan お茶割り", "Japan 炭酸割り", "いいちこ ロック", "いいちこ 水割り", "いいちこ お茶割り", "いいちこ 炭酸割り", "銀しろ ロック", "銀しろ 水割り", "銀しろ お茶割り", "銀しろ 炭酸割り", "一刻者 ロック", "一刻者 水割り", "一刻者 お茶割り", "一刻者 炭酸割り", "里の曙 ロック", "里の曙 水割り", "里の曙 お茶割り", "里の曙 炭酸割り", "I.W.ハーパー ロック", "I.W.ハーパー 水割り", "I.W.ハーパー 炭酸割り", "竹鶴 ロック", "竹鶴 水割り", "竹鶴 炭酸割り", "余市 ロック", "余市 水割り", "余市 炭酸割り", "シーバスリーガル ロック", "シーバスリーガル 水割り", "シーバスリーガル 炭酸割り", "シーバス ミズナラ ロック", "シーバス ミズナラ 水割り", "シーバス ミズナラ 炭酸割り", "スーパーニッカ ロック", "スーパーニッカ 水割り", "スーパーニッカ 炭酸割り", "ヘネシー V.S ロック", "ヘネシー V.S 水割り", "ヘネシー V.S 炭酸割り"]
+      }
     ];
 
     function saveSongs() {
@@ -3879,9 +3992,14 @@
       document.body.classList.toggle("song-count-hidden", !settings.showSongCount);
       settingMemo.checked = settings.showMemo;
       settingSongCount.checked = settings.showSongCount;
-      settings.showDrink = true;
-      settingDrink.checked = true;
-      drinkSection.classList.remove("hidden");
+      settingDrink.checked = settings.showDrink;
+      settingDrinkTotal.checked = settings.showDrinkTotal;
+      settingSetlistCopy.checked = settings.showSetlistCopy;
+      settingHistoryMemo.checked = settings.showHistoryMemo;
+      drinkSection.classList.toggle("hidden", !settings.showDrink);
+      todayDrinkCount.classList.toggle("feature-hidden", !settings.showDrinkTotal);
+      drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
+      todaySetlistCopyBlock.classList.toggle("feature-hidden", !settings.showSetlistCopy);
     }
 
     function renderTagFilterPanels() {
@@ -3921,6 +4039,21 @@
           </li>
         `).join("")
         : `<li class="empty">${escapeText(uiText("今日のセットリストはまだありません。"))}</li>`;
+      todaySetlistCopyText.textContent = createTodaySetlistText(todayItems);
+      todaySetlistCopyText.classList.toggle("feature-hidden", !todayItems.length);
+      copyTodaySetlist.disabled = !todayItems.length;
+    }
+
+    function createTodaySetlistText(items = songHistory.filter((item) => item.date === todayString())) {
+      if (!items.length) return uiText("今日のセットリストはまだありません。");
+      const header = currentLanguage === "en" ? `Today's Set List ${todayString()}` : `今日のセットリスト ${todayString()}`;
+      const rows = items.map((item, index) => {
+        const artist = item.artist || "-";
+        const key = item.key ? uiKey(item.key) : uiText("キー未設定");
+        const note = item.historyNote ? (currentLanguage === "en" ? ` / Note: ${item.historyNote}` : ` / メモ: ${item.historyNote}`) : "";
+        return `${index + 1}. ${item.title} / ${artist} / ${key}${note}`;
+      });
+      return [header, ...rows].join("\n");
     }
 
     function renderHistory() {
@@ -3940,6 +4073,12 @@
             <div>${escapeText(item.title)} / ${escapeText(item.artist || "-")}</div>
             <div class="favorite-meta">${escapeText(uiKey(item.key || "キー未設定"))}${getSongTags(item).length ? ` / ${getSongTags(item).map((tagName) => escapeText(uiText(tagName))).join(" / ")}` : ""}</div>
             ${item.memo ? `<div class="favorite-meta">${escapeText(item.memo)}</div>` : ""}
+            <div class="history-note-box ${settings.showHistoryMemo ? "" : "feature-hidden"}">
+              <label>
+                この記録のメモ
+                <textarea data-history-note="${escapeText(item.id)}" placeholder="${escapeText(uiText("例：今日は歌いやすかった。次はキーを下げる。"))}">${escapeText(item.historyNote || "")}</textarea>
+              </label>
+            </div>
           </li>
         `).join("");
       }
@@ -3967,6 +4106,7 @@
         kana: item.kana || "",
         key: item.key,
         memo: item.memo,
+        historyNote: "",
         duet: Boolean(item.duet),
         tags: getSongTags(item),
         createdAt: new Date().toISOString()
@@ -4040,6 +4180,7 @@
       const today = todayString();
       const todayDrinks = drinkHistory.filter((item) => item.date === today);
       todayDrinkCount.textContent = currentLanguage === "en" ? `${todayDrinks.length} drinks` : `${todayDrinks.length}杯`;
+      drinkTotalText.textContent = currentLanguage === "en" ? `Total ${todayDrinks.length} drinks` : `合計 ${todayDrinks.length}杯`;
       const counts = todayDrinks.reduce((result, item) => {
         result[item.name] = (result[item.name] || 0) + 1;
         return result;
@@ -4083,6 +4224,7 @@
         kana: item.kana || "",
         key: item.key,
         memo: item.memo,
+        historyNote: "",
         duet: Boolean(item.duet),
         tags: getSongTags(item),
         createdAt: new Date().toISOString()
@@ -4402,9 +4544,16 @@
     }
 
     function renderDrinkButtons() {
-      drinkButtons.innerHTML = drinkOptions.map((name) => (
-        `<button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>`
-      )).join("");
+      drinkButtons.innerHTML = drinkOptionGroups.map((group) => `
+        <div class="menu-block">
+          <h3>${escapeText(uiText(group.label))}</h3>
+          <div class="drink-buttons">
+            ${group.items.map((name) => (
+              `<button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>`
+            )).join("")}
+          </div>
+        </div>
+      `).join("");
     }
 
     favoriteSearch.addEventListener("input", renderFavorites);
@@ -4802,6 +4951,60 @@
       saveSettings();
       applySettings();
       renderHistory();
+    });
+
+    settingDrinkTotal.addEventListener("change", () => {
+      settings.showDrinkTotal = settingDrinkTotal.checked;
+      saveSettings();
+      applySettings();
+      renderDrinks();
+    });
+
+    settingSetlistCopy.addEventListener("change", () => {
+      settings.showSetlistCopy = settingSetlistCopy.checked;
+      saveSettings();
+      applySettings();
+      renderTodaySetlist();
+    });
+
+    settingHistoryMemo.addEventListener("change", () => {
+      settings.showHistoryMemo = settingHistoryMemo.checked;
+      saveSettings();
+      applySettings();
+      renderHistory();
+    });
+
+    copyTodaySetlist.addEventListener("click", async () => {
+      const text = createTodaySetlistText();
+      if (!text.trim()) return;
+      todaySetlistCopyText.textContent = text;
+      todaySetlistCopyText.classList.remove("feature-hidden");
+      try {
+        await navigator.clipboard.writeText(text);
+        copyTodaySetlist.textContent = uiText("コピーしました");
+      } catch (error) {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(todaySetlistCopyText);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        document.execCommand("copy");
+        selection.removeAllRanges();
+        copyTodaySetlist.textContent = uiText("コピーしました");
+      }
+      setTimeout(() => {
+        copyTodaySetlist.textContent = uiText("今日のセットリストをコピー");
+      }, 1400);
+    });
+
+    historyList.addEventListener("input", (event) => {
+      const textarea = event.target.closest("[data-history-note]");
+      if (!textarea) return;
+      const item = songHistory.find((record) => record.id === textarea.dataset.historyNote);
+      if (!item) return;
+      item.historyNote = textarea.value.trim();
+      saveHistory();
+      renderTodaySetlist();
     });
 
     openSettingsModal.addEventListener("click", () => {
