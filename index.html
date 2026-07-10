@@ -373,15 +373,20 @@
       flex-direction: column;
     }
 
+    #guide .card .tag {
+      align-self: flex-start;
+      width: auto;
+    }
+
     #guide .card .btn {
       width: 100%;
-      min-height: 54px;
+      min-height: 50px;
       justify-content: space-between;
       margin-top: auto;
-      border: 2px solid rgba(20, 63, 44, .24);
-      background: linear-gradient(135deg, var(--orange), #ffb15f);
+      border: 0;
+      background: var(--orange);
       color: var(--forest-2);
-      box-shadow: 0 12px 24px rgba(240, 138, 53, .24);
+      box-shadow: 0 8px 18px rgba(240, 138, 53, .18);
       font-size: 16px;
     }
 
@@ -393,14 +398,13 @@
       align-items: center;
       justify-content: center;
       border-radius: 999px;
-      background: rgba(11, 43, 30, .14);
+      background: rgba(11, 43, 30, .1);
       font-size: 24px;
       line-height: 1;
     }
 
     #guide .card .btn:hover {
-      background: linear-gradient(135deg, var(--orange-2), #ffc17a);
-      border-color: rgba(20, 63, 44, .34);
+      background: var(--orange-2);
     }
 
     .tag {
@@ -1562,6 +1566,81 @@
       background: rgba(255, 247, 232, .75);
     }
 
+    .guide-modal-panel {
+      width: min(860px, 100%);
+      max-height: min(760px, calc(100vh - 32px));
+      overflow: auto;
+    }
+
+    .guide-shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .guide-shortcut {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 28px;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      border: 1px solid rgba(240, 138, 53, .28);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fffdf8;
+      color: #2f261d;
+      text-align: left;
+      box-shadow: 0 10px 18px rgba(20, 33, 25, .06);
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .guide-shortcut:hover {
+      transform: translateY(-1px);
+      border-color: rgba(240, 138, 53, .52);
+      box-shadow: 0 14px 24px rgba(240, 138, 53, .14);
+    }
+
+    .guide-shortcut-icon {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(240, 138, 53, .18);
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .guide-shortcut strong {
+      display: block;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .guide-shortcut span:not(.guide-shortcut-icon):not(.guide-shortcut-arrow) {
+      display: block;
+      margin-top: 2px;
+      color: #66594a;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .guide-shortcut-arrow {
+      display: inline-flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: rgba(20, 63, 44, .1);
+      color: var(--forest);
+      font-size: 22px;
+      font-weight: 900;
+    }
+
     .undo-toast {
       position: fixed;
       left: 50%;
@@ -1664,6 +1743,7 @@
       .manager,
       .song-backup-grid,
       .contact-grid { grid-template-columns: 1fr; }
+      .guide-shortcut-grid { grid-template-columns: 1fr; }
       .menu-shortcut-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .info-list { grid-template-columns: 1fr; }
       .favorite-item { grid-template-columns: 1fr; }
@@ -1709,7 +1789,7 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
-        <a href="#guide">できること</a>
+        <button class="language-toggle" id="openGuideModalNav" type="button">DRUMガイド</button>
         <a href="#info">お知らせ</a>
         <a href="#menu">メニュー</a>
         <a href="#customers">マイ曲リスト</a>
@@ -1734,9 +1814,9 @@
           <span>DRUMの情報も、マイ曲リストも</span>
           <span class="hero-title-sub">このアプリで。</span>
         </h1>
-        <p>Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。</p>
+        <p>Music Saloon DRUMのお知らせやメニュー確認、自分専用のマイ曲リスト管理に使えるアプリです。</p>
         <div class="actions">
-          <a class="btn primary" href="#guide">できることを見る</a>
+          <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <a class="btn primary" href="#menu">メニューを見る</a>
           <a class="btn secondary" href="#customers">マイ曲リストを作る</a>
         </div>
@@ -1747,7 +1827,7 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <h2>このアプリでできること</h2>
+            <h2>DRUMガイド</h2>
             <p class="lead">使いたい機能を選ぶと、そのページへ移動できます。</p>
           </div>
         </div>
@@ -2743,6 +2823,70 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="guideModal" aria-hidden="true">
+    <div class="drink-modal-panel guide-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2>DRUMガイド</h2>
+          <p class="lead">使いたい項目を選ぶと、そのページへ移動できます。</p>
+        </div>
+        <button class="btn ghost" id="closeGuideModal" type="button">閉じる</button>
+      </div>
+      <div class="guide-shortcut-grid">
+        <button class="guide-shortcut" type="button" data-guide-target="menu">
+          <span class="guide-shortcut-icon">01</span>
+          <span><strong>メニューを見る</strong><span>飲み放題、ボトル、フードを確認</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="song-register">
+          <span class="guide-shortcut-icon">02</span>
+          <span><strong>曲を登録する</strong><span>曲名だけでも登録できます</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="customers">
+          <span class="guide-shortcut-icon">03</span>
+          <span><strong>マイ曲リスト</strong><span>検索、タグ、編集はこちら</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="gacha">
+          <span class="guide-shortcut-icon">04</span>
+          <span><strong>曲ガチャ</strong><span>次に歌う曲に迷った時に</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="history">
+          <span class="guide-shortcut-icon">05</span>
+          <span><strong>歌った記録</strong><span>日付ごとに歌った曲を保存</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="daily">
+          <span class="guide-shortcut-icon">06</span>
+          <span><strong>今日の記録</strong><span>セットリスト、ドリンク、メモ</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="drum-gacha">
+          <span class="guide-shortcut-icon">07</span>
+          <span><strong>DRUMガチャ</strong><span>ご来店中の運だめし</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="song-backup">
+          <span class="guide-shortcut-icon">08</span>
+          <span><strong>バックアップ</strong><span>曲リストの保存・復元</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="about">
+          <span class="guide-shortcut-icon">09</span>
+          <span><strong>店舗情報</strong><span>アクセス、営業時間、連絡先</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="features">
+          <span class="guide-shortcut-icon">10</span>
+          <span><strong>遊び方・ルール</strong><span>カラオケと楽器のマナー</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="drink-modal" id="drinkModal" aria-hidden="true">
     <div class="drink-modal-panel">
       <div class="section-head">
@@ -2915,6 +3059,10 @@
     const newsGallery = document.getElementById("newsGallery");
     const newsEmpty = document.getElementById("newsEmpty");
     const languageToggle = document.getElementById("languageToggle");
+    const openGuideModalNav = document.getElementById("openGuideModalNav");
+    const openGuideModalHero = document.getElementById("openGuideModalHero");
+    const guideModal = document.getElementById("guideModal");
+    const closeGuideModal = document.getElementById("closeGuideModal");
     const menuBackButton = document.getElementById("menuBackButton");
     const customersBackButton = document.getElementById("customersBackButton");
     const regularMenuHeading = document.getElementById("regularMenuHeading");
@@ -2943,9 +3091,8 @@
 
     const exactTranslations = {
       "お知らせ": "Info",
-      "できること": "Guide",
-      "このアプリでできること": "What You Can Do",
-      "できることを見る": "What You Can Do",
+      "DRUMガイド": "DRUM Guide",
+      "DRUMガイドを見る": "View DRUM Guide",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "歌った記録": "Song History",
@@ -3312,21 +3459,32 @@
       ["DRUMの情報も、マイ曲リストも", "DRUM info and your personal song list"],
       ["このアプリで。", "all in this app."],
       ["使いたい機能を選ぶと、そのページへ移動できます。", "Choose a feature to open that page."],
+      ["使いたい項目を選ぶと、そのページへ移動できます。", "Choose an item to open that page."],
       ["飲み放題、ボトル、グラス、フードなどを確認できます。", "Check all-you-can-drink plans, bottles, glass drinks, and food."],
+      ["飲み放題、ボトル、フードを確認", "Check plans, bottles, and food"],
       ["曲名だけでも登録できます。キー、タグ、メモはあとから編集できます。", "You can save just the song title first. Keys, tags, and notes can be edited later."],
+      ["曲名だけでも登録できます", "You can save just the song title"],
       ["曲名、歌手名、タグ、メモで検索できます。タグ選択から探すこともできます。", "Search by song title, artist, tag, or note. You can also search by choosing tags."],
+      ["検索、タグ、編集はこちら", "Search, tags, and editing"],
       ["歌う曲に迷った時、マイ曲リストから次の候補を選べます。", "When you are not sure what to sing, choose from My Song List."],
+      ["次に歌う曲に迷った時に", "When you are not sure what to sing next"],
       ["日付ごとに歌った曲を残せます。記録ごとのメモも使えます。", "Save sung songs by date. You can also add notes to each record."],
+      ["日付ごとに歌った曲を保存", "Save songs by date"],
       ["今日のセットリスト、ドリンク記録、来店メモを残せます。", "Save today's set list, drink log, and visit memo."],
+      ["セットリスト、ドリンク、メモ", "Set list, drinks, and memo"],
       ["飲み放題、グラス、ボトルの記録ができます。よく飲むものはお気に入り登録できます。", "Log all-you-can-drink, glass, and bottle drinks. You can save frequent drinks as favorites."],
       ["今日歌った曲をまとめてコピーできます。メモアプリやLINEに貼り付けて残せます。", "Copy today's sung songs together and paste them into notes or LINE."],
       ["ご来店中の運だめしです。サービス表示は当日限り有効です。", "Try your luck during your visit. Prize screens are valid only today."],
+      ["ご来店中の運だめし", "Try your luck during your visit"],
       ["JSON保存やコピペ用テキストで、曲リストを残したり復元したりできます。", "Save and restore your song list with JSON backup or copy-and-paste text."],
+      ["曲リストの保存・復元", "Save and restore your song list"],
       ["アクセス、営業時間、公式LINE、問い合わせ先などを確認できます。", "Check access, hours, Official LINE, and contact information."],
+      ["アクセス、営業時間、連絡先", "Access, hours, and contact"],
       ["カラオケと楽器を一緒に楽しむためのルールやマナーを確認できます。", "Check the rules and manners for enjoying karaoke and instruments together."],
+      ["カラオケと楽器のマナー", "Karaoke and instrument manners"],
       ["公式LINE、Instagram、YouTubeなどのリンクを確認できます。", "Check links such as Official LINE, Instagram, and YouTube."],
       ["よく飲むものは下の一覧の星ボタンで登録できます。", "Use the star buttons below to save drinks you often order."],
-      ["Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。", "Use this app to check Music Saloon DRUM notices and menus, and manage your personal song list. Open it from the table QR code and start using it right away."],
+      ["Music Saloon DRUMのお知らせやメニュー確認、自分専用のマイ曲リスト管理に使えるアプリです。", "Use this app to check Music Saloon DRUM notices and menus, and manage your personal song list."],
       ["ご来店中に確認していただきたいお知らせや、SNSへのリンクをまとめています。", "Notices to check during your visit and links to our social media."],
       ["イベント情報や店内の様子はInstagramでもご案内できます。", "You can also see event information and shop updates on Instagram."],
       ["最新情報やお知らせは公式LINEからもご案内できます。", "You can also get the latest updates through our Official LINE."],
@@ -3936,6 +4094,17 @@
     function closeHomePromptModal() {
       homePromptModal.classList.remove("show");
       homePromptModal.setAttribute("aria-hidden", "true");
+    }
+
+    function openGuideModal() {
+      guideModal.classList.add("show");
+      guideModal.setAttribute("aria-hidden", "false");
+      refreshLanguageSoon();
+    }
+
+    function closeGuideModalPanel() {
+      guideModal.classList.remove("show");
+      guideModal.setAttribute("aria-hidden", "true");
     }
 
     function drumGachaRateForToday() {
@@ -5253,6 +5422,23 @@
       if (event.target === settingsModal) closeSettingsModal.click();
     });
 
+    openGuideModalNav.addEventListener("click", openGuideModal);
+    openGuideModalHero.addEventListener("click", openGuideModal);
+
+    closeGuideModal.addEventListener("click", closeGuideModalPanel);
+
+    guideModal.addEventListener("click", (event) => {
+      if (event.target === guideModal) closeGuideModalPanel();
+    });
+
+    guideModal.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-guide-target]");
+      if (!button) return;
+      const target = button.dataset.guideTarget;
+      closeGuideModalPanel();
+      showView(target);
+    });
+
     closeHomePrompt.addEventListener("click", () => {
       saveHomePromptState({ ...getHomePromptState(), dismissedDate: todayString() });
       closeHomePromptModal();
@@ -5277,6 +5463,7 @@
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
       if (settingsModal.classList.contains("show")) closeSettingsModal.click();
+      if (guideModal.classList.contains("show")) closeGuideModalPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
       if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
@@ -5425,5 +5612,6 @@
   </script>
 </body>
 </html>
+
 
 
