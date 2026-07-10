@@ -1701,6 +1701,7 @@
         </h1>
         <p>Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。</p>
         <div class="actions">
+          <a class="btn primary" href="#guide">できることを見る</a>
           <a class="btn primary" href="#menu">メニューを見る</a>
           <a class="btn secondary" href="#customers">マイ曲リストを作る</a>
         </div>
@@ -1753,16 +1754,46 @@
             <a class="btn ghost" href="#daily">今日の記録へ</a>
           </article>
           <article class="card">
+            <span class="tag blue">Drink</span>
+            <h3>飲んだものを記録する</h3>
+            <p>飲み放題、グラス、ボトルの記録ができます。よく飲むものはお気に入り登録できます。</p>
+            <a class="btn ghost" href="#daily">ドリンク記録へ</a>
+          </article>
+          <article class="card">
+            <span class="tag green">Copy</span>
+            <h3>今日のセットリストをコピーする</h3>
+            <p>今日歌った曲をまとめてコピーできます。メモアプリやLINEに貼り付けて残せます。</p>
+            <a class="btn ghost" href="#daily">セットリストへ</a>
+          </article>
+          <article class="card">
             <span class="tag orange">DRUM</span>
             <h3>DRUMガチャを回す</h3>
             <p>ご来店中の運だめしです。サービス表示は当日限り有効です。</p>
             <a class="btn ghost" href="#drum-gacha">DRUMガチャへ</a>
           </article>
           <article class="card">
+            <span class="tag">Backup</span>
+            <h3>マイ曲リストをバックアップする</h3>
+            <p>JSON保存やコピペ用テキストで、曲リストを残したり復元したりできます。</p>
+            <a class="btn ghost" href="#song-backup">バックアップへ</a>
+          </article>
+          <article class="card">
             <span class="tag">Shop</span>
             <h3>店舗情報を見る</h3>
             <p>アクセス、営業時間、公式LINE、問い合わせ先などを確認できます。</p>
             <a class="btn ghost" href="#about">店舗情報へ</a>
+          </article>
+          <article class="card">
+            <span class="tag orange">Manners</span>
+            <h3>遊び方・ルールを見る</h3>
+            <p>カラオケと楽器を一緒に楽しむためのルールやマナーを確認できます。</p>
+            <a class="btn ghost" href="#features">遊び方へ</a>
+          </article>
+          <article class="card">
+            <span class="tag green">SNS</span>
+            <h3>SNSや動画を見る</h3>
+            <p>公式LINE、Instagram、YouTubeなどのリンクを確認できます。</p>
+            <a class="btn ghost" href="#info">SNSへ</a>
           </article>
         </div>
       </div>
@@ -2879,6 +2910,7 @@
       "お知らせ": "Info",
       "できること": "Guide",
       "このアプリでできること": "What You Can Do",
+      "できることを見る": "What You Can Do",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "歌った記録": "Song History",
@@ -2924,6 +2956,11 @@
       "歌った記録へ": "Go to Song History",
       "今日の記録へ": "Go to Today",
       "DRUMガチャへ": "Go to DRUM Gacha",
+      "ドリンク記録へ": "Go to Drink Log",
+      "セットリストへ": "Go to Set List",
+      "バックアップへ": "Go to Backup",
+      "遊び方へ": "Go to How to Enjoy",
+      "SNSへ": "Go to SNS",
       "店舗情報へ": "Go to Shop Info",
       "ドリンク記録に合計杯数を表示する": "Show total drink count",
       "今日のセットリストをコピーできるようにする": "Enable set list copy",
@@ -3246,8 +3283,13 @@
       ["歌う曲に迷った時、マイ曲リストから次の候補を選べます。", "When you are not sure what to sing, choose from My Song List."],
       ["日付ごとに歌った曲を残せます。記録ごとのメモも使えます。", "Save sung songs by date. You can also add notes to each record."],
       ["今日のセットリスト、ドリンク記録、来店メモを残せます。", "Save today's set list, drink log, and visit memo."],
+      ["飲み放題、グラス、ボトルの記録ができます。よく飲むものはお気に入り登録できます。", "Log all-you-can-drink, glass, and bottle drinks. You can save frequent drinks as favorites."],
+      ["今日歌った曲をまとめてコピーできます。メモアプリやLINEに貼り付けて残せます。", "Copy today's sung songs together and paste them into notes or LINE."],
       ["ご来店中の運だめしです。サービス表示は当日限り有効です。", "Try your luck during your visit. Prize screens are valid only today."],
+      ["JSON保存やコピペ用テキストで、曲リストを残したり復元したりできます。", "Save and restore your song list with JSON backup or copy-and-paste text."],
       ["アクセス、営業時間、公式LINE、問い合わせ先などを確認できます。", "Check access, hours, Official LINE, and contact information."],
+      ["カラオケと楽器を一緒に楽しむためのルールやマナーを確認できます。", "Check the rules and manners for enjoying karaoke and instruments together."],
+      ["公式LINE、Instagram、YouTubeなどのリンクを確認できます。", "Check links such as Official LINE, Instagram, and YouTube."],
       ["よく飲むものは下の一覧の星ボタンで登録できます。", "Use the star buttons below to save drinks you often order."],
       ["Music Saloon DRUMのお知らせやメニュー確認と、自分専用のマイ曲リスト管理に使えるアプリです。テーブルのQRコードから開いて、そのままマイ曲リストを管理できます。", "Use this app to check Music Saloon DRUM notices and menus, and manage your personal song list. Open it from the table QR code and start using it right away."],
       ["ご来店中に確認していただきたいお知らせや、SNSへのリンクをまとめています。", "Notices to check during your visit and links to our social media."],
