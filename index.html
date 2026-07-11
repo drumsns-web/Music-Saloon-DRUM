@@ -1522,6 +1522,35 @@
       line-height: 1.5;
     }
 
+    .home-add-steps {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+    }
+
+    .home-add-step {
+      border: 1px solid rgba(240, 138, 53, .28);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: rgba(255, 247, 232, .74);
+      color: #2f261d;
+    }
+
+    .home-add-step strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--forest);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .home-add-step p {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
     .settings-modal-panel .section-head {
       position: sticky;
       top: -22px;
@@ -1540,7 +1569,7 @@
 
     .drink-buttons {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 10px;
       margin-top: 14px;
     }
@@ -1552,10 +1581,52 @@
       align-items: stretch;
     }
 
+    .drink-choice .btn[data-drink] {
+      justify-content: flex-start;
+      min-height: 46px;
+      text-align: left;
+      white-space: normal;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      line-height: 1.35;
+    }
+
     .drink-choice .favorite-toggle {
       padding: 8px 0;
       min-height: 42px;
       font-size: 18px;
+    }
+
+    .drink-category-panel {
+      margin: 0 0 12px;
+    }
+
+    .drink-category-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .drink-category-buttons .btn {
+      min-height: 42px;
+      justify-content: center;
+      white-space: normal;
+      word-break: keep-all;
+      line-height: 1.25;
+    }
+
+    .drink-category-buttons .btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #123728;
+      box-shadow: 0 12px 24px rgba(240, 138, 53, .22);
+    }
+
+    .drink-category-title {
+      margin: 14px 0 0;
+      color: var(--green);
+      font-size: 20px;
     }
 
     .favorite-drink-panel {
@@ -1564,6 +1635,16 @@
       padding: 14px;
       margin: 0 0 16px;
       background: rgba(255, 247, 232, .75);
+    }
+
+    @media (max-width: 560px) {
+      .drink-buttons {
+        grid-template-columns: 1fr;
+      }
+
+      .drink-category-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     .guide-modal-panel {
@@ -2812,9 +2893,19 @@
         </div>
         <button class="btn ghost" id="closeHomePrompt" type="button">閉じる</button>
       </div>
-      <div class="result-panel">
-        <p>iPhoneは共有ボタンから「ホーム画面に追加」、Androidはブラウザのメニューから「ホーム画面に追加」を選べます。</p>
-        <p class="small">マイ曲リストや記録は、この端末のブラウザ内に保存されます。</p>
+      <div class="home-add-steps">
+        <div class="home-add-step">
+          <strong>iPhone</strong>
+          <p>共有ボタン → ホーム画面に追加 → 追加</p>
+        </div>
+        <div class="home-add-step">
+          <strong>Android</strong>
+          <p>メニュー → ホーム画面に追加 → 追加</p>
+        </div>
+        <div class="home-add-step">
+          <strong>保存について</strong>
+          <p>マイ曲リストや記録は、<br>この端末のブラウザ内に保存されます。</p>
+        </div>
       </div>
       <div class="control-row">
         <button class="btn primary" id="dismissHomePromptToday" type="button">今日は閉じる</button>
@@ -2901,6 +2992,12 @@
         <p class="small">よく飲むものは下の一覧の星ボタンで登録できます。</p>
         <div class="drink-buttons" id="favoriteDrinkButtons"></div>
       </div>
+      <div class="drink-category-panel">
+        <h3>種類を選ぶ</h3>
+        <p class="small">種類を選ぶと、そのドリンクだけを表示します。</p>
+        <div class="drink-category-buttons" id="drinkCategoryButtons"></div>
+      </div>
+      <h3 class="drink-category-title" id="drinkCategoryListTitle">焼酎</h3>
       <div class="drink-buttons" id="drinkButtons"></div>
     </div>
   </div>
@@ -3046,6 +3143,8 @@
     const drinkModal = document.getElementById("drinkModal");
     const drinkButtons = document.getElementById("drinkButtons");
     const favoriteDrinkButtons = document.getElementById("favoriteDrinkButtons");
+    const drinkCategoryButtons = document.getElementById("drinkCategoryButtons");
+    const drinkCategoryListTitle = document.getElementById("drinkCategoryListTitle");
     const homePromptModal = document.getElementById("homePromptModal");
     const closeHomePrompt = document.getElementById("closeHomePrompt");
     const dismissHomePromptToday = document.getElementById("dismissHomePromptToday");
@@ -3101,6 +3200,9 @@
       "DRUMガチャ": "DRUM Gacha",
       "設定": "Settings",
       "日本語": "Japanese",
+      "保存について": "About Saved Data",
+      "マイ曲リストや記録は、": "Your song list and records",
+      "この端末のブラウザ内に保存されます。": "are saved in this device's browser.",
       "インフォメーション": "Information",
       "店からのお知らせ": "Shop Notices",
       "お店からのお知らせ": "Shop Notices",
@@ -3123,9 +3225,16 @@
       "飲み放題・焼酎系": "All-you-can-drink Shochu",
       "飲み放題・ウイスキー系": "All-you-can-drink Whisky",
       "飲み放題・サワー": "All-you-can-drink Sours",
+      "焼酎": "Shochu",
+      "ウイスキー": "Whisky",
+      "サワー": "Sours",
+      "カクテル": "Cocktails",
+      "グラスドリンク": "Glass Drinks",
       "ソフトドリンク": "Soft Drinks",
       "グラス・その他": "Glass & Others",
       "ボトル": "Bottle Drinks",
+      "種類を選ぶ": "Choose a Category",
+      "種類を選ぶと、そのドリンクだけを表示します。": "Choose a category to show only those drinks.",
       "今日のセットリストをコピー": "Copy Today's Set List",
       "コピーしました": "Copied",
       "この記録のメモ": "Note for this song",
@@ -3527,6 +3636,9 @@
       ["まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。", "You can start by saving only the song title. Artist, key, tags, and memo can be filled in later as needed."],
       ["入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。", "If entering everything feels like too much, just type the song title and press “Save to My Song List.”"],
       ["スマホのホーム画面に追加しておくと、次回からすぐに開けます。", "Add this app to your phone's home screen so you can open it quickly next time."],
+      ["共有ボタン → ホーム画面に追加 → 追加", "Share button → Add to Home Screen → Add"],
+      ["メニュー → ホーム画面に追加 → 追加", "Menu → Add to Home Screen → Add"],
+      ["マイ曲リストや記録は、この端末のブラウザ内に保存されます。", "Your song list and records are saved in this device's browser."],
       ["iPhoneは共有ボタンから「ホーム画面に追加」、Androidはブラウザのメニューから「ホーム画面に追加」を選べます。", "On iPhone, use the Share button and choose “Add to Home Screen.” On Android, use the browser menu and choose “Add to Home screen.”"],
       ["マイ曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved in this device's browser. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
       ["マイ曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。", "Use the “Next” button in the song list to save songs you want to sing next time."],
@@ -3679,15 +3791,15 @@
 
     const drinkOptionGroups = [
       {
-        label: "飲み放題・焼酎系",
+        label: "焼酎",
         items: ["焼酎ロック", "焼酎水割り", "焼酎お湯割り", "緑茶ハイ", "ウーロンハイ", "ジャスミンハイ", "無糖紅茶ハイ", "麦茶ハイ", "焼酎ソーダ割り", "カルピスサワー"]
       },
       {
-        label: "飲み放題・ウイスキー系",
+        label: "ウイスキー",
         items: ["ウイスキーロック", "ウイスキー水割り", "ウイスキーお湯割り", "ハイボール", "コークハイ", "ジンジャーハイ", "カルピスハイボール"]
       },
       {
-        label: "飲み放題・サワー",
+        label: "サワー",
         items: ["レモンサワー", "グレープフルーツサワー", "GINONレモンサワー", "GINONグレープフルーツサワー", "男梅サワー", "カルピスサワー", "巨峰サワー", "ライチサワー", "桃サワー", "梅酒サワー", "マンゴーサワー"]
       },
       {
@@ -3695,14 +3807,19 @@
         items: ["ウーロン茶", "ジャスミン茶", "紅茶（無糖）", "コーラ（ZERO）", "緑茶", "ジンジャーエール", "麦茶", "カルピス"]
       },
       {
-        label: "グラス・その他",
-        items: ["生ビール", "瓶ビール", "日本酒", "イエローテイル（赤）", "イエローテイル（白）", "テキーラ", "梅酒", "カクテル", "スタッフドリンク"]
+        label: "カクテル",
+        items: ["カクテル"]
+      },
+      {
+        label: "グラスドリンク",
+        items: ["生ビール", "瓶ビール", "日本酒", "イエローテイル（赤）", "イエローテイル（白）", "テキーラ", "梅酒", "スタッフドリンク"]
       },
       {
         label: "ボトル",
         items: ["Japan ロック", "Japan 水割り", "Japan お茶割り", "Japan 炭酸割り", "いいちこ ロック", "いいちこ 水割り", "いいちこ お茶割り", "いいちこ 炭酸割り", "銀しろ ロック", "銀しろ 水割り", "銀しろ お茶割り", "銀しろ 炭酸割り", "一刻者 ロック", "一刻者 水割り", "一刻者 お茶割り", "一刻者 炭酸割り", "里の曙 ロック", "里の曙 水割り", "里の曙 お茶割り", "里の曙 炭酸割り", "I.W.ハーパー ロック", "I.W.ハーパー 水割り", "I.W.ハーパー 炭酸割り", "竹鶴 ロック", "竹鶴 水割り", "竹鶴 炭酸割り", "余市 ロック", "余市 水割り", "余市 炭酸割り", "シーバスリーガル ロック", "シーバスリーガル 水割り", "シーバスリーガル 炭酸割り", "シーバス ミズナラ ロック", "シーバス ミズナラ 水割り", "シーバス ミズナラ 炭酸割り", "スーパーニッカ ロック", "スーパーニッカ 水割り", "スーパーニッカ 炭酸割り", "ヘネシー V.S ロック", "ヘネシー V.S 水割り", "ヘネシー V.S 炭酸割り"]
       }
     ];
+    let activeDrinkCategory = drinkOptionGroups[0].label;
 
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
@@ -4908,18 +5025,23 @@
 
     function renderDrinkButtons() {
       renderFavoriteDrinkButtons();
-      drinkButtons.innerHTML = drinkOptionGroups.map((group) => `
-        <div class="menu-block">
-          <h3>${escapeText(uiText(group.label))}</h3>
-          <div class="drink-buttons">
-            ${group.items.map((name) => (
-              `<div class="drink-choice">
-                <button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>
-                <button class="btn ghost favorite-toggle" type="button" data-favorite-drink="${escapeText(name)}" aria-label="${escapeText(uiText(name))}をお気に入り登録">${favoriteDrinks.includes(name) ? "★" : "☆"}</button>
-              </div>`
-            )).join("")}
-          </div>
+      renderDrinkCategoryButtons();
+      const activeGroup = drinkOptionGroups.find((group) => group.label === activeDrinkCategory) || drinkOptionGroups[0];
+      activeDrinkCategory = activeGroup.label;
+      drinkCategoryListTitle.textContent = uiText(activeGroup.label);
+      drinkButtons.innerHTML = activeGroup.items.map((name) => `
+        <div class="drink-choice">
+          <button class="btn ghost" type="button" data-drink="${escapeText(name)}">${escapeText(uiText(name))}</button>
+          <button class="btn ghost favorite-toggle" type="button" data-favorite-drink="${escapeText(name)}" aria-label="${escapeText(uiText(name))}をお気に入り登録">${favoriteDrinks.includes(name) ? "★" : "☆"}</button>
         </div>
+      `).join("");
+    }
+
+    function renderDrinkCategoryButtons() {
+      drinkCategoryButtons.innerHTML = drinkOptionGroups.map((group) => `
+        <button class="btn ghost ${group.label === activeDrinkCategory ? "active" : ""}" type="button" data-drink-category="${escapeText(group.label)}">
+          ${escapeText(uiText(group.label))}
+        </button>
       `).join("");
     }
 
@@ -5532,6 +5654,13 @@
       const button = event.target.closest("[data-drink]");
       if (!button) return;
       recordDrinkByName(button.dataset.drink);
+    });
+
+    drinkCategoryButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-drink-category]");
+      if (!button) return;
+      activeDrinkCategory = button.dataset.drinkCategory;
+      renderDrinkButtons();
     });
 
     favoriteDrinkButtons.addEventListener("click", (event) => {
