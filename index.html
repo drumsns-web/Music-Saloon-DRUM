@@ -78,6 +78,15 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, .26);
     }
 
+    .brand-kanji {
+      width: min(150px, 22vw);
+      height: 34px;
+      object-fit: contain;
+      opacity: .46;
+      filter: invert(1) contrast(1.25);
+      mix-blend-mode: screen;
+    }
+
     .nav-links {
       display: flex;
       align-items: center;
@@ -1789,6 +1798,12 @@
         height: 38px;
       }
 
+      .brand-kanji {
+        width: 104px;
+        height: 26px;
+        opacity: .38;
+      }
+
       .nav-links {
         width: 100%;
         display: grid;
@@ -1868,6 +1883,7 @@
       <a class="brand" href="#top" aria-label="Music Saloon DRUM ホーム">
         <img src="drum-icon.jpg" alt="">
         <span>Music Saloon DRUM</span>
+        <img class="brand-kanji" src="drum-kanji.jpg" alt="努 楽 夢">
       </a>
       <div class="nav-links">
         <button class="language-toggle" id="openGuideModalNav" type="button">DRUMガイド</button>
