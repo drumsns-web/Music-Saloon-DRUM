@@ -464,6 +464,41 @@
       background: var(--orange-2);
     }
 
+    .guide-home-tip {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 22px;
+      border: 1px solid rgba(240, 138, 53, .42);
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      padding: 16px;
+      background: linear-gradient(135deg, #fff8ed, #fffdf8);
+      box-shadow: 0 12px 28px rgba(240, 138, 53, .13);
+      color: #2f261d;
+    }
+
+    .guide-home-tip strong {
+      display: block;
+      color: var(--forest);
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .guide-home-tip p {
+      margin: 5px 0 0;
+      color: #4d4033;
+      font-weight: 800;
+      line-height: 1.65;
+    }
+
+    .guide-home-tip .btn {
+      min-width: 130px;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
     .tag {
       display: inline-flex;
       min-height: 28px;
@@ -2010,6 +2045,12 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       .section-head { align-items: flex-start; flex-direction: column; }
+      .guide-home-tip {
+        grid-template-columns: 1fr;
+      }
+      .guide-home-tip .btn {
+        width: 100%;
+      }
       .grid,
       .manager,
       .song-backup-grid,
@@ -2103,6 +2144,13 @@
             <h2>DRUMガイド</h2>
             <p class="lead">使いたい機能を選ぶと、そのページへ移動できます。</p>
           </div>
+        </div>
+        <div class="guide-home-tip">
+          <div>
+            <strong>よく使う項目はトップに追加できます</strong>
+            <p>設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。</p>
+          </div>
+          <button class="btn primary open-settings-from-guide" type="button">設定を開く</button>
         </div>
         <div class="grid">
           <article class="card">
@@ -3135,6 +3183,13 @@
         </div>
         <button class="btn ghost" id="closeGuideModal" type="button">閉じる</button>
       </div>
+      <div class="guide-home-tip">
+        <div>
+          <strong>よく使う項目はトップに追加できます</strong>
+          <p>設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。</p>
+        </div>
+        <button class="btn primary open-settings-from-guide" type="button">設定を開く</button>
+      </div>
       <div class="guide-shortcut-grid">
         <button class="guide-shortcut" type="button" data-guide-target="menu">
           <span class="guide-shortcut-icon">01</span>
@@ -3427,6 +3482,8 @@
       "設定で変更できます": "You can change this in Settings",
       "トップ表示設定": "Home Button Settings",
       "トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。": "Choose which buttons appear on the home screen. Showing only what you often use helps you get there quickly.",
+      "よく使う項目はトップに追加できます": "Add Frequently Used Items to the Home Screen",
+      "設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。": "Use “Home Button Settings” to show Menu, My Song List, Song Gacha, and more on the home screen.",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "曲を登録": "Add Song",
@@ -4633,6 +4690,7 @@
       document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
         link.classList.toggle("active-nav", link.getAttribute("href") === `#${viewId}`);
       });
+      if (viewId === "top") renderTopShortcuts();
 
       if (viewId === "menu" && menuPageId) {
         clearCustomerSubpage();
@@ -4740,6 +4798,24 @@
           ${escapeText(uiText(option.label))}
         </label>
       `).join("");
+      topShortcutSettings.querySelectorAll("[data-top-shortcut]").forEach((checkbox) => {
+        checkbox.addEventListener("change", handleTopShortcutChange);
+      });
+    }
+
+    function handleTopShortcutChange(event) {
+      const checkbox = event.currentTarget || event.target.closest("[data-top-shortcut]");
+      if (!checkbox) return;
+      const shortcutId = checkbox.dataset.topShortcut;
+      if (checkbox.checked) {
+        if (!settings.topShortcuts.includes(shortcutId)) settings.topShortcuts.push(shortcutId);
+      } else {
+        settings.topShortcuts = settings.topShortcuts.filter((item) => item !== shortcutId);
+      }
+      saveSettings();
+      renderTopShortcuts();
+      renderTopShortcutSettings();
+      refreshLanguageSoon();
     }
 
     function applySettings() {
@@ -5808,12 +5884,20 @@
     });
 
     openSettingsModal.addEventListener("click", () => {
+      renderTopShortcutSettings();
       settingsModal.classList.add("show");
       settingsModal.setAttribute("aria-hidden", "false");
     });
 
     openSettingsModalHero.addEventListener("click", () => {
       openSettingsModal.click();
+    });
+
+    document.querySelectorAll(".open-settings-from-guide").forEach((button) => {
+      button.addEventListener("click", () => {
+        closeGuideModalPanel();
+        openSettingsModal.click();
+      });
     });
 
     closeSettingsModal.addEventListener("click", () => {
@@ -5823,21 +5907,6 @@
 
     settingsModal.addEventListener("click", (event) => {
       if (event.target === settingsModal) closeSettingsModal.click();
-    });
-
-    topShortcutSettings.addEventListener("change", (event) => {
-      const checkbox = event.target.closest("[data-top-shortcut]");
-      if (!checkbox) return;
-      const shortcutId = checkbox.dataset.topShortcut;
-      if (checkbox.checked) {
-        if (!settings.topShortcuts.includes(shortcutId)) settings.topShortcuts.push(shortcutId);
-      } else {
-        settings.topShortcuts = settings.topShortcuts.filter((item) => item !== shortcutId);
-      }
-      saveSettings();
-      renderTopShortcuts();
-      renderTopShortcutSettings();
-      refreshLanguageSoon();
     });
 
     openGuideModalNav.addEventListener("click", openGuideModal);
