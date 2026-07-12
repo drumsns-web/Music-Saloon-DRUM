@@ -86,6 +86,10 @@
       gap: 6px;
     }
 
+    .nav-shortcut-links {
+      display: contents;
+    }
+
     .nav-links a,
     .nav-links button {
       min-height: 36px;
@@ -2149,9 +2153,7 @@
       </a>
       <div class="nav-links">
         <button class="language-toggle" id="openGuideModalNav" type="button">DRUMガイド</button>
-        <a href="#info">お知らせ</a>
-        <a href="#menu">メニュー</a>
-        <a href="#customers">マイ曲リスト</a>
+        <span class="nav-shortcut-links" id="navShortcutLinks"></span>
         <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
         <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
@@ -2173,13 +2175,6 @@
           <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
-        <div class="top-shortcuts">
-          <div class="top-shortcuts-head">
-            <span>よく使う項目</span>
-            <span class="small">設定で変更できます</span>
-          </div>
-          <div class="top-shortcut-grid" id="topShortcutButtons"></div>
-        </div>
       </div>
     </section>
 
@@ -2193,8 +2188,8 @@
         </div>
         <div class="guide-home-tip">
           <div>
-            <strong>よく使う項目はトップに追加できます</strong>
-            <p>設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。</p>
+            <strong>よく使う項目は上部ボタンに追加できます</strong>
+            <p>設定の「上部ボタン表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由に上部ボタンへ表示できます。</p>
           </div>
           <button class="btn primary open-settings-from-guide" type="button">設定を開く</button>
         </div>
@@ -2923,13 +2918,13 @@
         <div class="grid">
           <article class="card">
             <span class="tag orange">Home</span>
-            <h3>トップ表示設定</h3>
-            <p class="small">トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。</p>
+            <h3>上部ボタン表示設定</h3>
+            <p class="small">上部ナビに置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。</p>
             <div class="top-shortcut-settings" id="topShortcutSettings"></div>
             <div class="top-shortcut-preview">
-              <strong>現在トップに表示中</strong>
+              <strong>現在上部ボタンに表示中</strong>
               <div class="top-shortcut-preview-list" id="topShortcutPreview"></div>
-              <p class="top-shortcut-status" id="topShortcutStatus">チェックするとすぐ反映されます。</p>
+              <p class="top-shortcut-status" id="topShortcutStatus">チェックすると上部ボタンにすぐ反映されます。</p>
             </div>
           </article>
           <article class="card">
@@ -3236,8 +3231,8 @@
       </div>
       <div class="guide-home-tip">
         <div>
-          <strong>よく使う項目はトップに追加できます</strong>
-          <p>設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。</p>
+          <strong>よく使う項目は上部ボタンに追加できます</strong>
+          <p>設定の「上部ボタン表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由に上部ボタンへ表示できます。</p>
         </div>
         <button class="btn primary open-settings-from-guide" type="button">設定を開く</button>
       </div>
@@ -3448,7 +3443,7 @@
     const openSettingsModalHero = document.getElementById("openSettingsModalHero");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
-    const topShortcutButtons = document.getElementById("topShortcutButtons");
+    const navShortcutLinks = document.getElementById("navShortcutLinks");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
     const topShortcutStatus = document.getElementById("topShortcutStatus");
@@ -3534,12 +3529,20 @@
       "よく使う項目": "Frequently Used",
       "設定で変更できます": "You can change this in Settings",
       "トップ表示設定": "Home Button Settings",
+      "上部ボタン表示設定": "Top Button Settings",
       "トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。": "Choose which buttons appear on the home screen. Showing only what you often use helps you get there quickly.",
+      "上部ナビに置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。": "Choose which items appear in the top navigation. Showing only the pages you often use helps you get there quickly.",
       "よく使う項目はトップに追加できます": "Add Frequently Used Items to the Home Screen",
+      "よく使う項目は上部ボタンに追加できます": "Add Frequently Used Items to the Top Buttons",
       "設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。": "Use “Home Button Settings” to show Menu, My Song List, Song Gacha, and more on the home screen.",
+      "設定の「上部ボタン表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由に上部ボタンへ表示できます。": "Use “Top Button Settings” to show Menu, My Song List, Song Gacha, and more in the top buttons.",
       "現在トップに表示中": "Currently Shown on Home",
+      "現在上部ボタンに表示中": "Currently Shown in Top Buttons",
       "チェックするとすぐ反映されます。": "Changes apply as soon as you check an item.",
+      "チェックすると上部ボタンにすぐ反映されます。": "Changes apply to the top buttons as soon as you check an item.",
       "トップに反映しました。": "Updated on the home screen.",
+      "上部ボタンに反映しました。": "Updated in the top buttons.",
+      "表示なし": "None",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "曲を登録": "Add Song",
@@ -4838,15 +4841,14 @@
 
     function renderTopShortcuts() {
       const selected = selectedTopShortcutIds();
-      if (!selected.length) {
-        topShortcutButtons.innerHTML = `<a href="#guide">${escapeText(uiText("DRUMガイド"))}</a>`;
-        topShortcutPreview.innerHTML = `<span>${escapeText(uiText("DRUMガイド"))}</span>`;
-        return;
-      }
-      topShortcutButtons.innerHTML = selected.map((shortcutId) => {
+      navShortcutLinks.innerHTML = selected.map((shortcutId) => {
         const option = topShortcutOptions.find((item) => item.id === shortcutId);
         return `<a href="#${escapeText(option.target)}">${escapeText(uiText(option.label))}</a>`;
       }).join("");
+      if (!selected.length) {
+        topShortcutPreview.innerHTML = `<span>${escapeText(uiText("表示なし"))}</span>`;
+        return;
+      }
       topShortcutPreview.innerHTML = selected.map((shortcutId) => {
         const option = topShortcutOptions.find((item) => item.id === shortcutId);
         return `<span>${escapeText(uiText(option.label))}</span>`;
@@ -4874,7 +4876,7 @@
       saveSettings();
       renderTopShortcuts();
       renderTopShortcutSettings();
-      topShortcutStatus.textContent = uiText("トップに反映しました。");
+      topShortcutStatus.textContent = uiText("上部ボタンに反映しました。");
       refreshLanguageSoon();
     }
 
@@ -6124,13 +6126,13 @@
       showView("customers", false);
     });
 
-    document.querySelectorAll('a[href^="#"]').forEach((link) => {
-      link.addEventListener("click", (event) => {
-        const viewId = link.getAttribute("href").slice(1) || "top";
-        if (!document.getElementById(viewId) && !menuPageMap[viewId] && !customerPageMap[viewId]) return;
-        event.preventDefault();
-        showView(viewId);
-      });
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest('a[href^="#"]');
+      if (!link) return;
+      const viewId = link.getAttribute("href").slice(1) || "top";
+      if (!document.getElementById(viewId) && !menuPageMap[viewId] && !customerPageMap[viewId]) return;
+      event.preventDefault();
+      showView(viewId);
     });
 
     window.addEventListener("popstate", () => {
