@@ -1156,6 +1156,39 @@
       margin-top: 10px;
     }
 
+    .tag-add-box {
+      padding: 12px;
+      border: 1px solid rgba(240, 138, 53, .34);
+      border-radius: 8px;
+      background: rgba(255, 247, 232, .78);
+    }
+
+    .tag-add-box label {
+      display: block;
+      margin: 0 0 8px;
+      color: var(--forest);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .tag-add-box .control-row {
+      margin: 0;
+    }
+
+    .tag-add-box input {
+      flex: 1 1 220px;
+      min-width: 0;
+      border-color: rgba(20, 63, 44, .36);
+      background: #fffefb;
+      box-shadow: inset 0 0 0 1px rgba(20, 63, 44, .05);
+    }
+
+    .tag-add-box input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(240, 138, 53, .18);
+      outline: none;
+    }
+
     .tag-manager-list {
       display: flex;
       flex-wrap: wrap;
@@ -1328,6 +1361,36 @@
     .mini-list .empty {
       padding: 12px;
       text-align: left;
+    }
+
+    .karaoke-request-list {
+      counter-reset: karaoke-request;
+      gap: 10px;
+    }
+
+    .karaoke-request-list li {
+      counter-increment: karaoke-request;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      line-height: 1.65;
+    }
+
+    .karaoke-request-list li::before {
+      content: counter(karaoke-request);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--forest-2);
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: 0 8px 16px rgba(240, 138, 53, .18);
     }
 
     .contact-grid {
@@ -2021,7 +2084,7 @@
           <article class="card">
             <span class="tag">Karaoke</span>
             <h3>カラオケ予約のお願い</h3>
-            <ul class="mini-list">
+            <ul class="mini-list karaoke-request-list">
               <li>より多くのお客様に気持ちよく歌っていただくため、カラオケ予約は1曲ずつお願いいたします。</li>
               <li>歌い終わったあとに、次の1曲をご予約ください。まとめて複数曲の予約はご遠慮ください。</li>
               <li>混雑時はデンモクを1台にして、席順で順番に回していただく場合があります。</li>
@@ -2654,9 +2717,12 @@
             <div class="tag-manager">
               <h3>タグ設定</h3>
               <p class="small">ジャンルだけでなく、十八番・お気に入り・練習中・盛り上がる曲など、自分用の印も追加できます。</p>
-              <div class="control-row">
-                <input id="newTagName" placeholder="例：懐メロ、お気に入り、練習中">
-                <button class="btn primary" id="addTagButton" type="button">タグを追加</button>
+              <div class="tag-add-box">
+                <label for="newTagName">追加するタグ名</label>
+                <div class="control-row">
+                  <input id="newTagName" placeholder="例：懐メロ、お気に入り、練習中">
+                  <button class="btn primary" id="addTagButton" type="button">タグを追加</button>
+                </div>
               </div>
               <div class="tag-manager-list" id="tagManagerList"></div>
               <p class="small">削除したタグは新しく選ぶ候補から外れます。すでに曲に付いているタグは曲側に残ります。</p>
@@ -3459,6 +3525,7 @@
       "閉じる": "Close",
       "マイ曲リスト設定": "My Song List Settings",
       "タグ設定": "Tag Settings",
+      "追加するタグ名": "Tag Name to Add",
       "タグを追加": "Add Tag",
       "記録について": "About Records",
       "削除記録の復元": "Restore Deleted Records",
