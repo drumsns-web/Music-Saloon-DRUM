@@ -271,10 +271,11 @@
       min-height: 52px;
       margin: 0 0 22px;
       padding: 12px 18px;
-      color: #fffdf8;
-      background: var(--forest);
+      color: var(--forest);
+      background: linear-gradient(135deg, #fff8ed, #f4a14c);
       border-color: rgba(240, 138, 53, .7);
-      box-shadow: 0 12px 26px rgba(11, 49, 33, .18);
+      box-shadow: 0 14px 28px rgba(240, 138, 53, .24);
+      font-weight: 900;
     }
 
     #customers .song-form-card,
@@ -962,6 +963,67 @@
       font-family: "BIZ UDPGothic", "Yu Gothic", Meiryo, sans-serif;
       font-size: 13px;
       line-height: 1.55;
+    }
+
+    .backup-main-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .backup-action-card,
+    .json-field-box {
+      padding: 14px;
+      border: 1px solid rgba(240, 138, 53, .28);
+      border-radius: 8px;
+      background: rgba(255, 248, 237, .8);
+    }
+
+    .backup-action-card h4,
+    .json-field-box h4 {
+      margin: 0 0 8px;
+      color: var(--forest);
+      font-size: 17px;
+    }
+
+    .backup-action-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .backup-advanced {
+      margin: 16px 0;
+      padding: 12px 14px;
+      border: 1px dashed rgba(20, 63, 44, .28);
+      border-radius: 8px;
+      background: rgba(255, 253, 248, .72);
+    }
+
+    .backup-advanced summary {
+      cursor: pointer;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .backup-advanced .song-backup-grid {
+      margin-top: 12px;
+    }
+
+    .json-field-box textarea {
+      border-width: 2px;
+      background: #fffdf8;
+      box-shadow: inset 0 0 0 1px rgba(20, 63, 44, .05);
+    }
+
+    .json-output-box textarea {
+      border-left: 6px solid var(--orange);
+      background: #fff6e8;
+    }
+
+    .json-input-box textarea {
+      border-left: 6px solid var(--green);
+      background: #fffefa;
     }
 
     .subtle-actions {
@@ -1892,6 +1954,7 @@
       .grid,
       .manager,
       .song-backup-grid,
+      .backup-main-actions,
       .contact-grid { grid-template-columns: 1fr; }
       .guide-shortcut-grid { grid-template-columns: 1fr; }
       .menu-shortcut-buttons { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -2408,25 +2471,42 @@
           <details class="card song-tool-card" id="songBackupPanel">
             <summary><strong>バックアップ・コピペ用</strong></summary>
             <p class="small">JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。</p>
+            <div class="backup-main-actions">
+              <div class="backup-action-card">
+                <h4>JSONファイルで保存</h4>
+                <p class="small">機種変更やブラウザデータ削除に備えて、復元用ファイルを保存できます。</p>
+                <button class="btn primary" id="saveJsonFileButton" type="button">JSONファイルを保存</button>
+              </div>
+              <div class="backup-action-card">
+                <h4>JSONファイルから復元</h4>
+                <p class="small">保存しておいたJSONファイルを選ぶと、マイ曲リストを復元できます。</p>
+                <button class="btn ghost" id="chooseJsonFileButton" type="button">JSONファイルから復元</button>
+                <input id="songJsonFileInput" type="file" accept=".json,application/json" hidden>
+              </div>
+            </div>
+            <details class="backup-advanced">
+              <summary>上級者向け：JSONをコピペで使う</summary>
+              <div class="song-backup-grid">
+                <div class="json-field-box json-output-box">
+                  <h4>JSONバックアップ</h4>
+                  <label for="songJsonBackupText">復元用JSON</label>
+                  <textarea id="songJsonBackupText" readonly placeholder="ここに復元用JSONを書き出します"></textarea>
+                  <div class="control-row">
+                    <button class="btn ghost" id="exportJsonButton" type="button">JSONを書き出す</button>
+                    <button class="btn ghost" id="copyJsonButton" type="button">JSONをコピー</button>
+                  </div>
+                </div>
+                <div class="json-field-box json-input-box">
+                  <h4>JSON読み込み</h4>
+                  <label for="songJsonRestoreText">保存しておいたJSONを貼り付け</label>
+                  <textarea id="songJsonRestoreText" placeholder="ここにJSONを貼り付け"></textarea>
+                  <div class="control-row">
+                    <button class="btn ghost" id="restoreJsonButton" type="button">JSONから復元</button>
+                  </div>
+                </div>
+              </div>
+            </details>
             <div class="song-backup-grid">
-              <div>
-                <label for="songJsonBackupText">JSONバックアップ</label>
-                <textarea id="songJsonBackupText" readonly placeholder="ここに復元用JSONを書き出します"></textarea>
-                <div class="control-row">
-                  <button class="btn primary" id="exportJsonButton" type="button">JSONを書き出す</button>
-                  <button class="btn ghost" id="copyJsonButton" type="button">JSONをコピー</button>
-                  <button class="btn ghost" id="saveJsonFileButton" type="button">JSONファイルを保存</button>
-                </div>
-              </div>
-              <div>
-                <label for="songJsonRestoreText">JSON読み込み</label>
-                <textarea id="songJsonRestoreText" placeholder="保存しておいたJSONを貼り付け"></textarea>
-                <div class="control-row">
-                  <button class="btn ghost" id="restoreJsonButton" type="button">JSONから復元</button>
-                  <button class="btn ghost" id="chooseJsonFileButton" type="button">JSONファイルから復元</button>
-                  <input id="songJsonFileInput" type="file" accept=".json,application/json" hidden>
-                </div>
-              </div>
               <div>
                 <label for="songExportText">コピペ用テキスト</label>
                 <textarea id="songExportText" readonly placeholder="ここにマイ曲リストを書き出します"></textarea>
@@ -3496,6 +3576,12 @@
       "JSONファイルを保存": "Save JSON File",
       "JSONから復元": "Restore from JSON",
       "JSONファイルから復元": "Restore from JSON File",
+      "JSONファイルで保存": "Save as JSON File",
+      "機種変更やブラウザデータ削除に備えて、復元用ファイルを保存できます。": "Save a restore file in case you change phones or clear browser data.",
+      "保存しておいたJSONファイルを選ぶと、マイ曲リストを復元できます。": "Choose a saved JSON file to restore your song list.",
+      "上級者向け：JSONをコピペで使う": "Advanced: Use JSON by Copy/Paste",
+      "復元用JSON": "Restore JSON",
+      "保存しておいたJSONを貼り付け": "Paste Saved JSON",
       "マイ曲リストを書き出す": "Export My Song List",
       "コピー": "Copy",
       "貼り付けた曲を読み込む": "Import Pasted Songs",
