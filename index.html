@@ -222,6 +222,62 @@
       gap: 12px;
     }
 
+    .top-shortcuts {
+      width: min(760px, 100%);
+      margin-top: 18px;
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(11, 43, 30, .72);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, .22);
+    }
+
+    .top-shortcuts-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      color: #fff7e8;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .top-shortcuts-head .small {
+      color: rgba(255, 247, 232, .82);
+      font-size: 12px;
+    }
+
+    .top-shortcut-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .top-shortcut-grid a {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 192, 122, .38);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #fffdf8;
+      background: rgba(255, 247, 232, .1);
+      font-size: 15px;
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    }
+
+    .top-shortcut-grid a:hover,
+    .top-shortcut-grid a:focus-visible {
+      color: var(--forest-2);
+      background: var(--orange);
+      outline: none;
+    }
+
     button,
     input,
     textarea,
@@ -1950,6 +2006,9 @@
       .hero h1 span:first-child {
         white-space: normal;
       }
+      .top-shortcut-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
       .section-head { align-items: flex-start; flex-direction: column; }
       .grid,
       .manager,
@@ -2006,11 +2065,6 @@
         <a href="#info">お知らせ</a>
         <a href="#menu">メニュー</a>
         <a href="#customers">マイ曲リスト</a>
-        <a href="#history">歌った記録</a>
-        <a href="#daily">今日の記録</a>
-        <a href="#drum-gacha">DRUMガチャ</a>
-        <a href="#about">店舗情報</a>
-        <a href="#youtube">YouTube</a>
         <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
         <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
@@ -2030,8 +2084,14 @@
         <p>Music Saloon DRUMのお知らせやメニュー確認、自分専用のマイ曲リスト管理に使えるアプリです。</p>
         <div class="actions">
           <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
-          <a class="btn primary" href="#menu">メニューを見る</a>
-          <a class="btn secondary" href="#customers">マイ曲リストを作る</a>
+          <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
+        </div>
+        <div class="top-shortcuts">
+          <div class="top-shortcuts-head">
+            <span>よく使う項目</span>
+            <span class="small">設定で変更できます</span>
+          </div>
+          <div class="top-shortcut-grid" id="topShortcutButtons"></div>
         </div>
       </div>
     </section>
@@ -2768,6 +2828,12 @@
         </div>
         <div class="grid">
           <article class="card">
+            <span class="tag orange">Home</span>
+            <h3>トップ表示設定</h3>
+            <p class="small">トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。</p>
+            <div class="top-shortcut-settings" id="topShortcutSettings"></div>
+          </article>
+          <article class="card">
             <span class="tag">Song List</span>
             <h3>マイ曲リスト設定</h3>
             <label class="check-row">
@@ -3273,8 +3339,11 @@
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
     const openSettingsModal = document.getElementById("openSettingsModal");
+    const openSettingsModalHero = document.getElementById("openSettingsModalHero");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
+    const topShortcutButtons = document.getElementById("topShortcutButtons");
+    const topShortcutSettings = document.getElementById("topShortcutSettings");
     const restoreHistoryBackup = document.getElementById("restoreHistoryBackup");
     const restoreHistoryStatus = document.getElementById("restoreHistoryStatus");
     const newTagName = document.getElementById("newTagName");
@@ -3328,6 +3397,22 @@
     ];
 
     const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌", "十八番", "お気に入り", "練習中", "盛り上がる", "しっとり"];
+    const defaultTopShortcutIds = ["info", "menu", "customers"];
+    const topShortcutOptions = [
+      { id: "info", label: "お知らせ", target: "info" },
+      { id: "menu", label: "メニュー", target: "menu" },
+      { id: "customers", label: "マイ曲リスト", target: "customers" },
+      { id: "song-register", label: "曲を登録", target: "song-register" },
+      { id: "gacha", label: "曲ガチャ", target: "gacha" },
+      { id: "history", label: "歌った記録", target: "history" },
+      { id: "daily", label: "今日の記録", target: "daily" },
+      { id: "drum-gacha", label: "DRUMガチャ", target: "drum-gacha" },
+      { id: "about", label: "店舗情報", target: "about" },
+      { id: "youtube", label: "YouTube", target: "youtube" },
+      { id: "features", label: "遊び方・ルール", target: "features" },
+      { id: "contact", label: "問い合わせ", target: "contact" },
+      { id: "song-backup", label: "バックアップ", target: "song-backup" }
+    ];
 
     const textOriginals = new WeakMap();
     const attrOriginals = new WeakMap();
@@ -3338,12 +3423,19 @@
       "お知らせ": "Info",
       "DRUMガイド": "DRUM Guide",
       "DRUMガイドを見る": "View DRUM Guide",
+      "よく使う項目": "Frequently Used",
+      "設定で変更できます": "You can change this in Settings",
+      "トップ表示設定": "Home Button Settings",
+      "トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。": "Choose which buttons appear on the home screen. Showing only what you often use helps you get there quickly.",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
+      "曲を登録": "Add Song",
       "歌った記録": "Song History",
       "今日の記録": "Today",
       "店舗情報": "Shop Info",
       "DRUMガチャ": "DRUM Gacha",
+      "遊び方・ルール": "Rules & Manners",
+      "バックアップ": "Backup",
       "設定": "Settings",
       "日本語": "Japanese",
       "保存について": "About Saved Data",
@@ -3927,6 +4019,7 @@
     if (settings.showSetlistCopy === undefined) settings.showSetlistCopy = true;
     if (settings.showHistoryMemo === undefined) settings.showHistoryMemo = true;
     if (settings.showDrinkTotal === undefined) settings.showDrinkTotal = true;
+    if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
     localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let editingSongId = null;
@@ -4282,6 +4375,8 @@
       renderFavorites();
       renderSongs();
       renderHistory();
+      renderTopShortcuts();
+      renderTopShortcutSettings();
       updateDrumGachaRateLabel();
     }
 
@@ -4621,6 +4716,32 @@
       tryHeroImage();
     }
 
+    function selectedTopShortcutIds() {
+      return settings.topShortcuts
+        .filter((shortcutId) => topShortcutOptions.some((option) => option.id === shortcutId));
+    }
+
+    function renderTopShortcuts() {
+      const selected = selectedTopShortcutIds();
+      if (!selected.length) {
+        topShortcutButtons.innerHTML = `<a href="#guide">${escapeText(uiText("DRUMガイド"))}</a>`;
+        return;
+      }
+      topShortcutButtons.innerHTML = selected.map((shortcutId) => {
+        const option = topShortcutOptions.find((item) => item.id === shortcutId);
+        return `<a href="#${escapeText(option.target)}">${escapeText(uiText(option.label))}</a>`;
+      }).join("");
+    }
+
+    function renderTopShortcutSettings() {
+      topShortcutSettings.innerHTML = topShortcutOptions.map((option) => `
+        <label class="check-row">
+          <input type="checkbox" data-top-shortcut="${escapeText(option.id)}" ${settings.topShortcuts.includes(option.id) ? "checked" : ""}>
+          ${escapeText(uiText(option.label))}
+        </label>
+      `).join("");
+    }
+
     function applySettings() {
       document.body.classList.toggle("memo-disabled", !settings.showMemo);
       document.body.classList.toggle("song-count-hidden", !settings.showSongCount);
@@ -4634,6 +4755,8 @@
       todayDrinkCount.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       todaySetlistCopyBlock.classList.toggle("feature-hidden", !settings.showSetlistCopy);
+      renderTopShortcuts();
+      renderTopShortcutSettings();
     }
 
     function renderTagFilterPanels() {
@@ -5689,6 +5812,10 @@
       settingsModal.setAttribute("aria-hidden", "false");
     });
 
+    openSettingsModalHero.addEventListener("click", () => {
+      openSettingsModal.click();
+    });
+
     closeSettingsModal.addEventListener("click", () => {
       settingsModal.classList.remove("show");
       settingsModal.setAttribute("aria-hidden", "true");
@@ -5696,6 +5823,21 @@
 
     settingsModal.addEventListener("click", (event) => {
       if (event.target === settingsModal) closeSettingsModal.click();
+    });
+
+    topShortcutSettings.addEventListener("change", (event) => {
+      const checkbox = event.target.closest("[data-top-shortcut]");
+      if (!checkbox) return;
+      const shortcutId = checkbox.dataset.topShortcut;
+      if (checkbox.checked) {
+        if (!settings.topShortcuts.includes(shortcutId)) settings.topShortcuts.push(shortcutId);
+      } else {
+        settings.topShortcuts = settings.topShortcuts.filter((item) => item !== shortcutId);
+      }
+      saveSettings();
+      renderTopShortcuts();
+      renderTopShortcutSettings();
+      refreshLanguageSoon();
     });
 
     openGuideModalNav.addEventListener("click", openGuideModal);
