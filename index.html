@@ -278,6 +278,52 @@
       outline: none;
     }
 
+    .top-shortcut-settings {
+      display: grid;
+      gap: 2px;
+      margin-top: 10px;
+    }
+
+    .top-shortcut-preview {
+      margin-top: 14px;
+      border: 1px solid rgba(240, 138, 53, .28);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255, 248, 237, .82);
+    }
+
+    .top-shortcut-preview strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--forest);
+      font-size: 14px;
+    }
+
+    .top-shortcut-preview-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .top-shortcut-preview-list span {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      color: var(--forest-2);
+      background: var(--orange);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .top-shortcut-status {
+      margin: 10px 0 0;
+      color: #5c4b3b;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
     button,
     input,
     textarea,
@@ -2880,6 +2926,11 @@
             <h3>トップ表示設定</h3>
             <p class="small">トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。</p>
             <div class="top-shortcut-settings" id="topShortcutSettings"></div>
+            <div class="top-shortcut-preview">
+              <strong>現在トップに表示中</strong>
+              <div class="top-shortcut-preview-list" id="topShortcutPreview"></div>
+              <p class="top-shortcut-status" id="topShortcutStatus">チェックするとすぐ反映されます。</p>
+            </div>
           </article>
           <article class="card">
             <span class="tag">Song List</span>
@@ -3399,6 +3450,8 @@
     const settingsModal = document.getElementById("settingsModal");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
+    const topShortcutPreview = document.getElementById("topShortcutPreview");
+    const topShortcutStatus = document.getElementById("topShortcutStatus");
     const restoreHistoryBackup = document.getElementById("restoreHistoryBackup");
     const restoreHistoryStatus = document.getElementById("restoreHistoryStatus");
     const newTagName = document.getElementById("newTagName");
@@ -3484,6 +3537,9 @@
       "トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。": "Choose which buttons appear on the home screen. Showing only what you often use helps you get there quickly.",
       "よく使う項目はトップに追加できます": "Add Frequently Used Items to the Home Screen",
       "設定の「トップ表示設定」から、メニュー・マイ曲リスト・曲ガチャなどを自由にトップへ表示できます。": "Use “Home Button Settings” to show Menu, My Song List, Song Gacha, and more on the home screen.",
+      "現在トップに表示中": "Currently Shown on Home",
+      "チェックするとすぐ反映されます。": "Changes apply as soon as you check an item.",
+      "トップに反映しました。": "Updated on the home screen.",
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "曲を登録": "Add Song",
@@ -4775,19 +4831,25 @@
     }
 
     function selectedTopShortcutIds() {
-      return settings.topShortcuts
-        .filter((shortcutId) => topShortcutOptions.some((option) => option.id === shortcutId));
+      return topShortcutOptions
+        .filter((option) => settings.topShortcuts.includes(option.id))
+        .map((option) => option.id);
     }
 
     function renderTopShortcuts() {
       const selected = selectedTopShortcutIds();
       if (!selected.length) {
         topShortcutButtons.innerHTML = `<a href="#guide">${escapeText(uiText("DRUMガイド"))}</a>`;
+        topShortcutPreview.innerHTML = `<span>${escapeText(uiText("DRUMガイド"))}</span>`;
         return;
       }
       topShortcutButtons.innerHTML = selected.map((shortcutId) => {
         const option = topShortcutOptions.find((item) => item.id === shortcutId);
         return `<a href="#${escapeText(option.target)}">${escapeText(uiText(option.label))}</a>`;
+      }).join("");
+      topShortcutPreview.innerHTML = selected.map((shortcutId) => {
+        const option = topShortcutOptions.find((item) => item.id === shortcutId);
+        return `<span>${escapeText(uiText(option.label))}</span>`;
       }).join("");
     }
 
@@ -4798,13 +4860,10 @@
           ${escapeText(uiText(option.label))}
         </label>
       `).join("");
-      topShortcutSettings.querySelectorAll("[data-top-shortcut]").forEach((checkbox) => {
-        checkbox.addEventListener("change", handleTopShortcutChange);
-      });
     }
 
     function handleTopShortcutChange(event) {
-      const checkbox = event.currentTarget || event.target.closest("[data-top-shortcut]");
+      const checkbox = event.target.closest("[data-top-shortcut]");
       if (!checkbox) return;
       const shortcutId = checkbox.dataset.topShortcut;
       if (checkbox.checked) {
@@ -4815,6 +4874,7 @@
       saveSettings();
       renderTopShortcuts();
       renderTopShortcutSettings();
+      topShortcutStatus.textContent = uiText("トップに反映しました。");
       refreshLanguageSoon();
     }
 
@@ -5908,6 +5968,8 @@
     settingsModal.addEventListener("click", (event) => {
       if (event.target === settingsModal) closeSettingsModal.click();
     });
+
+    topShortcutSettings.addEventListener("change", handleTopShortcutChange);
 
     openGuideModalNav.addEventListener("click", openGuideModal);
     openGuideModalHero.addEventListener("click", openGuideModal);
