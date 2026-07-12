@@ -224,6 +224,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      margin: 0 0 18px;
     }
 
     .top-shortcuts {
@@ -2152,9 +2153,7 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
-        <button class="language-toggle" id="openGuideModalNav" type="button">DRUMガイド</button>
         <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
-        <button class="settings-nav-button" id="openSettingsModal" type="button" aria-label="設定を開く"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
     </nav>
   </header>
@@ -2163,6 +2162,10 @@
     <section id="top" class="hero" aria-label="Music Saloon DRUM">
       <div class="hero-inner">
         <img class="hero-logo" src="drum-icon.jpg" alt="Music Saloon DRUM">
+        <div class="actions">
+          <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
+          <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
+        </div>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
           <div class="top-shortcuts-head">
@@ -2176,10 +2179,6 @@
           <span class="hero-title-sub">このアプリで。</span>
         </h1>
         <p>Music Saloon DRUMのお知らせやメニュー確認、自分専用のマイ曲リスト管理に使えるアプリです。</p>
-        <div class="actions">
-          <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
-          <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
-        </div>
       </div>
     </section>
 
@@ -3444,7 +3443,6 @@
     const settingDrinkTotal = document.getElementById("settingDrinkTotal");
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
-    const openSettingsModal = document.getElementById("openSettingsModal");
     const openSettingsModalHero = document.getElementById("openSettingsModalHero");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
@@ -3481,7 +3479,6 @@
     const newsGallery = document.getElementById("newsGallery");
     const newsEmpty = document.getElementById("newsEmpty");
     const languageToggle = document.getElementById("languageToggle");
-    const openGuideModalNav = document.getElementById("openGuideModalNav");
     const openGuideModalHero = document.getElementById("openGuideModalHero");
     const guideModal = document.getElementById("guideModal");
     const closeGuideModal = document.getElementById("closeGuideModal");
@@ -5958,20 +5955,20 @@
       renderTodaySetlist();
     });
 
-    openSettingsModal.addEventListener("click", () => {
+    function openSettingsPanel() {
       renderTopShortcutSettings();
       settingsModal.classList.add("show");
       settingsModal.setAttribute("aria-hidden", "false");
-    });
+    }
 
     openSettingsModalHero.addEventListener("click", () => {
-      openSettingsModal.click();
+      openSettingsPanel();
     });
 
     document.querySelectorAll(".open-settings-from-guide").forEach((button) => {
       button.addEventListener("click", () => {
         closeGuideModalPanel();
-        openSettingsModal.click();
+        openSettingsPanel();
       });
     });
 
@@ -5986,7 +5983,6 @@
 
     topShortcutSettings.addEventListener("change", handleTopShortcutChange);
 
-    openGuideModalNav.addEventListener("click", openGuideModal);
     openGuideModalHero.addEventListener("click", openGuideModal);
 
     closeGuideModal.addEventListener("click", closeGuideModalPanel);
