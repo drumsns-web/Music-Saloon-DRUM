@@ -3562,6 +3562,7 @@
       "遊び方・ルール": "Rules & Manners",
       "バックアップ": "Backup",
       "設定": "Settings",
+      "⚙ 設定": "⚙ Settings",
       "日本語": "Japanese",
       "保存について": "About Saved Data",
       "マイ曲リストや記録は、": "Your song list and records",
@@ -3829,11 +3830,15 @@
       "マイ曲リスト設定": "My Song List Settings",
       "タグ設定": "Tag Settings",
       "追加するタグ名": "Tag Name to Add",
+      "例：懐メロ、お気に入り、練習中": "Ex: Classics, favorite, practicing",
       "タグを追加": "Add Tag",
       "記録について": "About Records",
       "削除記録の復元": "Restore Deleted Records",
       "削除した歌った記録を復元": "Restore Deleted Song History",
       "デュエット検索": "Duet Search",
+      "復元できる記録はありません。": "No records can be restored.",
+      "歌った曲、キー、ドリンク記録、今日のメモはこの端末のブラウザ内に保存されます。別のお客様やお店側へ自動共有されません。": "Sung songs, keys, drink logs, and today's notes are saved only in this device's browser. They are not automatically shared with other customers or the shop.",
+      "曲を保存するときに「デュエット曲として登録」を選ぶと、マイ曲リストでデュエット曲だけを表示できます。": "When saving a song, choose “Mark as duet” to filter duet songs later.",
       "歌った回数ランキング": "Singing Frequency Ranking",
       "アクセス": "Access",
       "店内写真": "Shop Photo",
@@ -3862,6 +3867,7 @@
       "動画 2": "Video 2",
       "動画は準備中です。": "Video is being prepared.",
       "設定を開く": "Open Settings",
+      "使う人に合わせて、マイ曲リストの表示や記録機能を切り替えられます。": "Adjust the song list display and logging features to suit how you use the app.",
       "写真のお知らせ": "Photo notices",
       "連絡先": "Contact",
       "お名前": "Name",
@@ -4441,8 +4447,8 @@
 
     function updateLanguageButton() {
       if (!languageToggle) return;
-      languageToggle.textContent = currentLanguage === "en" ? "日本語" : "English";
-      languageToggle.setAttribute("aria-label", currentLanguage === "en" ? "日本語表示に切り替え" : "英語表示に切り替え");
+      languageToggle.textContent = currentLanguage === "en" ? "Japanese" : "English";
+      languageToggle.setAttribute("aria-label", currentLanguage === "en" ? "Switch to Japanese" : "英語表示に切り替え");
     }
 
     function applyLanguage() {
