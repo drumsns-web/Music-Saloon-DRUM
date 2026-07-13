@@ -2154,39 +2154,48 @@
     @media (max-width: 880px) {
       nav {
         width: min(100%, calc(100% - 24px));
-        min-height: auto;
-        align-items: flex-start;
-        flex-direction: column;
+        min-height: 76px;
+        align-items: center;
+        flex-direction: row;
         padding: 10px 0;
-        gap: 10px;
+        gap: 8px;
       }
 
       .brand {
         gap: 9px;
-        font-size: 18px;
+        min-width: 0;
+        flex: 1 1 auto;
+        font-size: clamp(18px, 4.9vw, 28px);
+      }
+
+      .brand span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .brand img {
         width: 38px;
         height: 38px;
+        flex: 0 0 auto;
       }
 
       .nav-links {
-        width: 100%;
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        justify-content: stretch;
-        gap: 7px;
+        width: auto;
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: flex-end;
+        gap: 6px;
       }
 
       .nav-links a,
       .nav-links button {
-        width: 100%;
+        width: auto;
         min-height: 34px;
-        padding: 7px 5px;
+        padding: 7px 9px;
         font-size: 12px;
         line-height: 1.12;
-        white-space: normal;
+        white-space: nowrap;
         text-align: center;
       }
 
@@ -2252,7 +2261,13 @@
 
     @media (max-width: 390px) {
       .nav-links {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+      }
+
+      .nav-links a,
+      .nav-links button {
+        padding-inline: 7px;
+        font-size: 11px;
       }
     }
   </style>
@@ -2266,6 +2281,7 @@
       </a>
       <div class="nav-links">
         <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
+        <button class="settings-nav-button" id="openSettingsModalNav" type="button"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
     </nav>
   </header>
@@ -3638,6 +3654,7 @@
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
     const openSettingsModalHero = document.getElementById("openSettingsModalHero");
+    const openSettingsModalNav = document.getElementById("openSettingsModalNav");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
@@ -6289,6 +6306,10 @@
     }
 
     openSettingsModalHero.addEventListener("click", () => {
+      openSettingsPanel();
+    });
+
+    openSettingsModalNav.addEventListener("click", () => {
       openSettingsPanel();
     });
 
