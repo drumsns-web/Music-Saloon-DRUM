@@ -2308,7 +2308,7 @@
             <a href="#features">ルールを見る</a>
           </div>
         </div>
-        <div class="shop-message-card">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
+        <div class="shop-message-card" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
           <div class="top-shortcuts-head">
@@ -3689,6 +3689,7 @@
     const dailyMemo = document.getElementById("dailyMemo");
     const dailyMemoStatus = document.getElementById("dailyMemoStatus");
     const dailyMemoTemplates = document.getElementById("dailyMemoTemplates");
+    const dailyShopMessage = document.getElementById("dailyShopMessage");
     const undoToast = document.getElementById("undoToast");
     const undoText = document.getElementById("undoText");
     const undoButton = document.getElementById("undoButton");
@@ -3737,6 +3738,109 @@
       { id: "features", label: "遊び方・ルール", target: "features" },
       { id: "contact", label: "問い合わせ", target: "contact" },
       { id: "song-backup", label: "バックアップ", target: "song-backup" }
+    ];
+
+    const dailyShopMessages = [
+      { ja: "今日の一曲が、いい夜のきっかけになりますように。", en: "May today's song be the start of a great night." },
+      { ja: "歌う曲に迷ったら、曲ガチャをそっと回してみてください。", en: "If you are not sure what to sing, try the Song Gacha." },
+      { ja: "いつもの曲も、今日の気分で少し違って聴こえるかもしれません。", en: "Your usual song may feel a little different tonight." },
+      { ja: "キーやメモを残しておくと、次回の一曲がもっと歌いやすくなります。", en: "Saving keys and notes can make your next song easier to sing." },
+      { ja: "今日はどんな曲から始めますか？", en: "What song will you start with today?" },
+      { ja: "歌った曲は、今日の記録に残しておけます。", en: "You can save the songs you sang in Today's Log." },
+      { ja: "メニューや料金は、このアプリからすぐ確認できます。", en: "You can quickly check the menu and prices in this app." },
+      { ja: "楽器と歌が重なる時間を、ゆっくり楽しんでください。", en: "Enjoy the moment when instruments and voices come together." },
+      { ja: "よく歌う曲が増えるほど、自分だけのランキングが育ちます。", en: "The more you sing, the more your personal ranking grows." },
+      { ja: "次に歌いたい曲は、マイ曲リストに残しておくと便利です。", en: "Save songs you want to sing next in your song list." },
+      { ja: "乾杯の前に、今日の一曲を決めてみるのもいいですね。", en: "Choosing your first song before a toast can be fun." },
+      { ja: "初めての曲も、十八番の曲も、今日のDRUMで楽しんでください。", en: "Enjoy both new songs and your go-to songs at DRUM today." },
+      { ja: "他のお客様の歌や演奏も、気持ちよく楽しめる夜になりますように。", en: "May tonight be enjoyable for everyone's singing and playing." },
+      { ja: "DRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。", en: "Use the DRUM Guide to check the menu, song list, and rules." },
+      { ja: "今日の気分に合う曲を、マイ曲リストから探してみてください。", en: "Find a song that fits your mood in your song list." },
+      { ja: "歌ったあとに記録しておくと、次回来た時の楽しみが増えます。", en: "Logging songs after singing makes your next visit more fun." },
+      { ja: "迷った時は、いつもの十八番から始めるのもありです。", en: "When in doubt, starting with your go-to song is always nice." },
+      { ja: "新しく歌えそうな曲は、忘れる前に曲リストへ。", en: "Add songs you might want to sing before you forget them." },
+      { ja: "今日のキーが合ったら、メモしておくと次回が楽です。", en: "If today's key works well, save it for next time." },
+      { ja: "曲リストは、自分だけの小さな歌本です。", en: "Your song list is your own little songbook." },
+      { ja: "何を歌うか迷う時間も、DRUMの楽しみのひとつです。", en: "Choosing what to sing is part of the fun at DRUM." },
+      { ja: "今日は少しだけ冒険して、いつもと違う曲もどうぞ。", en: "Try a small adventure with a song you do not usually sing." },
+      { ja: "いつもの曲に、今日だけの演奏が重なるかもしれません。", en: "Your usual song may meet a special performance tonight." },
+      { ja: "歌いたい曲が浮かんだら、曲名だけでも登録できます。", en: "If a song comes to mind, you can add just the title." },
+      { ja: "曲名だけ登録して、歌手名やキーはあとから足せます。", en: "Add just the title now, then add artist and key later." },
+      { ja: "デュエット曲はタグを付けておくと探しやすくなります。", en: "Tag duet songs so they are easier to find." },
+      { ja: "十八番タグを育てると、迷った時に頼れるリストになります。", en: "Build your go-to tag into a reliable list for later." },
+      { ja: "お気に入りの曲は、タグでまとめておくと便利です。", en: "Tags are useful for collecting your favorite songs." },
+      { ja: "今日は自分のランキング上位曲から選んでみるのもいいですね。", en: "Try choosing from the top of your personal ranking today." },
+      { ja: "よく歌う曲ランキングは、歌うほど自分らしくなります。", en: "Your frequent-song ranking becomes more personal as you sing." },
+      { ja: "今日のセットリストは、あとで見返すとちょっと楽しい記録になります。", en: "Today's set list becomes a fun memory to look back on." },
+      { ja: "歌った曲を残すと、DRUMで過ごした夜のメモになります。", en: "Saving sung songs keeps a note of your night at DRUM." },
+      { ja: "ドリンク記録は、飲みすぎ防止の目安にも使えます。", en: "The drink log can help you keep track of your pace." },
+      { ja: "今日のメモに、次回歌いたい曲を書いておくのもおすすめです。", en: "Today's memo is a good place for songs to sing next time." },
+      { ja: "マイ曲リストは、この端末だけに保存されます。", en: "Your song list is saved only on this device." },
+      { ja: "曲リストが増えてきたら、バックアップも忘れずに。", en: "When your song list grows, remember to back it up." },
+      { ja: "機種変更前には、曲リストのJSON保存がおすすめです。", en: "Before changing phones, saving a JSON backup is recommended." },
+      { ja: "メニューで迷ったら、気になるメニューに星を付けておけます。", en: "Star menu items you are interested in for later." },
+      { ja: "スタッフドリンクもあります。よければ一緒に乾杯しましょう。", en: "Staff drinks are available too. Cheers together if you like." },
+      { ja: "飲み放題メニューはプランごとに確認できます。", en: "All-you-can-drink menus can be checked by plan." },
+      { ja: "ボトル派の方も、通常メニューから確認できます。", en: "Bottle drinkers can check the regular menu." },
+      { ja: "グラスドリンクもメニューからすぐ探せます。", en: "Glass drinks are easy to find in the menu." },
+      { ja: "フードやチャージも、このアプリで確認できます。", en: "Food and cover charges can also be checked here." },
+      { ja: "DRUMガチャは当日限りのお楽しみです。", en: "DRUM Gacha is today's little treat." },
+      { ja: "平日はDRUMガチャのチャンスが少し高めです。", en: "DRUM Gacha odds are a little better on weekdays." },
+      { ja: "曲リストが増えると、DRUMガチャの楽しみも少し増えます。", en: "A bigger song list adds a little more fun to DRUM Gacha." },
+      { ja: "曲ガチャは、歌う曲に迷った時の小さなきっかけです。", en: "Song Gacha is a small spark when you cannot choose a song." },
+      { ja: "一人で歌う時は、デュエット曲を外して曲ガチャできます。", en: "Singing solo? You can exclude duet songs from Song Gacha." },
+      { ja: "二人で歌う時は、デュエット曲も候補に入れて楽しめます。", en: "Singing together? Include duet songs and enjoy the draw." },
+      { ja: "今日の一曲目は、声慣らしの曲から始めるのもいいですね。", en: "Starting with a warm-up song is a nice way to begin." },
+      { ja: "今日はしっとり歌う日でも、盛り上がる日でも。", en: "Tonight can be mellow, lively, or anything in between." },
+      { ja: "歌う方の一曲を大切に、みんなで楽しい時間にしましょう。", en: "Let's respect each singer's song and enjoy the night together." },
+      { ja: "他のお客様の歌に合わせる時は、ひと声かけると気持ちよく楽しめます。", en: "When joining someone else's song, a quick word helps everyone enjoy it." },
+      { ja: "ハモリやコーラスは、相手の気持ちに寄り添って楽しみましょう。", en: "For harmonies or chorus, enjoy while respecting the singer." },
+      { ja: "楽器で参加する時は、歌う方が主役の気持ちで。", en: "When playing along, remember the singer is the star." },
+      { ja: "カラオケと楽器が共存する、DRUMらしい時間をお楽しみください。", en: "Enjoy DRUM's mix of karaoke and live instruments." },
+      { ja: "生演奏したい時は、スタッフに相談してみてください。", en: "If you want to play live, please ask the staff." },
+      { ja: "歌も演奏も、ほどよいコミュニケーションから。", en: "Good singing and playing start with good communication." },
+      { ja: "今日は誰かの歌に、素敵な演奏が重なるかもしれません。", en: "Someone's song may meet a wonderful performance tonight." },
+      { ja: "歌う人も聴く人も、気持ちよく過ごせる夜になりますように。", en: "May singers and listeners both have a comfortable night." },
+      { ja: "曲のキーに迷ったら、今日の調子をメモしておきましょう。", en: "If you are unsure about key, note how your voice feels today." },
+      { ja: "高い曲は無理せず、キー調整も楽しみ方のひとつです。", en: "Do not push high songs too hard; key changes are part of the fun." },
+      { ja: "低めに歌った曲も、記録しておくと次回に役立ちます。", en: "If you sing lower today, save it for next time." },
+      { ja: "今日は声の調子に合わせて、気持ちよく歌える曲を。", en: "Choose a song that feels good for your voice today." },
+      { ja: "歌いやすかったキーは、忘れないうちに保存しておきましょう。", en: "Save the key that felt easy before you forget it." },
+      { ja: "練習中の曲は、タグを付けておくと見つけやすくなります。", en: "Tag practice songs so you can find them easily." },
+      { ja: "盛り上がる曲タグを作ると、場面に合わせて選びやすくなります。", en: "A lively-song tag helps you choose for the moment." },
+      { ja: "しっとり歌いたい夜は、タグ検索が便利です。", en: "On a mellow night, tag search can help." },
+      { ja: "昭和歌謡、JPOP、アニソンなど、タグで自分らしく整理できます。", en: "Organize songs your way with tags like J-pop, anime, or classics." },
+      { ja: "曲リストは、使うほどあなた仕様になります。", en: "Your song list becomes more yours the more you use it." },
+      { ja: "今日は新しい十八番が見つかるかもしれません。", en: "You might find a new go-to song today." },
+      { ja: "いつか歌いたい曲も、今のうちにメモしておきましょう。", en: "Save songs you want to sing someday." },
+      { ja: "ふと思い出した曲は、曲名だけでも登録できます。", en: "If a song pops into your head, add just the title." },
+      { ja: "歌手名がわからなくても、あとから編集できます。", en: "You can edit the artist later if you do not know it now." },
+      { ja: "曲を削除する時は確認が出るので、落ち着いて整理できます。", en: "Deletion asks for confirmation, so you can organize calmly." },
+      { ja: "間違って消した時は、すぐなら元に戻せます。", en: "If you delete by mistake, you can undo it right away." },
+      { ja: "今日の記録は、あとで日記みたいに見返せます。", en: "Today's log can feel like a little diary later." },
+      { ja: "来店メモには、曲のことでも気分のことでも自由にどうぞ。", en: "Use visit notes for songs, mood, or anything you like." },
+      { ja: "今日のセットリストをコピーして、メモアプリに残すのもおすすめです。", en: "Copy today's set list and save it in your notes app." },
+      { ja: "LINEに貼れる形で、今日歌った曲をまとめられます。", en: "You can copy today's songs in a LINE-friendly format." },
+      { ja: "歌った記録が増えると、DRUMでの思い出も増えていきます。", en: "More song logs mean more memories at DRUM." },
+      { ja: "ドリンク記録は、よく飲むものをお気に入り登録できます。", en: "You can favorite drinks you often order." },
+      { ja: "いつものドリンクは、お気に入りからすぐ記録できます。", en: "Your usual drink can be logged quickly from favorites." },
+      { ja: "飲み放題の内容は、プランごとに見比べられます。", en: "Compare all-you-can-drink options by plan." },
+      { ja: "メニューは価格税込みで表示しています。", en: "Menu prices include tax." },
+      { ja: "店舗情報からアクセスや連絡先も確認できます。", en: "Shop info includes access and contact details." },
+      { ja: "公式LINEやInstagramも、インフォメーションから開けます。", en: "Official LINE and Instagram are available from Information." },
+      { ja: "YouTubeページでは、店の動画も見られます。", en: "You can watch shop videos on the YouTube page." },
+      { ja: "ホーム画面に追加しておくと、次回からすぐ開けます。", en: "Add this app to your home screen for quicker access next time." },
+      { ja: "DRUMガイドは、このアプリの入口です。", en: "The DRUM Guide is the entrance to this app." },
+      { ja: "よく使うボタンは、設定からトップに追加できます。", en: "Add frequently used buttons to the home screen from Settings." },
+      { ja: "トップのボタンは、自分が使いやすいように選べます。", en: "Choose home buttons that fit how you use the app." },
+      { ja: "使わないボタンは出さずに、すっきり使えます。", en: "Hide buttons you do not use for a cleaner screen." },
+      { ja: "迷ったらまずDRUMガイドを開いてみてください。", en: "When in doubt, start with the DRUM Guide." },
+      { ja: "今日の楽しみ方は、メニューからでも曲リストからでも。", en: "Start today's fun from the menu or your song list." },
+      { ja: "まずは乾杯、それから一曲。そんな夜もいいですね。", en: "A toast first, then a song. That sounds like a good night." },
+      { ja: "聴くだけの日も、歌う日も、DRUMでゆっくりどうぞ。", en: "Whether you sing or just listen, relax at DRUM." },
+      { ja: "今日の一曲が、誰かの好きな曲かもしれません。", en: "Today's song might be someone's favorite." },
+      { ja: "歌も演奏も、お互いに気持ちよく楽しみましょう。", en: "Let's enjoy singing and playing with respect for each other." },
+      { ja: "本日もMusic Saloon DRUMでお楽しみください。", en: "Enjoy your time at Music Saloon DRUM today." }
     ];
 
     const textOriginals = new WeakMap();
@@ -4772,6 +4876,7 @@
       renderTagManager();
       renderDrinkButtons();
       renderMenuFavorites();
+      renderDailyShopMessage();
       renderHistoryBackupStatus();
       renderDailyMemo();
       renderFavorites();
@@ -4835,6 +4940,20 @@
 
     function todayString() {
       return new Date().toISOString().slice(0, 10);
+    }
+
+    function dayIndexFromDate(date = new Date()) {
+      const start = new Date(date.getFullYear(), 0, 0);
+      const diff = date - start + ((start.getTimezoneOffset() - date.getTimezoneOffset()) * 60000);
+      return Math.floor(diff / 86400000);
+    }
+
+    function renderDailyShopMessage() {
+      if (!dailyShopMessage || !dailyShopMessages.length) return;
+      const index = (dayIndexFromDate() - 1) % dailyShopMessages.length;
+      const message = dailyShopMessages[index];
+      const prefix = currentLanguage === "en" ? "Today's note: " : "今日の一言：";
+      dailyShopMessage.textContent = `${prefix}${currentLanguage === "en" ? message.en : message.ja}`;
     }
 
     function getHomePromptState() {
@@ -6534,6 +6653,7 @@
     renderTagManager();
     renderDrinkButtons();
     initMenuFavoriteButtons();
+    renderDailyShopMessage();
     applySettings();
     updateKeyAdjustLabel();
     renderHistoryBackupStatus();
