@@ -2165,13 +2165,14 @@
         gap: 9px;
         min-width: 0;
         flex: 1 1 auto;
-        font-size: clamp(18px, 4.9vw, 28px);
+        font-size: clamp(17px, 4.4vw, 24px);
+        line-height: 1.12;
       }
 
       .brand span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
       }
 
       .brand img {
@@ -2192,7 +2193,7 @@
       .nav-links button {
         width: auto;
         min-height: 34px;
-        padding: 7px 9px;
+        padding: 7px 8px;
         font-size: 12px;
         line-height: 1.12;
         white-space: nowrap;
@@ -2201,6 +2202,10 @@
 
       .settings-nav-button .settings-icon {
         font-size: 15px;
+      }
+
+      .language-toggle {
+        min-width: 68px;
       }
 
       .hero { min-height: 600px; }
