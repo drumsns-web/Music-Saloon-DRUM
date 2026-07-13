@@ -283,6 +283,60 @@
       outline: none;
     }
 
+    .today-action-panel,
+    .shop-message-card {
+      width: min(760px, 100%);
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      padding: 14px;
+      color: #fffdf8;
+      background: rgba(11, 43, 30, .72);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, .22);
+    }
+
+    .today-action-panel {
+      margin: 18px 0;
+    }
+
+    .shop-message-card {
+      margin: 0 0 18px;
+      font-weight: 900;
+      line-height: 1.6;
+    }
+
+    .today-action-panel strong {
+      display: block;
+      margin-bottom: 10px;
+      color: #fff7e8;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .today-action-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .today-action-grid a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 9px 10px;
+      color: var(--forest-2);
+      background: rgba(255, 247, 232, .92);
+      font-size: 14px;
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .today-action-grid a.primary-action {
+      background: var(--orange);
+    }
+
     .top-shortcut-settings {
       display: grid;
       gap: 2px;
@@ -682,6 +736,39 @@
       color: var(--muted);
       font-size: 14px;
       font-weight: 700;
+    }
+
+    .menu-favorites-panel {
+      margin: 16px 0 0;
+    }
+
+    .menu-favorite-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .menu-favorite-list .pill {
+      background: #fff7e8;
+      border: 1px solid rgba(240, 138, 53, .28);
+    }
+
+    .menu-favorite-button {
+      min-height: 34px;
+      border: 1px solid rgba(240, 138, 53, .26);
+      border-radius: 999px;
+      padding: 4px 9px;
+      color: var(--forest);
+      background: #fffdf8;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .menu-favorite-button.active {
+      color: var(--forest-2);
+      background: var(--orange);
+      border-color: var(--orange);
     }
 
     .menu-detail {
@@ -1257,6 +1344,14 @@
       outline: none;
     }
 
+    .song-search-card #songSort {
+      flex: 0 1 160px;
+      width: auto;
+      min-height: 58px;
+      border: 2px solid rgba(20, 63, 44, .24);
+      font-weight: 900;
+    }
+
     .song-search-card .tag-filter .btn {
       min-height: 58px;
       padding-inline: 18px;
@@ -1727,6 +1822,19 @@
       font-weight: 800;
     }
 
+    .template-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 0;
+    }
+
+    .template-buttons .btn {
+      min-height: 38px;
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+
     mark.search-hit {
       border-radius: 4px;
       padding: 0 2px;
@@ -2093,6 +2201,9 @@
       .hero h1 span:first-child {
         white-space: normal;
       }
+      .today-action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
       .top-shortcut-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -2167,6 +2278,16 @@
           <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
+        <div class="today-action-panel">
+          <strong>今日は何をしますか？</strong>
+          <div class="today-action-grid">
+            <a class="primary-action" href="#menu">メニューを見る</a>
+            <a href="#customers">曲を探す</a>
+            <a href="#gacha">曲ガチャ</a>
+            <a href="#features">ルールを見る</a>
+          </div>
+        </div>
+        <div class="shop-message-card">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
           <div class="top-shortcuts-head">
@@ -2371,6 +2492,11 @@
             <button class="btn ghost" type="button" data-menu-page="menuPlans">飲み放題プラン</button>
             <button class="btn ghost" type="button" data-menu-page="freeDrinkMenu">飲み放題メニュー</button>
             <button class="btn ghost" type="button" data-menu-page="chargeFoodMenu">チャージ・フード</button>
+          </div>
+          <div class="menu-favorites-panel">
+            <strong>気になるメニュー</strong>
+            <p class="small">通常メニュー横の星を押すと、ここにまとめて表示できます。</p>
+            <div class="menu-favorite-list" id="menuFavoriteList"></div>
           </div>
         </div>
 
@@ -2635,6 +2761,12 @@
                 <button class="btn ghost" id="songTagFilterButton" type="button">タグを選ぶ</button>
                 <div class="tag-filter-panel" id="songTagFilterPanel"></div>
               </div>
+              <select id="songSort" aria-label="曲リストの並び順">
+                <option value="recent">最近追加</option>
+                <option value="title">曲名順</option>
+                <option value="artist">歌手名順</option>
+                <option value="sung">よく歌う順</option>
+              </select>
               <strong id="countText">0件</strong>
             </div>
           </div>
@@ -2904,6 +3036,14 @@
             <p class="small">マイ曲リストで「記録」を押した曲が、今日のセットリストとして残ります。</p>
             <ul class="mini-list" id="todaySetlist"></ul>
             <div id="todaySetlistCopyBlock">
+              <label>
+                コピー形式
+                <select id="setlistCopyFormat">
+                  <option value="withKey">キー・メモ付き</option>
+                  <option value="simple">シンプル</option>
+                  <option value="share">共有用</option>
+                </select>
+              </label>
               <button class="btn ghost" id="copyTodaySetlist" type="button">今日のセットリストをコピー</button>
               <div class="copy-output feature-hidden" id="todaySetlistCopyText"></div>
             </div>
@@ -2924,6 +3064,11 @@
               メモ
               <textarea id="dailyMemo" placeholder="例：今日は高めのキーが調子よかった。次回来たらこの曲を歌いたい。"></textarea>
             </label>
+            <div class="template-buttons" id="dailyMemoTemplates">
+              <button class="btn ghost" type="button" data-daily-memo-template="今日は楽しく歌えた。">楽しく歌えた</button>
+              <button class="btn ghost" type="button" data-daily-memo-template="次回はキーを少し調整したい。">キー調整</button>
+              <button class="btn ghost" type="button" data-daily-memo-template="次回来たら歌いたい曲をメモしておく。">次回候補</button>
+            </div>
             <p class="small" id="dailyMemoStatus">この端末のブラウザ内に保存されます。</p>
           </article>
           <article class="card">
@@ -3402,6 +3547,7 @@
     const historyBackupStorageKey = "music-saloon-drum-history-backup";
     const drinkStorageKey = "music-saloon-drum-drinks";
     const favoriteDrinkStorageKey = "music-saloon-drum-favorite-drinks";
+    const menuFavoriteStorageKey = "music-saloon-drum-menu-favorites";
     const dailyMemoStorageKey = "music-saloon-drum-daily-memos";
     const settingsStorageKey = "music-saloon-drum-settings";
     const tagStorageKey = "music-saloon-drum-tags";
@@ -3421,6 +3567,7 @@
     const list = document.getElementById("songList");
     const nextSongList = document.getElementById("nextSongList");
     const searchBox = document.getElementById("searchBox");
+    const songSort = document.getElementById("songSort");
     const countText = document.getElementById("countText");
     const totalSongCount = document.getElementById("totalSongCount");
     const clearAll = document.getElementById("clearAll");
@@ -3479,6 +3626,7 @@
     const addHistoryNewSong = document.getElementById("addHistoryNewSong");
     const todaySetlist = document.getElementById("todaySetlist");
     const todaySetlistCopyBlock = document.getElementById("todaySetlistCopyBlock");
+    const setlistCopyFormat = document.getElementById("setlistCopyFormat");
     const copyTodaySetlist = document.getElementById("copyTodaySetlist");
     const todaySetlistCopyText = document.getElementById("todaySetlistCopyText");
     const todaySongCount = document.getElementById("todaySongCount");
@@ -3518,6 +3666,7 @@
     const disableHomePrompt = document.getElementById("disableHomePrompt");
     const dailyMemo = document.getElementById("dailyMemo");
     const dailyMemoStatus = document.getElementById("dailyMemoStatus");
+    const dailyMemoTemplates = document.getElementById("dailyMemoTemplates");
     const undoToast = document.getElementById("undoToast");
     const undoText = document.getElementById("undoText");
     const undoButton = document.getElementById("undoButton");
@@ -3531,6 +3680,8 @@
     const menuBackButton = document.getElementById("menuBackButton");
     const customersBackButton = document.getElementById("customersBackButton");
     const regularMenuHeading = document.getElementById("regularMenuHeading");
+    const regularMenu = document.getElementById("regularMenu");
+    const menuFavoriteList = document.getElementById("menuFavoriteList");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -3575,6 +3726,10 @@
       "お知らせ": "Info",
       "DRUMガイド": "DRUM Guide",
       "DRUMガイドを見る": "View DRUM Guide",
+      "今日は何をしますか？": "What would you like to do today?",
+      "曲を探す": "Search Songs",
+      "ルールを見る": "View Rules",
+      "今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。": "Today's note: If you are not sure where to go, the DRUM Guide takes you to the menu, song list, and rules.",
       "よく使う項目": "Frequently Used",
       "お知らせを見る": "View Info",
       "お知らせへ": "Go to Info",
@@ -3669,6 +3824,16 @@
       "種類を選ぶ": "Choose a Category",
       "種類を選ぶと、そのドリンクだけを表示します。": "Choose a category to show only those drinks.",
       "今日のセットリストをコピー": "Copy Today's Set List",
+      "コピー形式": "Copy Format",
+      "キー・メモ付き": "With Key / Notes",
+      "シンプル": "Simple",
+      "共有用": "For Sharing",
+      "楽しく歌えた": "Good Singing Day",
+      "キー調整": "Key Adjustment",
+      "次回候補": "Next Time",
+      "今日は楽しく歌えた。": "I had fun singing today.",
+      "次回はキーを少し調整したい。": "I want to adjust the key next time.",
+      "次回来たら歌いたい曲をメモしておく。": "Note songs I want to sing next time.",
       "コピーしました": "Copied",
       "この記録のメモ": "Note for this song",
       "お気に入りドリンク": "Favorite Drinks",
@@ -3731,6 +3896,9 @@
       "スタンダード": "Standard",
       "プレミアム": "Premium",
       "通常ドリンク・ボトル": "Drinks & Bottles",
+      "気になるメニュー": "Menu Favorites",
+      "通常メニュー横の星を押すと、ここにまとめて表示できます。": "Tap the star next to a regular menu item to collect it here.",
+      "まだ気になるメニューはありません。": "No menu favorites yet.",
       "ビール": "Beer",
       "焼酎": "Shochu",
       "ウイスキー": "Whisky",
@@ -4214,6 +4382,7 @@
     let historyBackup = JSON.parse(localStorage.getItem(historyBackupStorageKey) || "null");
     let drinkHistory = JSON.parse(localStorage.getItem(drinkStorageKey) || "[]");
     let favoriteDrinks = JSON.parse(localStorage.getItem(favoriteDrinkStorageKey) || "[]");
+    let menuFavorites = JSON.parse(localStorage.getItem(menuFavoriteStorageKey) || "[]");
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     if (settings.showSongCount === undefined) settings.showSongCount = true;
@@ -4447,6 +4616,10 @@
       localStorage.setItem(favoriteDrinkStorageKey, JSON.stringify(favoriteDrinks));
     }
 
+    function saveMenuFavorites() {
+      localStorage.setItem(menuFavoriteStorageKey, JSON.stringify(menuFavorites));
+    }
+
     function saveDailyMemos() {
       localStorage.setItem(dailyMemoStorageKey, JSON.stringify(dailyMemos));
     }
@@ -4576,6 +4749,7 @@
       renderTagOptions();
       renderTagManager();
       renderDrinkButtons();
+      renderMenuFavorites();
       renderHistoryBackupStatus();
       renderDailyMemo();
       renderFavorites();
@@ -5032,14 +5206,21 @@
 
     function createTodaySetlistText(items = songHistory.filter((item) => item.date === todayString())) {
       if (!items.length) return uiText("今日のセットリストはまだありません。");
-      const header = currentLanguage === "en" ? `Today's Set List ${todayString()}` : `今日のセットリスト ${todayString()}`;
+      const format = setlistCopyFormat ? setlistCopyFormat.value : "withKey";
+      const header = currentLanguage === "en"
+        ? (format === "share" ? `Songs I sang at Music Saloon DRUM ${todayString()}` : `Today's Set List ${todayString()}`)
+        : (format === "share" ? `Music Saloon DRUMで歌った曲 ${todayString()}` : `今日のセットリスト ${todayString()}`);
       const rows = items.map((item, index) => {
         const artist = item.artist || "-";
         const key = item.key ? uiKey(item.key) : uiText("キー未設定");
         const note = item.historyNote ? (currentLanguage === "en" ? ` / Note: ${item.historyNote}` : ` / メモ: ${item.historyNote}`) : "";
+        if (format === "simple") return `${index + 1}. ${item.title}${item.artist ? ` / ${artist}` : ""}`;
         return `${index + 1}. ${item.title} / ${artist} / ${key}${note}`;
       });
-      return [header, ...rows].join("\n");
+      const footer = format === "share"
+        ? (currentLanguage === "en" ? "Saved with Music Saloon DRUM app" : "Music Saloon DRUMアプリで記録")
+        : "";
+      return [header, ...rows, footer].filter(Boolean).join("\n");
     }
 
     function renderHistory() {
@@ -5493,10 +5674,23 @@
     function renderSongs() {
       const query = searchBox.value.trim();
       const normalizedQuery = normalizeKana(query);
+      const sortMode = songSort ? songSort.value : "recent";
       const filtered = songs.filter((item) => {
         const tags = getSongTags(item);
         if (duetOnly.checked && !tags.includes("デュエット")) return false;
         return normalizeKana(songSearchText(item)).includes(normalizedQuery);
+      }).sort((a, b) => {
+        if (sortMode === "title") {
+          return (a.title || "").localeCompare(b.title || "", "ja") || (a.artist || "").localeCompare(b.artist || "", "ja");
+        }
+        if (sortMode === "artist") {
+          return (a.artist || "").localeCompare(b.artist || "", "ja") || (a.title || "").localeCompare(b.title || "", "ja");
+        }
+        if (sortMode === "sung") {
+          const countDiff = songSungCount(b.id) - songSungCount(a.id);
+          if (countDiff) return countDiff;
+        }
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       });
 
       totalSongCount.textContent = currentLanguage === "en" ? `${songs.length} songs` : `${songs.length}曲`;
@@ -5566,6 +5760,55 @@
       }
       saveFavoriteDrinks();
       renderDrinkButtons();
+    }
+
+    function renderMenuFavorites() {
+      if (!menuFavoriteList) return;
+      menuFavoriteList.innerHTML = menuFavorites.length
+        ? menuFavorites.map((name) => `<span class="pill">${escapeText(uiText(name))}</span>`).join("")
+        : `<span class="small">${escapeText(uiText("まだ気になるメニューはありません。"))}</span>`;
+    }
+
+    function initMenuFavoriteButtons() {
+      if (!regularMenu) return;
+      regularMenu.querySelectorAll(".menu-list li:not(.drink-menu-row)").forEach((item) => {
+        if (item.querySelector("[data-menu-favorite]")) return;
+        const label = item.querySelector("span:first-child");
+        if (!label) return;
+        const name = label.textContent.trim();
+        if (!name) return;
+        const button = document.createElement("button");
+        const isActive = menuFavorites.includes(name);
+        button.type = "button";
+        button.className = `menu-favorite-button ${isActive ? "active" : ""}`;
+        button.dataset.menuFavorite = name;
+        button.textContent = isActive ? "★" : "☆";
+        button.setAttribute("aria-label", `${name}を気になるメニューに追加`);
+        item.appendChild(button);
+      });
+      renderMenuFavorites();
+    }
+
+    function toggleMenuFavorite(name) {
+      if (!name) return;
+      if (menuFavorites.includes(name)) {
+        menuFavorites = menuFavorites.filter((item) => item !== name);
+      } else {
+        menuFavorites.unshift(name);
+      }
+      saveMenuFavorites();
+      if (regularMenu) {
+        regularMenu.querySelectorAll("[data-menu-favorite]").forEach((button) => {
+          const isActive = menuFavorites.includes(button.dataset.menuFavorite);
+          button.classList.toggle("active", isActive);
+          button.textContent = isActive ? "★" : "☆";
+        });
+      }
+      renderMenuFavorites();
+    }
+
+    function songSungCount(songId) {
+      return songHistory.filter((item) => item.sourceId === songId).length;
     }
 
     function recordDrinkByName(drinkName) {
@@ -5768,6 +6011,7 @@
     });
 
     searchBox.addEventListener("input", renderSongs);
+    songSort.addEventListener("change", renderSongs);
     duetOnly.addEventListener("change", renderSongs);
     songKeyBase.addEventListener("change", updateKeyAdjustLabel);
     songEditCancelButton.addEventListener("click", resetSongFormMode);
@@ -6003,6 +6247,8 @@
       renderHistory();
     });
 
+    setlistCopyFormat.addEventListener("change", renderTodaySetlist);
+
     copyTodaySetlist.addEventListener("click", async () => {
       const text = createTodaySetlistText();
       if (!text.trim()) return;
@@ -6200,10 +6446,25 @@
       updateDailyMemoStatus(uiText("保存しました。"));
     });
 
+    dailyMemoTemplates.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-daily-memo-template]");
+      if (!button) return;
+      const text = uiText(button.dataset.dailyMemoTemplate);
+      dailyMemo.value = dailyMemo.value.trim() ? `${dailyMemo.value.trim()}\n${text}` : text;
+      dailyMemo.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+
     document.querySelectorAll("[data-menu-page]").forEach((button) => {
       button.addEventListener("click", () => {
         showMenuSubpage(button.dataset.menuPage);
       });
+    });
+
+    regularMenu.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-menu-favorite]");
+      if (!button) return;
+      event.preventDefault();
+      toggleMenuFavorite(button.dataset.menuFavorite);
     });
 
     menuBackButton.addEventListener("click", () => {
@@ -6246,6 +6507,7 @@
     renderTagOptions();
     renderTagManager();
     renderDrinkButtons();
+    initMenuFavoriteButtons();
     applySettings();
     updateKeyAdjustLabel();
     renderHistoryBackupStatus();
