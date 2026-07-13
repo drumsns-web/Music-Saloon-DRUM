@@ -2200,6 +2200,12 @@
         </div>
         <div class="grid">
           <article class="card">
+            <span class="tag green">Info</span>
+            <h3>お知らせを見る</h3>
+            <p>お店からのお知らせ、公式LINE、Instagramを確認できます。</p>
+            <a class="btn primary" href="#info">お知らせへ</a>
+          </article>
+          <article class="card">
             <span class="tag orange">Menu</span>
             <h3>メニューを見る</h3>
             <p>飲み放題、ボトル、グラス、フードなどを確認できます。</p>
@@ -2222,6 +2228,12 @@
             <h3>曲ガチャを使う</h3>
             <p>歌う曲に迷った時、マイ曲リストから次の候補を選べます。</p>
             <a class="btn ghost" href="#gacha">曲ガチャへ</a>
+          </article>
+          <article class="card">
+            <span class="tag orange">Ranking</span>
+            <h3>よく歌う曲を見る</h3>
+            <p>記録した回数をもとに、自分がよく歌う曲をランキングで確認できます。</p>
+            <a class="btn ghost" href="#favorites">よく歌う曲へ</a>
           </article>
           <article class="card">
             <span class="tag green">History</span>
@@ -2282,6 +2294,12 @@
             <h3>YouTubeを見る</h3>
             <p>店内の様子や出演動画を、このアプリ内で再生できます。</p>
             <a class="btn ghost" href="#youtube">YouTubeへ</a>
+          </article>
+          <article class="card">
+            <span class="tag green">Contact</span>
+            <h3>問い合わせる</h3>
+            <p>予約、貸切、イベント利用などのお問い合わせに使えます。</p>
+            <a class="btn ghost" href="#contact">問い合わせへ</a>
           </article>
         </div>
       </div>
@@ -3249,59 +3267,74 @@
         <button class="btn primary open-settings-from-guide" type="button">設定を開く</button>
       </div>
       <div class="guide-shortcut-grid">
-        <button class="guide-shortcut" type="button" data-guide-target="menu">
+        <button class="guide-shortcut" type="button" data-guide-target="info">
           <span class="guide-shortcut-icon">01</span>
+          <span><strong>お知らせを見る</strong><span>お店からの案内、LINE、Instagram</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="menu">
+          <span class="guide-shortcut-icon">02</span>
           <span><strong>メニューを見る</strong><span>飲み放題、ボトル、フードを確認</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="song-register">
-          <span class="guide-shortcut-icon">02</span>
+          <span class="guide-shortcut-icon">03</span>
           <span><strong>曲を登録する</strong><span>曲名だけでも登録できます</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="customers">
-          <span class="guide-shortcut-icon">03</span>
+          <span class="guide-shortcut-icon">04</span>
           <span><strong>マイ曲リスト</strong><span>検索、タグ、編集はこちら</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="gacha">
-          <span class="guide-shortcut-icon">04</span>
+          <span class="guide-shortcut-icon">05</span>
           <span><strong>曲ガチャ</strong><span>次に歌う曲に迷った時に</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
+        <button class="guide-shortcut" type="button" data-guide-target="favorites">
+          <span class="guide-shortcut-icon">06</span>
+          <span><strong>よく歌う曲</strong><span>歌った回数ランキング</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
         <button class="guide-shortcut" type="button" data-guide-target="history">
-          <span class="guide-shortcut-icon">05</span>
+          <span class="guide-shortcut-icon">07</span>
           <span><strong>歌った記録</strong><span>日付ごとに歌った曲を保存</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="daily">
-          <span class="guide-shortcut-icon">06</span>
+          <span class="guide-shortcut-icon">08</span>
           <span><strong>今日の記録</strong><span>セットリスト、ドリンク、メモ</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="drum-gacha">
-          <span class="guide-shortcut-icon">07</span>
+          <span class="guide-shortcut-icon">09</span>
           <span><strong>DRUMガチャ</strong><span>ご来店中の運だめし</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="song-backup">
-          <span class="guide-shortcut-icon">08</span>
+          <span class="guide-shortcut-icon">10</span>
           <span><strong>バックアップ</strong><span>曲リストの保存・復元</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="about">
-          <span class="guide-shortcut-icon">09</span>
+          <span class="guide-shortcut-icon">11</span>
           <span><strong>店舗情報</strong><span>アクセス、営業時間、連絡先</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="features">
-          <span class="guide-shortcut-icon">10</span>
+          <span class="guide-shortcut-icon">12</span>
           <span><strong>遊び方・ルール</strong><span>カラオケと楽器のマナー</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="youtube">
-          <span class="guide-shortcut-icon">11</span>
+          <span class="guide-shortcut-icon">13</span>
           <span><strong>YouTubeを見る</strong><span>店内の様子や出演動画を再生</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="contact">
+          <span class="guide-shortcut-icon">14</span>
+          <span><strong>問い合わせる</strong><span>予約、貸切、イベント利用など</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
       </div>
@@ -3522,6 +3555,7 @@
       { id: "customers", label: "マイ曲リスト", target: "customers" },
       { id: "song-register", label: "曲を登録", target: "song-register" },
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
+      { id: "favorites", label: "よく歌う曲", target: "favorites" },
       { id: "history", label: "歌った記録", target: "history" },
       { id: "daily", label: "今日の記録", target: "daily" },
       { id: "drum-gacha", label: "DRUMガチャ", target: "drum-gacha" },
@@ -3542,6 +3576,18 @@
       "DRUMガイド": "DRUM Guide",
       "DRUMガイドを見る": "View DRUM Guide",
       "よく使う項目": "Frequently Used",
+      "お知らせを見る": "View Info",
+      "お知らせへ": "Go to Info",
+      "お店からのお知らせ、公式LINE、Instagramを確認できます。": "Check shop notices, Official LINE, and Instagram.",
+      "お店からの案内、LINE、Instagram": "Shop notices, LINE, and Instagram",
+      "よく歌う曲を見る": "View Frequent Songs",
+      "よく歌う曲へ": "Go to Frequent Songs",
+      "記録した回数をもとに、自分がよく歌う曲をランキングで確認できます。": "See a ranking of the songs you sing most based on your logged records.",
+      "歌った回数ランキング": "Singing Frequency Ranking",
+      "問い合わせる": "Contact Us",
+      "問い合わせへ": "Go to Contact",
+      "予約、貸切、イベント利用などのお問い合わせに使えます。": "Use this for reservations, private bookings, events, and other inquiries.",
+      "予約、貸切、イベント利用など": "Reservations, private bookings, events",
       "設定で変更できます": "You can change this in Settings",
       "トップ表示設定": "Home Button Settings",
       "上部ボタン表示設定": "Top Button Settings",
