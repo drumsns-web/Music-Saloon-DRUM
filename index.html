@@ -1617,6 +1617,7 @@
       background: #fff7e8;
       color: #241a10;
       font-weight: 900;
+      line-height: 1.75;
       box-shadow: 0 8px 20px rgba(22, 47, 34, .08);
     }
 
@@ -2583,7 +2584,7 @@
               <strong>登録曲数</strong>
               <span class="song-count-number" id="totalSongCount">0曲</span>
             </div>
-            <p class="privacy-note">マイ曲リストはこの端末のブラウザだけに保存されます。他のお客様に見られたり、お店側へ自動共有されたりすることはありません。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <p class="privacy-note">マイ曲リストはこの端末のブラウザだけに保存されます。<br>他のお客様に見られたり、お店側へ自動共有されたりすることはありません。<br>ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="backup-recommend">
               <p>曲が増えてきたら、念のためバックアップをおすすめします。完全復元用のJSONと、見やすいコピペ用テキストを保存できます。</p>
               <button class="btn ghost" id="openSongBackupButton" type="button">バックアップを開く</button>
@@ -2734,7 +2735,7 @@
                 <button class="btn primary" id="songSubmitButton" type="submit">マイ曲リストに保存</button>
                 <button class="btn ghost" id="songEditCancelButton" type="button" hidden>編集をやめる</button>
               </div>
-            <p class="small">マイ曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
+            <p class="small">マイ曲リストはお使いの端末のブラウザ内に保存されます。<br>ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             </form>
           </div>
 
@@ -2904,7 +2905,7 @@
           <article class="card">
             <span class="tag">Private</span>
             <h3>保存について</h3>
-            <p>ドリンク記録とメモは、この端末のブラウザ内に保存されます。他のお客様やお店側へ自動共有されません。</p>
+            <p>ドリンク記録とメモは、この端末のブラウザ内に保存されます。<br>他のお客様やお店側へ自動共有されません。</p>
           </article>
         </div>
       </div>
@@ -2996,7 +2997,7 @@
             <span class="tag">Ranking</span>
             <h3>歌った回数ランキング</h3>
             <p>マイ曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
-            <p class="privacy-note">ランキングもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。</p>
+            <p class="privacy-note">ランキングもこの端末のブラウザだけに保存されます。<br>別の席や別のお客様からは見えません。</p>
           </div>
 
           <div>
@@ -3083,16 +3084,17 @@
         <div class="grid">
           <article class="card">
             <span class="tag">Movie</span>
-            <h3>動画 1</h3>
-            <div class="youtube-placeholder" id="youtubePlaceholder">動画は準備中です。</div>
-            <div id="youtubeEmbedArea"></div>
-            <p class="small">ここに動画ごとの説明を掲載できます。</p>
-          </article>
-          <article class="card">
-            <span class="tag green">Movie</span>
-            <h3>動画 2</h3>
-            <div class="youtube-placeholder">動画は準備中です。</div>
-            <p class="small">動画URLをいただいたら、タイトルと説明文を添えて表示できます。</p>
+            <h3>当店がモヤさまに出演した際の動画です</h3>
+            <iframe
+              class="youtube-frame"
+              src="https://www.youtube-nocookie.com/embed/mSk5ypmEimk?rel=0&modestbranding=1&playsinline=1"
+              title="当店がモヤさまに出演した際の動画です"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              sandbox="allow-scripts allow-same-origin allow-presentation"
+            ></iframe>
+            <p class="small">このページ内で再生できます。外部リンクは設置していません。</p>
           </article>
         </div>
       </div>
@@ -3345,7 +3347,7 @@
       <div class="gacha-hit" id="drumGachaLabel">結果発表</div>
       <div class="result-panel" id="drumGachaResult">結果を表示します。</div>
       <p class="verify-code" id="drumGachaVerifyCode" hidden>端末保存コード</p>
-      <p class="privacy-note" id="drumGachaStaffNote">サービス表示は当日限り有効です。この画面をスタッフにお見せください。</p>
+      <p class="privacy-note" id="drumGachaStaffNote">サービス表示は当日限り有効です。<br>この画面をスタッフにお見せください。</p>
     </div>
   </div>
 
@@ -3567,6 +3569,16 @@
       "保存について": "About Saved Data",
       "マイ曲リストや記録は、": "Your song list and records",
       "この端末のブラウザ内に保存されます。": "are saved in this device's browser.",
+      "マイ曲リストはこの端末のブラウザだけに保存されます。": "Your song list is saved only in this device's browser.",
+      "他のお客様に見られたり、お店側へ自動共有されたりすることはありません。": "Other customers cannot see it, and it is not automatically shared with the shop.",
+      "ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。": "It may be deleted if browser data is cleared, when changing devices, or when using private browsing.",
+      "マイ曲リストはお使いの端末のブラウザ内に保存されます。": "Your song list is saved in this device's browser.",
+      "ドリンク記録とメモは、この端末のブラウザ内に保存されます。": "Drink logs and notes are saved in this device's browser.",
+      "他のお客様やお店側へ自動共有されません。": "They are not automatically shared with other customers or the shop.",
+      "ランキングもこの端末のブラウザだけに保存されます。": "Rankings are saved only in this device's browser.",
+      "別の席や別のお客様からは見えません。": "Other seats and customers cannot see them.",
+      "サービス表示は当日限り有効です。": "Prize screens are valid today only.",
+      "この画面をスタッフにお見せください。": "Please show this screen to staff.",
       "インフォメーション": "Information",
       "店からのお知らせ": "Shop Notices",
       "お店からのお知らせ": "Shop Notices",
@@ -3866,6 +3878,8 @@
       "動画 1": "Video 1",
       "動画 2": "Video 2",
       "動画は準備中です。": "Video is being prepared.",
+      "当店がモヤさまに出演した際の動画です": "DRUM's appearance on Moyamoya Summers",
+      "このページ内で再生できます。外部リンクは設置していません。": "You can play the video on this page. No external link is shown.",
       "設定を開く": "Open Settings",
       "使う人に合わせて、マイ曲リストの表示や記録機能を切り替えられます。": "Adjust the song list display and logging features to suit how you use the app.",
       "写真のお知らせ": "Photo notices",
