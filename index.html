@@ -2344,7 +2344,7 @@
       <div class="hero-inner">
         <img class="hero-logo" src="drum-icon.jpg" alt="Music Saloon DRUM">
         <div class="actions">
-          <button class="btn primary" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
+          <button class="btn primary js-open-guide-modal" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
         <div class="today-action-panel">
@@ -2906,6 +2906,24 @@
         </div>
 
         <div class="manager">
+          <div class="song-list-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>曲名</th>
+                  <th>歌手名</th>
+                  <th>キー</th>
+                  <th class="memo-col">メモ</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="songList"></tbody>
+            </table>
+            <div class="subtle-actions">
+              <button class="btn danger" id="clearAll" type="button">マイ曲リストを全削除</button>
+            </div>
+          </div>
+
           <div class="card song-form-card" id="songRegister">
             <h3 id="songFormTitle">曲を登録する</h3>
             <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
@@ -6697,6 +6715,13 @@
     topShortcutSettings.addEventListener("change", handleTopShortcutChange);
 
     openGuideModalHero.addEventListener("click", openGuideModal);
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest(".js-open-guide-modal");
+      if (!button) return;
+      event.preventDefault();
+      openGuideModal();
+    });
 
     closeGuideModal.addEventListener("click", closeGuideModalPanel);
 
