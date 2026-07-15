@@ -1138,6 +1138,61 @@
       background: #fffef9;
     }
 
+    .photo-cropper {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid rgba(240, 138, 53, .38);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .62);
+    }
+
+    .photo-cropper.is-visible {
+      display: block;
+    }
+
+    .song-photo-crop-stage {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+      margin-top: 10px;
+      overflow: hidden;
+      border: 1px solid #d7d0c3;
+      border-radius: 7px;
+      background: #25221d;
+      touch-action: none;
+      user-select: none;
+      cursor: crosshair;
+    }
+
+    .song-photo-crop-stage img {
+      display: block;
+      width: auto;
+      max-width: 100%;
+      max-height: 420px;
+    }
+
+    .song-photo-crop-selection {
+      position: absolute;
+      z-index: 2;
+      display: none;
+      border: 3px solid var(--orange);
+      border-radius: 4px;
+      background: rgba(240, 138, 53, .12);
+      box-shadow: 0 0 0 999px rgba(0, 0, 0, .45);
+      pointer-events: none;
+    }
+
+    .song-photo-crop-selection.is-visible {
+      display: block;
+    }
+
+    .photo-cropper .small {
+      margin: 0;
+      font-weight: 800;
+      line-height: 1.7;
+    }
+
     .photo-status {
       display: inline-flex;
       align-items: center;
@@ -2930,18 +2985,29 @@
             <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。</p>
             <div class="photo-song-card">
               <h4>写真から曲名を読み取る</h4>
-              <p class="small">歌手名や曲名が写った画面を選ぶと、読み取った文字を曲登録フォームへ入れやすくできます。</p>
+              <p class="small">曲名と歌手名が写った写真から、登録したい1組だけを選んで読み取れます。</p>
               <div class="control-row">
                 <button class="btn ghost" id="chooseSongPhotoButton" type="button">写真を選ぶ</button>
                 <span class="photo-status" id="songPhotoStatus"></span>
               </div>
               <input id="songPhotoInput" type="file" accept="image/*" capture="environment" hidden>
+              <div class="photo-cropper" id="songPhotoCropper">
+                <p class="small">複数曲が写った写真は、登録したい曲名と歌手名の部分だけを指で囲ってください。文字を大きく切り取るほど、読み取りやすくなります。</p>
+                <div class="song-photo-crop-stage" id="songPhotoCropStage">
+                  <img id="songPhotoPreview" alt="選んだ写真のプレビュー">
+                  <div class="song-photo-crop-selection" id="songPhotoCropSelection"></div>
+                </div>
+                <div class="control-row">
+                  <button class="btn primary" id="readSongPhotoCropButton" type="button">選択範囲を読み取る</button>
+                  <button class="btn ghost" id="resetSongPhotoCropButton" type="button">選択をやり直す</button>
+                </div>
+              </div>
               <div class="photo-song-result" id="songPhotoResult">
                 <label>
                   読み取った文字
                   <textarea id="songPhotoText" placeholder="読み取った文字がここに入ります。必要なら直してからフォームへ入れてください。"></textarea>
                 </label>
-                <p class="small">1行目を曲名、2行目を歌手名として入れます。曲名だけの場合は1行目だけで大丈夫です。</p>
+                <p class="small">1行目を曲名、2行目を歌手名として入れます。読み取りが違う場合は、ここで直してから入れてください。</p>
                 <div class="control-row">
                   <button class="btn primary" id="applySongPhotoTextButton" type="button">曲名・歌手名に入れる</button>
                 </div>
@@ -3663,6 +3729,12 @@
     const chooseSongPhotoButton = document.getElementById("chooseSongPhotoButton");
     const songPhotoInput = document.getElementById("songPhotoInput");
     const songPhotoStatus = document.getElementById("songPhotoStatus");
+    const songPhotoCropper = document.getElementById("songPhotoCropper");
+    const songPhotoCropStage = document.getElementById("songPhotoCropStage");
+    const songPhotoPreview = document.getElementById("songPhotoPreview");
+    const songPhotoCropSelection = document.getElementById("songPhotoCropSelection");
+    const readSongPhotoCropButton = document.getElementById("readSongPhotoCropButton");
+    const resetSongPhotoCropButton = document.getElementById("resetSongPhotoCropButton");
     const songPhotoResult = document.getElementById("songPhotoResult");
     const songPhotoText = document.getElementById("songPhotoText");
     const applySongPhotoTextButton = document.getElementById("applySongPhotoTextButton");
@@ -3983,11 +4055,20 @@
       "曲を登録": "Add Song",
       "写真から曲名を読み取る": "Read Song Info from a Photo",
       "歌手名や曲名が写った画面を選ぶと、読み取った文字を曲登録フォームへ入れやすくできます。": "Choose a photo that shows the song title or artist, and the app will help move the text into the song form.",
+      "曲名と歌手名が写った写真から、登録したい1組だけを選んで読み取れます。": "Choose one song-and-artist pair from a photo to read into the form.",
       "写真を選ぶ": "Choose Photo",
+      "複数曲が写った写真は、登録したい曲名と歌手名の部分だけを指で囲ってください。文字を大きく切り取るほど、読み取りやすくなります。": "For a photo with several songs, draw a box around only the title and artist you want. A larger, tighter crop is easier to read.",
+      "選択範囲を読み取る": "Read Selected Area",
+      "選択をやり直す": "Reset Selection",
       "読み取った文字": "Recognized Text",
       "読み取った文字がここに入ります。必要なら直してからフォームへ入れてください。": "Recognized text will appear here. Edit it if needed, then add it to the form.",
       "1行目を曲名、2行目を歌手名として入れます。曲名だけの場合は1行目だけで大丈夫です。": "Line 1 is used as the song title, and line 2 as the artist. If you only know the title, line 1 is enough.",
+      "1行目を曲名、2行目を歌手名として入れます。読み取りが違う場合は、ここで直してから入れてください。": "Line 1 is used as the song title, and line 2 as the artist. Correct the text here before adding it if needed.",
       "曲名・歌手名に入れる": "Add to Title and Artist",
+      "曲名と歌手名が入るように、範囲を指で囲ってください。": "Draw a box around the song title and artist.",
+      "範囲を選びました。「選択範囲を読み取る」を押してください。": "Area selected. Tap “Read Selected Area.”",
+      "写真を準備しています": "Preparing the photo",
+      "写真を開けませんでした。別の写真でお試しください。": "Could not open the photo. Try another one.",
       "写真読み取りの準備中です": "Preparing photo reading",
       "写真を読み取っています": "Reading the photo",
       "読み取りました。必要なら直してから入れてください。": "Read complete. Edit if needed before adding it.",
@@ -6168,13 +6249,98 @@
         .filter((line) => !/^(曲名|歌手名|アーティスト|タイトル)$/i.test(line));
     }
 
-    async function readSongPhoto(file) {
-      if (!file || !songPhotoText || !songPhotoResult) return;
+    let songPhotoImage = null;
+    let songPhotoCrop = { x: 0.08, y: 0.22, w: 0.84, h: 0.34 };
+    let songPhotoPointerStart = null;
+
+    function clampPhotoCropValue(value) {
+      return Math.min(1, Math.max(0, value));
+    }
+
+    function updateSongPhotoCropSelection() {
+      if (!songPhotoCropSelection || !songPhotoImage) return;
+      songPhotoCropSelection.style.left = `${songPhotoCrop.x * 100}%`;
+      songPhotoCropSelection.style.top = `${songPhotoCrop.y * 100}%`;
+      songPhotoCropSelection.style.width = `${songPhotoCrop.w * 100}%`;
+      songPhotoCropSelection.style.height = `${songPhotoCrop.h * 100}%`;
+      songPhotoCropSelection.classList.add("is-visible");
+    }
+
+    function resetSongPhotoCrop() {
+      songPhotoCrop = { x: 0.08, y: 0.22, w: 0.84, h: 0.34 };
+      updateSongPhotoCropSelection();
+      setPhotoStatus("曲名と歌手名が入るように、範囲を指で囲ってください。");
+    }
+
+    function photoPointerPosition(event) {
+      const rect = songPhotoCropStage.getBoundingClientRect();
+      return {
+        x: clampPhotoCropValue((event.clientX - rect.left) / rect.width),
+        y: clampPhotoCropValue((event.clientY - rect.top) / rect.height)
+      };
+    }
+
+    function startSongPhotoCrop(event) {
+      if (!songPhotoImage) return;
+      songPhotoPointerStart = photoPointerPosition(event);
+      songPhotoCrop = { x: songPhotoPointerStart.x, y: songPhotoPointerStart.y, w: 0.01, h: 0.01 };
+      songPhotoCropStage.setPointerCapture?.(event.pointerId);
+      updateSongPhotoCropSelection();
+      event.preventDefault();
+    }
+
+    function moveSongPhotoCrop(event) {
+      if (!songPhotoPointerStart) return;
+      const point = photoPointerPosition(event);
+      songPhotoCrop = {
+        x: Math.min(songPhotoPointerStart.x, point.x),
+        y: Math.min(songPhotoPointerStart.y, point.y),
+        w: Math.abs(point.x - songPhotoPointerStart.x),
+        h: Math.abs(point.y - songPhotoPointerStart.y)
+      };
+      updateSongPhotoCropSelection();
+      event.preventDefault();
+    }
+
+    function finishSongPhotoCrop(event) {
+      if (!songPhotoPointerStart) return;
+      songPhotoPointerStart = null;
+      songPhotoCropStage.releasePointerCapture?.(event.pointerId);
+      if (songPhotoCrop.w < 0.05 || songPhotoCrop.h < 0.05) {
+        resetSongPhotoCrop();
+        return;
+      }
+      setPhotoStatus("範囲を選びました。「選択範囲を読み取る」を押してください。");
+    }
+
+    function createPhotoReadCanvas() {
+      const sourceWidth = Math.max(1, Math.round(songPhotoImage.naturalWidth * songPhotoCrop.w));
+      const sourceHeight = Math.max(1, Math.round(songPhotoImage.naturalHeight * songPhotoCrop.h));
+      const sourceX = Math.round(songPhotoImage.naturalWidth * songPhotoCrop.x);
+      const sourceY = Math.round(songPhotoImage.naturalHeight * songPhotoCrop.y);
+      const scale = Math.min(3, Math.max(1, 1800 / Math.max(sourceWidth, sourceHeight)));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(sourceWidth * scale);
+      canvas.height = Math.round(sourceHeight * scale);
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      context.fillStyle = "#ffffff";
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.filter = "grayscale(1) contrast(2.25) brightness(1.12)";
+      context.drawImage(songPhotoImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
+      context.filter = "none";
+      return canvas;
+    }
+
+    async function readSongPhotoSelection() {
+      if (!songPhotoImage || !songPhotoText || !songPhotoResult) return;
       setPhotoStatus("写真読み取りの準備中です");
       try {
         const Tesseract = await loadPhotoReader();
         setPhotoStatus("写真を読み取っています");
-        const result = await Tesseract.recognize(file, "jpn+eng", {
+        const readCanvas = createPhotoReadCanvas();
+        const result = await Tesseract.recognize(readCanvas, "jpn+eng", {
+          tessedit_pageseg_mode: "6",
+          preserve_interword_spaces: "1",
           logger: (message) => {
             if (message.status === "recognizing text" && Number.isFinite(message.progress)) {
               setPhotoStatus(`${uiText("写真を読み取っています")} ${Math.round(message.progress * 100)}%`);
@@ -6192,9 +6358,25 @@
       } catch (error) {
         console.warn(error);
         setPhotoStatus("写真読み取り機能を読み込めませんでした。通信状態を確認して、もう一度お試しください。");
-      } finally {
-        if (songPhotoInput) songPhotoInput.value = "";
       }
+    }
+
+    function prepareSongPhoto(file) {
+      if (!file || !songPhotoPreview || !songPhotoCropper) return;
+      const reader = new FileReader();
+      setPhotoStatus("写真を準備しています");
+      reader.onload = () => {
+        songPhotoPreview.onload = () => {
+          songPhotoImage = songPhotoPreview;
+          songPhotoCropper.classList.add("is-visible");
+          songPhotoResult.classList.remove("is-visible");
+          songPhotoText.value = "";
+          resetSongPhotoCrop();
+        };
+        songPhotoPreview.src = reader.result;
+      };
+      reader.onerror = () => setPhotoStatus("写真を開けませんでした。別の写真でお試しください。");
+      reader.readAsDataURL(file);
     }
 
     favoriteSearch.addEventListener("input", renderFavorites);
@@ -6205,8 +6387,17 @@
 
     songPhotoInput.addEventListener("change", (event) => {
       const file = event.target.files && event.target.files[0];
-      if (file) readSongPhoto(file);
+      if (file) prepareSongPhoto(file);
+      songPhotoInput.value = "";
     });
+
+    songPhotoCropStage.addEventListener("pointerdown", startSongPhotoCrop);
+    songPhotoCropStage.addEventListener("pointermove", moveSongPhotoCrop);
+    songPhotoCropStage.addEventListener("pointerup", finishSongPhotoCrop);
+    songPhotoCropStage.addEventListener("pointercancel", finishSongPhotoCrop);
+
+    resetSongPhotoCropButton.addEventListener("click", resetSongPhotoCrop);
+    readSongPhotoCropButton.addEventListener("click", readSongPhotoSelection);
 
     applySongPhotoTextButton.addEventListener("click", () => {
       const lines = photoTextLines(songPhotoText.value);
