@@ -6235,10 +6235,12 @@
     }
 
     function cleanPhotoLine(line) {
-      return line
+      const cleaned = line
         .replace(/\s+/g, " ")
         .replace(/^(曲名|歌手名|アーティスト|タイトル|artist|title|song)\s*[:：]?\s*/i, "")
         .trim();
+      // OCRが日本語の1文字ごとに空白を入れることがあるため、日本語同士の空白だけを取り除く。
+      return cleaned.replace(/([ぁ-んァ-ヶ一-龠々〆ヵヶ])\s+(?=[ぁ-んァ-ヶ一-龠々〆ヵヶ])/g, "$1");
     }
 
     function photoTextLines(text) {
@@ -6352,7 +6354,7 @@
           setPhotoStatus("文字を読み取れませんでした。明るく、文字が大きく写った写真でお試しください。");
           return;
         }
-        songPhotoText.value = text;
+        songPhotoText.value = photoTextLines(text).join("\n");
         songPhotoResult.classList.add("is-visible");
         setPhotoStatus("読み取りました。必要なら直してから入れてください。");
       } catch (error) {
