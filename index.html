@@ -1106,6 +1106,47 @@
       line-height: 1.7;
     }
 
+    .photo-song-card {
+      margin: 0 0 18px;
+      border: 1px solid rgba(240, 138, 53, .34);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(255, 247, 232, .9);
+    }
+
+    .photo-song-card h4 {
+      margin: 0 0 8px;
+      color: var(--forest);
+      font-size: 18px;
+    }
+
+    .photo-song-card .control-row {
+      margin-top: 10px;
+    }
+
+    .photo-song-result {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .photo-song-result.is-visible {
+      display: block;
+    }
+
+    .photo-song-result textarea {
+      min-height: 110px;
+      background: #fffef9;
+    }
+
+    .photo-status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      color: #4c4035;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
     .song-count-card {
       display: flex;
       align-items: center;
@@ -1443,6 +1484,13 @@
       font-size: 13px;
       font-weight: 900;
       cursor: pointer;
+    }
+
+    .filter-empty {
+      display: block;
+      padding: 8px 10px;
+      color: #4d4033;
+      font-weight: 900;
     }
 
     .tag-manager {
@@ -2782,6 +2830,10 @@
                 <button class="btn ghost" id="songTagFilterButton" type="button">タグを選ぶ</button>
                 <div class="tag-filter-panel" id="songTagFilterPanel"></div>
               </div>
+              <div class="tag-filter" id="songArtistFilter">
+                <button class="btn ghost" id="songArtistFilterButton" type="button">歌手を選ぶ</button>
+                <div class="tag-filter-panel" id="songArtistFilterPanel"></div>
+              </div>
               <select id="songSort" aria-label="曲リストの並び順">
                 <option value="recent">最近追加</option>
                 <option value="title">曲名順</option>
@@ -2792,12 +2844,7 @@
             </div>
           </div>
 
-          <div class="card song-tool-card next-song-card">
-            <span class="tag green">Next</span>
-            <h3>次回歌いたい曲</h3>
-            <p class="small">マイ曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。</p>
-            <ul class="mini-list" id="nextSongList"></ul>
-          </div>
+
 
           <details class="card song-tool-card" id="songBackupPanel">
             <summary><strong>バックアップ・コピペ用</strong></summary>
@@ -2863,6 +2910,25 @@
             <h3 id="songFormTitle">曲を登録する</h3>
             <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
             <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。</p>
+            <div class="photo-song-card">
+              <h4>写真から曲名を読み取る</h4>
+              <p class="small">歌手名や曲名が写った画面を選ぶと、読み取った文字を曲登録フォームへ入れやすくできます。</p>
+              <div class="control-row">
+                <button class="btn ghost" id="chooseSongPhotoButton" type="button">写真を選ぶ</button>
+                <span class="photo-status" id="songPhotoStatus"></span>
+              </div>
+              <input id="songPhotoInput" type="file" accept="image/*" capture="environment" hidden>
+              <div class="photo-song-result" id="songPhotoResult">
+                <label>
+                  読み取った文字
+                  <textarea id="songPhotoText" placeholder="読み取った文字がここに入ります。必要なら直してからフォームへ入れてください。"></textarea>
+                </label>
+                <p class="small">1行目を曲名、2行目を歌手名として入れます。曲名だけの場合は1行目だけで大丈夫です。</p>
+                <div class="control-row">
+                  <button class="btn primary" id="applySongPhotoTextButton" type="button">曲名・歌手名に入れる</button>
+                </div>
+              </div>
+            </div>
             <form id="songForm">
               <label>
                 曲名
@@ -2875,6 +2941,7 @@
               <label>
                 検索用よみ <span class="optional-label">任意</span>
                 <input id="songKana" placeholder="例：さざんおーるすたーず いとしのえりー">
+                <p class="small kana-search-help">ひらがな・カタカナどちらでも検索できます。別名もスペース区切りで入れられます。例：みすたーちるどれん ミスチル</p>
               </label>
               <label>
                 キーの基準 <span class="optional-label">任意</span>
@@ -2907,6 +2974,7 @@
               <label class="memo-field">
                 メモ <span class="optional-label">任意</span>
                 <textarea id="memo" placeholder="例：サビ前から入る。次に歌いたい曲。"></textarea>
+                <p class="small memo-search-help">メモに入れたキーワードも検索できます。</p>
               </label>
               <div class="control-row">
                 <button class="btn primary" id="songSubmitButton" type="submit">マイ曲リストに保存</button>
@@ -2916,23 +2984,14 @@
             </form>
           </div>
 
-          <div class="song-list-card">
-            <table aria-label="マイ曲リスト">
-              <thead>
-                <tr>
-                  <th>曲名</th>
-                  <th>歌手名</th>
-                  <th>キー</th>
-                  <th class="memo-col">メモ</th>
-                  <th>操作</th>
-                </tr>
-              </thead>
-              <tbody id="songList"></tbody>
-            </table>
-            <div class="control-row subtle-actions">
-              <button class="btn danger" id="clearAll" type="button">マイ曲リストを全削除</button>
-            </div>
-          </div>
+</div>
+        </div>
+
+        <div class="card song-tool-card next-song-card">
+          <span class="tag green">Next</span>
+          <h3>次回歌いたい曲</h3>
+          <p class="small">マイ曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。</p>
+          <ul class="mini-list" id="nextSongList"></ul>
         </div>
       </div>
     </section>
@@ -3583,6 +3642,12 @@
     const songFormTitle = document.getElementById("songFormTitle");
     const songSubmitButton = document.getElementById("songSubmitButton");
     const songEditCancelButton = document.getElementById("songEditCancelButton");
+    const chooseSongPhotoButton = document.getElementById("chooseSongPhotoButton");
+    const songPhotoInput = document.getElementById("songPhotoInput");
+    const songPhotoStatus = document.getElementById("songPhotoStatus");
+    const songPhotoResult = document.getElementById("songPhotoResult");
+    const songPhotoText = document.getElementById("songPhotoText");
+    const applySongPhotoTextButton = document.getElementById("applySongPhotoTextButton");
     const songKeyBase = document.getElementById("songKeyBase");
     const songKeyAdjust = document.getElementById("songKeyAdjust");
     const list = document.getElementById("songList");
@@ -3612,6 +3677,9 @@
     const songTagFilter = document.getElementById("songTagFilter");
     const songTagFilterButton = document.getElementById("songTagFilterButton");
     const songTagFilterPanel = document.getElementById("songTagFilterPanel");
+    const songArtistFilter = document.getElementById("songArtistFilter");
+    const songArtistFilterButton = document.getElementById("songArtistFilterButton");
+    const songArtistFilterPanel = document.getElementById("songArtistFilterPanel");
     const favoriteTagFilter = document.getElementById("favoriteTagFilter");
     const favoriteTagFilterButton = document.getElementById("favoriteTagFilterButton");
     const favoriteTagFilterPanel = document.getElementById("favoriteTagFilterPanel");
@@ -3895,6 +3963,20 @@
       "メニュー": "Menu",
       "マイ曲リスト": "My Song List",
       "曲を登録": "Add Song",
+      "写真から曲名を読み取る": "Read Song Info from a Photo",
+      "歌手名や曲名が写った画面を選ぶと、読み取った文字を曲登録フォームへ入れやすくできます。": "Choose a photo that shows the song title or artist, and the app will help move the text into the song form.",
+      "写真を選ぶ": "Choose Photo",
+      "読み取った文字": "Recognized Text",
+      "読み取った文字がここに入ります。必要なら直してからフォームへ入れてください。": "Recognized text will appear here. Edit it if needed, then add it to the form.",
+      "1行目を曲名、2行目を歌手名として入れます。曲名だけの場合は1行目だけで大丈夫です。": "Line 1 is used as the song title, and line 2 as the artist. If you only know the title, line 1 is enough.",
+      "曲名・歌手名に入れる": "Add to Title and Artist",
+      "写真読み取りの準備中です": "Preparing photo reading",
+      "写真を読み取っています": "Reading the photo",
+      "読み取りました。必要なら直してから入れてください。": "Read complete. Edit if needed before adding it.",
+      "文字を読み取れませんでした。明るく、文字が大きく写った写真でお試しください。": "Could not read text. Try a brighter photo with larger text.",
+      "写真読み取り機能を読み込めませんでした。通信状態を確認して、もう一度お試しください。": "Could not load the photo reading feature. Check your connection and try again.",
+      "読み取った文字がありません。": "There is no recognized text.",
+      "曲名を入力しました。必要なら直して保存してください。": "Added the song title. Edit if needed, then save.",
       "歌った記録": "Song History",
       "今日の記録": "Today",
       "店舗情報": "Shop Info",
@@ -4201,6 +4283,8 @@
       "曲ガチャ": "Song Gacha",
       "よく歌う曲": "Frequently Sung",
       "タグを選ぶ": "Choose Tags",
+      "歌手を選ぶ": "Choose Artist",
+      "歌手名の登録がありません": "No artist names saved yet",
       "曲を検索する": "Search Songs",
       "登録曲数": "Saved Songs",
       "次回歌いたい曲": "Next Songs",
@@ -4326,7 +4410,8 @@
       "基準未設定": "Base not set",
       "キーの基準": "Key base",
       "キー調整": "Key adjustment",
-      "検索用よみ": "Search reading",
+      "ひらがな・カタカナどちらでも検索できます。別名もスペース区切りで入れられます。例：みすたーちるどれん ミスチル": "Hiragana and katakana both work. You can also add nicknames separated by spaces. Example: Mr Children Misuchiru",
+      "メモに入れたキーワードも検索できます。": "Keywords written in the memo can also be searched.",      "検索用よみ": "Search reading",
       "タグ": "Tags",
       "任意": "Optional",
       "マイ曲リストにメモ欄を表示する": "Show memo field in song list",
@@ -5363,6 +5448,15 @@
       favoriteTagFilterPanel.innerHTML = buttons;
     }
 
+    function renderArtistFilterPanel() {
+      if (!songArtistFilterPanel) return;
+      const artists = [...new Set(songs.map((item) => (item.artist || "").trim()).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, "ja"));
+      songArtistFilterPanel.innerHTML = artists.length
+        ? artists.map((artist) => `<button type="button" data-filter-artist="${escapeText(artist)}">${escapeText(artist)}</button>`).join("")
+        : `<span class="filter-empty">${escapeText(uiText("歌手名の登録がありません"))}</span>`;
+    }
+
     function setSearchByTag(input, tagName, renderCallback, filterElement) {
       input.value = tagName;
       filterElement.classList.remove("open");
@@ -5865,6 +5959,7 @@
     }
 
     function renderSongs() {
+      renderArtistFilterPanel();
       const query = searchBox.value.trim();
       const normalizedQuery = normalizeKana(query);
       const sortMode = songSort ? songSort.value : "recent";
@@ -6021,7 +6116,91 @@
       });
     }
 
+    let tesseractLoadPromise = null;
+
+    function loadPhotoReader() {
+      if (window.Tesseract) return Promise.resolve(window.Tesseract);
+      if (tesseractLoadPromise) return tesseractLoadPromise;
+      tesseractLoadPromise = new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js";
+        script.onload = () => window.Tesseract ? resolve(window.Tesseract) : reject(new Error("Tesseract not available"));
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+      return tesseractLoadPromise;
+    }
+
+    function setPhotoStatus(message) {
+      if (songPhotoStatus) songPhotoStatus.textContent = message ? uiText(message) : "";
+    }
+
+    function cleanPhotoLine(line) {
+      return line
+        .replace(/\s+/g, " ")
+        .replace(/^(曲名|歌手名|アーティスト|タイトル|artist|title|song)\s*[:：]?\s*/i, "")
+        .trim();
+    }
+
+    function photoTextLines(text) {
+      return text
+        .split(/\r?\n/)
+        .map(cleanPhotoLine)
+        .filter(Boolean)
+        .filter((line) => !/^(曲名|歌手名|アーティスト|タイトル)$/i.test(line));
+    }
+
+    async function readSongPhoto(file) {
+      if (!file || !songPhotoText || !songPhotoResult) return;
+      setPhotoStatus("写真読み取りの準備中です");
+      try {
+        const Tesseract = await loadPhotoReader();
+        setPhotoStatus("写真を読み取っています");
+        const result = await Tesseract.recognize(file, "jpn+eng", {
+          logger: (message) => {
+            if (message.status === "recognizing text" && Number.isFinite(message.progress)) {
+              setPhotoStatus(`${uiText("写真を読み取っています")} ${Math.round(message.progress * 100)}%`);
+            }
+          }
+        });
+        const text = (result && result.data && result.data.text ? result.data.text : "").trim();
+        if (!text) {
+          setPhotoStatus("文字を読み取れませんでした。明るく、文字が大きく写った写真でお試しください。");
+          return;
+        }
+        songPhotoText.value = text;
+        songPhotoResult.classList.add("is-visible");
+        setPhotoStatus("読み取りました。必要なら直してから入れてください。");
+      } catch (error) {
+        console.warn(error);
+        setPhotoStatus("写真読み取り機能を読み込めませんでした。通信状態を確認して、もう一度お試しください。");
+      } finally {
+        if (songPhotoInput) songPhotoInput.value = "";
+      }
+    }
+
     favoriteSearch.addEventListener("input", renderFavorites);
+
+    chooseSongPhotoButton.addEventListener("click", () => {
+      songPhotoInput.click();
+    });
+
+    songPhotoInput.addEventListener("change", (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (file) readSongPhoto(file);
+    });
+
+    applySongPhotoTextButton.addEventListener("click", () => {
+      const lines = photoTextLines(songPhotoText.value);
+      if (!lines.length) {
+        setPhotoStatus("読み取った文字がありません。");
+        return;
+      }
+      document.getElementById("songTitle").value = lines[0] || "";
+      if (lines[1]) document.getElementById("artistName").value = lines[1];
+      setPhotoStatus("曲名を入力しました。必要なら直して保存してください。");
+      document.getElementById("songTitle").focus();
+    });
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -6220,6 +6399,15 @@
     songTagFilterButton.addEventListener("click", (event) => {
       event.stopPropagation();
       songTagFilter.classList.toggle("open");
+      if (songArtistFilter) songArtistFilter.classList.remove("open");
+      favoriteTagFilter.classList.remove("open");
+    });
+
+    songArtistFilterButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      renderArtistFilterPanel();
+      songArtistFilter.classList.toggle("open");
+      songTagFilter.classList.remove("open");
       favoriteTagFilter.classList.remove("open");
     });
 
@@ -6243,6 +6431,7 @@
 
     document.addEventListener("click", (event) => {
       if (!songTagFilter.contains(event.target)) songTagFilter.classList.remove("open");
+      if (songArtistFilter && !songArtistFilter.contains(event.target)) songArtistFilter.classList.remove("open");
       if (!favoriteTagFilter.contains(event.target)) favoriteTagFilter.classList.remove("open");
     });
 
@@ -6720,6 +6909,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
