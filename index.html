@@ -1233,6 +1233,80 @@
       display: none;
     }
 
+    .song-profile-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 0 0 14px;
+      padding: 12px 14px;
+      border: 1px solid rgba(240, 138, 53, .4);
+      border-radius: 8px;
+      background: #fff8ec;
+    }
+
+    .song-profile-bar.is-visible {
+      display: flex;
+    }
+
+    .song-profile-label {
+      color: var(--forest);
+      font-size: 14px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .song-profile-buttons {
+      display: flex;
+      flex: 1;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .song-profile-buttons .btn {
+      min-height: 38px;
+      padding: 8px 14px;
+    }
+
+    .song-profile-buttons .btn.active {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: #173c2d;
+      box-shadow: 0 8px 18px rgba(240, 138, 53, .2);
+    }
+
+    .additional-list-settings {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid rgba(240, 138, 53, .42);
+      border-radius: 8px;
+      background: #fff8ec;
+    }
+
+    .additional-list-settings.is-visible {
+      display: block;
+    }
+
+    .autosave-note {
+      margin: 0 0 14px;
+      color: #486b59;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 620px) {
+      .song-profile-bar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .song-profile-buttons {
+        justify-content: flex-start;
+      }
+    }
+
     .optional-label {
       color: var(--muted);
       font-size: 13px;
@@ -2852,6 +2926,11 @@
         </div>
         <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← マイ曲リストに戻る</button>
 
+        <div class="song-profile-bar" id="songProfileBar" aria-live="polite">
+          <span class="song-profile-label" id="songProfileLabel">表示する曲リスト</span>
+          <div class="song-profile-buttons" id="songProfileButtons"></div>
+        </div>
+
         <div class="song-tools">
           <div class="card song-tool-card customers-home-card">
             <div class="song-count-card">
@@ -2860,7 +2939,7 @@
             </div>
             <p class="privacy-note">マイ曲リストはこの端末のブラウザだけに保存されます。<br>他のお客様に見られたり、お店側へ自動共有されたりすることはありません。<br>ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="backup-recommend">
-              <p>曲が増えてきたら、念のためバックアップをおすすめします。完全復元用のJSONと、見やすいコピペ用テキストを保存できます。</p>
+              <p>曲が増えてきたら、念のためバックアップをおすすめします。保存したJSONファイルがあれば、端末のデータが消えた後もここから復元できます。</p>
               <button class="btn ghost" id="openSongBackupButton" type="button">バックアップを開く</button>
             </div>
             <div class="control-row song-primary-actions">
@@ -2903,16 +2982,16 @@
 
           <details class="card song-tool-card" id="songBackupPanel">
             <summary><strong>バックアップ・コピペ用</strong></summary>
-            <p class="small">JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。</p>
+            <p class="small">JSONは曲リスト・歌った記録・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。</p>
             <div class="backup-main-actions">
               <div class="backup-action-card">
                 <h4>JSONファイルで保存</h4>
-                <p class="small">機種変更やブラウザデータ削除に備えて、復元用ファイルを保存できます。</p>
+                <p class="small">機種変更やブラウザデータ削除に備えて、曲リストと記録の復元用ファイルを保存できます。</p>
                 <button class="btn primary" id="saveJsonFileButton" type="button">JSONファイルを保存</button>
               </div>
               <div class="backup-action-card">
                 <h4>JSONファイルから復元</h4>
-                <p class="small">保存しておいたJSONファイルを選ぶと、マイ曲リストを復元できます。</p>
+                <p class="small">保存しておいたJSONファイルを選ぶと、曲リストと記録を復元できます。</p>
                 <button class="btn ghost" id="chooseJsonFileButton" type="button">JSONファイルから復元</button>
                 <input id="songJsonFileInput" type="file" accept=".json,application/json" hidden>
               </div>
@@ -2983,6 +3062,7 @@
             <h3 id="songFormTitle">曲を登録する</h3>
             <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
             <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。</p>
+            <p class="autosave-note" id="songDraftStatus" aria-live="polite">入力内容はこの端末に自動保存されます。</p>
             <div class="photo-song-card">
               <h4>写真から曲名を読み取る</h4>
               <p class="small">曲名と歌手名が写った写真から、登録したい1組だけを選んで読み取れます。</p>
@@ -3292,6 +3372,17 @@
               <input id="settingHistoryMemo" type="checkbox" checked>
               歌った記録ごとにメモ欄を表示する
             </label>
+            <div class="additional-list-settings" id="additionalListSettings">
+              <label class="check-row">
+                <input id="settingAdditionalList" type="checkbox">
+                自分とは別の曲リストも使う
+              </label>
+              <label>
+                追加リストの名前 <span class="optional-label">任意</span>
+                <input id="additionalListName" maxlength="24" placeholder="例：パートナー、夫、同僚、社長">
+              </label>
+              <p class="small">有効にすると、曲の登録・検索・歌った記録をリストごとに切り替えられます。</p>
+            </div>
             <div class="tag-manager">
               <h3>タグ設定</h3>
               <p class="small">ジャンルだけでなく、十八番・お気に入り・練習中・盛り上がる曲など、自分用の印も追加できます。</p>
@@ -3714,6 +3805,7 @@
     const menuFavoriteStorageKey = "music-saloon-drum-menu-favorites";
     const dailyMemoStorageKey = "music-saloon-drum-daily-memos";
     const settingsStorageKey = "music-saloon-drum-settings";
+    const songDraftStorageKey = "music-saloon-drum-song-form-draft";
     const tagStorageKey = "music-saloon-drum-tags";
     const drumGachaStorageKey = "music-saloon-drum-drum-gacha";
     const browserMarkStorageKey = "music-saloon-drum-browser-mark";
@@ -3726,6 +3818,10 @@
     const songFormTitle = document.getElementById("songFormTitle");
     const songSubmitButton = document.getElementById("songSubmitButton");
     const songEditCancelButton = document.getElementById("songEditCancelButton");
+    const songDraftStatus = document.getElementById("songDraftStatus");
+    const songProfileBar = document.getElementById("songProfileBar");
+    const songProfileLabel = document.getElementById("songProfileLabel");
+    const songProfileButtons = document.getElementById("songProfileButtons");
     const chooseSongPhotoButton = document.getElementById("chooseSongPhotoButton");
     const songPhotoInput = document.getElementById("songPhotoInput");
     const songPhotoStatus = document.getElementById("songPhotoStatus");
@@ -3816,6 +3912,9 @@
     const settingDrinkTotal = document.getElementById("settingDrinkTotal");
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
+    const settingAdditionalList = document.getElementById("settingAdditionalList");
+    const additionalListSettings = document.getElementById("additionalListSettings");
+    const additionalListName = document.getElementById("additionalListName");
     const openSettingsModalHero = document.getElementById("openSettingsModalHero");
     const openSettingsModalNav = document.getElementById("openSettingsModalNav");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
@@ -4534,6 +4633,14 @@
       "アニソン": "Anime Song",
       "洋楽": "International Songs",
       "ロック": "Rock",
+      "表示する曲リスト": "Song List",
+      "自分": "My List",
+      "自分とは別の曲リストも使う": "Use an Additional Song List",
+      "追加リストの名前": "Additional List Name",
+      "有効にすると、曲の登録・検索・歌った記録をリストごとに切り替えられます。": "When enabled, you can switch song registration, search, and history between lists.",
+      "入力内容はこの端末に自動保存されます。": "Your input is saved automatically on this device.",
+      "入力内容を自動保存しました。": "Saved automatically.",
+      "前回の入力内容を復元しました。": "Restored your previous input.",
       "バラード": "Ballad",
       "昭和歌謡": "Showa Pop",
       "演歌": "Enka",
@@ -4756,8 +4863,28 @@
     if (settings.showSetlistCopy === undefined) settings.showSetlistCopy = true;
     if (settings.showHistoryMemo === undefined) settings.showHistoryMemo = true;
     if (settings.showDrinkTotal === undefined) settings.showDrinkTotal = true;
+    if (settings.enableAdditionalList === undefined) settings.enableAdditionalList = false;
+    if (!settings.additionalListName) settings.additionalListName = "パートナー";
+    if (settings.activeSongProfile !== "additional") settings.activeSongProfile = "self";
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
+    let didMigrateProfiles = false;
+    songs.forEach((item) => {
+      if (item.profile !== "additional") {
+        item.profile = "self";
+        didMigrateProfiles = true;
+      }
+    });
+    songHistory.forEach((item) => {
+      if (item.profile !== "additional") {
+        item.profile = "self";
+        didMigrateProfiles = true;
+      }
+    });
     localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
+    if (didMigrateProfiles) {
+      localStorage.setItem(storageKey, JSON.stringify(songs));
+      localStorage.setItem(historyStorageKey, JSON.stringify(songHistory));
+    }
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let editingSongId = null;
     let didAddDefaultTags = false;
@@ -4810,6 +4937,127 @@
       updateDrumGachaRateLabel();
     }
 
+    function activeSongProfile() {
+      return settings.enableAdditionalList && settings.activeSongProfile === "additional" ? "additional" : "self";
+    }
+
+    function additionalProfileName() {
+      return String(settings.additionalListName || "パートナー").trim() || "パートナー";
+    }
+
+    function songProfileName(profile = activeSongProfile()) {
+      if (profile === "additional") return additionalProfileName();
+      return currentLanguage === "en" ? "My List" : "自分";
+    }
+
+    function isInActiveSongProfile(item) {
+      const profile = item && item.profile === "additional" ? "additional" : "self";
+      return profile === activeSongProfile();
+    }
+
+    function activeProfileSongs() {
+      return songs.filter(isInActiveSongProfile);
+    }
+
+    function activeProfileHistory() {
+      return songHistory.filter(isInActiveSongProfile);
+    }
+
+    function renderSongProfileSwitcher() {
+      if (!songProfileBar || !songProfileButtons || !songProfileLabel) return;
+      const enabled = Boolean(settings.enableAdditionalList);
+      songProfileBar.classList.toggle("is-visible", enabled);
+      if (!enabled) return;
+      const current = activeSongProfile();
+      songProfileLabel.textContent = currentLanguage === "en" ? "Song list" : "表示する曲リスト";
+      const selfLabel = currentLanguage === "en" ? "My List" : "自分";
+      const extraLabel = additionalProfileName();
+      songProfileButtons.innerHTML = [
+        { id: "self", label: selfLabel },
+        { id: "additional", label: extraLabel }
+      ].map((profile) => `
+        <button class="btn ghost ${profile.id === current ? "active" : ""}" type="button" data-song-profile="${profile.id}" aria-pressed="${profile.id === current}">
+          ${escapeText(profile.label)}
+        </button>
+      `).join("");
+    }
+
+    function renderActiveSongProfileViews() {
+      renderSongProfileSwitcher();
+      renderSongs();
+      renderHistory();
+      renderFavorites();
+      renderTodaySetlist();
+      renderHistoryBackupStatus();
+    }
+
+    function updateSongDraftStatus(message) {
+      if (!songDraftStatus) return;
+      songDraftStatus.textContent = message || (currentLanguage === "en"
+        ? "Your input is saved automatically on this device."
+        : "入力内容はこの端末に自動保存されます。");
+    }
+
+    function songDraftData() {
+      return {
+        title: document.getElementById("songTitle").value,
+        artist: document.getElementById("artistName").value,
+        kana: document.getElementById("songKana").value,
+        keyBase: songKeyBase.value,
+        keyAdjust: songKeyAdjust.value,
+        duet: document.getElementById("songDuet").checked,
+        tags: selectedSongTags().filter((tag) => tag !== "デュエット"),
+        memo: document.getElementById("memo").value,
+        profile: activeSongProfile(),
+        savedAt: new Date().toISOString()
+      };
+    }
+
+    function songDraftKey(profile = activeSongProfile()) {
+      return `${songDraftStorageKey}-${profile}`;
+    }
+
+    function saveSongDraft() {
+      if (editingSongId) return;
+      const draft = songDraftData();
+      const hasValue = Object.entries(draft).some(([key, value]) => !["savedAt", "profile", "tags", "duet"].includes(key) && String(value || "").trim());
+      if (!hasValue && !draft.duet && !draft.tags.length) {
+        localStorage.removeItem(songDraftKey());
+        updateSongDraftStatus();
+        return;
+      }
+      localStorage.setItem(songDraftKey(), JSON.stringify(draft));
+      updateSongDraftStatus(currentLanguage === "en" ? "Saved automatically." : "入力内容を自動保存しました。");
+    }
+
+    function clearSongDraft() {
+      localStorage.removeItem(songDraftKey());
+      updateSongDraftStatus();
+    }
+
+    function restoreSongDraft() {
+      if (editingSongId) return;
+      let draft;
+      try {
+        draft = JSON.parse(localStorage.getItem(songDraftKey()) || (activeSongProfile() === "self" ? localStorage.getItem(songDraftStorageKey) : "null") || "null");
+      } catch (error) {
+        localStorage.removeItem(songDraftKey());
+        return;
+      }
+      if (!draft || !draft.savedAt) return;
+      localStorage.removeItem(songDraftStorageKey);
+      document.getElementById("songTitle").value = draft.title || "";
+      document.getElementById("artistName").value = draft.artist || "";
+      document.getElementById("songKana").value = draft.kana || "";
+      songKeyBase.value = draft.keyBase || "";
+      updateKeyAdjustLabel();
+      songKeyAdjust.value = draft.keyAdjust || "";
+      document.getElementById("songDuet").checked = Boolean(draft.duet);
+      setSongTagSelection(draft.tags || []);
+      document.getElementById("memo").value = draft.memo || "";
+      updateSongDraftStatus(currentLanguage === "en" ? "Restored your previous input." : "前回の入力内容を復元しました。");
+    }
+
     function updateKeyAdjustLabel() {
       const straightOption = songKeyAdjust.querySelector('option[value=""]');
       if (!straightOption) return;
@@ -4834,7 +5082,7 @@
 
     function createSongExportText() {
       const header = "曲名\t歌手名\tキー\t検索用よみ";
-      const rows = songs.map((item) => [
+      const rows = activeProfileSongs().map((item) => [
         item.title || "",
         item.artist || "",
         item.key || "",
@@ -4847,10 +5095,18 @@
       return JSON.stringify({
         app: "Music Saloon DRUM",
         type: "song-list-backup",
-        version: 1,
+        version: 2,
         exportedAt: new Date().toISOString(),
         songs,
-        genreTags
+        genreTags,
+        songHistory,
+        drinkHistory,
+        favoriteDrinks,
+        dailyMemos,
+        additionalList: {
+          enabled: Boolean(settings.enableAdditionalList),
+          name: additionalProfileName()
+        }
       }, null, 2);
     }
 
@@ -4868,13 +5124,28 @@
           memo: String(item.memo || "").trim(),
           duet: Boolean(item.duet),
           nextWish: Boolean(item.nextWish),
+          profile: item.profile === "additional" ? "additional" : "self",
           tags: Array.isArray(item.tags) ? item.tags.map(String) : [],
           createdAt: item.createdAt || new Date().toISOString()
         }))
         .filter((item) => item.title);
       return {
         songs: parsedSongs,
-        genreTags: Array.isArray(data.genreTags) ? data.genreTags.map(String) : []
+        genreTags: Array.isArray(data.genreTags) ? data.genreTags.map(String) : [],
+        songHistory: Array.isArray(data.songHistory) ? data.songHistory.map((item) => ({
+          ...item,
+          id: item.id || createId(),
+          profile: item.profile === "additional" ? "additional" : "self"
+        })) : null,
+        drinkHistory: Array.isArray(data.drinkHistory) ? data.drinkHistory : null,
+        favoriteDrinks: Array.isArray(data.favoriteDrinks) ? data.favoriteDrinks.map(String) : null,
+        dailyMemos: data.dailyMemos && typeof data.dailyMemos === "object" ? data.dailyMemos : null,
+        additionalList: data.additionalList && typeof data.additionalList === "object"
+          ? {
+            enabled: Boolean(data.additionalList.enabled),
+            name: String(data.additionalList.name || "パートナー").trim() || "パートナー"
+          }
+          : null
       };
     }
 
@@ -4945,6 +5216,7 @@
             kana,
             memo: "",
             nextWish: false,
+            profile: activeSongProfile(),
             tags: []
           };
         })
@@ -5239,7 +5511,7 @@
     }
 
     function drumGachaSongBonus() {
-      const count = songs.length;
+      const count = activeProfileSongs().length;
       if (count >= 50) return 0.01;
       if (count >= 30) return 0.007;
       if (count >= 15) return 0.005;
@@ -5531,12 +5803,17 @@
       settingDrinkTotal.checked = settings.showDrinkTotal;
       settingSetlistCopy.checked = settings.showSetlistCopy;
       settingHistoryMemo.checked = settings.showHistoryMemo;
+      settingAdditionalList.checked = Boolean(settings.enableAdditionalList);
+      additionalListName.value = additionalProfileName();
+      additionalListSettings.classList.add("is-visible");
+      additionalListName.disabled = !settings.enableAdditionalList;
       drinkSection.classList.toggle("hidden", !settings.showDrink);
       todayDrinkCount.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       todaySetlistCopyBlock.classList.toggle("feature-hidden", !settings.showSetlistCopy);
       renderTopShortcuts();
       renderTopShortcutSettings();
+      renderSongProfileSwitcher();
     }
 
     function renderTagFilterPanels() {
@@ -5549,7 +5826,7 @@
 
     function renderArtistFilterPanel() {
       if (!songArtistFilterPanel) return;
-      const artists = [...new Set(songs.map((item) => (item.artist || "").trim()).filter(Boolean))]
+      const artists = [...new Set(activeProfileSongs().map((item) => (item.artist || "").trim()).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b, "ja"));
       songArtistFilterPanel.innerHTML = artists.length
         ? artists.map((artist) => `<button type="button" data-filter-artist="${escapeText(artist)}">${escapeText(artist)}</button>`).join("")
@@ -5564,7 +5841,7 @@
     }
 
     function renderNextSongs() {
-      const nextItems = songs.filter((item) => item.nextWish);
+      const nextItems = activeProfileSongs().filter((item) => item.nextWish);
       nextSongList.innerHTML = nextItems.length
         ? nextItems.slice(0, 8).map((item) => `
           <li>
@@ -5576,7 +5853,7 @@
     }
 
     function renderTodaySetlist() {
-      const todayItems = songHistory.filter((item) => item.date === todayString());
+      const todayItems = activeProfileHistory().filter((item) => item.date === todayString());
       todaySetlist.innerHTML = todayItems.length
         ? todayItems.map((item) => `
           <li>
@@ -5590,7 +5867,7 @@
       copyTodaySetlist.disabled = !todayItems.length;
     }
 
-    function createTodaySetlistText(items = songHistory.filter((item) => item.date === todayString())) {
+    function createTodaySetlistText(items = activeProfileHistory().filter((item) => item.date === todayString())) {
       if (!items.length) return uiText("今日のセットリストはまだありません。");
       const format = setlistCopyFormat ? setlistCopyFormat.value : "withKey";
       const header = currentLanguage === "en"
@@ -5612,8 +5889,8 @@
     function renderHistory() {
       const selectedDate = historyDate.value || todayString();
       if (historyAddDate && historyAddDate.value !== selectedDate) historyAddDate.value = selectedDate;
-      const selectedItems = songHistory.filter((item) => item.date === selectedDate);
-      const todayItems = songHistory.filter((item) => item.date === todayString());
+      const selectedItems = activeProfileHistory().filter((item) => item.date === selectedDate);
+      const todayItems = activeProfileHistory().filter((item) => item.date === todayString());
       todaySongCount.textContent = currentLanguage === "en" ? `${todayItems.length} songs` : `${todayItems.length}曲`;
       renderHistorySongSelect();
 
@@ -5642,10 +5919,11 @@
 
     function renderHistorySongSelect() {
       if (!historySongSelect) return;
-      historySongSelect.innerHTML = songs.length
-        ? songs.map((item) => `<option value="${escapeText(item.id)}">${escapeText(itemLabelText(item))}</option>`).join("")
+      const profileSongs = activeProfileSongs();
+      historySongSelect.innerHTML = profileSongs.length
+        ? profileSongs.map((item) => `<option value="${escapeText(item.id)}">${escapeText(itemLabelText(item))}</option>`).join("")
         : `<option value="">${escapeText(uiText("マイ曲リストに曲がありません"))}</option>`;
-      addHistoryFromSong.disabled = songs.length === 0;
+      addHistoryFromSong.disabled = profileSongs.length === 0;
     }
 
     function addHistoryRecordFromSong(item, date) {
@@ -5662,6 +5940,7 @@
         historyNote: "",
         duet: Boolean(item.duet),
         tags: getSongTags(item),
+        profile: item.profile === "additional" ? "additional" : "self",
         createdAt: new Date().toISOString()
       });
       saveHistory();
@@ -5671,7 +5950,7 @@
     }
 
     function addHistoryForSelectedDate() {
-      const item = songs.find((song) => song.id === historySongSelect.value);
+      const item = activeProfileSongs().find((song) => song.id === historySongSelect.value);
       const selectedDate = (historyAddDate && historyAddDate.value) || historyDate.value || todayString();
       historyDate.value = selectedDate;
       if (historyAddDate) historyAddDate.value = selectedDate;
@@ -5707,6 +5986,7 @@
         duet: false,
         tags: [],
         nextWish: false,
+        profile: activeSongProfile(),
         createdAt: new Date().toISOString()
       };
       songs.unshift(item);
@@ -5749,7 +6029,8 @@
     }
 
     function renderHistoryBackupStatus() {
-      const count = historyBackup && Array.isArray(historyBackup.items) ? historyBackup.items.length : 0;
+      const backupItems = historyBackup && Array.isArray(historyBackup.items) ? historyBackup.items : [];
+      const count = backupItems.filter(isInActiveSongProfile).length;
       restoreHistoryBackup.disabled = count === 0;
       restoreHistoryStatus.textContent = count
         ? (currentLanguage === "en" ? `You can restore ${count} deleted song history items.` : `前回削除した歌った記録を ${count}件 復元できます。`)
@@ -5765,7 +6046,7 @@
     }
 
     function recordSong(id) {
-      const item = songs.find((song) => song.id === id);
+      const item = activeProfileSongs().find((song) => song.id === id);
       if (!item) return;
       const wasNextWish = Boolean(item.nextWish);
       songHistory.unshift({
@@ -5780,6 +6061,7 @@
         historyNote: "",
         duet: Boolean(item.duet),
         tags: getSongTags(item),
+        profile: item.profile === "additional" ? "additional" : "self",
         createdAt: new Date().toISOString()
       });
       if (item.nextWish) {
@@ -5910,11 +6192,13 @@
       form.reset();
       setSongTagSelection([]);
       updateKeyAdjustLabel();
+      clearSongDraft();
     }
 
     function startEditSong(id) {
-      const item = songs.find((song) => song.id === id);
+      const item = activeProfileSongs().find((song) => song.id === id);
       if (!item) return;
+      clearSongDraft();
       editingSongId = id;
       showView("song-register");
       document.getElementById("songTitle").value = item.title || "";
@@ -5999,7 +6283,7 @@
     function renderFavorites() {
       const query = favoriteSearch.value.trim();
       const normalizedQuery = normalizeKana(query);
-      const rankingMap = songHistory.reduce((result, item) => {
+      const rankingMap = activeProfileHistory().reduce((result, item) => {
         const key = `${normalizeKana(item.title)}|${normalizeKana(item.artist)}`;
         if (!result[key]) {
           result[key] = {
@@ -6062,7 +6346,8 @@
       const query = searchBox.value.trim();
       const normalizedQuery = normalizeKana(query);
       const sortMode = songSort ? songSort.value : "recent";
-      const filtered = songs.filter((item) => {
+      const profileSongs = activeProfileSongs();
+      const filtered = profileSongs.filter((item) => {
         const tags = getSongTags(item);
         if (duetOnly.checked && !tags.includes("デュエット")) return false;
         return normalizeKana(songSearchText(item)).includes(normalizedQuery);
@@ -6080,7 +6365,7 @@
         return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
       });
 
-      totalSongCount.textContent = currentLanguage === "en" ? `${songs.length} songs` : `${songs.length}曲`;
+      totalSongCount.textContent = currentLanguage === "en" ? `${profileSongs.length} songs` : `${profileSongs.length}曲`;
       countText.textContent = currentLanguage === "en" ? `${filtered.length} items` : `${filtered.length}件`;
       updateDrumGachaRateLabel();
 
@@ -6195,7 +6480,7 @@
     }
 
     function songSungCount(songId) {
-      return songHistory.filter((item) => item.sourceId === songId).length;
+      return activeProfileHistory().filter((item) => item.sourceId === songId).length;
     }
 
     function recordDrinkByName(drinkName) {
@@ -6236,11 +6521,16 @@
 
     function cleanPhotoLine(line) {
       const cleaned = line
-        .replace(/\s+/g, " ")
+        .replace(/[\s\u200B\uFEFF]+/g, " ")
         .replace(/^(曲名|歌手名|アーティスト|タイトル|artist|title|song)\s*[:：]?\s*/i, "")
         .trim();
-      // OCRが日本語の1文字ごとに空白を入れることがあるため、日本語同士の空白だけを取り除く。
-      return cleaned.replace(/([ぁ-んァ-ヶ一-龠々〆ヵヶ])\s+(?=[ぁ-んァ-ヶ一-龠々〆ヵヶ])/g, "$1");
+      // OCRが日本語の1文字ごと、または長音記号の前後に空白を入れることがある。
+      // 英語だけの曲名にある単語間の空白は残す。
+      const japaneseChar = "ぁ-んァ-ヶー一-龠々〆ヵヶ";
+      return cleaned
+        .replace(new RegExp(`([${japaneseChar}])\\s+(?=[${japaneseChar}])`, "g"), "$1")
+        .replace(new RegExp(`([${japaneseChar}])\\s+(?=[・、。！？〜～])`, "g"), "$1")
+        .replace(new RegExp(`([・、。！？〜～])\\s+(?=[${japaneseChar}])`, "g"), "$1");
     }
 
     function photoTextLines(text) {
@@ -6432,6 +6722,7 @@
           id: createId(),
           ...formData,
           nextWish: false,
+          profile: activeSongProfile(),
           createdAt: new Date().toISOString()
         });
       }
@@ -6464,9 +6755,11 @@
     enableSwipeDelete(list, "[data-song-id]", "songId", deleteSong);
 
     clearAll.addEventListener("click", () => {
-      if (!songs.length) return;
+      const profileSongs = activeProfileSongs();
+      if (!profileSongs.length) return;
       if (confirm(uiText("登録済みのマイ曲リストをすべて削除しますか？"))) {
-        songs = [];
+        const profileSongIds = new Set(profileSongs.map((item) => item.id));
+        songs = songs.filter((item) => !profileSongIds.has(item.id));
         saveSongs();
         renderSongs();
       }
@@ -6502,10 +6795,20 @@
     restoreJsonButton.addEventListener("click", () => {
       let restoredSongs = [];
       let restoredTags = [];
+      let restoredAdditionalList = null;
+      let restoredHistory = null;
+      let restoredDrinks = null;
+      let restoredFavoriteDrinks = null;
+      let restoredDailyMemos = null;
       try {
         const restored = parseSongJsonBackup(songJsonRestoreText.value);
         restoredSongs = restored.songs;
         restoredTags = restored.genreTags;
+        restoredAdditionalList = restored.additionalList;
+        restoredHistory = restored.songHistory;
+        restoredDrinks = restored.drinkHistory;
+        restoredFavoriteDrinks = restored.favoriteDrinks;
+        restoredDailyMemos = restored.dailyMemos;
       } catch (error) {
         alert(uiText("JSONを読み込めませんでした。保存したJSONをそのまま貼り付けてください。"));
         return;
@@ -6516,6 +6819,16 @@
       }
       if (!confirm(currentLanguage === "en" ? `Replace the current song list with ${restoredSongs.length} songs from the JSON?` : `現在のマイ曲リストを、JSON内の${restoredSongs.length}曲に置き換えますか？`)) return;
       songs = restoredSongs;
+      if (restoredHistory) songHistory = restoredHistory;
+      if (restoredDrinks) drinkHistory = restoredDrinks;
+      if (restoredFavoriteDrinks) favoriteDrinks = restoredFavoriteDrinks;
+      if (restoredDailyMemos) dailyMemos = restoredDailyMemos;
+      if (restoredAdditionalList) {
+        settings.enableAdditionalList = restoredAdditionalList.enabled;
+        settings.additionalListName = restoredAdditionalList.name;
+        settings.activeSongProfile = "self";
+        saveSettings();
+      }
       if (restoredTags.length) {
         genreTags = [...new Set([...restoredTags, ...defaultGenreTags])];
         saveTags();
@@ -6523,7 +6836,14 @@
         renderTagManager();
       }
       saveSongs();
-      renderSongs();
+      saveHistory();
+      saveDrinks();
+      saveFavoriteDrinks();
+      saveDailyMemos();
+      applySettings();
+      renderActiveSongProfileViews();
+      renderDrinkButtons();
+      renderDailyMemo();
       songJsonRestoreText.value = "";
       songJsonBackupText.value = createSongJsonBackup();
       songExportText.value = createSongExportText();
@@ -6597,10 +6917,13 @@
     songSort.addEventListener("change", renderSongs);
     duetOnly.addEventListener("change", renderSongs);
     songKeyBase.addEventListener("change", updateKeyAdjustLabel);
+    form.addEventListener("input", saveSongDraft);
+    form.addEventListener("change", saveSongDraft);
     songEditCancelButton.addEventListener("click", resetSongFormMode);
 
     focusSongFormButton.addEventListener("click", () => {
-      resetSongFormMode();
+      if (editingSongId) resetSongFormMode();
+      else restoreSongDraft();
       showView("song-register");
       setTimeout(() => {
         document.getElementById("songTitle").focus();
@@ -6648,7 +6971,8 @@
 
     gachaButton.addEventListener("click", () => {
       if (gachaButton.disabled) return;
-      const candidates = songs.filter((item) => {
+      const profileSongs = activeProfileSongs();
+      const candidates = profileSongs.filter((item) => {
         const isDuet = getSongTags(item).includes("デュエット");
         return gachaIncludeDuet.checked || !isDuet;
       });
@@ -6656,7 +6980,7 @@
         gachaModal.classList.add("show");
         gachaModal.setAttribute("aria-hidden", "false");
         gachaHit.classList.remove("show");
-        gachaResult.textContent = songs.length
+        gachaResult.textContent = profileSongs.length
           ? uiText("一人で歌える曲がまだ登録されていません。デュエット曲も候補に入れる場合はチェックを入れてください。")
           : uiText("マイ曲リストに曲を登録すると、ここでおすすめできます。");
         return;
@@ -6760,16 +7084,18 @@
     addHistoryNewSong.addEventListener("click", addNewSongToHistory);
 
     clearHistory.addEventListener("click", () => {
-      if (!songHistory.length) return;
+      const profileHistory = activeProfileHistory();
+      if (!profileHistory.length) return;
       if (confirm(uiText("歌った記録をすべて削除しますか？"))) {
-        const backup = [...songHistory];
+        const backup = [...profileHistory];
         saveHistoryBackup(backup);
-        songHistory = [];
+        const profileHistoryIds = new Set(profileHistory.map((item) => item.id));
+        songHistory = songHistory.filter((item) => !profileHistoryIds.has(item.id));
         saveHistory();
         renderHistory();
         renderFavorites();
         showUndo(uiText("歌った記録を削除しました"), () => {
-          songHistory = backup;
+          songHistory = [...backup, ...songHistory];
           clearHistoryBackup();
           saveHistory();
           renderHistory();
@@ -6779,7 +7105,9 @@
     });
 
     restoreHistoryBackup.addEventListener("click", () => {
-      const backupItems = historyBackup && Array.isArray(historyBackup.items) ? historyBackup.items : [];
+      const backupItems = historyBackup && Array.isArray(historyBackup.items)
+        ? historyBackup.items.filter(isInActiveSongProfile)
+        : [];
       if (!backupItems.length) return;
       if (!confirm(uiText("前回削除した歌った記録を復元しますか？"))) return;
 
@@ -6838,6 +7166,45 @@
       saveSettings();
       applySettings();
       renderHistory();
+    });
+
+    settingAdditionalList.addEventListener("change", () => {
+      settings.enableAdditionalList = settingAdditionalList.checked;
+      if (!settings.enableAdditionalList) settings.activeSongProfile = "self";
+      saveSettings();
+      applySettings();
+      renderActiveSongProfileViews();
+    });
+
+    additionalListName.addEventListener("input", () => {
+      const name = additionalListName.value.trim();
+      settings.additionalListName = name || "パートナー";
+      saveSettings();
+      renderSongProfileSwitcher();
+    });
+
+    additionalListName.addEventListener("change", () => {
+      additionalListName.value = additionalProfileName();
+      renderSongProfileSwitcher();
+    });
+
+    songProfileButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-song-profile]");
+      if (!button || !settings.enableAdditionalList) return;
+      const profile = button.dataset.songProfile;
+      if (!profile || profile === activeSongProfile()) return;
+      saveSongDraft();
+      settings.activeSongProfile = profile === "additional" ? "additional" : "self";
+      saveSettings();
+      editingSongId = null;
+      songFormTitle.textContent = uiText("曲を登録する");
+      songSubmitButton.textContent = uiText("マイ曲リストに保存");
+      songEditCancelButton.hidden = true;
+      form.reset();
+      setSongTagSelection([]);
+      updateKeyAdjustLabel();
+      restoreSongDraft();
+      renderActiveSongProfileViews();
     });
 
     setlistCopyFormat.addEventListener("change", renderTodaySetlist);
@@ -7118,6 +7485,8 @@
     renderHistoryBackupStatus();
     renderDailyMemo();
     renderHeroBackground();
+    restoreSongDraft();
+    renderSongProfileSwitcher();
     renderFavorites();
     renderSongs();
     renderHistory();
