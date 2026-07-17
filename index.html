@@ -2968,6 +2968,10 @@
                 <button class="btn ghost" id="songArtistFilterButton" type="button">歌手を選ぶ</button>
                 <div class="tag-filter-panel" id="songArtistFilterPanel"></div>
               </div>
+              <div class="tag-filter feature-hidden" id="songOwnerFilter">
+                <button class="btn ghost" id="songOwnerFilterButton" type="button">歌う人を選ぶ</button>
+                <div class="tag-filter-panel" id="songOwnerFilterPanel"></div>
+              </div>
               <select id="songSort" aria-label="曲リストの並び順">
                 <option value="recent">最近追加</option>
                 <option value="title">曲名順</option>
@@ -3101,6 +3105,11 @@
               <label>
                 歌手名 <span class="optional-label">任意</span>
                 <input id="artistName" placeholder="例：サザンオールスターズ">
+              </label>
+              <label class="song-owner-field feature-hidden" id="songOwnerField">
+                歌う人 <span class="optional-label">任意</span>
+                <select id="songOwner"></select>
+                <p class="small">設定で追加した名前から選べます。</p>
               </label>
               <label>
                 検索用よみ <span class="optional-label">任意</span>
@@ -3382,6 +3391,22 @@
                 <input id="additionalListName" maxlength="24" placeholder="例：パートナー、夫、同僚、社長">
               </label>
               <p class="small">有効にすると、曲の登録・検索・歌った記録をリストごとに切り替えられます。</p>
+            </div>
+            <div class="additional-list-settings" id="songOwnerSettings">
+              <label class="check-row">
+                <input id="settingSongOwners" type="checkbox">
+                曲ごとに歌う人を分ける
+              </label>
+              <p class="small">夫婦・同僚・スタッフ・お客様など、曲をよく歌う人の名前を自由に登録できます。</p>
+              <div class="tag-add-box">
+                <label for="newSongOwner">追加する歌う人の名前</label>
+                <div class="control-row">
+                  <input id="newSongOwner" maxlength="24" placeholder="例：夫、スタッフA、田中さん">
+                  <button class="btn primary" id="addSongOwnerButton" type="button">歌う人を追加</button>
+                </div>
+              </div>
+              <div class="tag-manager-list" id="songOwnerManagerList"></div>
+              <p class="small">候補から削除しても、すでに曲に付けた名前は曲ごとに残ります。</p>
             </div>
             <div class="tag-manager">
               <h3>タグ設定</h3>
@@ -3866,6 +3891,11 @@
     const songArtistFilter = document.getElementById("songArtistFilter");
     const songArtistFilterButton = document.getElementById("songArtistFilterButton");
     const songArtistFilterPanel = document.getElementById("songArtistFilterPanel");
+    const songOwnerFilter = document.getElementById("songOwnerFilter");
+    const songOwnerFilterButton = document.getElementById("songOwnerFilterButton");
+    const songOwnerFilterPanel = document.getElementById("songOwnerFilterPanel");
+    const songOwnerField = document.getElementById("songOwnerField");
+    const songOwner = document.getElementById("songOwner");
     const favoriteTagFilter = document.getElementById("favoriteTagFilter");
     const favoriteTagFilterButton = document.getElementById("favoriteTagFilterButton");
     const favoriteTagFilterPanel = document.getElementById("favoriteTagFilterPanel");
@@ -3915,6 +3945,11 @@
     const settingAdditionalList = document.getElementById("settingAdditionalList");
     const additionalListSettings = document.getElementById("additionalListSettings");
     const additionalListName = document.getElementById("additionalListName");
+    const settingSongOwners = document.getElementById("settingSongOwners");
+    const songOwnerSettings = document.getElementById("songOwnerSettings");
+    const newSongOwner = document.getElementById("newSongOwner");
+    const addSongOwnerButton = document.getElementById("addSongOwnerButton");
+    const songOwnerManagerList = document.getElementById("songOwnerManagerList");
     const openSettingsModalHero = document.getElementById("openSettingsModalHero");
     const openSettingsModalNav = document.getElementById("openSettingsModalNav");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
@@ -4483,6 +4518,18 @@
       "タグを選ぶ": "Choose Tags",
       "歌手を選ぶ": "Choose Artist",
       "歌手名の登録がありません": "No artist names saved yet",
+      "歌う人": "Singer",
+      "未指定": "Not specified",
+      "歌う人を選ぶ": "Choose Singer",
+      "歌う人の登録がありません": "No singers saved yet",
+      "曲ごとに歌う人を分ける": "Organize Songs by Singer",
+      "夫婦・同僚・スタッフ・お客様など、曲をよく歌う人の名前を自由に登録できます。": "Add any names freely, such as a partner, colleague, staff member, or customer.",
+      "追加する歌う人の名前": "Add a Singer Name",
+      "歌う人を追加": "Add Singer",
+      "候補から削除しても、すでに曲に付けた名前は曲ごとに残ります。": "Removing a name from the choices does not remove it from songs already saved.",
+      "設定で追加した名前から選べます。": "Choose from names added in Settings.",
+      "まだ歌う人の名前がありません": "No singer names yet",
+      "同じ名前がすでにあります。": "That name is already saved.",
       "曲を検索する": "Search Songs",
       "登録曲数": "Saved Songs",
       "次回歌いたい曲": "Next Songs",
@@ -4866,6 +4913,8 @@
     if (settings.enableAdditionalList === undefined) settings.enableAdditionalList = false;
     if (!settings.additionalListName) settings.additionalListName = "パートナー";
     if (settings.activeSongProfile !== "additional") settings.activeSongProfile = "self";
+    if (settings.enableSongOwners === undefined) settings.enableSongOwners = false;
+    if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
     let didMigrateProfiles = false;
     songs.forEach((item) => {
@@ -4873,10 +4922,18 @@
         item.profile = "self";
         didMigrateProfiles = true;
       }
+      if (typeof item.owner !== "string") {
+        item.owner = "";
+        didMigrateProfiles = true;
+      }
     });
     songHistory.forEach((item) => {
       if (item.profile !== "additional") {
         item.profile = "self";
+        didMigrateProfiles = true;
+      }
+      if (typeof item.owner !== "string") {
+        item.owner = "";
         didMigrateProfiles = true;
       }
     });
@@ -4963,6 +5020,65 @@
       return songHistory.filter(isInActiveSongProfile);
     }
 
+    function songOwnerNames() {
+      return [...new Set((settings.songOwners || []).map((name) => String(name || "").trim()).filter(Boolean))];
+    }
+
+    function renderSongOwnerOptions(selectedOwner = "") {
+      if (!songOwner) return;
+      const owners = songOwnerNames();
+      if (selectedOwner && !owners.includes(selectedOwner)) owners.push(selectedOwner);
+      songOwner.innerHTML = [
+        `<option value="">${escapeText(uiText("未指定"))}</option>`,
+        ...owners.map((name) => `<option value="${escapeText(name)}">${escapeText(name)}</option>`)
+      ].join("");
+      songOwner.value = selectedOwner || "";
+    }
+
+    function renderSongOwnerManager() {
+      if (!songOwnerManagerList) return;
+      const owners = songOwnerNames();
+      songOwnerManagerList.innerHTML = owners.length
+        ? owners.map((name) => `
+          <button class="btn ghost" type="button" data-song-owner-delete="${escapeText(name)}">
+            ${escapeText(name)} ×
+          </button>
+        `).join("")
+        : `<span class="pill">${escapeText(uiText("まだ歌う人の名前がありません"))}</span>`;
+    }
+
+    function addSongOwner() {
+      const name = newSongOwner.value.trim();
+      if (!name) {
+        newSongOwner.focus();
+        return;
+      }
+      if (songOwnerNames().some((owner) => owner.toLowerCase() === name.toLowerCase())) {
+        alert(uiText("同じ名前がすでにあります。"));
+        newSongOwner.select();
+        return;
+      }
+      settings.songOwners.push(name);
+      saveSettings();
+      newSongOwner.value = "";
+      renderSongOwnerOptions(songOwner.value);
+      renderSongOwnerManager();
+      renderOwnerFilterPanel();
+    }
+
+    function renderOwnerFilterPanel() {
+      if (!songOwnerFilter || !songOwnerFilterPanel) return;
+      const enabled = Boolean(settings.enableSongOwners);
+      songOwnerFilter.classList.toggle("feature-hidden", !enabled);
+      songOwnerField.classList.toggle("feature-hidden", !enabled);
+      if (!enabled) return;
+      const owners = [...new Set([...songOwnerNames(), ...activeProfileSongs().map((item) => String(item.owner || "").trim()).filter(Boolean)])]
+        .sort((a, b) => a.localeCompare(b, "ja"));
+      songOwnerFilterPanel.innerHTML = owners.length
+        ? owners.map((owner) => `<button type="button" data-filter-owner="${escapeText(owner)}">${escapeText(owner)}</button>`).join("")
+        : `<span class="filter-empty">${escapeText(uiText("歌う人の登録がありません"))}</span>`;
+    }
+
     function renderSongProfileSwitcher() {
       if (!songProfileBar || !songProfileButtons || !songProfileLabel) return;
       const enabled = Boolean(settings.enableAdditionalList);
@@ -4984,6 +5100,7 @@
 
     function renderActiveSongProfileViews() {
       renderSongProfileSwitcher();
+      renderOwnerFilterPanel();
       renderSongs();
       renderHistory();
       renderFavorites();
@@ -5002,6 +5119,7 @@
       return {
         title: document.getElementById("songTitle").value,
         artist: document.getElementById("artistName").value,
+        owner: songOwner ? songOwner.value : "",
         kana: document.getElementById("songKana").value,
         keyBase: songKeyBase.value,
         keyAdjust: songKeyAdjust.value,
@@ -5048,6 +5166,7 @@
       localStorage.removeItem(songDraftStorageKey);
       document.getElementById("songTitle").value = draft.title || "";
       document.getElementById("artistName").value = draft.artist || "";
+      renderSongOwnerOptions(draft.owner || "");
       document.getElementById("songKana").value = draft.kana || "";
       songKeyBase.value = draft.keyBase || "";
       updateKeyAdjustLabel();
@@ -5095,7 +5214,7 @@
       return JSON.stringify({
         app: "Music Saloon DRUM",
         type: "song-list-backup",
-        version: 2,
+        version: 3,
         exportedAt: new Date().toISOString(),
         songs,
         genreTags,
@@ -5106,6 +5225,10 @@
         additionalList: {
           enabled: Boolean(settings.enableAdditionalList),
           name: additionalProfileName()
+        },
+        songOwners: {
+          enabled: Boolean(settings.enableSongOwners),
+          names: songOwnerNames()
         }
       }, null, 2);
     }
@@ -5119,6 +5242,7 @@
           id: item.id || createId(),
           title: String(item.title || "").trim(),
           artist: String(item.artist || "").trim(),
+          owner: String(item.owner || "").trim(),
           kana: String(item.kana || "").trim(),
           key: String(item.key || "").trim(),
           memo: String(item.memo || "").trim(),
@@ -5135,6 +5259,7 @@
         songHistory: Array.isArray(data.songHistory) ? data.songHistory.map((item) => ({
           ...item,
           id: item.id || createId(),
+          owner: String(item.owner || "").trim(),
           profile: item.profile === "additional" ? "additional" : "self"
         })) : null,
         drinkHistory: Array.isArray(data.drinkHistory) ? data.drinkHistory : null,
@@ -5144,6 +5269,12 @@
           ? {
             enabled: Boolean(data.additionalList.enabled),
             name: String(data.additionalList.name || "パートナー").trim() || "パートナー"
+          }
+          : null,
+        songOwners: data.songOwners && typeof data.songOwners === "object"
+          ? {
+            enabled: Boolean(data.songOwners.enabled),
+            names: Array.isArray(data.songOwners.names) ? data.songOwners.names.map((name) => String(name).trim()).filter(Boolean) : []
           }
           : null
       };
@@ -5435,7 +5566,7 @@
     }
 
     function songSearchText(item) {
-      return [item.title, item.artist, item.kana, item.key, item.memo, ...getSongTags(item)].join(" ");
+      return [item.title, item.artist, item.owner, item.kana, item.key, item.memo, ...getSongTags(item)].join(" ");
     }
 
     function getKanaGroup(item) {
@@ -5807,6 +5938,13 @@
       additionalListName.value = additionalProfileName();
       additionalListSettings.classList.add("is-visible");
       additionalListName.disabled = !settings.enableAdditionalList;
+      settingSongOwners.checked = Boolean(settings.enableSongOwners);
+      songOwnerSettings.classList.add("is-visible");
+      newSongOwner.disabled = !settings.enableSongOwners;
+      addSongOwnerButton.disabled = !settings.enableSongOwners;
+      renderSongOwnerOptions(songOwner.value);
+      renderSongOwnerManager();
+      renderOwnerFilterPanel();
       drinkSection.classList.toggle("hidden", !settings.showDrink);
       todayDrinkCount.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
@@ -5875,10 +6013,11 @@
         : (format === "share" ? `Music Saloon DRUMで歌った曲 ${todayString()}` : `今日のセットリスト ${todayString()}`);
       const rows = items.map((item, index) => {
         const artist = item.artist || "-";
+        const owner = item.owner ? (currentLanguage === "en" ? ` / Singer: ${item.owner}` : ` / 歌う人: ${item.owner}`) : "";
         const key = item.key ? uiKey(item.key) : uiText("キー未設定");
         const note = item.historyNote ? (currentLanguage === "en" ? ` / Note: ${item.historyNote}` : ` / メモ: ${item.historyNote}`) : "";
-        if (format === "simple") return `${index + 1}. ${item.title}${item.artist ? ` / ${artist}` : ""}`;
-        return `${index + 1}. ${item.title} / ${artist} / ${key}${note}`;
+        if (format === "simple") return `${index + 1}. ${item.title}${item.artist ? ` / ${artist}` : ""}${owner}`;
+        return `${index + 1}. ${item.title} / ${artist}${owner} / ${key}${note}`;
       });
       const footer = format === "share"
         ? (currentLanguage === "en" ? "Saved with Music Saloon DRUM app" : "Music Saloon DRUMアプリで記録")
@@ -5901,6 +6040,7 @@
           <li>
             <div class="history-date">${escapeText(item.date)}</div>
             <div>${escapeText(item.title)} / ${escapeText(item.artist || "-")}</div>
+            ${item.owner ? `<div class="favorite-meta">${escapeText(uiText("歌う人"))}：${escapeText(item.owner)}</div>` : ""}
             <div class="favorite-meta">${escapeText(uiKey(item.key || "キー未設定"))}${getSongTags(item).length ? ` / ${getSongTags(item).map((tagName) => escapeText(uiText(tagName))).join(" / ")}` : ""}</div>
             ${item.memo ? `<div class="favorite-meta">${escapeText(item.memo)}</div>` : ""}
             <div class="history-note-box ${settings.showHistoryMemo ? "" : "feature-hidden"}">
@@ -5934,6 +6074,7 @@
         date,
         title: item.title,
         artist: item.artist,
+        owner: item.owner || "",
         kana: item.kana || "",
         key: item.key,
         memo: item.memo,
@@ -5980,6 +6121,7 @@
         id: createId(),
         title,
         artist: historyNewArtist.value.trim(),
+        owner: "",
         kana: "",
         key: historyNewKey.value || "キー未設定",
         memo: "",
@@ -6110,8 +6252,9 @@
 
     function itemLabelText(item) {
       const artist = item.artist ? ` / ${item.artist}` : "";
+      const owner = item.owner ? ` / ${currentLanguage === "en" ? "Singer" : "歌う人"}: ${item.owner}` : "";
       const key = item.key ? ` / ${uiKey(item.key)}` : "";
-      return `${item.title || "曲名未設定"}${artist}${key}`;
+      return `${item.title || "曲名未設定"}${artist}${owner}${key}`;
     }
 
     function getSongTags(item) {
@@ -6190,6 +6333,7 @@
       songSubmitButton.textContent = uiText("マイ曲リストに保存");
       songEditCancelButton.hidden = true;
       form.reset();
+      renderSongOwnerOptions();
       setSongTagSelection([]);
       updateKeyAdjustLabel();
       clearSongDraft();
@@ -6203,6 +6347,7 @@
       showView("song-register");
       document.getElementById("songTitle").value = item.title || "";
       document.getElementById("artistName").value = item.artist || "";
+      renderSongOwnerOptions(item.owner || "");
       document.getElementById("songKana").value = item.kana || "";
       const parsedKey = parseSongKeyLabel(item.key);
       songKeyBase.value = parsedKey.base;
@@ -6284,11 +6429,12 @@
       const query = favoriteSearch.value.trim();
       const normalizedQuery = normalizeKana(query);
       const rankingMap = activeProfileHistory().reduce((result, item) => {
-        const key = `${normalizeKana(item.title)}|${normalizeKana(item.artist)}`;
+        const key = `${normalizeKana(item.title)}|${normalizeKana(item.artist)}|${normalizeKana(item.owner)}`;
         if (!result[key]) {
           result[key] = {
             title: item.title,
             artist: item.artist,
+            owner: item.owner || "",
             kana: item.kana || "",
             key: item.key,
             memo: item.memo,
@@ -6330,6 +6476,7 @@
                 <div>
                   <p class="favorite-title">${highlightText(item.title, query)}</p>
                   <p class="favorite-meta">${highlightText(item.artist || "-", query)}${item.key ? ` / ${highlightText(uiKey(item.key), query)}` : ""}</p>
+                  ${item.owner ? `<p class="favorite-meta">${escapeText(uiText("歌う人"))}：${highlightText(item.owner, query)}</p>` : ""}
                   <p class="favorite-meta">${currentLanguage === "en" ? `${item.count} times sung` : `${item.count}回歌唱`}${item.lastDate ? ` / ${escapeText(uiText("最終:"))} ${escapeText(item.lastDate)}` : ""}</p>
                   ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>` : ""}
                   ${item.memo ? `<p class="favorite-meta">${highlightText(item.memo, query)}</p>` : ""}
@@ -6343,6 +6490,7 @@
 
     function renderSongs() {
       renderArtistFilterPanel();
+      renderOwnerFilterPanel();
       const query = searchBox.value.trim();
       const normalizedQuery = normalizeKana(query);
       const sortMode = songSort ? songSort.value : "recent";
@@ -6380,6 +6528,7 @@
           <td class="song-title-cell" data-label="${escapeText(uiText("曲名"))}">${highlightText(item.title, query)}</td>
           <td class="artist-cell" data-label="${escapeText(uiText("歌手名"))}">
             ${highlightText(item.artist || "-", query)}
+            ${item.owner ? `<div class="favorite-meta">${escapeText(uiText("歌う人"))}：${highlightText(item.owner, query)}</div>` : ""}
             <div>${getSongTags(item).map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>
           </td>
           <td data-label="${escapeText(uiText("キー"))}"><span class="status">${highlightText(uiKey(item.key), query)}</span></td>
@@ -6708,6 +6857,7 @@
       const formData = {
         title: document.getElementById("songTitle").value.trim(),
         artist: document.getElementById("artistName").value.trim(),
+        owner: settings.enableSongOwners ? songOwner.value.trim() : "",
         kana: document.getElementById("songKana").value.trim(),
         key: getSongKeyLabel(),
         memo: settings.showMemo ? document.getElementById("memo").value.trim() : "",
@@ -6796,6 +6946,7 @@
       let restoredSongs = [];
       let restoredTags = [];
       let restoredAdditionalList = null;
+      let restoredSongOwners = null;
       let restoredHistory = null;
       let restoredDrinks = null;
       let restoredFavoriteDrinks = null;
@@ -6805,6 +6956,7 @@
         restoredSongs = restored.songs;
         restoredTags = restored.genreTags;
         restoredAdditionalList = restored.additionalList;
+        restoredSongOwners = restored.songOwners;
         restoredHistory = restored.songHistory;
         restoredDrinks = restored.drinkHistory;
         restoredFavoriteDrinks = restored.favoriteDrinks;
@@ -6827,6 +6979,11 @@
         settings.enableAdditionalList = restoredAdditionalList.enabled;
         settings.additionalListName = restoredAdditionalList.name;
         settings.activeSongProfile = "self";
+        saveSettings();
+      }
+      if (restoredSongOwners) {
+        settings.enableSongOwners = restoredSongOwners.enabled;
+        settings.songOwners = restoredSongOwners.names;
         saveSettings();
       }
       if (restoredTags.length) {
@@ -6945,6 +7102,15 @@
       favoriteTagFilter.classList.remove("open");
     });
 
+    songOwnerFilterButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      renderOwnerFilterPanel();
+      songOwnerFilter.classList.toggle("open");
+      songTagFilter.classList.remove("open");
+      songArtistFilter.classList.remove("open");
+      favoriteTagFilter.classList.remove("open");
+    });
+
     favoriteTagFilterButton.addEventListener("click", (event) => {
       event.stopPropagation();
       favoriteTagFilter.classList.toggle("open");
@@ -6963,9 +7129,16 @@
       setSearchByTag(favoriteSearch, button.dataset.filterTag, renderFavorites, favoriteTagFilter);
     });
 
+    songOwnerFilterPanel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter-owner]");
+      if (!button) return;
+      setSearchByTag(searchBox, button.dataset.filterOwner, renderSongs, songOwnerFilter);
+    });
+
     document.addEventListener("click", (event) => {
       if (!songTagFilter.contains(event.target)) songTagFilter.classList.remove("open");
       if (songArtistFilter && !songArtistFilter.contains(event.target)) songArtistFilter.classList.remove("open");
+      if (songOwnerFilter && !songOwnerFilter.contains(event.target)) songOwnerFilter.classList.remove("open");
       if (!favoriteTagFilter.contains(event.target)) favoriteTagFilter.classList.remove("open");
     });
 
@@ -7188,6 +7361,32 @@
       renderSongProfileSwitcher();
     });
 
+    settingSongOwners.addEventListener("change", () => {
+      settings.enableSongOwners = settingSongOwners.checked;
+      saveSettings();
+      applySettings();
+      renderSongs();
+    });
+
+    addSongOwnerButton.addEventListener("click", addSongOwner);
+
+    newSongOwner.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      addSongOwner();
+    });
+
+    songOwnerManagerList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-song-owner-delete]");
+      if (!button) return;
+      const name = button.dataset.songOwnerDelete;
+      settings.songOwners = songOwnerNames().filter((owner) => owner !== name);
+      saveSettings();
+      renderSongOwnerOptions(songOwner.value === name ? "" : songOwner.value);
+      renderSongOwnerManager();
+      renderOwnerFilterPanel();
+    });
+
     songProfileButtons.addEventListener("click", (event) => {
       const button = event.target.closest("[data-song-profile]");
       if (!button || !settings.enableAdditionalList) return;
@@ -7201,6 +7400,7 @@
       songSubmitButton.textContent = uiText("マイ曲リストに保存");
       songEditCancelButton.hidden = true;
       form.reset();
+      renderSongOwnerOptions();
       setSongTagSelection([]);
       updateKeyAdjustLabel();
       restoreSongDraft();
