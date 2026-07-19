@@ -2982,6 +2982,12 @@
             <a class="btn ghost" href="#favorites">よく歌う曲へ</a>
           </article>
           <article class="card">
+            <span class="tag orange">Community</span>
+            <h3>みんなのお気に入り曲を見る</h3>
+            <p>お気に入りにした曲を匿名で共有し、DRUMで人気の曲を確認できます。</p>
+            <a class="btn ghost" href="#community">みんなのお気に入り曲へ</a>
+          </article>
+          <article class="card">
             <span class="tag green">History</span>
             <h3>歌った曲を記録する</h3>
             <p>日付ごとに歌った曲を残せます。記録ごとのメモも使えます。</p>
@@ -3960,14 +3966,20 @@
           </div>
         </div>
 
-        <div class="shared-ranking">
-          <div class="section-head">
-            <div>
-              <span class="tag">Community</span>
-              <h3>みんなのお気に入り曲</h3>
-              <p class="small">お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。<br>「お気に入り」タグを付けた曲だけが共有の対象になります。</p>
-            </div>
+      </div>
+    </section>
+
+    <section id="community">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="tag orange">Community</span>
+            <h2>みんなのお気に入り曲</h2>
+            <p class="lead">お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。</p>
           </div>
+        </div>
+        <div class="shared-ranking">
+          <p class="small">「お気に入り」タグを付けた曲だけが共有の対象になります。</p>
           <p class="privacy-note">共有するのは曲名・歌手名だけです。<br>マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は送信しません。<br>誤字・脱字や情報不足がある場合は、ランキングに反映されないことがあります。</p>
           <div class="shared-ranking-actions">
             <button class="btn primary" id="shareFavoriteSongs" type="button">お気に入り曲を匿名で共有</button>
@@ -4568,6 +4580,7 @@
       { id: "song-register", label: "曲を登録", target: "song-register" },
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
+      { id: "community", label: "みんなのお気に入り曲", target: "community" },
       { id: "history", label: "歌った記録", target: "history" },
       { id: "daily", label: "今日の記録", target: "daily" },
       { id: "drum-gacha", label: "DRUMガチャ", target: "drum-gacha" },
@@ -4748,7 +4761,11 @@
       "記録した回数をもとに、自分がよく歌う曲をランキングで確認できます。": "See a ranking of the songs you sing most based on your logged records.",
       "歌った回数ランキング": "Singing Frequency Ranking",
       "みんなのお気に入り曲": "Community Favorite Songs",
+      "みんなのお気に入り曲を見る": "View Community Favorite Songs",
+      "みんなのお気に入り曲へ": "Go to Community Favorite Songs",
       "お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。": "Share favorite songs anonymously to appear as popular songs at DRUM.",
+      "お気に入りにした曲を匿名で共有し、DRUMで人気の曲を確認できます。": "Share your favorite songs anonymously and see what is popular at DRUM.",
+      "「お気に入り」タグを付けた曲だけが共有の対象になります。": "Only songs tagged “Favorite” can be shared.",
       "共有するのは曲名・歌手名だけです。": "Only the song title and artist are shared.",
       "マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は送信しません。": "Your song list, notes, singer names, and device-identifying information are not sent.",
       "誤字・脱字や情報不足がある場合は、ランキングに反映されないことがあります。": "Songs with typos or incomplete information may not appear in the ranking.",
