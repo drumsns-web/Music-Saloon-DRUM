@@ -80,6 +80,18 @@
       will-change: transform;
     }
 
+    .daily-news-label {
+      display: inline-block;
+      margin-right: 10px;
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: var(--forest-2);
+      font-weight: 900;
+      line-height: 18px;
+      vertical-align: 1px;
+    }
+
     @keyframes daily-news-scroll {
       0% { transform: translateX(100vw); }
       78% { transform: translateX(-100%); }
@@ -2783,7 +2795,7 @@
       </div>
     </nav>
     <div class="daily-news-ticker" aria-label="今日の一言">
-      <div class="daily-news-track" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。　｜　ご来店ありがとうございます♪ 本日もお楽しみください♪</div>
+      <div class="daily-news-track" id="dailyShopMessage"><span class="daily-news-label">今日の一言</span>迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。　｜　ご来店ありがとうございます♪ 本日もお楽しみください♪</div>
     </div>
   </header>
 
@@ -6107,11 +6119,12 @@
       if (!dailyShopMessage || !dailyShopMessages.length) return;
       const index = (dayIndexFromDate() - 1) % dailyShopMessages.length;
       const message = dailyShopMessages[index];
-      const prefix = currentLanguage === "en" ? "Today's note: " : "今日の一言：";
+      const label = currentLanguage === "en" ? "Today's Note" : "今日の一言";
       const greeting = currentLanguage === "en"
         ? "Thank you for visiting♪ Enjoy your time today♪"
         : "ご来店ありがとうございます♪ 本日もお楽しみください♪";
-      dailyShopMessage.textContent = `${prefix}${currentLanguage === "en" ? message.en : message.ja}　｜　${greeting}`;
+      const body = currentLanguage === "en" ? message.en : message.ja;
+      dailyShopMessage.innerHTML = `<span class="daily-news-label">${escapeText(label)}</span>${escapeText(body)}　｜　${escapeText(greeting)}`;
     }
 
     function getHomePromptState() {
