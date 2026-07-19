@@ -1981,6 +1981,20 @@
       word-break: normal;
     }
 
+    .song-favorite-action {
+      margin-top: 10px;
+      min-height: 38px;
+      padding: 7px 12px;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .song-favorite-action.is-active {
+      color: #5d3510;
+      border-color: var(--orange);
+      background: #fff0da;
+    }
+
     .rank-badge {
       min-width: 42px;
       min-height: 42px;
@@ -3836,7 +3850,7 @@
             </div>
             <div class="tag-manager settings-target" id="settings-tags">
               <h3>タグ設定</h3>
-              <p class="small">ジャンルだけでなく、十八番・お気に入り・練習中・盛り上がる曲など、自分用の印も追加できます。</p>
+              <p class="small">ジャンルだけでなく、十八番・お気に入り・練習中・盛り上がる曲など、自分用の印も追加できます。<br>「お気に入り」を付けた曲は、匿名共有ランキングへ送る候補になります。</p>
               <div class="tag-add-box">
                 <label for="newTagName">追加するタグ名</label>
                 <div class="control-row">
@@ -3951,7 +3965,7 @@
             <div>
               <span class="tag">Community</span>
               <h3>みんなのお気に入り曲</h3>
-              <p class="small">お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。</p>
+              <p class="small">お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。<br>「お気に入り」タグを付けた曲だけが共有の対象になります。</p>
             </div>
           </div>
           <p class="privacy-note">共有するのは曲名・歌手名だけです。<br>マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は送信しません。<br>誤字・脱字や情報不足がある場合は、ランキングに反映されないことがあります。</p>
@@ -6612,9 +6626,9 @@
     function openTerminalSearch(station) {
       const destination = commuteDestinationText();
       if (!destination) {
-        setCommuteStatus(uiText("路線案内の目的地を設定してください。"));
-        openSettingsPanel();
-        window.setTimeout(() => commuteDestination.focus(), 120);
+        const query = encodeURIComponent(`${station} 路線案内`);
+        window.open(`https://www.google.com/search?q=${query}`, "_blank", "noopener");
+        setCommuteStatus(uiText("目的地を設定すると、目的地までの経路を直接検索できます。"));
         return;
       }
       const params = new URLSearchParams({ from: station, to: destination });
@@ -7142,6 +7156,7 @@
         const key = `${normalizeKana(item.title)}|${normalizeKana(item.artist)}|${normalizeKana(item.owner)}`;
         if (!result[key]) {
           result[key] = {
+            sourceId: item.sourceId || "",
             title: item.title,
             artist: item.artist,
             owner: item.owner || "",
@@ -7158,6 +7173,7 @@
         if (item.kana) result[key].kana = item.kana;
         if (item.key) result[key].key = item.key;
         if (item.memo) result[key].memo = item.memo;
+        if (item.sourceId) result[key].sourceId = item.sourceId;
         result[key].tags = [...new Set([...result[key].tags, ...getSongTags(item)])];
         return result;
       }, {});
@@ -7190,6 +7206,12 @@
                   <p class="favorite-meta">${currentLanguage === "en" ? `${item.count} times sung` : `${item.count}回歌唱`}${item.lastDate ? ` / ${escapeText(uiText("最終:"))} ${escapeText(item.lastDate)}` : ""}</p>
                   ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>` : ""}
                   ${item.memo ? `<p class="favorite-meta">${highlightText(item.memo, query)}</p>` : ""}
+                  ${item.sourceId ? (() => {
+                    const sourceSong = activeProfileSongs().find((song) => song.id === item.sourceId);
+                    if (!sourceSong) return "";
+                    const isFavorite = getSongTags(sourceSong).includes("お気に入り");
+                    return `<button class="btn ghost song-favorite-action${isFavorite ? " is-active" : ""}" type="button" data-song-favorite-toggle="${escapeText(sourceSong.id)}">${isFavorite ? "★ お気に入り" : "☆ お気に入りにする"}</button>`;
+                  })() : ""}
                 </div>
               </li>
             `).join("")}
@@ -7202,6 +7224,29 @@
       return activeProfileSongs().filter((item) => {
         const title = String(item.title || "").trim();
         return title && getSongTags(item).includes("お気に入り");
+      });
+    }
+
+    function toggleSongFavorite(id) {
+      const item = activeProfileSongs().find((song) => song.id === id);
+      if (!item) return;
+      const tags = Array.isArray(item.tags) ? [...item.tags] : [];
+      const tagIndex = tags.indexOf("お気に入り");
+      const isAdding = tagIndex === -1;
+      if (isAdding) tags.push("お気に入り");
+      else tags.splice(tagIndex, 1);
+      item.tags = tags;
+      saveSongs();
+      renderSongs();
+      renderFavorites();
+      const message = currentLanguage === "en"
+        ? (isAdding ? "Added to favorites." : "Removed from favorites.")
+        : (isAdding ? "お気に入りに追加しました。匿名共有の候補になります。" : "お気に入りから外しました。");
+      showUndo(message, () => {
+        item.tags = isAdding ? tags.filter((tag) => tag !== "お気に入り") : [...tags, "お気に入り"];
+        saveSongs();
+        renderSongs();
+        renderFavorites();
       });
     }
 
@@ -7645,6 +7690,11 @@
     }
 
     favoriteSearch.addEventListener("input", renderFavorites);
+
+    favoriteGroups.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-song-favorite-toggle]");
+      if (button) toggleSongFavorite(button.dataset.songFavoriteToggle);
+    });
 
     shareFavoriteSongs.addEventListener("click", shareFavoriteSongsToRanking);
     refreshSharedRanking.addEventListener("click", loadSharedRanking);
