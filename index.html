@@ -7251,7 +7251,13 @@
         const response = await fetch(`${sharedRankingApiUrl}?action=ranking`, { cache: "no-store" });
         const payload = await response.json();
         if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("ranking unavailable");
-        sharedRankingSongs = payload.songs;
+        // The API returns database-style keys. Normalize them once so the
+        // ranking UI can use the same title / artist shape as local songs.
+        sharedRankingSongs = payload.songs.map((item) => ({
+          ...item,
+          title: item.title || item.song_title || "",
+          artist: item.artist || item.artist_name || ""
+        }));
         renderSharedRanking();
       } catch (error) {
         console.warn(error);
