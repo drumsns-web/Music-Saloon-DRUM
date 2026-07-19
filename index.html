@@ -3951,10 +3951,10 @@
             <div>
               <span class="tag">Community</span>
               <h3>みんなのお気に入り曲</h3>
-              <p class="small">お気に入りにした曲を匿名で集計し、DRUMで人気の曲として表示します。</p>
+              <p class="small">お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。</p>
             </div>
           </div>
-          <p class="privacy-note">共有するのは曲名・歌手名だけです。<br>マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は共有しません。</p>
+          <p class="privacy-note">共有するのは曲名・歌手名だけです。<br>マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は送信しません。<br>誤字・脱字や情報不足がある場合は、ランキングに反映されないことがあります。</p>
           <div class="shared-ranking-actions">
             <button class="btn primary" id="shareFavoriteSongs" type="button">お気に入り曲を匿名で共有</button>
             <button class="btn ghost" id="refreshSharedRanking" type="button">ランキングを更新</button>
@@ -4734,9 +4734,10 @@
       "記録した回数をもとに、自分がよく歌う曲をランキングで確認できます。": "See a ranking of the songs you sing most based on your logged records.",
       "歌った回数ランキング": "Singing Frequency Ranking",
       "みんなのお気に入り曲": "Community Favorite Songs",
-      "お気に入りにした曲を匿名で集計し、DRUMで人気の曲として表示します。": "Songs you choose as favorites can be counted anonymously and shown as popular songs at DRUM.",
+      "お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。": "Share favorite songs anonymously to appear as popular songs at DRUM.",
       "共有するのは曲名・歌手名だけです。": "Only the song title and artist are shared.",
-      "マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は共有しません。": "Your song list, notes, singer names, and device-identifying information are not shared.",
+      "マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は送信しません。": "Your song list, notes, singer names, and device-identifying information are not sent.",
+      "誤字・脱字や情報不足がある場合は、ランキングに反映されないことがあります。": "Songs with typos or incomplete information may not appear in the ranking.",
       "お気に入り曲を匿名で共有": "Share Favorite Songs Anonymously",
       "ランキングを更新": "Refresh Ranking",
       "ランキングを読み込んでいます。": "Loading ranking...",
@@ -7273,8 +7274,8 @@
         return;
       }
       const message = currentLanguage === "en"
-        ? `Share ${items.length} favorite song${items.length === 1 ? "" : "s"} anonymously? Only song titles and artists will be sent. This cannot be undone after aggregation.`
-        : `お気に入りの${items.length}曲を匿名で共有しますか？\n送信するのは曲名と歌手名だけです。集計後は取り消せません。`;
+        ? `Share ${items.length} favorite song${items.length === 1 ? "" : "s"} anonymously? Only song titles and artists will be sent. They will appear in the ranking right away.`
+        : `お気に入りの${items.length}曲を匿名で共有しますか？\n送信するのは曲名と歌手名だけです。ランキングへすぐ反映されます。`;
       if (!confirm(message)) return;
 
       shareFavoriteSongs.disabled = true;
@@ -7299,12 +7300,12 @@
         await loadSharedRanking();
         renderSharedRanking();
         sharedRankingStatus.textContent = currentLanguage === "en"
-          ? `Shared ${sharedCount} favorite song${sharedCount === 1 ? "" : "s"} anonymously.`
-          : `お気に入り曲 ${sharedCount}曲を匿名で共有しました。`;
+          ? `Shared ${sharedCount} favorite song${sharedCount === 1 ? "" : "s"} anonymously. They are now reflected in the ranking.`
+          : `お気に入り曲 ${sharedCount}曲を匿名で共有しました。ランキングへ反映されました。`;
       } catch (error) {
         console.warn(error);
         sharedRankingStatus.textContent = currentLanguage === "en"
-          ? "Could not share the songs. Please try again."
+          ? "Could not submit the songs. Please try again."
           : "共有できませんでした。時間をおいてもう一度お試しください。";
       } finally {
         shareFavoriteSongs.disabled = !sharedFavoriteCandidates().some((item) => !item.sharedFavoriteEventId);
