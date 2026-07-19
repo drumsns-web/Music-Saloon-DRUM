@@ -59,6 +59,41 @@
       gap: 18px;
     }
 
+    .daily-news-ticker {
+      overflow: hidden;
+      height: 30px;
+      border-top: 1px solid rgba(255, 192, 122, .15);
+      background: rgba(4, 29, 19, .8);
+      color: #fff3df;
+      white-space: nowrap;
+    }
+
+    .daily-news-track {
+      display: inline-block;
+      min-width: max-content;
+      padding: 4px 0;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 20px;
+      letter-spacing: 0;
+      animation: daily-news-scroll 24s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes daily-news-scroll {
+      0% { transform: translateX(100vw); }
+      78% { transform: translateX(-100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .daily-news-track {
+        padding-left: 14px;
+        animation: none;
+        transform: none;
+      }
+    }
+
     .brand {
       display: flex;
       align-items: center;
@@ -312,8 +347,7 @@
       outline: none;
     }
 
-    .today-action-panel,
-    .shop-message-card {
+    .today-action-panel {
       width: min(760px, 100%);
       border-left: 4px solid var(--orange);
       border-radius: 8px;
@@ -325,12 +359,6 @@
 
     .today-action-panel {
       margin: 18px 0;
-    }
-
-    .shop-message-card {
-      margin: 0 0 18px;
-      font-weight: 900;
-      line-height: 1.6;
     }
 
     .today-action-panel strong {
@@ -2664,6 +2692,9 @@
         <button class="guide-nav-button js-open-guide-modal" type="button" aria-label="DRUMガイドを開く" title="DRUMガイドを開く">☰</button>
       </div>
     </nav>
+    <div class="daily-news-ticker" aria-label="今日の一言">
+      <div class="daily-news-track" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
+    </div>
   </header>
 
   <main>
@@ -2714,7 +2745,6 @@
           <p class="commute-status" id="commuteStatus"></p>
           <p class="weather-source">Weather data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></p>
         </section>
-        <div class="shop-message-card" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
           <div class="top-shortcuts-head">
