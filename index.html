@@ -2727,14 +2727,14 @@
             <button class="commute-action" data-terminal-station="江古田駅" type="button">
               <span class="commute-action-icon">↗</span>
               <span>
-                <strong>江古田駅から終電</strong>
+                <strong>江古田駅から路線案内</strong>
                 <small>目的地を設定して検索</small>
               </span>
             </button>
             <button class="commute-action" data-terminal-station="新江古田駅" type="button">
               <span class="commute-action-icon">↗</span>
               <span>
-                <strong>新江古田駅から終電</strong>
+                <strong>新江古田駅から路線案内</strong>
                 <small>目的地を設定して検索</small>
               </span>
             </button>
@@ -3681,16 +3681,16 @@
           </article>
           <article class="card">
             <span class="tag blue">Trip</span>
-            <h3>天気・終電設定</h3>
+            <h3>天気・路線案内設定</h3>
             <label class="check-row">
               <input id="settingCommuteSupport" type="checkbox" checked>
               トップに帰り道サポートを表示する
             </label>
             <label>
-              終電の目的地 <span class="optional-label">任意</span>
+              路線案内の目的地 <span class="optional-label">任意</span>
               <input id="commuteDestination" maxlength="48" placeholder="例：池袋駅、自宅最寄り駅">
             </label>
-            <p class="small">江古田駅・新江古田駅から、登録した目的地までの終電を検索できます。目的地はこの端末のブラウザに保存されます。</p>
+            <p class="small">江古田駅・新江古田駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。</p>
             <label>
               通知に使う駅
               <select id="commuteStation">
@@ -3699,12 +3699,12 @@
               </select>
             </label>
             <label>
-              終電時刻 <span class="optional-label">任意</span>
+              帰宅の目安時刻 <span class="optional-label">任意</span>
               <input id="lastTrainTime" type="time">
             </label>
             <label class="check-row">
               <input id="settingLastTrainReminder" type="checkbox">
-              終電前に知らせる
+              帰宅前に知らせる
             </label>
             <label>
               お知らせするタイミング
@@ -3717,7 +3717,7 @@
                 <option value="5">5分前</option>
               </select>
             </label>
-            <p class="small">終電検索で確認した時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。</p>
+            <p class="small">帰宅の目安時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。</p>
           </article>
           <article class="card">
             <span class="tag">Restore</span>
@@ -4464,17 +4464,17 @@
       "目的地を設定": "Set Destination",
       "現在地の天気": "Local Weather",
       "タップして現在地の天気を確認": "Tap to check local weather",
-      "江古田駅から終電": "Last Train from Ekoda",
-      "新江古田駅から終電": "Last Train from Shin-Ekoda",
+      "江古田駅から路線案内": "Routes from Ekoda",
+      "新江古田駅から路線案内": "Routes from Shin-Ekoda",
       "目的地を設定して検索": "Set a destination to search",
-      "天気・終電設定": "Weather & Last Train",
+      "天気・路線案内設定": "Weather & Route Guide",
       "トップに帰り道サポートを表示する": "Show Getting Home on the home screen",
-      "終電の目的地": "Last-train destination",
+      "路線案内の目的地": "Route destination",
       "例：池袋駅、自宅最寄り駅": "Example: Ikebukuro Station, home station",
-      "江古田駅・新江古田駅から、登録した目的地までの終電を検索できます。目的地はこの端末のブラウザに保存されます。": "Search for the last train from Ekoda or Shin-Ekoda Station to your saved destination. The destination is saved only in this device's browser.",
+      "江古田駅・新江古田駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。": "Search routes from Ekoda or Shin-Ekoda Station to your saved destination. The destination is saved only in this device's browser.",
       "通知に使う駅": "Station for reminder",
-      "終電時刻": "Last-train time",
-      "終電前に知らせる": "Remind me before the last train",
+      "帰宅の目安時刻": "Target time to head home",
+      "帰宅前に知らせる": "Remind me before heading home",
       "お知らせするタイミング": "Reminder timing",
       "江古田駅": "Ekoda Station",
       "新江古田駅": "Shin-Ekoda Station",
@@ -4484,12 +4484,12 @@
       "15分前": "15 minutes before",
       "10分前": "10 minutes before",
       "5分前": "5 minutes before",
-      "終電検索で確認した時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。": "Set the time you confirmed in the last-train search. Reminders appear only while this app is open. If you allow notifications, the device will also notify you.",
+      "帰宅の目安時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。": "Set a target time to head home. Reminders appear only while this app is open. If you allow notifications, the device will also notify you.",
       "この端末では現在地を確認できません。": "This device cannot check your location.",
       "現在地を確認しています...": "Checking your location...",
       "天気を取得できませんでした。時間をおいてもう一度お試しください。": "Could not get weather. Please try again shortly.",
       "現在地を取得できませんでした。位置情報の利用を許可してください。": "Could not get your location. Please allow location access.",
-      "終電の目的地を設定してください。": "Please set a last-train destination.",
+      "路線案内の目的地を設定してください。": "Please set a route destination.",
       "今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。": "Today's note: If you are not sure where to go, the DRUM Guide takes you to the menu, song list, and rules.",
       "よく使う項目": "Frequently Used",
       "お知らせを見る": "View Info",
@@ -6413,39 +6413,18 @@
     function openTerminalSearch(station) {
       const destination = commuteDestinationText();
       if (!destination) {
-        setCommuteStatus(uiText("終電の目的地を設定してください。"));
+        setCommuteStatus(uiText("路線案内の目的地を設定してください。"));
         openSettingsPanel();
         window.setTimeout(() => commuteDestination.focus(), 120);
         return;
       }
-      const today = new Date();
-      const params = new URLSearchParams({
-        from: station,
-        to: destination,
-        yy: String(today.getFullYear()),
-        mm: String(today.getMonth() + 1).padStart(2, "0"),
-        dd: String(today.getDate()).padStart(2, "0"),
-        hh: "23",
-        m1: "50",
-        m2: "0",
-        type: "4",
-        ticket: "ic",
-        expkind: "1",
-        ws: "3",
-        s: "0",
-        al: "1",
-        shin: "1",
-        ex: "1",
-        hb: "1",
-        lb: "1",
-        sr: "1"
-      });
+      const params = new URLSearchParams({ from: station, to: destination });
       const url = `https://transit.yahoo.co.jp/search/result?${params.toString()}`;
       const searchWindow = window.open(url, "_blank", "noopener");
       if (searchWindow) searchWindow.opener = null;
       setCommuteStatus(currentLanguage === "en"
-        ? `Opening last-train search: ${station} to ${destination}`
-        : `${station}から${destination}までの終電検索を開きました。`);
+        ? `Opening route guide: ${station} to ${destination}`
+        : `${station}から${destination}までの路線案内を開きました。`);
     }
 
     function reminderTimeForToday() {
@@ -6463,8 +6442,8 @@
       const destination = commuteDestinationText();
       const minutes = Number(settings.lastTrainReminderMinutes || 30);
       const body = currentLanguage === "en"
-        ? `Your last train from ${station}${destination ? ` to ${destination}` : ""} is in about ${minutes} minutes.`
-        : `${station}${destination ? `から${destination}までの` : "の"}終電まで約${minutes}分です。`;
+        ? `It is about ${minutes} minutes before your target time to head home${destination ? ` for ${destination}` : ""}.`
+        : `${destination ? `${destination}へ向けて` : "帰宅に向けて"}、目安時刻まで約${minutes}分です。`;
       setCommuteStatus(body);
       if ("Notification" in window && Notification.permission === "granted") {
         new Notification("Music Saloon DRUM", { body, icon: "drum-icon.jpg" });
