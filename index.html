@@ -144,6 +144,16 @@
       min-width: 76px;
     }
 
+    .guide-nav-button {
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      font-size: 24px !important;
+      line-height: 1 !important;
+    }
+
     .hero {
       min-height: calc(100vh - 72px);
       display: grid;
@@ -2385,6 +2395,13 @@
         min-width: 68px;
       }
 
+      .guide-nav-button {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+        font-size: 22px !important;
+      }
+
       .hero { min-height: 600px; }
       .hero h1 {
         font-size: clamp(34px, 10vw, 54px);
@@ -2462,6 +2479,7 @@
         <span>Music Saloon DRUM</span>
       </a>
       <div class="nav-links">
+        <button class="guide-nav-button js-open-guide-modal" type="button" aria-label="DRUMガイドを開く" title="DRUMガイドを開く">☰</button>
         <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
         <button class="settings-nav-button" id="openSettingsModalNav" type="button"><span class="settings-icon">⚙</span><span>設定</span></button>
       </div>
@@ -3033,7 +3051,7 @@
               </div>
               <div>
                 <label for="songImportText">テキスト読み込み</label>
-                <p class="small">1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみを入れる場合は4つ目に入れてください。</p>
+                <p class="small">1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみ（曲名・歌手名・別名）を入れる場合は4つ目に入れてください。</p>
                 <textarea id="songImportText" placeholder="例：海　サザンオールスターズ　原曲キー　うみ さざん"></textarea>
                 <div class="control-row">
                   <button class="btn ghost" id="importSongsButton" type="button">貼り付けた曲を読み込む</button>
@@ -3112,9 +3130,9 @@
                 <p class="small">設定で追加した名前から選べます。</p>
               </label>
               <label>
-                検索用よみ <span class="optional-label">任意</span>
-                <input id="songKana" placeholder="例：さざんおーるすたーず いとしのえりー">
-                <p class="small kana-search-help">ひらがな・カタカナどちらでも検索できます。別名もスペース区切りで入れられます。例：みすたーちるどれん ミスチル</p>
+                検索用よみ（曲名・歌手名・別名） <span class="optional-label">任意</span>
+                <input id="songKana" placeholder="例：いとしのえりー さざんおーるすたーず">
+                <p class="small kana-search-help">曲名・歌手名のよみ、愛称や旧名などをスペース区切りで入れられます。ひらがな・カタカナどちらで検索しても見つかります。例：みすたーちるどれん ミスチル</p>
               </label>
               <label>
                 キーの基準 <span class="optional-label">任意</span>
@@ -4655,8 +4673,10 @@
       "基準未設定": "Base not set",
       "キーの基準": "Key base",
       "キー調整": "Key adjustment",
-      "ひらがな・カタカナどちらでも検索できます。別名もスペース区切りで入れられます。例：みすたーちるどれん ミスチル": "Hiragana and katakana both work. You can also add nicknames separated by spaces. Example: Mr Children Misuchiru",
+      "曲名・歌手名のよみ、愛称や旧名などをスペース区切りで入れられます。ひらがな・カタカナどちらで検索しても見つかります。例：みすたーちるどれん ミスチル": "Add song and artist readings, nicknames, or former names separated by spaces. Hiragana and katakana searches both work. Example: Mister Children Misuchiru",
       "メモに入れたキーワードも検索できます。": "Keywords written in the memo can also be searched.",      "検索用よみ": "Search reading",
+      "検索用よみ（曲名・歌手名・別名）": "Search readings (song, artist, aliases)",
+      "例：いとしのえりー さざんおーるすたーず": "Example: Itoshi no Ellie Southern All Stars",
       "タグ": "Tags",
       "任意": "Optional",
       "マイ曲リストにメモ欄を表示する": "Show memo field in song list",
@@ -4779,7 +4799,7 @@
       ["マイ曲リストはお使いの端末のブラウザ内に保存されます。ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。", "Your song list is saved in this device's browser. It may be deleted if browser data is cleared, when changing devices, or when using private browsing."],
       ["マイ曲リストの「次回」ボタンで、次に来た時に歌いたい曲を残せます。", "Use the “Next” button in the song list to save songs you want to sing next time."],
       ["JSONは曲名・歌手名・キー・タグ・メモなどをまとめて復元できます。テキスト出力はメモアプリやLINEに貼る確認用として使えます。", "JSON can restore song titles, artists, keys, tags, notes, and more. Text export is useful for pasting into notes or LINE for checking."],
-      ["1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみを入れる場合は4つ目に入れてください。", "Paste one song per line. Example: Umi Southern All Stars Original key. You can also register only the song title. If you add a search reading, put it fourth."],
+      ["1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみ（曲名・歌手名・別名）を入れる場合は4つ目に入れてください。", "Paste one song per line. Example: Umi Southern All Stars Original key. You can also register only the song title. If you add search readings for the song, artist, or aliases, put them in the fourth field."],
       ["JSONバックアップ", "JSON Backup"],
       ["JSON読み込み", "JSON Import"],
       ["コピペ用テキスト", "Copy/Paste Text"],
