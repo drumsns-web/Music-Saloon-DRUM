@@ -366,6 +366,117 @@
       background: var(--orange);
     }
 
+    .commute-panel {
+      width: min(760px, 100%);
+      margin: 0 0 18px;
+      border-left: 4px solid #5e8fc4;
+      border-radius: 8px;
+      padding: 14px;
+      color: #fffdf8;
+      background: rgba(11, 43, 30, .78);
+      box-shadow: 0 14px 36px rgba(0, 0, 0, .22);
+    }
+
+    .commute-panel-head,
+    .commute-action {
+      display: flex;
+      align-items: center;
+    }
+
+    .commute-panel-head {
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .commute-panel-head strong {
+      color: #f4f8ff;
+      font-size: 16px;
+    }
+
+    .commute-panel .btn {
+      min-height: 38px;
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+
+    .commute-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .commute-action {
+      min-height: 58px;
+      justify-content: flex-start;
+      gap: 10px;
+      border: 1px solid rgba(255, 247, 232, .42);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--forest-2);
+      background: rgba(255, 249, 239, .96);
+      font: inherit;
+      font-weight: 900;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .commute-action:hover,
+    .commute-action:focus-visible {
+      background: var(--orange);
+      outline: none;
+    }
+
+    .commute-action.weather-action {
+      grid-column: 1 / -1;
+    }
+
+    .commute-action-icon {
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: #fff;
+      background: #3e75a8;
+      font-size: 18px;
+    }
+
+    .commute-action strong,
+    .commute-action small {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .commute-action small {
+      margin-top: 2px;
+      color: #5f5548;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .commute-status {
+      min-height: 18px;
+      margin: 10px 0 0;
+      color: #e8f2ff;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .weather-source {
+      margin: 8px 0 0;
+      color: rgba(255, 247, 232, .75);
+      font-size: 11px;
+    }
+
+    .weather-source a {
+      color: inherit;
+    }
+
     .top-shortcut-settings {
       display: grid;
       gap: 2px;
@@ -2472,6 +2583,12 @@
       .today-action-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+      .commute-grid {
+        grid-template-columns: 1fr;
+      }
+      .commute-action.weather-action {
+        grid-column: auto;
+      }
       .top-shortcut-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
@@ -2562,6 +2679,37 @@
             <a href="#features">ルールを見る</a>
           </div>
         </div>
+        <section class="commute-panel" aria-labelledby="commuteSupportTitle">
+          <div class="commute-panel-head">
+            <strong id="commuteSupportTitle">帰り道サポート</strong>
+            <button class="btn ghost" id="openCommuteSettings" type="button">目的地を設定</button>
+          </div>
+          <div class="commute-grid">
+            <button class="commute-action weather-action" id="weatherButton" type="button">
+              <span class="commute-action-icon">☀</span>
+              <span>
+                <strong>現在地の天気</strong>
+                <small id="weatherStatus">タップして現在地の天気を確認</small>
+              </span>
+            </button>
+            <button class="commute-action" data-terminal-station="江古田駅" type="button">
+              <span class="commute-action-icon">↗</span>
+              <span>
+                <strong>江古田駅から終電</strong>
+                <small>目的地を設定して検索</small>
+              </span>
+            </button>
+            <button class="commute-action" data-terminal-station="新江古田駅" type="button">
+              <span class="commute-action-icon">↗</span>
+              <span>
+                <strong>新江古田駅から終電</strong>
+                <small>目的地を設定して検索</small>
+              </span>
+            </button>
+          </div>
+          <p class="commute-status" id="commuteStatus"></p>
+          <p class="weather-source">Weather data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></p>
+        </section>
         <div class="shop-message-card" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
@@ -3500,6 +3648,46 @@
             </div>
           </article>
           <article class="card">
+            <span class="tag blue">Trip</span>
+            <h3>天気・終電設定</h3>
+            <label class="check-row">
+              <input id="settingCommuteSupport" type="checkbox" checked>
+              トップに帰り道サポートを表示する
+            </label>
+            <label>
+              終電の目的地 <span class="optional-label">任意</span>
+              <input id="commuteDestination" maxlength="48" placeholder="例：池袋駅、自宅最寄り駅">
+            </label>
+            <p class="small">江古田駅・新江古田駅から、登録した目的地までの終電を検索できます。目的地はこの端末のブラウザに保存されます。</p>
+            <label>
+              通知に使う駅
+              <select id="commuteStation">
+                <option value="江古田駅">江古田駅</option>
+                <option value="新江古田駅">新江古田駅</option>
+              </select>
+            </label>
+            <label>
+              終電時刻 <span class="optional-label">任意</span>
+              <input id="lastTrainTime" type="time">
+            </label>
+            <label class="check-row">
+              <input id="settingLastTrainReminder" type="checkbox">
+              終電前に知らせる
+            </label>
+            <label>
+              お知らせするタイミング
+              <select id="lastTrainReminderMinutes">
+                <option value="30">30分前</option>
+                <option value="25">25分前</option>
+                <option value="20">20分前</option>
+                <option value="15">15分前</option>
+                <option value="10">10分前</option>
+                <option value="5">5分前</option>
+              </select>
+            </label>
+            <p class="small">終電検索で確認した時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。</p>
+          </article>
+          <article class="card">
             <span class="tag">Restore</span>
             <h3>削除記録の復元</h3>
             <button class="btn ghost" id="restoreHistoryBackup" type="button">削除した歌った記録を復元</button>
@@ -4023,6 +4211,18 @@
     const settingDrinkTotal = document.getElementById("settingDrinkTotal");
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
+    const settingCommuteSupport = document.getElementById("settingCommuteSupport");
+    const commuteDestination = document.getElementById("commuteDestination");
+    const commuteStation = document.getElementById("commuteStation");
+    const lastTrainTime = document.getElementById("lastTrainTime");
+    const settingLastTrainReminder = document.getElementById("settingLastTrainReminder");
+    const lastTrainReminderMinutes = document.getElementById("lastTrainReminderMinutes");
+    const openCommuteSettings = document.getElementById("openCommuteSettings");
+    const commutePanel = document.querySelector(".commute-panel");
+    const weatherButton = document.getElementById("weatherButton");
+    const weatherStatus = document.getElementById("weatherStatus");
+    const commuteStatus = document.getElementById("commuteStatus");
+    const terminalSearchButtons = document.querySelectorAll("[data-terminal-station]");
     const settingAdditionalList = document.getElementById("settingAdditionalList");
     const additionalListSettings = document.getElementById("additionalListSettings");
     const additionalListName = document.getElementById("additionalListName");
@@ -4228,6 +4428,36 @@
       "今日は何をしますか？": "What would you like to do today?",
       "曲を探す": "Search Songs",
       "ルールを見る": "View Rules",
+      "帰り道サポート": "Getting Home",
+      "目的地を設定": "Set Destination",
+      "現在地の天気": "Local Weather",
+      "タップして現在地の天気を確認": "Tap to check local weather",
+      "江古田駅から終電": "Last Train from Ekoda",
+      "新江古田駅から終電": "Last Train from Shin-Ekoda",
+      "目的地を設定して検索": "Set a destination to search",
+      "天気・終電設定": "Weather & Last Train",
+      "トップに帰り道サポートを表示する": "Show Getting Home on the home screen",
+      "終電の目的地": "Last-train destination",
+      "例：池袋駅、自宅最寄り駅": "Example: Ikebukuro Station, home station",
+      "江古田駅・新江古田駅から、登録した目的地までの終電を検索できます。目的地はこの端末のブラウザに保存されます。": "Search for the last train from Ekoda or Shin-Ekoda Station to your saved destination. The destination is saved only in this device's browser.",
+      "通知に使う駅": "Station for reminder",
+      "終電時刻": "Last-train time",
+      "終電前に知らせる": "Remind me before the last train",
+      "お知らせするタイミング": "Reminder timing",
+      "江古田駅": "Ekoda Station",
+      "新江古田駅": "Shin-Ekoda Station",
+      "30分前": "30 minutes before",
+      "25分前": "25 minutes before",
+      "20分前": "20 minutes before",
+      "15分前": "15 minutes before",
+      "10分前": "10 minutes before",
+      "5分前": "5 minutes before",
+      "終電検索で確認した時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。": "Set the time you confirmed in the last-train search. Reminders appear only while this app is open. If you allow notifications, the device will also notify you.",
+      "この端末では現在地を確認できません。": "This device cannot check your location.",
+      "現在地を確認しています...": "Checking your location...",
+      "天気を取得できませんでした。時間をおいてもう一度お試しください。": "Could not get weather. Please try again shortly.",
+      "現在地を取得できませんでした。位置情報の利用を許可してください。": "Could not get your location. Please allow location access.",
+      "終電の目的地を設定してください。": "Please set a last-train destination.",
       "今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。": "Today's note: If you are not sure where to go, the DRUM Guide takes you to the menu, song list, and rules.",
       "よく使う項目": "Frequently Used",
       "お知らせを見る": "View Info",
@@ -4999,6 +5229,12 @@
     if (settings.enableSongOwners === undefined) settings.enableSongOwners = false;
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
+    if (typeof settings.commuteDestination !== "string") settings.commuteDestination = "";
+    if (settings.commuteStation !== "新江古田駅") settings.commuteStation = "江古田駅";
+    if (typeof settings.lastTrainTime !== "string") settings.lastTrainTime = "";
+    if (settings.showCommuteSupport === undefined) settings.showCommuteSupport = true;
+    if (settings.lastTrainReminderEnabled === undefined) settings.lastTrainReminderEnabled = false;
+    if (![5, 10, 15, 20, 25, 30].includes(Number(settings.lastTrainReminderMinutes))) settings.lastTrainReminderMinutes = 30;
     let didMigrateProfiles = false;
     songs.forEach((item) => {
       if (item.profile !== "additional") {
@@ -6018,6 +6254,7 @@
       settingDrinkTotal.checked = settings.showDrinkTotal;
       settingSetlistCopy.checked = settings.showSetlistCopy;
       settingHistoryMemo.checked = settings.showHistoryMemo;
+      settingCommuteSupport.checked = settings.showCommuteSupport !== false;
       settingAdditionalList.checked = Boolean(settings.enableAdditionalList);
       additionalListName.value = additionalProfileName();
       additionalListSettings.classList.add("is-visible");
@@ -6033,9 +6270,165 @@
       todayDrinkCount.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       todaySetlistCopyBlock.classList.toggle("feature-hidden", !settings.showSetlistCopy);
+      commutePanel.classList.toggle("hidden", settings.showCommuteSupport === false);
+      commuteDestination.value = settings.commuteDestination || "";
+      commuteStation.value = settings.commuteStation || "江古田駅";
+      lastTrainTime.value = settings.lastTrainTime || "";
+      settingLastTrainReminder.checked = Boolean(settings.lastTrainReminderEnabled);
+      lastTrainReminderMinutes.value = String(settings.lastTrainReminderMinutes || 30);
       renderTopShortcuts();
       renderTopShortcutSettings();
       renderSongProfileSwitcher();
+      renderCommuteSupport();
+    }
+
+    const weatherCodeLabels = {
+      0: { ja: "晴れ", en: "Clear" },
+      1: { ja: "おおむね晴れ", en: "Mostly clear" },
+      2: { ja: "晴れ時々くもり", en: "Partly cloudy" },
+      3: { ja: "くもり", en: "Overcast" },
+      45: { ja: "霧", en: "Fog" },
+      48: { ja: "霧", en: "Rime fog" },
+      51: { ja: "霧雨", en: "Light drizzle" },
+      53: { ja: "霧雨", en: "Drizzle" },
+      55: { ja: "強い霧雨", en: "Heavy drizzle" },
+      61: { ja: "小雨", en: "Light rain" },
+      63: { ja: "雨", en: "Rain" },
+      65: { ja: "強い雨", en: "Heavy rain" },
+      71: { ja: "小雪", en: "Light snow" },
+      73: { ja: "雪", en: "Snow" },
+      75: { ja: "強い雪", en: "Heavy snow" },
+      80: { ja: "にわか雨", en: "Rain showers" },
+      81: { ja: "雨", en: "Rain showers" },
+      82: { ja: "強い雨", en: "Heavy rain showers" },
+      95: { ja: "雷雨", en: "Thunderstorm" },
+      96: { ja: "ひょうを伴う雷雨", en: "Thunderstorm with hail" },
+      99: { ja: "強い雷雨", en: "Heavy thunderstorm" }
+    };
+
+    let lastTrainReminderTimer = null;
+
+    function commuteDestinationText() {
+      return String(settings.commuteDestination || "").trim();
+    }
+
+    function terminalButtonNote(destination) {
+      if (!destination) return uiText("目的地を設定して検索");
+      return currentLanguage === "en" ? `To: ${destination}` : `目的地：${destination}`;
+    }
+
+    function setCommuteStatus(message) {
+      if (commuteStatus) commuteStatus.textContent = message || "";
+    }
+
+    function renderCommuteSupport() {
+      const destination = commuteDestinationText();
+      terminalSearchButtons.forEach((button) => {
+        const note = button.querySelector("small");
+        if (note) note.textContent = terminalButtonNote(destination);
+      });
+      scheduleLastTrainReminder();
+    }
+
+    function weatherLabel(code) {
+      const item = weatherCodeLabels[Number(code)] || { ja: "天気情報", en: "Weather" };
+      return currentLanguage === "en" ? item.en : item.ja;
+    }
+
+    function weatherIcon(code) {
+      const value = Number(code);
+      if ([0, 1].includes(value)) return "☀";
+      if ([2, 3].includes(value)) return "☁";
+      if ([45, 48].includes(value)) return "〰";
+      if (value >= 71 && value <= 77) return "❄";
+      if (value >= 95) return "⚡";
+      return "☂";
+    }
+
+    async function checkCurrentWeather() {
+      if (!navigator.geolocation) {
+        weatherStatus.textContent = uiText("この端末では現在地を確認できません。");
+        return;
+      }
+      weatherButton.disabled = true;
+      weatherStatus.textContent = uiText("現在地を確認しています...");
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        try {
+          const params = new URLSearchParams({
+            latitude: String(position.coords.latitude),
+            longitude: String(position.coords.longitude),
+            current: "temperature_2m,weather_code",
+            timezone: "auto"
+          });
+          const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
+          if (!response.ok) throw new Error("Weather request failed");
+          const data = await response.json();
+          const current = data.current || {};
+          const temp = Number.isFinite(Number(current.temperature_2m)) ? `${Math.round(Number(current.temperature_2m))}°C` : "";
+          weatherStatus.textContent = `${weatherIcon(current.weather_code)} ${weatherLabel(current.weather_code)}${temp ? ` / ${temp}` : ""}`;
+        } catch (error) {
+          weatherStatus.textContent = uiText("天気を取得できませんでした。時間をおいてもう一度お試しください。");
+        } finally {
+          weatherButton.disabled = false;
+        }
+      }, () => {
+        weatherStatus.textContent = uiText("現在地を取得できませんでした。位置情報の利用を許可してください。");
+        weatherButton.disabled = false;
+      }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
+    }
+
+    function openTerminalSearch(station) {
+      const destination = commuteDestinationText();
+      if (!destination) {
+        setCommuteStatus(uiText("終電の目的地を設定してください。"));
+        openSettingsPanel();
+        window.setTimeout(() => commuteDestination.focus(), 120);
+        return;
+      }
+      const url = `https://transit.yahoo.co.jp/search/result?from=${encodeURIComponent(station)}&to=${encodeURIComponent(destination)}&type=4`;
+      const searchWindow = window.open(url, "_blank", "noopener");
+      if (searchWindow) searchWindow.opener = null;
+      setCommuteStatus(currentLanguage === "en"
+        ? `Opening last-train search: ${station} to ${destination}`
+        : `${station}から${destination}までの終電検索を開きました。`);
+    }
+
+    function reminderTimeForToday() {
+      if (!settings.lastTrainReminderEnabled || !settings.lastTrainTime) return null;
+      const [hours, minutes] = settings.lastTrainTime.split(":").map(Number);
+      if (!Number.isInteger(hours) || !Number.isInteger(minutes)) return null;
+      const target = new Date();
+      target.setHours(hours, minutes, 0, 0);
+      target.setMinutes(target.getMinutes() - Number(settings.lastTrainReminderMinutes || 30));
+      return target;
+    }
+
+    function sendLastTrainReminder() {
+      const station = settings.commuteStation || "江古田駅";
+      const destination = commuteDestinationText();
+      const minutes = Number(settings.lastTrainReminderMinutes || 30);
+      const body = currentLanguage === "en"
+        ? `Your last train from ${station}${destination ? ` to ${destination}` : ""} is in about ${minutes} minutes.`
+        : `${station}${destination ? `から${destination}までの` : "の"}終電まで約${minutes}分です。`;
+      setCommuteStatus(body);
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("Music Saloon DRUM", { body, icon: "drum-icon.jpg" });
+      } else {
+        window.alert(body);
+      }
+    }
+
+    function scheduleLastTrainReminder() {
+      if (lastTrainReminderTimer) {
+        window.clearTimeout(lastTrainReminderTimer);
+        lastTrainReminderTimer = null;
+      }
+      const reminderTime = reminderTimeForToday();
+      if (!reminderTime || reminderTime.getTime() <= Date.now()) return;
+      lastTrainReminderTimer = window.setTimeout(() => {
+        sendLastTrainReminder();
+        lastTrainReminderTimer = null;
+      }, reminderTime.getTime() - Date.now());
     }
 
     function renderTagFilterPanels() {
@@ -7423,6 +7816,60 @@
       saveSettings();
       applySettings();
       renderHistory();
+    });
+
+    settingCommuteSupport.addEventListener("change", () => {
+      settings.showCommuteSupport = settingCommuteSupport.checked;
+      saveSettings();
+      applySettings();
+    });
+
+    commuteDestination.addEventListener("input", () => {
+      settings.commuteDestination = commuteDestination.value;
+      saveSettings();
+      renderCommuteSupport();
+    });
+
+    commuteStation.addEventListener("change", () => {
+      settings.commuteStation = commuteStation.value;
+      saveSettings();
+      scheduleLastTrainReminder();
+    });
+
+    lastTrainTime.addEventListener("change", () => {
+      settings.lastTrainTime = lastTrainTime.value;
+      saveSettings();
+      scheduleLastTrainReminder();
+    });
+
+    settingLastTrainReminder.addEventListener("change", async () => {
+      settings.lastTrainReminderEnabled = settingLastTrainReminder.checked;
+      if (settings.lastTrainReminderEnabled && "Notification" in window && Notification.permission === "default") {
+        try {
+          await Notification.requestPermission();
+        } catch (error) {
+          // The on-screen reminder remains available when notification permission is unavailable.
+        }
+      }
+      saveSettings();
+      scheduleLastTrainReminder();
+    });
+
+    lastTrainReminderMinutes.addEventListener("change", () => {
+      settings.lastTrainReminderMinutes = Number(lastTrainReminderMinutes.value);
+      saveSettings();
+      scheduleLastTrainReminder();
+    });
+
+    openCommuteSettings.addEventListener("click", () => {
+      openSettingsPanel();
+      window.setTimeout(() => commuteDestination.focus(), 120);
+    });
+
+    weatherButton.addEventListener("click", checkCurrentWeather);
+
+    terminalSearchButtons.forEach((button) => {
+      button.addEventListener("click", () => openTerminalSearch(button.dataset.terminalStation));
     });
 
     settingAdditionalList.addEventListener("change", () => {
