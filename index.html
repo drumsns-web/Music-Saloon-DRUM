@@ -4422,6 +4422,8 @@
     const openSettingsModalNav = document.getElementById("openSettingsModalNav");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
+    const settingsModalPanel = settingsModal.querySelector(".settings-modal-panel");
+    const settingsModalHeader = settingsModal.querySelector(".section-head");
     const openSettingsQuickMenu = document.getElementById("openSettingsQuickMenu");
     const settingsQuickMenu = document.getElementById("settingsQuickMenu");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
@@ -8202,7 +8204,13 @@
       if (!button) return;
       const target = document.getElementById(button.dataset.settingsTarget);
       closeSettingsQuickMenu();
-      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!target) return;
+
+      const panelTop = settingsModalPanel.getBoundingClientRect().top;
+      const targetTop = target.getBoundingClientRect().top;
+      const headerHeight = settingsModalHeader.getBoundingClientRect().height;
+      const nextTop = settingsModalPanel.scrollTop + targetTop - panelTop - headerHeight - 14;
+      settingsModalPanel.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
     });
 
     settingsModal.addEventListener("click", (event) => {
