@@ -265,7 +265,7 @@
       display: block;
     }
 
-    .hero h1 span:first-child {
+    .hero h1 span {
       white-space: nowrap;
     }
 
@@ -2607,10 +2607,7 @@
 
       .hero { min-height: 600px; }
       .hero h1 {
-        font-size: clamp(34px, 10vw, 54px);
-      }
-      .hero h1 span:first-child {
-        white-space: normal;
+        font-size: 32px;
       }
       .today-action-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2754,7 +2751,8 @@
           <div class="top-shortcut-grid" id="topShortcutButtons"></div>
         </div>
         <h1>
-          <span>DRUMの情報も、曲リストも</span>
+          <span>DRUMの情報も</span>
+          <span>曲リストも</span>
           <span class="hero-title-sub">このアプリで。</span>
         </h1>
         <p>Music Saloon DRUMのお知らせやメニュー確認、自分専用のマイ曲リスト管理に使えるアプリです。</p>
@@ -5048,8 +5046,9 @@
     const phraseTranslations = [
       ["ご来店ありがとうございます♪", "Thank you for visiting♪"],
       ["本日もお楽しみください♪", "Enjoy your time today♪"],
-      ["DRUMの情報も、曲リストも", "DRUM info and song lists"],
-      ["このアプリで。", "all in this app."],
+      ["DRUMの情報も", "DRUM Information"],
+      ["曲リストも", "Your Song List"],
+      ["このアプリで。", "All in One App."],
       ["使いたい機能を選ぶと、そのページへ移動できます。", "Choose a feature to open that page."],
       ["使いたい項目を選ぶと、そのページへ移動できます。", "Choose an item to open that page."],
       ["飲み放題、ボトル、グラス、フードなどを確認できます。", "Check all-you-can-drink plans, bottles, glass drinks, and food."],
@@ -6419,7 +6418,29 @@
         window.setTimeout(() => commuteDestination.focus(), 120);
         return;
       }
-      const url = `https://transit.yahoo.co.jp/search/result?from=${encodeURIComponent(station)}&to=${encodeURIComponent(destination)}&type=4`;
+      const today = new Date();
+      const params = new URLSearchParams({
+        from: station,
+        to: destination,
+        yy: String(today.getFullYear()),
+        mm: String(today.getMonth() + 1).padStart(2, "0"),
+        dd: String(today.getDate()).padStart(2, "0"),
+        hh: "23",
+        m1: "50",
+        m2: "0",
+        type: "4",
+        ticket: "ic",
+        expkind: "1",
+        ws: "3",
+        s: "0",
+        al: "1",
+        shin: "1",
+        ex: "1",
+        hb: "1",
+        lb: "1",
+        sr: "1"
+      });
+      const url = `https://transit.yahoo.co.jp/search/result?${params.toString()}`;
       const searchWindow = window.open(url, "_blank", "noopener");
       if (searchWindow) searchWindow.opener = null;
       setCommuteStatus(currentLanguage === "en"
