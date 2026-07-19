@@ -467,6 +467,10 @@
       grid-column: 1 / -1;
     }
 
+    .commute-action.hidden {
+      display: none;
+    }
+
     .commute-action-icon {
       display: inline-flex;
       width: 32px;
@@ -495,12 +499,15 @@
     }
 
     .commute-status {
-      min-height: 18px;
       margin: 10px 0 0;
       color: #e8f2ff;
       font-size: 13px;
       font-weight: 800;
       line-height: 1.5;
+    }
+
+    .commute-status:empty {
+      display: none;
     }
 
     .top-shortcut-settings {
@@ -2294,9 +2301,10 @@
     }
 
     .settings-modal-actions {
-      display: inline-flex;
+      display: grid;
       flex: 0 0 auto;
       gap: 8px;
+      justify-items: end;
     }
 
     .settings-menu-button {
@@ -2454,6 +2462,17 @@
       flex-wrap: wrap;
       gap: 10px;
       margin: 0 0 16px;
+    }
+
+    #closeGuideModal.guide-close-button {
+      min-width: 118px;
+      min-height: 46px;
+      padding: 10px 16px;
+      border-color: var(--orange);
+      background: var(--orange);
+      color: var(--forest-2);
+      box-shadow: 0 10px 20px rgba(240, 138, 53, .26);
+      font-weight: 900;
     }
 
     #guideModal .language-toggle,
@@ -2764,7 +2783,7 @@
       </div>
     </nav>
     <div class="daily-news-ticker" aria-label="今日の一言">
-      <div class="daily-news-track" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。</div>
+      <div class="daily-news-track" id="dailyShopMessage">今日の一言：迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。　｜　ご来店ありがとうございます♪ 本日もお楽しみください♪</div>
     </div>
   </header>
 
@@ -2805,21 +2824,21 @@
                 <small>GOのサイトを開きます</small>
               </span>
             </button>
-            <button class="commute-action" data-terminal-station="江古田駅" type="button">
+            <button class="commute-action" id="ekodaRouteButton" data-terminal-station="江古田駅" type="button">
               <span class="commute-action-icon">↗</span>
               <span>
                 <strong>江古田駅から路線案内</strong>
                 <small>目的地を設定して検索</small>
               </span>
             </button>
-            <button class="commute-action" data-terminal-station="新江古田駅" type="button">
+            <button class="commute-action" id="shinEkodaRouteButton" data-terminal-station="新江古田駅" type="button">
               <span class="commute-action-icon">↗</span>
               <span>
                 <strong>新江古田駅から路線案内</strong>
                 <small>目的地を設定して検索</small>
               </span>
             </button>
-            <button class="commute-action" data-terminal-station="新桜台駅" type="button">
+            <button class="commute-action" id="shinSakuradaiRouteButton" data-terminal-station="新桜台駅" type="button">
               <span class="commute-action-icon">↗</span>
               <span>
                 <strong>新桜台駅から路線案内</strong>
@@ -2829,7 +2848,6 @@
           </div>
           <p class="commute-status" id="commuteStatus"></p>
         </section>
-        <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
           <div class="top-shortcuts-head">
             <span>よく使う項目</span>
@@ -3782,13 +3800,26 @@
           <article class="card settings-target" id="settings-commute">
             <span class="tag blue">Trip</span>
             <h3>帰り道サポート設定</h3>
+            <p class="small">トップに表示したい項目だけを選べます。すべて外すと、帰り道サポート自体が表示されません。</p>
             <label class="check-row">
-              <input id="settingCommuteSupport" type="checkbox" checked>
-              トップに帰り道サポートを表示する
+              <input id="settingWeatherRadar" type="checkbox" checked>
+              雨雲レーダーを表示する
             </label>
             <label class="check-row">
               <input id="settingTaxiSupport" type="checkbox">
               タクシー手配を表示する
+            </label>
+            <label class="check-row">
+              <input id="settingEkodaRoute" type="checkbox" checked>
+              江古田駅からの路線案内を表示する
+            </label>
+            <label class="check-row">
+              <input id="settingShinEkodaRoute" type="checkbox" checked>
+              新江古田駅からの路線案内を表示する
+            </label>
+            <label class="check-row">
+              <input id="settingShinSakuradaiRoute" type="checkbox" checked>
+              新桜台駅からの路線案内を表示する
             </label>
             <label>
               路線案内の目的地 <span class="optional-label">任意</span>
@@ -4084,7 +4115,7 @@
           <h2>DRUMガイド</h2>
           <p class="lead">使いたい項目を選ぶと、そのページへ移動できます。</p>
         </div>
-        <button class="btn ghost" id="closeGuideModal" type="button">閉じる</button>
+        <button class="btn guide-close-button" id="closeGuideModal" type="button">閉じる ×</button>
       </div>
       <div class="guide-modal-tools">
         <button class="language-toggle" id="languageToggle" type="button" aria-label="英語表示に切り替え">English</button>
@@ -4348,8 +4379,11 @@
     const settingDrinkTotal = document.getElementById("settingDrinkTotal");
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
-    const settingCommuteSupport = document.getElementById("settingCommuteSupport");
+    const settingWeatherRadar = document.getElementById("settingWeatherRadar");
     const settingTaxiSupport = document.getElementById("settingTaxiSupport");
+    const settingEkodaRoute = document.getElementById("settingEkodaRoute");
+    const settingShinEkodaRoute = document.getElementById("settingShinEkodaRoute");
+    const settingShinSakuradaiRoute = document.getElementById("settingShinSakuradaiRoute");
     const commuteDestination = document.getElementById("commuteDestination");
     const commuteStation = document.getElementById("commuteStation");
     const lastTrainTime = document.getElementById("lastTrainTime");
@@ -4359,6 +4393,9 @@
     const commutePanel = document.querySelector(".commute-panel");
     const weatherButton = document.getElementById("weatherButton");
     const taxiButton = document.getElementById("taxiButton");
+    const ekodaRouteButton = document.getElementById("ekodaRouteButton");
+    const shinEkodaRouteButton = document.getElementById("shinEkodaRouteButton");
+    const shinSakuradaiRouteButton = document.getElementById("shinSakuradaiRouteButton");
     const commuteStatus = document.getElementById("commuteStatus");
     const terminalSearchButtons = document.querySelectorAll("[data-terminal-station]");
     const settingAdditionalList = document.getElementById("settingAdditionalList");
@@ -4584,8 +4621,12 @@
       "新桜台駅から路線案内": "Routes from Shin-Sakuradai",
       "目的地を設定して検索": "Set a destination to search",
       "帰り道サポート設定": "Getting Home Settings",
-      "トップに帰り道サポートを表示する": "Show Getting Home on the home screen",
+      "トップに表示したい項目だけを選べます。すべて外すと、帰り道サポート自体が表示されません。": "Choose only the items you want on the home screen. Getting Home is hidden when all items are off.",
+      "雨雲レーダーを表示する": "Show Rain Radar",
       "タクシー手配を表示する": "Show Taxi Booking",
+      "江古田駅からの路線案内を表示する": "Show routes from Ekoda Station",
+      "新江古田駅からの路線案内を表示する": "Show routes from Shin-Ekoda Station",
+      "新桜台駅からの路線案内を表示する": "Show routes from Shin-Sakuradai Station",
       "路線案内の目的地": "Route destination",
       "例：池袋駅、自宅最寄り駅": "Example: Ikebukuro Station, home station",
       "江古田駅・新江古田駅・新桜台駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。": "Search routes from Ekoda, Shin-Ekoda, or Shin-Sakuradai Station to your saved destination. The destination is saved only in this device's browser.",
@@ -5383,8 +5424,12 @@
     if (typeof settings.commuteDestination !== "string") settings.commuteDestination = "";
     if (!["江古田駅", "新江古田駅", "新桜台駅"].includes(settings.commuteStation)) settings.commuteStation = "江古田駅";
     if (typeof settings.lastTrainTime !== "string") settings.lastTrainTime = "";
-    if (settings.showCommuteSupport === undefined) settings.showCommuteSupport = true;
+    const legacyCommuteVisible = settings.showCommuteSupport !== false;
+    if (settings.showWeatherRadar === undefined) settings.showWeatherRadar = legacyCommuteVisible;
     if (settings.showTaxiSupport === undefined) settings.showTaxiSupport = false;
+    if (settings.showEkodaRoute === undefined) settings.showEkodaRoute = legacyCommuteVisible;
+    if (settings.showShinEkodaRoute === undefined) settings.showShinEkodaRoute = legacyCommuteVisible;
+    if (settings.showShinSakuradaiRoute === undefined) settings.showShinSakuradaiRoute = legacyCommuteVisible;
     if (settings.lastTrainReminderEnabled === undefined) settings.lastTrainReminderEnabled = false;
     if (![5, 10, 15, 20, 25, 30].includes(Number(settings.lastTrainReminderMinutes))) settings.lastTrainReminderMinutes = 30;
     let didMigrateProfiles = false;
@@ -6063,7 +6108,10 @@
       const index = (dayIndexFromDate() - 1) % dailyShopMessages.length;
       const message = dailyShopMessages[index];
       const prefix = currentLanguage === "en" ? "Today's note: " : "今日の一言：";
-      dailyShopMessage.textContent = `${prefix}${currentLanguage === "en" ? message.en : message.ja}`;
+      const greeting = currentLanguage === "en"
+        ? "Thank you for visiting♪ Enjoy your time today♪"
+        : "ご来店ありがとうございます♪ 本日もお楽しみください♪";
+      dailyShopMessage.textContent = `${prefix}${currentLanguage === "en" ? message.en : message.ja}　｜　${greeting}`;
     }
 
     function getHomePromptState() {
@@ -6406,8 +6454,11 @@
       settingDrinkTotal.checked = settings.showDrinkTotal;
       settingSetlistCopy.checked = settings.showSetlistCopy;
       settingHistoryMemo.checked = settings.showHistoryMemo;
-      settingCommuteSupport.checked = settings.showCommuteSupport !== false;
+      settingWeatherRadar.checked = Boolean(settings.showWeatherRadar);
       settingTaxiSupport.checked = Boolean(settings.showTaxiSupport);
+      settingEkodaRoute.checked = Boolean(settings.showEkodaRoute);
+      settingShinEkodaRoute.checked = Boolean(settings.showShinEkodaRoute);
+      settingShinSakuradaiRoute.checked = Boolean(settings.showShinSakuradaiRoute);
       settingAdditionalList.checked = Boolean(settings.enableAdditionalList);
       additionalListName.value = additionalProfileName();
       additionalListSettings.classList.add("is-visible");
@@ -6423,8 +6474,13 @@
       todayDrinkCount.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       todaySetlistCopyBlock.classList.toggle("feature-hidden", !settings.showSetlistCopy);
-      commutePanel.classList.toggle("hidden", settings.showCommuteSupport === false);
+      weatherButton.classList.toggle("hidden", !settings.showWeatherRadar);
       taxiButton.classList.toggle("hidden", !settings.showTaxiSupport);
+      ekodaRouteButton.classList.toggle("hidden", !settings.showEkodaRoute);
+      shinEkodaRouteButton.classList.toggle("hidden", !settings.showShinEkodaRoute);
+      shinSakuradaiRouteButton.classList.toggle("hidden", !settings.showShinSakuradaiRoute);
+      const hasVisibleCommuteAction = settings.showWeatherRadar || settings.showTaxiSupport || settings.showEkodaRoute || settings.showShinEkodaRoute || settings.showShinSakuradaiRoute;
+      commutePanel.classList.toggle("hidden", !hasVisibleCommuteAction);
       commuteDestination.value = settings.commuteDestination || "";
       commuteStation.value = settings.commuteStation || "江古田駅";
       lastTrainTime.value = settings.lastTrainTime || "";
@@ -7902,14 +7958,32 @@
       renderHistory();
     });
 
-    settingCommuteSupport.addEventListener("change", () => {
-      settings.showCommuteSupport = settingCommuteSupport.checked;
+    settingWeatherRadar.addEventListener("change", () => {
+      settings.showWeatherRadar = settingWeatherRadar.checked;
       saveSettings();
       applySettings();
     });
 
     settingTaxiSupport.addEventListener("change", () => {
       settings.showTaxiSupport = settingTaxiSupport.checked;
+      saveSettings();
+      applySettings();
+    });
+
+    settingEkodaRoute.addEventListener("change", () => {
+      settings.showEkodaRoute = settingEkodaRoute.checked;
+      saveSettings();
+      applySettings();
+    });
+
+    settingShinEkodaRoute.addEventListener("change", () => {
+      settings.showShinEkodaRoute = settingShinEkodaRoute.checked;
+      saveSettings();
+      applySettings();
+    });
+
+    settingShinSakuradaiRoute.addEventListener("change", () => {
+      settings.showShinSakuradaiRoute = settingShinSakuradaiRoute.checked;
       saveSettings();
       applySettings();
     });
