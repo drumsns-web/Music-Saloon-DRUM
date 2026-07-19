@@ -2328,7 +2328,7 @@
 
     .settings-quick-menu {
       position: absolute;
-      top: 88px;
+      top: calc(100% - 8px);
       right: 22px;
       z-index: 4;
       display: none;
@@ -3718,15 +3718,15 @@
             <button class="btn ghost settings-menu-button" id="openSettingsQuickMenu" type="button" aria-label="設定メニューを開く" aria-controls="settingsQuickMenu" aria-expanded="false" title="設定メニュー">☰</button>
             <button class="btn ghost" id="closeSettingsModal" type="button">閉じる</button>
           </div>
-        </div>
-        <div class="settings-quick-menu" id="settingsQuickMenu" aria-hidden="true">
-          <strong>設定メニュー</strong>
-          <div class="settings-quick-menu-list">
-            <button type="button" data-settings-target="settings-shortcuts">トップ表示</button>
-            <button type="button" data-settings-target="settings-song-list">曲リスト・記録</button>
-            <button type="button" data-settings-target="settings-tags">タグ・歌う人</button>
-            <button type="button" data-settings-target="settings-commute">帰り道</button>
-            <button type="button" data-settings-target="settings-restore">復元</button>
+          <div class="settings-quick-menu" id="settingsQuickMenu" aria-hidden="true">
+            <strong>設定メニュー</strong>
+            <div class="settings-quick-menu-list">
+              <button type="button" data-settings-target="settings-shortcuts">トップ表示</button>
+              <button type="button" data-settings-target="settings-song-list">曲リスト・記録</button>
+              <button type="button" data-settings-target="settings-tags">タグ・歌う人</button>
+              <button type="button" data-settings-target="settings-commute">帰り道</button>
+              <button type="button" data-settings-target="settings-restore">復元</button>
+            </div>
           </div>
         </div>
         <div class="grid">
