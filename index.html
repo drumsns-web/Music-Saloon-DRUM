@@ -503,16 +503,6 @@
       line-height: 1.5;
     }
 
-    .weather-source {
-      margin: 8px 0 0;
-      color: rgba(255, 247, 232, .75);
-      font-size: 11px;
-    }
-
-    .weather-source a {
-      color: inherit;
-    }
-
     .top-shortcut-settings {
       display: grid;
       gap: 2px;
@@ -2222,6 +2212,7 @@
     }
 
     .settings-modal-panel {
+      position: relative;
       width: min(980px, 100%);
     }
 
@@ -2300,6 +2291,76 @@
     #closeSettingsModal {
       flex: 0 0 auto;
       box-shadow: 0 10px 24px rgba(20, 33, 25, .16);
+    }
+
+    .settings-modal-actions {
+      display: inline-flex;
+      flex: 0 0 auto;
+      gap: 8px;
+    }
+
+    .settings-menu-button {
+      min-width: 48px !important;
+      padding-inline: 13px !important;
+      font-size: 22px !important;
+      line-height: 1;
+    }
+
+    .settings-quick-menu {
+      position: absolute;
+      top: 88px;
+      right: 22px;
+      z-index: 4;
+      display: none;
+      width: min(280px, calc(100% - 44px));
+      padding: 12px;
+      border: 1px solid rgba(240, 138, 53, .45);
+      border-radius: 8px;
+      background: #fffdf8;
+      box-shadow: 0 16px 34px rgba(20, 33, 25, .2);
+    }
+
+    .settings-quick-menu.show {
+      display: block;
+    }
+
+    .settings-quick-menu strong {
+      display: block;
+      margin: 0 0 8px;
+      color: var(--forest);
+      font-size: 14px;
+    }
+
+    .settings-quick-menu-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .settings-quick-menu-list button {
+      min-height: 42px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--forest);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.25;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .settings-quick-menu-list button:hover,
+    .settings-quick-menu-list button:focus-visible {
+      border-color: var(--orange);
+      background: #fff3df;
+      outline: none;
+    }
+
+    .settings-target {
+      scroll-margin-top: 132px;
     }
 
     .drink-buttons {
@@ -2626,6 +2687,15 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       .section-head { align-items: flex-start; flex-direction: column; }
+      .settings-modal-panel .section-head {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+      .settings-quick-menu {
+        top: 84px;
+        right: 14px;
+        width: min(280px, calc(100% - 28px));
+      }
       .guide-home-tip {
         grid-template-columns: 1fr;
       }
@@ -2722,10 +2792,17 @@
           </div>
           <div class="commute-grid">
             <button class="commute-action weather-action" id="weatherButton" type="button">
-              <span class="commute-action-icon">☀</span>
+              <span class="commute-action-icon">☂</span>
               <span>
-                <strong>現在地の天気</strong>
-                <small id="weatherStatus">タップして天気と雨雲レーダーを確認</small>
+                <strong>雨雲レーダーを開く</strong>
+                <small>Yahoo!天気で雨雲を確認</small>
+              </span>
+            </button>
+            <button class="commute-action hidden" id="taxiButton" type="button">
+              <span class="commute-action-icon">🚕</span>
+              <span>
+                <strong>タクシー手配</strong>
+                <small>GOのサイトを開きます</small>
               </span>
             </button>
             <button class="commute-action" data-terminal-station="江古田駅" type="button">
@@ -2742,9 +2819,15 @@
                 <small>目的地を設定して検索</small>
               </span>
             </button>
+            <button class="commute-action" data-terminal-station="新桜台駅" type="button">
+              <span class="commute-action-icon">↗</span>
+              <span>
+                <strong>新桜台駅から路線案内</strong>
+                <small>目的地を設定して検索</small>
+              </span>
+            </button>
           </div>
           <p class="commute-status" id="commuteStatus"></p>
-          <p class="weather-source">Weather data: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></p>
         </section>
         <p class="welcome-line">ご来店ありがとうございます♪<br>本日もお楽しみください♪</p>
         <div class="top-shortcuts">
@@ -3601,10 +3684,23 @@
             <h2>設定</h2>
             <p class="lead">使う人に合わせて、マイ曲リストの表示や記録機能を切り替えられます。</p>
           </div>
-          <button class="btn ghost" id="closeSettingsModal" type="button">閉じる</button>
+          <div class="settings-modal-actions">
+            <button class="btn ghost settings-menu-button" id="openSettingsQuickMenu" type="button" aria-label="設定メニューを開く" aria-controls="settingsQuickMenu" aria-expanded="false" title="設定メニュー">☰</button>
+            <button class="btn ghost" id="closeSettingsModal" type="button">閉じる</button>
+          </div>
+        </div>
+        <div class="settings-quick-menu" id="settingsQuickMenu" aria-hidden="true">
+          <strong>設定メニュー</strong>
+          <div class="settings-quick-menu-list">
+            <button type="button" data-settings-target="settings-shortcuts">トップ表示</button>
+            <button type="button" data-settings-target="settings-song-list">曲リスト・記録</button>
+            <button type="button" data-settings-target="settings-tags">タグ・歌う人</button>
+            <button type="button" data-settings-target="settings-commute">帰り道</button>
+            <button type="button" data-settings-target="settings-restore">復元</button>
+          </div>
         </div>
         <div class="grid">
-          <article class="card">
+          <article class="card settings-target" id="settings-shortcuts">
             <span class="tag orange">Home</span>
             <h3>トップボタン表示設定</h3>
             <p class="small">トップ画面に置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。</p>
@@ -3615,7 +3711,7 @@
               <p class="top-shortcut-status" id="topShortcutStatus">チェックするとトップ画面にすぐ反映されます。</p>
             </div>
           </article>
-          <article class="card">
+          <article class="card settings-target" id="settings-song-list">
             <span class="tag">Song List</span>
             <h3>マイ曲リスト設定</h3>
             <label class="check-row">
@@ -3669,7 +3765,7 @@
               <div class="tag-manager-list" id="songOwnerManagerList"></div>
               <p class="small">候補から削除しても、すでに曲に付けた名前は曲ごとに残ります。</p>
             </div>
-            <div class="tag-manager">
+            <div class="tag-manager settings-target" id="settings-tags">
               <h3>タグ設定</h3>
               <p class="small">ジャンルだけでなく、十八番・お気に入り・練習中・盛り上がる曲など、自分用の印も追加できます。</p>
               <div class="tag-add-box">
@@ -3683,23 +3779,28 @@
               <p class="small">削除したタグは新しく選ぶ候補から外れます。すでに曲に付いているタグは曲側に残ります。</p>
             </div>
           </article>
-          <article class="card">
+          <article class="card settings-target" id="settings-commute">
             <span class="tag blue">Trip</span>
-            <h3>天気・路線案内設定</h3>
+            <h3>帰り道サポート設定</h3>
             <label class="check-row">
               <input id="settingCommuteSupport" type="checkbox" checked>
               トップに帰り道サポートを表示する
+            </label>
+            <label class="check-row">
+              <input id="settingTaxiSupport" type="checkbox">
+              タクシー手配を表示する
             </label>
             <label>
               路線案内の目的地 <span class="optional-label">任意</span>
               <input id="commuteDestination" maxlength="48" placeholder="例：池袋駅、自宅最寄り駅">
             </label>
-            <p class="small">江古田駅・新江古田駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。</p>
+            <p class="small">江古田駅・新江古田駅・新桜台駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。</p>
             <label>
               通知に使う駅
               <select id="commuteStation">
                 <option value="江古田駅">江古田駅</option>
                 <option value="新江古田駅">新江古田駅</option>
+                <option value="新桜台駅">新桜台駅</option>
               </select>
             </label>
             <label>
@@ -3723,7 +3824,7 @@
             </label>
             <p class="small">帰宅の目安時刻を設定してください。通知はこのアプリを開いている間のみ表示されます。端末通知を許可している場合は通知でもお知らせします。</p>
           </article>
-          <article class="card">
+          <article class="card settings-target" id="settings-restore">
             <span class="tag">Restore</span>
             <h3>削除記録の復元</h3>
             <button class="btn ghost" id="restoreHistoryBackup" type="button">削除した歌った記録を復元</button>
@@ -4248,6 +4349,7 @@
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
     const settingCommuteSupport = document.getElementById("settingCommuteSupport");
+    const settingTaxiSupport = document.getElementById("settingTaxiSupport");
     const commuteDestination = document.getElementById("commuteDestination");
     const commuteStation = document.getElementById("commuteStation");
     const lastTrainTime = document.getElementById("lastTrainTime");
@@ -4256,7 +4358,7 @@
     const openCommuteSettings = document.getElementById("openCommuteSettings");
     const commutePanel = document.querySelector(".commute-panel");
     const weatherButton = document.getElementById("weatherButton");
-    const weatherStatus = document.getElementById("weatherStatus");
+    const taxiButton = document.getElementById("taxiButton");
     const commuteStatus = document.getElementById("commuteStatus");
     const terminalSearchButtons = document.querySelectorAll("[data-terminal-station]");
     const settingAdditionalList = document.getElementById("settingAdditionalList");
@@ -4271,6 +4373,8 @@
     const openSettingsModalNav = document.getElementById("openSettingsModalNav");
     const closeSettingsModal = document.getElementById("closeSettingsModal");
     const settingsModal = document.getElementById("settingsModal");
+    const openSettingsQuickMenu = document.getElementById("openSettingsQuickMenu");
+    const settingsQuickMenu = document.getElementById("settingsQuickMenu");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
@@ -4461,27 +4565,37 @@
       "お知らせ": "Info",
       "DRUMガイド": "DRUM Guide",
       "DRUMガイドを見る": "View DRUM Guide",
+      "設定メニュー": "Settings Menu",
+      "トップ表示": "Home Shortcuts",
+      "曲リスト・記録": "Song List & Records",
+      "タグ・歌う人": "Tags & Singers",
+      "帰り道": "Getting Home",
       "今日は何をしますか？": "What would you like to do today?",
       "曲を探す": "Search Songs",
       "ルールを見る": "View Rules",
       "帰り道サポート": "Getting Home",
       "目的地を設定": "Set Destination",
-      "現在地の天気": "Local Weather",
-      "タップして天気と雨雲レーダーを確認": "Tap for local weather and rain radar",
+      "雨雲レーダーを開く": "Open Rain Radar",
+      "Yahoo!天気で雨雲を確認": "View rain clouds on Yahoo! Weather",
+      "タクシー手配": "Taxi Booking",
+      "GOのサイトを開きます": "Open GO website",
       "江古田駅から路線案内": "Routes from Ekoda",
       "新江古田駅から路線案内": "Routes from Shin-Ekoda",
+      "新桜台駅から路線案内": "Routes from Shin-Sakuradai",
       "目的地を設定して検索": "Set a destination to search",
-      "天気・路線案内設定": "Weather & Route Guide",
+      "帰り道サポート設定": "Getting Home Settings",
       "トップに帰り道サポートを表示する": "Show Getting Home on the home screen",
+      "タクシー手配を表示する": "Show Taxi Booking",
       "路線案内の目的地": "Route destination",
       "例：池袋駅、自宅最寄り駅": "Example: Ikebukuro Station, home station",
-      "江古田駅・新江古田駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。": "Search routes from Ekoda or Shin-Ekoda Station to your saved destination. The destination is saved only in this device's browser.",
+      "江古田駅・新江古田駅・新桜台駅から、登録した目的地までの路線案内を検索できます。目的地はこの端末のブラウザに保存されます。": "Search routes from Ekoda, Shin-Ekoda, or Shin-Sakuradai Station to your saved destination. The destination is saved only in this device's browser.",
       "通知に使う駅": "Station for reminder",
       "帰宅の目安時刻": "Target time to head home",
       "帰宅前に知らせる": "Remind me before heading home",
       "お知らせするタイミング": "Reminder timing",
       "江古田駅": "Ekoda Station",
       "新江古田駅": "Shin-Ekoda Station",
+      "新桜台駅": "Shin-Sakuradai Station",
       "30分前": "30 minutes before",
       "25分前": "25 minutes before",
       "20分前": "20 minutes before",
@@ -5267,9 +5381,10 @@
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
     if (typeof settings.commuteDestination !== "string") settings.commuteDestination = "";
-    if (settings.commuteStation !== "新江古田駅") settings.commuteStation = "江古田駅";
+    if (!["江古田駅", "新江古田駅", "新桜台駅"].includes(settings.commuteStation)) settings.commuteStation = "江古田駅";
     if (typeof settings.lastTrainTime !== "string") settings.lastTrainTime = "";
     if (settings.showCommuteSupport === undefined) settings.showCommuteSupport = true;
+    if (settings.showTaxiSupport === undefined) settings.showTaxiSupport = false;
     if (settings.lastTrainReminderEnabled === undefined) settings.lastTrainReminderEnabled = false;
     if (![5, 10, 15, 20, 25, 30].includes(Number(settings.lastTrainReminderMinutes))) settings.lastTrainReminderMinutes = 30;
     let didMigrateProfiles = false;
@@ -6292,6 +6407,7 @@
       settingSetlistCopy.checked = settings.showSetlistCopy;
       settingHistoryMemo.checked = settings.showHistoryMemo;
       settingCommuteSupport.checked = settings.showCommuteSupport !== false;
+      settingTaxiSupport.checked = Boolean(settings.showTaxiSupport);
       settingAdditionalList.checked = Boolean(settings.enableAdditionalList);
       additionalListName.value = additionalProfileName();
       additionalListSettings.classList.add("is-visible");
@@ -6308,6 +6424,7 @@
       drinkTotalText.classList.toggle("feature-hidden", !settings.showDrinkTotal);
       todaySetlistCopyBlock.classList.toggle("feature-hidden", !settings.showSetlistCopy);
       commutePanel.classList.toggle("hidden", settings.showCommuteSupport === false);
+      taxiButton.classList.toggle("hidden", !settings.showTaxiSupport);
       commuteDestination.value = settings.commuteDestination || "";
       commuteStation.value = settings.commuteStation || "江古田駅";
       lastTrainTime.value = settings.lastTrainTime || "";
@@ -6318,30 +6435,6 @@
       renderSongProfileSwitcher();
       renderCommuteSupport();
     }
-
-    const weatherCodeLabels = {
-      0: { ja: "晴れ", en: "Clear" },
-      1: { ja: "おおむね晴れ", en: "Mostly clear" },
-      2: { ja: "晴れ時々くもり", en: "Partly cloudy" },
-      3: { ja: "くもり", en: "Overcast" },
-      45: { ja: "霧", en: "Fog" },
-      48: { ja: "霧", en: "Rime fog" },
-      51: { ja: "霧雨", en: "Light drizzle" },
-      53: { ja: "霧雨", en: "Drizzle" },
-      55: { ja: "強い霧雨", en: "Heavy drizzle" },
-      61: { ja: "小雨", en: "Light rain" },
-      63: { ja: "雨", en: "Rain" },
-      65: { ja: "強い雨", en: "Heavy rain" },
-      71: { ja: "小雪", en: "Light snow" },
-      73: { ja: "雪", en: "Snow" },
-      75: { ja: "強い雪", en: "Heavy snow" },
-      80: { ja: "にわか雨", en: "Rain showers" },
-      81: { ja: "雨", en: "Rain showers" },
-      82: { ja: "強い雨", en: "Heavy rain showers" },
-      95: { ja: "雷雨", en: "Thunderstorm" },
-      96: { ja: "ひょうを伴う雷雨", en: "Thunderstorm with hail" },
-      99: { ja: "強い雷雨", en: "Heavy thunderstorm" }
-    };
 
     let lastTrainReminderTimer = null;
 
@@ -6365,71 +6458,6 @@
         if (note) note.textContent = terminalButtonNote(destination);
       });
       scheduleLastTrainReminder();
-    }
-
-    function weatherLabel(code) {
-      const item = weatherCodeLabels[Number(code)] || { ja: "天気情報", en: "Weather" };
-      return currentLanguage === "en" ? item.en : item.ja;
-    }
-
-    function weatherIcon(code) {
-      const value = Number(code);
-      if ([0, 1].includes(value)) return "☀";
-      if ([2, 3].includes(value)) return "☁";
-      if ([45, 48].includes(value)) return "〰";
-      if (value >= 71 && value <= 77) return "❄";
-      if (value >= 95) return "⚡";
-      return "☂";
-    }
-
-    function openRainRadar(latitude, longitude, radarWindow) {
-      const url = `https://weather.yahoo.co.jp/weather/zoomradar/?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&z=12`;
-      if (radarWindow && !radarWindow.closed) {
-        radarWindow.location.replace(url);
-        return;
-      }
-      const opened = window.open(url, "_blank", "noopener");
-      if (opened) opened.opener = null;
-    }
-
-    async function checkCurrentWeather(openRadar = false) {
-      const radarWindow = openRadar ? window.open("", "_blank") : null;
-      if (radarWindow) radarWindow.opener = null;
-      if (!navigator.geolocation) {
-        weatherStatus.textContent = uiText("この端末では現在地を確認できません。");
-        if (radarWindow) radarWindow.close();
-        return;
-      }
-      weatherButton.disabled = true;
-      weatherStatus.textContent = uiText("現在地を確認しています...");
-      navigator.geolocation.getCurrentPosition(async (position) => {
-        try {
-          const params = new URLSearchParams({
-            latitude: String(position.coords.latitude),
-            longitude: String(position.coords.longitude),
-            current: "temperature_2m,weather_code",
-            timezone: "auto"
-          });
-          const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
-          if (!response.ok) throw new Error("Weather request failed");
-          const data = await response.json();
-          const current = data.current || {};
-          const temp = Number.isFinite(Number(current.temperature_2m)) ? `${Math.round(Number(current.temperature_2m))}°C` : "";
-          weatherStatus.textContent = `${weatherIcon(current.weather_code)} ${weatherLabel(current.weather_code)}${temp ? ` / ${temp}` : ""}`;
-          if (openRadar) {
-            openRainRadar(position.coords.latitude, position.coords.longitude, radarWindow);
-          }
-        } catch (error) {
-          weatherStatus.textContent = uiText("天気を取得できませんでした。時間をおいてもう一度お試しください。");
-          if (radarWindow) radarWindow.close();
-        } finally {
-          weatherButton.disabled = false;
-        }
-      }, () => {
-        weatherStatus.textContent = uiText("現在地を取得できませんでした。位置情報の利用を許可してください。");
-        if (radarWindow) radarWindow.close();
-        weatherButton.disabled = false;
-      }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
     }
 
     function openTerminalSearch(station) {
@@ -7880,6 +7908,12 @@
       applySettings();
     });
 
+    settingTaxiSupport.addEventListener("change", () => {
+      settings.showTaxiSupport = settingTaxiSupport.checked;
+      saveSettings();
+      applySettings();
+    });
+
     commuteDestination.addEventListener("input", () => {
       settings.commuteDestination = commuteDestination.value;
       saveSettings();
@@ -7922,7 +7956,13 @@
       window.setTimeout(() => commuteDestination.focus(), 120);
     });
 
-    weatherButton.addEventListener("click", () => checkCurrentWeather(true));
+    weatherButton.addEventListener("click", () => {
+      window.open("https://weather.yahoo.co.jp/weather/zoomradar/", "_blank", "noopener");
+    });
+
+    taxiButton.addEventListener("click", () => {
+      window.open("https://go.goinc.jp/charge-search", "_blank", "noopener");
+    });
 
     terminalSearchButtons.forEach((button) => {
       button.addEventListener("click", () => openTerminalSearch(button.dataset.terminalStation));
@@ -8035,6 +8075,12 @@
       settingsModal.setAttribute("aria-hidden", "false");
     }
 
+    function closeSettingsQuickMenu() {
+      settingsQuickMenu.classList.remove("show");
+      settingsQuickMenu.setAttribute("aria-hidden", "true");
+      openSettingsQuickMenu.setAttribute("aria-expanded", "false");
+    }
+
     openSettingsModalHero.addEventListener("click", () => {
       openSettingsPanel();
     });
@@ -8052,12 +8098,29 @@
     });
 
     closeSettingsModal.addEventListener("click", () => {
+      closeSettingsQuickMenu();
       settingsModal.classList.remove("show");
       settingsModal.setAttribute("aria-hidden", "true");
     });
 
+    openSettingsQuickMenu.addEventListener("click", () => {
+      const willOpen = !settingsQuickMenu.classList.contains("show");
+      settingsQuickMenu.classList.toggle("show", willOpen);
+      settingsQuickMenu.setAttribute("aria-hidden", String(!willOpen));
+      openSettingsQuickMenu.setAttribute("aria-expanded", String(willOpen));
+    });
+
+    settingsQuickMenu.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-settings-target]");
+      if (!button) return;
+      const target = document.getElementById(button.dataset.settingsTarget);
+      closeSettingsQuickMenu();
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
     settingsModal.addEventListener("click", (event) => {
       if (event.target === settingsModal) closeSettingsModal.click();
+      if (!event.target.closest("#settingsQuickMenu, #openSettingsQuickMenu")) closeSettingsQuickMenu();
     });
 
     topShortcutSettings.addEventListener("change", handleTopShortcutChange);
