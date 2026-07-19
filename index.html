@@ -2721,7 +2721,7 @@
               <span class="commute-action-icon">☀</span>
               <span>
                 <strong>現在地の天気</strong>
-                <small id="weatherStatus">タップして現在地の天気を確認</small>
+                <small id="weatherStatus">タップして天気と雨雲レーダーを確認</small>
               </span>
             </button>
             <button class="commute-action" data-terminal-station="江古田駅" type="button">
@@ -4463,7 +4463,7 @@
       "帰り道サポート": "Getting Home",
       "目的地を設定": "Set Destination",
       "現在地の天気": "Local Weather",
-      "タップして現在地の天気を確認": "Tap to check local weather",
+      "タップして天気と雨雲レーダーを確認": "Tap for local weather and rain radar",
       "江古田駅から路線案内": "Routes from Ekoda",
       "新江古田駅から路線案内": "Routes from Shin-Ekoda",
       "目的地を設定して検索": "Set a destination to search",
@@ -6378,9 +6378,22 @@
       return "☂";
     }
 
-    async function checkCurrentWeather() {
+    function openRainRadar(latitude, longitude, radarWindow) {
+      const url = `https://weather.yahoo.co.jp/weather/zoomradar/?lat=${encodeURIComponent(latitude)}&lon=${encodeURIComponent(longitude)}&z=12`;
+      if (radarWindow && !radarWindow.closed) {
+        radarWindow.location.replace(url);
+        return;
+      }
+      const opened = window.open(url, "_blank", "noopener");
+      if (opened) opened.opener = null;
+    }
+
+    async function checkCurrentWeather(openRadar = false) {
+      const radarWindow = openRadar ? window.open("", "_blank") : null;
+      if (radarWindow) radarWindow.opener = null;
       if (!navigator.geolocation) {
         weatherStatus.textContent = uiText("この端末では現在地を確認できません。");
+        if (radarWindow) radarWindow.close();
         return;
       }
       weatherButton.disabled = true;
@@ -6399,13 +6412,18 @@
           const current = data.current || {};
           const temp = Number.isFinite(Number(current.temperature_2m)) ? `${Math.round(Number(current.temperature_2m))}°C` : "";
           weatherStatus.textContent = `${weatherIcon(current.weather_code)} ${weatherLabel(current.weather_code)}${temp ? ` / ${temp}` : ""}`;
+          if (openRadar) {
+            openRainRadar(position.coords.latitude, position.coords.longitude, radarWindow);
+          }
         } catch (error) {
           weatherStatus.textContent = uiText("天気を取得できませんでした。時間をおいてもう一度お試しください。");
+          if (radarWindow) radarWindow.close();
         } finally {
           weatherButton.disabled = false;
         }
       }, () => {
         weatherStatus.textContent = uiText("現在地を取得できませんでした。位置情報の利用を許可してください。");
+        if (radarWindow) radarWindow.close();
         weatherButton.disabled = false;
       }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 });
     }
@@ -7900,7 +7918,7 @@
       window.setTimeout(() => commuteDestination.focus(), 120);
     });
 
-    weatherButton.addEventListener("click", checkCurrentWeather);
+    weatherButton.addEventListener("click", () => checkCurrentWeather(true));
 
     terminalSearchButtons.forEach((button) => {
       button.addEventListener("click", () => openTerminalSearch(button.dataset.terminalStation));
