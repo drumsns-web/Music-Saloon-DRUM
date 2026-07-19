@@ -2002,6 +2002,45 @@
       overflow-wrap: anywhere;
     }
 
+    .shared-ranking {
+      margin-top: 28px;
+      border: 1px solid rgba(240, 138, 53, .4);
+      border-radius: 8px;
+      padding: 20px;
+      background: rgba(255, 247, 232, .96);
+      color: #241a10;
+    }
+
+    .shared-ranking .section-head {
+      margin-bottom: 14px;
+    }
+
+    .shared-ranking .section-head h3 {
+      margin: 0;
+      color: var(--forest);
+      font-size: 23px;
+    }
+
+    .shared-ranking-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 12px;
+    }
+
+    .shared-ranking-status {
+      margin: 0;
+      color: #5c4b3b;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    .shared-ranking .kana-group {
+      margin-top: 14px;
+    }
+
     .mini-list {
       display: grid;
       gap: 8px;
@@ -3906,6 +3945,23 @@
             <div class="song-groups" id="favoriteGroups"></div>
           </div>
         </div>
+
+        <div class="shared-ranking">
+          <div class="section-head">
+            <div>
+              <span class="tag">Community</span>
+              <h3>みんなのお気に入り曲</h3>
+              <p class="small">お気に入りにした曲を匿名で集計し、DRUMで人気の曲として表示します。</p>
+            </div>
+          </div>
+          <p class="privacy-note">共有するのは曲名・歌手名だけです。<br>マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は共有しません。</p>
+          <div class="shared-ranking-actions">
+            <button class="btn primary" id="shareFavoriteSongs" type="button">お気に入り曲を匿名で共有</button>
+            <button class="btn ghost" id="refreshSharedRanking" type="button">ランキングを更新</button>
+          </div>
+          <p class="shared-ranking-status" id="sharedRankingStatus">ランキングを読み込んでいます。</p>
+          <div class="song-groups" id="sharedRankingGroups"></div>
+        </div>
       </div>
     </section>
 
@@ -4352,6 +4408,10 @@
     const favoriteGroups = document.getElementById("favoriteGroups");
     const favoriteSearch = document.getElementById("favoriteSearch");
     const favoriteCount = document.getElementById("favoriteCount");
+    const shareFavoriteSongs = document.getElementById("shareFavoriteSongs");
+    const refreshSharedRanking = document.getElementById("refreshSharedRanking");
+    const sharedRankingStatus = document.getElementById("sharedRankingStatus");
+    const sharedRankingGroups = document.getElementById("sharedRankingGroups");
     const duetOnly = document.getElementById("duetOnly");
     const gachaIncludeDuet = document.getElementById("gachaIncludeDuet");
     const songTagOptions = document.getElementById("songTagOptions");
@@ -4673,6 +4733,19 @@
       "よく歌う曲へ": "Go to Frequent Songs",
       "記録した回数をもとに、自分がよく歌う曲をランキングで確認できます。": "See a ranking of the songs you sing most based on your logged records.",
       "歌った回数ランキング": "Singing Frequency Ranking",
+      "みんなのお気に入り曲": "Community Favorite Songs",
+      "お気に入りにした曲を匿名で集計し、DRUMで人気の曲として表示します。": "Songs you choose as favorites can be counted anonymously and shown as popular songs at DRUM.",
+      "共有するのは曲名・歌手名だけです。": "Only the song title and artist are shared.",
+      "マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は共有しません。": "Your song list, notes, singer names, and device-identifying information are not shared.",
+      "お気に入り曲を匿名で共有": "Share Favorite Songs Anonymously",
+      "ランキングを更新": "Refresh Ranking",
+      "ランキングを読み込んでいます。": "Loading ranking...",
+      "共有できるお気に入り曲がありません。曲に「お気に入り」タグを付けると、ここから共有できます。": "No favorite songs to share yet. Add the “Favorite” tag to a song to share it here.",
+      "共有済みです。新しくお気に入りにした曲があれば、ここから共有できます。": "Already shared. When you add new favorites, you can share them here.",
+      "ランキングを取得できませんでした。時間をおいてもう一度お試しください。": "Could not load the ranking. Please try again shortly.",
+      "まだ共有された曲がありません。最初の1曲を共有してみませんか？": "No songs have been shared yet. Would you like to share the first one?",
+      "共有ランキング": "Community Ranking",
+      "お気に入り": "Favorite",
       "問い合わせる": "Contact Us",
       "問い合わせへ": "Go to Contact",
       "予約、貸切、イベント利用などのお問い合わせに使えます。": "Use this for reservations, private bookings, events, and other inquiries.",
@@ -5486,6 +5559,8 @@
     let undoAction = null;
     let newsRenderRun = 0;
     let gachaSpinTimer = null;
+    const sharedRankingApiUrl = "https://music-saloon-drum.com/api/api.php";
+    let sharedRankingSongs = [];
 
     const drinkOptionGroups = [
       {
@@ -5522,6 +5597,7 @@
     function saveSongs() {
       localStorage.setItem(storageKey, JSON.stringify(songs));
       updateDrumGachaRateLabel();
+      renderSharedRanking();
     }
 
     function activeSongProfile() {
@@ -6049,6 +6125,7 @@
       renderHistoryBackupStatus();
       renderDailyMemo();
       renderFavorites();
+      renderSharedRanking();
       renderSongs();
       renderHistory();
       renderTopShortcuts();
@@ -7120,6 +7197,114 @@
       `;
     }
 
+    function sharedFavoriteCandidates() {
+      return activeProfileSongs().filter((item) => {
+        const title = String(item.title || "").trim();
+        return title && getSongTags(item).includes("お気に入り");
+      });
+    }
+
+    function renderSharedRanking() {
+      if (!sharedRankingGroups || !sharedRankingStatus) return;
+      const ranked = Array.isArray(sharedRankingSongs) ? sharedRankingSongs : [];
+      const candidates = sharedFavoriteCandidates();
+      const unshared = candidates.filter((item) => !item.sharedFavoriteEventId);
+
+      shareFavoriteSongs.disabled = !unshared.length;
+      if (!ranked.length) {
+        sharedRankingGroups.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText("まだ共有された曲がありません。最初の1曲を共有してみませんか？"))}</div></div>`;
+      } else {
+        sharedRankingGroups.innerHTML = `
+          <div class="kana-group">
+            <div class="kana-head"><span>${escapeText(uiText("共有ランキング"))}</span><span>${currentLanguage === "en" ? `${ranked.length} songs` : `${ranked.length}曲`}</span></div>
+            <ul class="favorite-list">
+              ${ranked.map((item, index) => `
+                <li class="favorite-item">
+                  <span class="rank-badge">${index + 1}</span>
+                  <div>
+                    <p class="favorite-title">${escapeText(item.title || "-")}</p>
+                    <p class="favorite-meta">${escapeText(item.artist || "-")}</p>
+                    <p class="favorite-meta">${currentLanguage === "en" ? `${Number(item.favorite_count || 0)} favorites` : `お気に入り ${Number(item.favorite_count || 0)}件`}</p>
+                  </div>
+                </li>
+              `).join("")}
+            </ul>
+          </div>
+        `;
+      }
+
+      if (!candidates.length) {
+        sharedRankingStatus.textContent = uiText("共有できるお気に入り曲がありません。曲に「お気に入り」タグを付けると、ここから共有できます。");
+      } else if (!unshared.length) {
+        sharedRankingStatus.textContent = uiText("共有済みです。新しくお気に入りにした曲があれば、ここから共有できます。");
+      } else {
+        sharedRankingStatus.textContent = currentLanguage === "en"
+          ? `${unshared.length} favorite song${unshared.length === 1 ? "" : "s"} can be shared.`
+          : `共有できるお気に入り曲が ${unshared.length}曲あります。`;
+      }
+    }
+
+    async function loadSharedRanking() {
+      if (!sharedRankingStatus) return;
+      sharedRankingStatus.textContent = uiText("ランキングを読み込んでいます。");
+      try {
+        const response = await fetch(`${sharedRankingApiUrl}?action=ranking`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("ranking unavailable");
+        sharedRankingSongs = payload.songs;
+        renderSharedRanking();
+      } catch (error) {
+        console.warn(error);
+        sharedRankingStatus.textContent = uiText("ランキングを取得できませんでした。時間をおいてもう一度お試しください。");
+        sharedRankingGroups.innerHTML = "";
+      }
+    }
+
+    async function shareFavoriteSongsToRanking() {
+      const items = sharedFavoriteCandidates().filter((item) => !item.sharedFavoriteEventId);
+      if (!items.length) {
+        renderSharedRanking();
+        return;
+      }
+      const message = currentLanguage === "en"
+        ? `Share ${items.length} favorite song${items.length === 1 ? "" : "s"} anonymously? Only song titles and artists will be sent. This cannot be undone after aggregation.`
+        : `お気に入りの${items.length}曲を匿名で共有しますか？\n送信するのは曲名と歌手名だけです。集計後は取り消せません。`;
+      if (!confirm(message)) return;
+
+      shareFavoriteSongs.disabled = true;
+      sharedRankingStatus.textContent = currentLanguage === "en" ? "Sharing favorite songs..." : "お気に入り曲を共有しています。";
+      let sharedCount = 0;
+      try {
+        for (const item of items) {
+          const eventId = `favorite-${item.id || createId()}`;
+          const response = await fetch(sharedRankingApiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "favorite", title: item.title, artist: item.artist || "", event_id: eventId })
+          });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) throw new Error("favorite submit failed");
+          item.sharedFavoriteEventId = eventId;
+          // Keep the anonymous submission marker after every successful request.
+          // This prevents a retry from counting the same local song twice.
+          saveSongs();
+          sharedCount += 1;
+        }
+        await loadSharedRanking();
+        renderSharedRanking();
+        sharedRankingStatus.textContent = currentLanguage === "en"
+          ? `Shared ${sharedCount} favorite song${sharedCount === 1 ? "" : "s"} anonymously.`
+          : `お気に入り曲 ${sharedCount}曲を匿名で共有しました。`;
+      } catch (error) {
+        console.warn(error);
+        sharedRankingStatus.textContent = currentLanguage === "en"
+          ? "Could not share the songs. Please try again."
+          : "共有できませんでした。時間をおいてもう一度お試しください。";
+      } finally {
+        shareFavoriteSongs.disabled = !sharedFavoriteCandidates().some((item) => !item.sharedFavoriteEventId);
+      }
+    }
+
     function renderSongs() {
       renderArtistFilterPanel();
       renderOwnerFilterPanel();
@@ -7453,6 +7638,9 @@
     }
 
     favoriteSearch.addEventListener("input", renderFavorites);
+
+    shareFavoriteSongs.addEventListener("click", shareFavoriteSongsToRanking);
+    refreshSharedRanking.addEventListener("click", loadSharedRanking);
 
     chooseSongPhotoButton.addEventListener("click", () => {
       songPhotoInput.click();
@@ -8434,6 +8622,8 @@
     restoreSongDraft();
     renderSongProfileSwitcher();
     renderFavorites();
+    renderSharedRanking();
+    loadSharedRanking();
     renderSongs();
     renderHistory();
     showView(location.hash.replace("#", "") || "top", false);
