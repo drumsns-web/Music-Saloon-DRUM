@@ -2008,6 +2008,49 @@
       color: var(--ink);
     }
 
+    .song-hub-nav {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin: 0 0 22px;
+      padding: 8px;
+      border: 1px solid rgba(240, 138, 53, .42);
+      border-radius: 12px;
+      background: rgba(255, 250, 241, .92);
+      box-shadow: 0 8px 20px rgba(29, 62, 47, .08);
+    }
+
+    .song-hub-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 8px 10px;
+      border: 1px solid rgba(29, 62, 47, .2);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--forest);
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.3;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .song-hub-nav a:hover,
+    .song-hub-nav a:focus-visible {
+      border-color: var(--orange);
+      box-shadow: 0 5px 12px rgba(240, 138, 53, .16);
+      transform: translateY(-1px);
+    }
+
+    .song-hub-nav a.active {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: #102f24;
+      box-shadow: 0 5px 12px rgba(240, 138, 53, .2);
+    }
+
     .favorite-capability-entry strong {
       display: block;
       color: var(--forest);
@@ -2950,6 +2993,7 @@
       .favorite-item { grid-template-columns: 1fr; }
       .favorite-capability-entry { grid-template-columns: 1fr; }
       .favorite-capability-entry .btn { width: 100%; }
+      .song-hub-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
       table,
       thead,
@@ -3512,6 +3556,12 @@
             <p class="lead">曲名だけでも登録できます。歌手名・キー・メモはあとから追加できます。</p>
           </div>
         </div>
+        <nav class="song-hub-nav" aria-label="曲関連ページ">
+          <a class="active" href="#customers" aria-current="page">マイ曲リスト</a>
+          <a href="#favorites">よく歌う曲</a>
+          <a href="#community">みんなのお気に入り</a>
+          <a href="#performance-share">歌える・演奏できる</a>
+        </nav>
         <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← マイ曲リストに戻る</button>
 
         <div class="song-profile-bar" id="songProfileBar" aria-live="polite">
@@ -4115,6 +4165,12 @@
             <p class="lead">マイ曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
           </div>
         </div>
+        <nav class="song-hub-nav" aria-label="曲関連ページ">
+          <a href="#customers">マイ曲リスト</a>
+          <a class="active" href="#favorites" aria-current="page">よく歌う曲</a>
+          <a href="#community">みんなのお気に入り</a>
+          <a href="#performance-share">歌える・演奏できる</a>
+        </nav>
 
         <div class="favorite-capability-entry">
           <div>
@@ -4157,6 +4213,12 @@
             <p class="lead">お気に入り曲を匿名で共有し、DRUMで人気の曲として表示します。</p>
           </div>
         </div>
+        <nav class="song-hub-nav" aria-label="曲関連ページ">
+          <a href="#customers">マイ曲リスト</a>
+          <a href="#favorites">よく歌う曲</a>
+          <a class="active" href="#community" aria-current="page">みんなのお気に入り</a>
+          <a href="#performance-share">歌える・演奏できる</a>
+        </nav>
         <div class="shared-ranking">
           <p class="small">「お気に入り」タグを付けた曲だけが共有の対象になります。</p>
           <p class="privacy-note">共有するのは曲名・歌手名だけです。<br>マイ曲リスト、メモ、歌う人の名前、端末を特定する情報は送信しません。<br>誤字・脱字や情報不足がある場合は、ランキングに反映されないことがあります。</p>
@@ -4180,6 +4242,12 @@
             <p class="lead">名前付きで任意共有し、店内で一緒に歌ったり演奏したりするきっかけに使えます。</p>
           </div>
         </div>
+        <nav class="song-hub-nav" aria-label="曲関連ページ">
+          <a href="#customers">マイ曲リスト</a>
+          <a href="#favorites">よく歌う曲</a>
+          <a href="#community">みんなのお気に入り</a>
+          <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる</a>
+        </nav>
         <div class="capability-purpose">
           <p><strong>通常営業：</strong>「この曲なら○○さんが演奏できそう」と声をかける目安にします。</p>
           <p><strong>LIVE・イベント：</strong>歌える人と楽器パートを見て、即席バンドを組みやすくします。</p>
@@ -4475,48 +4543,53 @@
           <span><strong>よく歌う曲</strong><span>歌った回数ランキング</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
-        <button class="guide-shortcut" type="button" data-guide-target="performance-share">
+        <button class="guide-shortcut" type="button" data-guide-target="community">
           <span class="guide-shortcut-icon">07</span>
+          <span><strong>みんなのお気に入り曲</strong><span>DRUMで人気の曲ランキング</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="performance-share">
+          <span class="guide-shortcut-icon">08</span>
           <span><strong>歌える・演奏できる曲</strong><span>名前付き共有、即席バンドの目安</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="history">
-          <span class="guide-shortcut-icon">08</span>
+          <span class="guide-shortcut-icon">09</span>
           <span><strong>歌った記録</strong><span>日付ごとに歌った曲を保存</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="daily">
-          <span class="guide-shortcut-icon">09</span>
+          <span class="guide-shortcut-icon">10</span>
           <span><strong>今日の記録</strong><span>セットリスト、ドリンク、メモ</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="drum-gacha">
-          <span class="guide-shortcut-icon">10</span>
+          <span class="guide-shortcut-icon">11</span>
           <span><strong>DRUMガチャ</strong><span>ご来店中の運だめし</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="song-backup">
-          <span class="guide-shortcut-icon">11</span>
+          <span class="guide-shortcut-icon">12</span>
           <span><strong>バックアップ</strong><span>曲リストの保存・復元</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="about">
-          <span class="guide-shortcut-icon">12</span>
+          <span class="guide-shortcut-icon">13</span>
           <span><strong>店舗情報</strong><span>アクセス、営業時間、連絡先</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="features">
-          <span class="guide-shortcut-icon">13</span>
+          <span class="guide-shortcut-icon">14</span>
           <span><strong>遊び方・ルール</strong><span>カラオケと楽器のマナー</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="youtube">
-          <span class="guide-shortcut-icon">14</span>
+          <span class="guide-shortcut-icon">15</span>
           <span><strong>YouTubeを見る</strong><span>店内の様子や出演動画を再生</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="contact">
-          <span class="guide-shortcut-icon">15</span>
+          <span class="guide-shortcut-icon">16</span>
           <span><strong>問い合わせる</strong><span>予約、貸切、イベント利用など</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
@@ -4948,6 +5021,9 @@
       "曲リスト・記録": "Song List & Records",
       "タグ・歌う人": "Tags & Singers",
       "歌える・演奏できる曲": "Songs People Can Sing or Play",
+      "歌える・演奏できる": "Sing or Play",
+      "曲関連ページ": "Song Pages",
+      "みんなのお気に入り": "Community Favorites",
       "歌える・演奏できる曲へ": "Songs People Can Sing or Play",
       "共有ページを開く": "Open Sharing Page",
       "歌える・演奏できる曲で共有": "Share Singing / Playing",
@@ -4955,6 +5031,8 @@
       "共有したい曲を検索": "Search songs to share",
       "自分も歌える・マイ曲リストへ": "I can sing this — Add to My Song List",
       "マイ曲リスト登録済み": "Already in My Song List",
+      "マイ曲リストから登録解除": "Remove from My Song List",
+      "マイ曲リストから登録解除しました。": "Removed from My Song List.",
       "曲ごとに自分が演奏できるパートを記録する": "Record the parts I can play for each song",
       "店内で本人が分かる名前": "Name people at DRUM will recognize",
       "自分が演奏できるパート": "Parts I can play",
@@ -7597,7 +7675,7 @@
                     <p class="favorite-meta">${currentLanguage === "en" ? `${Number(item.favorite_count || 0)} favorites` : `お気に入り ${Number(item.favorite_count || 0)}件`}</p>
                     ${(() => {
                       const localSong = findLocalSongFromRanking(item);
-                      return `<button class="btn ${localSong ? "ghost" : "primary"} shared-ranking-add-action" type="button" data-ranking-song-add="${index}" ${localSong ? "disabled" : ""}>${escapeText(uiText(localSong ? "マイ曲リスト登録済み" : "自分も歌える・マイ曲リストへ"))}</button>`;
+                      return `<button class="btn ${localSong ? "ghost" : "primary"} shared-ranking-add-action" type="button" data-ranking-song-toggle="${index}" aria-pressed="${localSong ? "true" : "false"}">${escapeText(uiText(localSong ? "マイ曲リストから登録解除" : "自分も歌える・マイ曲リストへ"))}</button>`;
                     })()}
                   </div>
                 </li>
@@ -7629,14 +7707,27 @@
       }) || null;
     }
 
-    function addRankingSongToMyList(index) {
+    function toggleRankingSongInMyList(index) {
       const item = sharedRankingSongs[Number(index)];
       if (!item || !String(item.title || "").trim()) return;
       const existing = findLocalSongFromRanking(item);
       if (existing) {
-        existing.capabilityCanSing = true;
+        const songIndex = songs.findIndex((song) => song.id === existing.id);
+        if (songIndex === -1) return;
+        const removedSong = songs[songIndex];
+        songs.splice(songIndex, 1);
         saveSongs();
-        sharedRankingStatus.textContent = uiText("この曲はすでにマイ曲リストへ登録されています。");
+        renderSongs();
+        renderFavorites();
+        sharedRankingStatus.textContent = uiText("マイ曲リストから登録解除しました。");
+        showUndo(currentLanguage === "en"
+          ? `Removed ${itemLabel(removedSong)} from My Song List`
+          : `${itemLabel(removedSong)}をマイ曲リストから登録解除しました`, () => {
+          songs.splice(songIndex, 0, removedSong);
+          saveSongs();
+          renderSongs();
+          renderFavorites();
+        });
         return;
       }
       const newSong = {
@@ -8269,9 +8360,9 @@
     shareFavoriteSongs.addEventListener("click", shareFavoriteSongsToRanking);
     refreshSharedRanking.addEventListener("click", loadSharedRanking);
     sharedRankingGroups.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-ranking-song-add]");
-      if (!button || button.disabled) return;
-      addRankingSongToMyList(button.dataset.rankingSongAdd);
+      const button = event.target.closest("[data-ranking-song-toggle]");
+      if (!button) return;
+      toggleRankingSongInMyList(button.dataset.rankingSongToggle);
     });
     capabilityDisplayName.addEventListener("input", () => {
       settings.capabilityDisplayName = capabilityDisplayName.value;
