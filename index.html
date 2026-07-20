@@ -2149,6 +2149,61 @@
       box-shadow: 0 5px 12px rgba(var(--theme-accent-rgb), .2);
     }
 
+    /* Keep text contrast predictable on every color theme. Dark page surfaces
+       use cream text; light operation panels always return to dark text. */
+    .dark-section .card .small {
+      color: rgba(255, 247, 232, .86);
+    }
+
+    #customers.dark-section .song-tool-card,
+    #customers.dark-section .song-form-card {
+      border-color: rgba(var(--theme-accent-rgb), .38);
+      background: linear-gradient(135deg, #fffdf8, #fff3dc);
+      color: var(--ink);
+    }
+
+    #customers.dark-section .song-tool-card .small,
+    #customers.dark-section .song-form-card .small {
+      color: var(--muted);
+    }
+
+    #customers.dark-section .song-tool-card .check-row,
+    #customers.dark-section .song-form-card .check-row {
+      color: var(--ink);
+    }
+
+    #customers.dark-section .song-search-heading,
+    #customers.dark-section .song-form-card h3,
+    #customers.dark-section .song-tool-card h3,
+    #customers.dark-section .song-tool-card h4 {
+      color: var(--forest);
+    }
+
+    #customers.dark-section .song-search-help {
+      color: #514235;
+    }
+
+    .dark-section .song-hub-nav,
+    .dark-section .song-profile-bar,
+    .dark-section .favorite-capability-entry,
+    .dark-section .shared-ranking,
+    .dark-section .capability-purpose,
+    .dark-section .kana-group,
+    .dark-section .capability-song-card,
+    .dark-section .capability-person-card {
+      color: var(--ink);
+    }
+
+    html[data-app-theme="snow-white"] .btn.primary,
+    html[data-app-theme="snow-white"] .song-hub-nav a.active {
+      border-color: rgba(var(--theme-dark-rgb), .34);
+      box-shadow: 0 7px 18px rgba(var(--theme-dark-rgb), .16);
+    }
+
+    html[data-app-theme="snow-white"] .tag {
+      border: 1px solid rgba(var(--theme-dark-rgb), .28);
+    }
+
     .favorite-capability-entry strong {
       display: block;
       color: var(--forest);
@@ -5004,7 +5059,9 @@
       { id: "charcoal", label: "チャコール", dark: "#333a40", deep: "#1e2429", mid: "#596873", accent: "#b9ced8", soft: "#dce8ed", paper: "#f0f3f4", panel: "rgba(251, 253, 254, .95)", darkRgb: "51, 58, 64", deepRgb: "30, 36, 41", accentRgb: "185, 206, 216", softRgb: "220, 232, 237" },
       { id: "deep-teal", label: "ディープティール", dark: "#095c59", deep: "#053a38", mid: "#21817b", accent: "#55d6be", soft: "#a3eadc", paper: "#eaf7f4", panel: "rgba(248, 255, 253, .95)", darkRgb: "9, 92, 89", deepRgb: "5, 58, 56", accentRgb: "85, 214, 190", softRgb: "163, 234, 220" },
       { id: "ruby-red", label: "ルビーレッド", dark: "#651f2d", deep: "#3d1019", mid: "#963d4d", accent: "#ff8b7b", soft: "#ffc1b8", paper: "#faefed", panel: "rgba(255, 250, 249, .95)", darkRgb: "101, 31, 45", deepRgb: "61, 16, 25", accentRgb: "255, 139, 123", softRgb: "255, 193, 184" },
-      { id: "indigo", label: "インディゴ", dark: "#303b73", deep: "#1b234c", mid: "#5665a5", accent: "#9dafff", soft: "#ccd5ff", paper: "#f0f2fb", panel: "rgba(250, 251, 255, .95)", darkRgb: "48, 59, 115", deepRgb: "27, 35, 76", accentRgb: "157, 175, 255", softRgb: "204, 213, 255" }
+      { id: "indigo", label: "インディゴ", dark: "#303b73", deep: "#1b234c", mid: "#5665a5", accent: "#9dafff", soft: "#ccd5ff", paper: "#f0f2fb", panel: "rgba(250, 251, 255, .95)", darkRgb: "48, 59, 115", deepRgb: "27, 35, 76", accentRgb: "157, 175, 255", softRgb: "204, 213, 255" },
+      { id: "jet-black", label: "ジェットブラック", dark: "#151515", deep: "#050505", mid: "#3a3a3a", accent: "#e0b84f", soft: "#f3d98f", paper: "#efefec", panel: "rgba(252, 252, 250, .96)", darkRgb: "21, 21, 21", deepRgb: "5, 5, 5", accentRgb: "224, 184, 79", softRgb: "243, 217, 143" },
+      { id: "snow-white", label: "スノーホワイト", dark: "#48545c", deep: "#263139", mid: "#6f7e87", accent: "#f7f9fa", soft: "#ffffff", paper: "#ffffff", panel: "rgba(255, 255, 255, .98)", darkRgb: "72, 84, 92", deepRgb: "38, 49, 57", accentRgb: "247, 249, 250", softRgb: "255, 255, 255" }
     ];
     const topShortcutOptions = [
       { id: "info", label: "お知らせ", target: "info" },
@@ -5157,6 +5214,8 @@
       "ディープティール": "Deep Teal",
       "ルビーレッド": "Ruby Red",
       "インディゴ": "Indigo",
+      "ジェットブラック": "Jet Black",
+      "スノーホワイト": "Snow White",
       "曲関連ページ": "Song Pages",
       "みんなのお気に入り": "Community Favorites",
       "歌える・演奏できる曲へ": "Songs People Can Sing or Play",
