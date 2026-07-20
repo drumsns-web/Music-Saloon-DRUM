@@ -2100,6 +2100,13 @@
       margin-top: 14px;
     }
 
+    .shared-ranking-add-action {
+      margin-top: 10px;
+      min-height: 40px;
+      padding: 8px 12px;
+      white-space: normal;
+    }
+
     .playable-parts-field {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -4946,6 +4953,8 @@
       "歌える・演奏できる曲で共有": "Share Singing / Playing",
       "歌・演奏を共有": "Share Singing / Playing",
       "共有したい曲を検索": "Search songs to share",
+      "自分も歌える・マイ曲リストへ": "I can sing this — Add to My Song List",
+      "マイ曲リスト登録済み": "Already in My Song List",
       "曲ごとに自分が演奏できるパートを記録する": "Record the parts I can play for each song",
       "店内で本人が分かる名前": "Name people at DRUM will recognize",
       "自分が演奏できるパート": "Parts I can play",
@@ -7586,6 +7595,10 @@
                     <p class="favorite-title">${escapeText(item.title || "-")}</p>
                     <p class="favorite-meta">${escapeText(item.artist || "-")}</p>
                     <p class="favorite-meta">${currentLanguage === "en" ? `${Number(item.favorite_count || 0)} favorites` : `お気に入り ${Number(item.favorite_count || 0)}件`}</p>
+                    ${(() => {
+                      const localSong = findLocalSongFromRanking(item);
+                      return `<button class="btn ${localSong ? "ghost" : "primary"} shared-ranking-add-action" type="button" data-ranking-song-add="${index}" ${localSong ? "disabled" : ""}>${escapeText(uiText(localSong ? "マイ曲リスト登録済み" : "自分も歌える・マイ曲リストへ"))}</button>`;
+                    })()}
                   </div>
                 </li>
               `).join("")}
@@ -7603,6 +7616,55 @@
           ? `${unshared.length} favorite song${unshared.length === 1 ? "" : "s"} can be shared.`
           : `共有できるお気に入り曲が ${unshared.length}曲あります。`;
       }
+    }
+
+    function findLocalSongFromRanking(item) {
+      const title = normalizeKana(item && item.title);
+      const artist = normalizeKana(item && item.artist);
+      if (!title) return null;
+      return activeProfileSongs().find((song) => {
+        if (normalizeKana(song.title) !== title) return false;
+        if (!artist) return true;
+        return normalizeKana(song.artist) === artist;
+      }) || null;
+    }
+
+    function addRankingSongToMyList(index) {
+      const item = sharedRankingSongs[Number(index)];
+      if (!item || !String(item.title || "").trim()) return;
+      const existing = findLocalSongFromRanking(item);
+      if (existing) {
+        existing.capabilityCanSing = true;
+        saveSongs();
+        sharedRankingStatus.textContent = uiText("この曲はすでにマイ曲リストへ登録されています。");
+        return;
+      }
+      const newSong = {
+        id: createId(),
+        title: String(item.title || "").trim(),
+        artist: String(item.artist || "").trim(),
+        owner: "",
+        kana: "",
+        key: "",
+        memo: "",
+        duet: false,
+        nextWish: false,
+        profile: activeSongProfile(),
+        tags: [],
+        playableParts: [],
+        capabilityCanSing: true,
+        capabilityShared: false,
+        createdAt: new Date().toISOString()
+      };
+      songs.unshift(newSong);
+      saveSongs();
+      renderSongs();
+      sharedRankingStatus.textContent = uiText("マイ曲リストに追加しました。店内共有はされていません。");
+      showUndo(uiText("マイ曲リストに追加しました"), () => {
+        songs = songs.filter((song) => song.id !== newSong.id);
+        saveSongs();
+        renderSongs();
+      });
     }
 
     async function loadSharedRanking() {
@@ -8206,6 +8268,11 @@
 
     shareFavoriteSongs.addEventListener("click", shareFavoriteSongsToRanking);
     refreshSharedRanking.addEventListener("click", loadSharedRanking);
+    sharedRankingGroups.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-ranking-song-add]");
+      if (!button || button.disabled) return;
+      addRankingSongToMyList(button.dataset.rankingSongAdd);
+    });
     capabilityDisplayName.addEventListener("input", () => {
       settings.capabilityDisplayName = capabilityDisplayName.value;
       saveSettings();
