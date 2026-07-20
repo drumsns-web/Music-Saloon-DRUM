@@ -22,6 +22,10 @@
       --purple: #7753a5;
       --red: #b5422a;
       --shadow: 0 18px 50px rgba(20, 33, 25, .18);
+      --theme-dark-rgb: 20, 63, 44;
+      --theme-deep-rgb: 11, 43, 30;
+      --theme-accent-rgb: 240, 138, 53;
+      --theme-soft-rgb: 255, 192, 122;
     }
 
     * { box-sizing: border-box; }
@@ -652,7 +656,7 @@
     .dark-section {
       color: var(--cream);
       background:
-        linear-gradient(135deg, rgba(20, 63, 44, .96), rgba(11, 43, 30, .98)),
+        linear-gradient(135deg, rgba(var(--theme-dark-rgb), .96), rgba(var(--theme-deep-rgb), .98)),
         var(--forest);
     }
 
@@ -2047,8 +2051,102 @@
     .song-hub-nav a.active {
       border-color: var(--orange);
       background: var(--orange);
-      color: #102f24;
+      color: var(--forest-2);
       box-shadow: 0 5px 12px rgba(240, 138, 53, .2);
+    }
+
+    .theme-settings-card {
+      grid-column: 1 / -1;
+    }
+
+    .theme-picker {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .theme-option {
+      position: relative;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      min-height: 58px;
+      padding: 8px 10px;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.3;
+      cursor: pointer;
+      transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+    }
+
+    .theme-option:hover,
+    .theme-option:focus-within {
+      border-color: var(--orange);
+      box-shadow: 0 6px 16px rgba(var(--theme-accent-rgb), .16);
+      transform: translateY(-1px);
+    }
+
+    .theme-option.is-selected {
+      border-color: var(--orange);
+      background: color-mix(in srgb, var(--orange) 10%, #fff);
+      box-shadow: 0 0 0 3px rgba(var(--theme-accent-rgb), .14);
+    }
+
+    .theme-option input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .theme-swatch {
+      width: 34px;
+      height: 34px;
+      border: 2px solid rgba(255, 255, 255, .88);
+      border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(36, 29, 23, .2);
+    }
+
+    .theme-status {
+      min-height: 1.5em;
+      margin: 10px 0 0;
+      color: var(--forest);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    /* The selected theme also colors the large app surfaces that previously
+       used fixed DRUM green values. */
+    body {
+      background:
+        linear-gradient(180deg, var(--panel), var(--paper)),
+        var(--paper);
+    }
+    header { background: rgba(var(--theme-deep-rgb), .9); }
+    .daily-news-ticker { background: rgba(var(--theme-deep-rgb), .8); }
+    .hero {
+      background:
+        linear-gradient(100deg, rgba(var(--theme-deep-rgb), .9), rgba(var(--theme-dark-rgb), .58) 55%, rgba(var(--theme-dark-rgb), .18)),
+        var(--hero-image, url("drum-stage.jpeg")) center/cover;
+    }
+    .btn.primary { box-shadow: 0 12px 28px rgba(var(--theme-accent-rgb), .28); }
+    .song-hub-nav {
+      border-color: rgba(var(--theme-accent-rgb), .42);
+      box-shadow: 0 8px 20px rgba(var(--theme-dark-rgb), .08);
+    }
+    .song-hub-nav a:hover,
+    .song-hub-nav a:focus-visible {
+      box-shadow: 0 5px 12px rgba(var(--theme-accent-rgb), .16);
+    }
+    .song-hub-nav a.active {
+      box-shadow: 0 5px 12px rgba(var(--theme-accent-rgb), .2);
     }
 
     .favorite-capability-entry strong {
@@ -2994,6 +3092,7 @@
       .favorite-capability-entry { grid-template-columns: 1fr; }
       .favorite-capability-entry .btn { width: 100%; }
       .song-hub-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
       table,
       thead,
@@ -3548,7 +3647,7 @@
       </div>
     </section>
 
-    <section id="customers">
+    <section id="customers" class="dark-section">
       <div class="wrap">
         <div class="section-head">
           <div>
@@ -3990,6 +4089,7 @@
           <div class="settings-quick-menu" id="settingsQuickMenu" aria-hidden="true">
             <strong>設定メニュー</strong>
             <div class="settings-quick-menu-list">
+              <button type="button" data-settings-target="settings-theme">カラー</button>
               <button type="button" data-settings-target="settings-shortcuts">トップ表示</button>
               <button type="button" data-settings-target="settings-song-list">曲リスト・記録</button>
               <button type="button" data-settings-target="settings-tags">タグ・歌う人</button>
@@ -3999,6 +4099,13 @@
           </div>
         </div>
         <div class="grid">
+          <article class="card settings-target theme-settings-card" id="settings-theme">
+            <span class="tag orange">Color</span>
+            <h3>アプリの基本カラー</h3>
+            <p class="small">好きな色を選ぶと、アプリ全体の見出し・背景・ボタンへすぐ反映されます。この端末のブラウザに保存されます。</p>
+            <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="アプリの基本カラー"></div>
+            <p class="theme-status" id="themeStatus" aria-live="polite"></p>
+          </article>
           <article class="card settings-target" id="settings-shortcuts">
             <span class="tag orange">Home</span>
             <h3>トップボタン表示設定</h3>
@@ -4204,7 +4311,7 @@
       </div>
     </section>
 
-    <section id="community">
+    <section id="community" class="dark-section">
       <div class="wrap">
         <div class="section-head">
           <div>
@@ -4233,7 +4340,7 @@
       </div>
     </section>
 
-    <section id="performance-share">
+    <section id="performance-share" class="dark-section">
       <div class="wrap">
         <div class="section-head">
           <div>
@@ -4815,6 +4922,8 @@
     const settingsModalHeader = settingsModal.querySelector(".section-head");
     const openSettingsQuickMenu = document.getElementById("openSettingsQuickMenu");
     const settingsQuickMenu = document.getElementById("settingsQuickMenu");
+    const themePicker = document.getElementById("themePicker");
+    const themeStatus = document.getElementById("themeStatus");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
@@ -4885,6 +4994,18 @@
     const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌", "十八番", "お気に入り", "練習中", "盛り上がる", "しっとり"];
     const defaultTopShortcutIds = ["info", "menu", "customers"];
     const playablePartChoices = ["ギター", "ベース", "ドラム", "キーボード", "ピアノ", "パーカッション", "管楽器", "その他"];
+    const appThemes = [
+      { id: "drum-green", label: "DRUMグリーン", dark: "#143f2c", deep: "#0b2b1e", mid: "#2f6b4b", accent: "#f08a35", soft: "#ffc07a", paper: "#fbf4e5", panel: "rgba(255, 252, 244, .94)", darkRgb: "20, 63, 44", deepRgb: "11, 43, 30", accentRgb: "240, 138, 53", softRgb: "255, 192, 122" },
+      { id: "ocean-blue", label: "オーシャンブルー", dark: "#123f52", deep: "#092b3a", mid: "#267189", accent: "#42c3dd", soft: "#9be5f2", paper: "#edf7f8", panel: "rgba(248, 254, 255, .95)", darkRgb: "18, 63, 82", deepRgb: "9, 43, 58", accentRgb: "66, 195, 221", softRgb: "155, 229, 242" },
+      { id: "midnight-navy", label: "ミッドナイトネイビー", dark: "#1d3557", deep: "#10213b", mid: "#42658f", accent: "#ffd166", soft: "#ffe7a8", paper: "#f5f3ea", panel: "rgba(255, 253, 246, .95)", darkRgb: "29, 53, 87", deepRgb: "16, 33, 59", accentRgb: "255, 209, 102", softRgb: "255, 231, 168" },
+      { id: "wine-red", label: "ワインレッド", dark: "#5a2135", deep: "#35121f", mid: "#87475e", accent: "#f29aaf", soft: "#f8c7d2", paper: "#fbf0f2", panel: "rgba(255, 250, 251, .95)", darkRgb: "90, 33, 53", deepRgb: "53, 18, 31", accentRgb: "242, 154, 175", softRgb: "248, 199, 210" },
+      { id: "royal-purple", label: "ロイヤルパープル", dark: "#46305f", deep: "#2a1a3d", mid: "#755799", accent: "#c69cf4", soft: "#e1c8fb", paper: "#f5effa", panel: "rgba(253, 250, 255, .95)", darkRgb: "70, 48, 95", deepRgb: "42, 26, 61", accentRgb: "198, 156, 244", softRgb: "225, 200, 251" },
+      { id: "chocolate", label: "チョコレート", dark: "#563721", deep: "#342014", mid: "#865c39", accent: "#e7a65b", soft: "#f4cf9f", paper: "#f8f1e7", panel: "rgba(255, 252, 247, .95)", darkRgb: "86, 55, 33", deepRgb: "52, 32, 20", accentRgb: "231, 166, 91", softRgb: "244, 207, 159" },
+      { id: "charcoal", label: "チャコール", dark: "#333a40", deep: "#1e2429", mid: "#596873", accent: "#b9ced8", soft: "#dce8ed", paper: "#f0f3f4", panel: "rgba(251, 253, 254, .95)", darkRgb: "51, 58, 64", deepRgb: "30, 36, 41", accentRgb: "185, 206, 216", softRgb: "220, 232, 237" },
+      { id: "deep-teal", label: "ディープティール", dark: "#095c59", deep: "#053a38", mid: "#21817b", accent: "#55d6be", soft: "#a3eadc", paper: "#eaf7f4", panel: "rgba(248, 255, 253, .95)", darkRgb: "9, 92, 89", deepRgb: "5, 58, 56", accentRgb: "85, 214, 190", softRgb: "163, 234, 220" },
+      { id: "ruby-red", label: "ルビーレッド", dark: "#651f2d", deep: "#3d1019", mid: "#963d4d", accent: "#ff8b7b", soft: "#ffc1b8", paper: "#faefed", panel: "rgba(255, 250, 249, .95)", darkRgb: "101, 31, 45", deepRgb: "61, 16, 25", accentRgb: "255, 139, 123", softRgb: "255, 193, 184" },
+      { id: "indigo", label: "インディゴ", dark: "#303b73", deep: "#1b234c", mid: "#5665a5", accent: "#9dafff", soft: "#ccd5ff", paper: "#f0f2fb", panel: "rgba(250, 251, 255, .95)", darkRgb: "48, 59, 115", deepRgb: "27, 35, 76", accentRgb: "157, 175, 255", softRgb: "204, 213, 255" }
+    ];
     const topShortcutOptions = [
       { id: "info", label: "お知らせ", target: "info" },
       { id: "menu", label: "メニュー", target: "menu" },
@@ -5022,6 +5143,20 @@
       "タグ・歌う人": "Tags & Singers",
       "歌える・演奏できる曲": "Songs People Can Sing or Play",
       "歌える・演奏できる": "Sing or Play",
+      "カラー": "Color",
+      "アプリの基本カラー": "App Color Theme",
+      "好きな色を選ぶと、アプリ全体の見出し・背景・ボタンへすぐ反映されます。この端末のブラウザに保存されます。": "Choose a color to apply it instantly to headings, backgrounds, and buttons. It is saved in this device's browser.",
+      "基本カラーを変更しました。": "Color theme updated.",
+      "DRUMグリーン": "DRUM Green",
+      "オーシャンブルー": "Ocean Blue",
+      "ミッドナイトネイビー": "Midnight Navy",
+      "ワインレッド": "Wine Red",
+      "ロイヤルパープル": "Royal Purple",
+      "チョコレート": "Chocolate",
+      "チャコール": "Charcoal",
+      "ディープティール": "Deep Teal",
+      "ルビーレッド": "Ruby Red",
+      "インディゴ": "Indigo",
       "曲関連ページ": "Song Pages",
       "みんなのお気に入り": "Community Favorites",
       "歌える・演奏できる曲へ": "Songs People Can Sing or Play",
@@ -5881,6 +6016,7 @@
     if (settings.enableSongOwners === undefined) settings.enableSongOwners = false;
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
+    if (!appThemes.some((theme) => theme.id === settings.colorTheme)) settings.colorTheme = "drum-green";
     if (typeof settings.commuteDestination !== "string") settings.commuteDestination = "";
     if (!["江古田駅", "新江古田駅", "新桜台駅"].includes(settings.commuteStation)) settings.commuteStation = "江古田駅";
     if (typeof settings.lastTrainTime !== "string") settings.lastTrainTime = "";
@@ -6383,6 +6519,42 @@
 
     function saveSettings() {
       localStorage.setItem(settingsStorageKey, JSON.stringify(settings));
+    }
+
+    function selectedAppTheme() {
+      return appThemes.find((theme) => theme.id === settings.colorTheme) || appThemes[0];
+    }
+
+    function renderThemePicker() {
+      const selectedId = selectedAppTheme().id;
+      themePicker.innerHTML = appThemes.map((theme) => `
+        <label class="theme-option ${theme.id === selectedId ? "is-selected" : ""}">
+          <input type="radio" name="app-color-theme" value="${escapeText(theme.id)}" ${theme.id === selectedId ? "checked" : ""}>
+          <span class="theme-swatch" aria-hidden="true" style="background:linear-gradient(135deg, ${theme.dark} 0 58%, ${theme.accent} 58% 100%)"></span>
+          <span>${escapeText(uiText(theme.label))}</span>
+        </label>
+      `).join("");
+    }
+
+    function applyColorTheme() {
+      const theme = selectedAppTheme();
+      settings.colorTheme = theme.id;
+      const rootStyle = document.documentElement.style;
+      rootStyle.setProperty("--forest", theme.dark);
+      rootStyle.setProperty("--forest-2", theme.deep);
+      rootStyle.setProperty("--leaf", theme.mid);
+      rootStyle.setProperty("--orange", theme.accent);
+      rootStyle.setProperty("--orange-2", theme.soft);
+      rootStyle.setProperty("--paper", theme.paper);
+      rootStyle.setProperty("--panel", theme.panel);
+      rootStyle.setProperty("--line", `rgba(${theme.darkRgb}, .18)`);
+      rootStyle.setProperty("--shadow", `0 18px 50px rgba(${theme.deepRgb}, .2)`);
+      rootStyle.setProperty("--theme-dark-rgb", theme.darkRgb);
+      rootStyle.setProperty("--theme-deep-rgb", theme.deepRgb);
+      rootStyle.setProperty("--theme-accent-rgb", theme.accentRgb);
+      rootStyle.setProperty("--theme-soft-rgb", theme.softRgb);
+      document.documentElement.dataset.appTheme = theme.id;
+      renderThemePicker();
     }
 
     function saveTags() {
@@ -6924,6 +7096,7 @@
     }
 
     function applySettings() {
+      applyColorTheme();
       document.body.classList.toggle("memo-disabled", !settings.showMemo);
       document.body.classList.toggle("song-count-hidden", !settings.showSongCount);
       settingMemo.checked = settings.showMemo;
@@ -9165,6 +9338,16 @@
     });
 
     topShortcutSettings.addEventListener("change", handleTopShortcutChange);
+
+    themePicker.addEventListener("change", (event) => {
+      const input = event.target.closest('input[name="app-color-theme"]');
+      if (!input || !appThemes.some((theme) => theme.id === input.value)) return;
+      settings.colorTheme = input.value;
+      saveSettings();
+      applyColorTheme();
+      themeStatus.textContent = uiText("基本カラーを変更しました。");
+      refreshLanguageSoon();
+    });
 
     openGuideModalHero.addEventListener("click", openGuideModal);
 
