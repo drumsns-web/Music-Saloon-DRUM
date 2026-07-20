@@ -2061,7 +2061,7 @@
 
     .theme-picker {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       margin-top: 14px;
     }
@@ -5051,17 +5051,9 @@
     const playablePartChoices = ["ギター", "ベース", "ドラム", "キーボード", "ピアノ", "パーカッション", "管楽器", "その他"];
     const appThemes = [
       { id: "drum-green", label: "DRUMグリーン", dark: "#143f2c", deep: "#0b2b1e", mid: "#2f6b4b", accent: "#f08a35", soft: "#ffc07a", paper: "#fbf4e5", panel: "rgba(255, 252, 244, .94)", darkRgb: "20, 63, 44", deepRgb: "11, 43, 30", accentRgb: "240, 138, 53", softRgb: "255, 192, 122" },
-      { id: "ocean-blue", label: "オーシャンブルー", dark: "#123f52", deep: "#092b3a", mid: "#267189", accent: "#42c3dd", soft: "#9be5f2", paper: "#edf7f8", panel: "rgba(248, 254, 255, .95)", darkRgb: "18, 63, 82", deepRgb: "9, 43, 58", accentRgb: "66, 195, 221", softRgb: "155, 229, 242" },
-      { id: "midnight-navy", label: "ミッドナイトネイビー", dark: "#1d3557", deep: "#10213b", mid: "#42658f", accent: "#ffd166", soft: "#ffe7a8", paper: "#f5f3ea", panel: "rgba(255, 253, 246, .95)", darkRgb: "29, 53, 87", deepRgb: "16, 33, 59", accentRgb: "255, 209, 102", softRgb: "255, 231, 168" },
-      { id: "wine-red", label: "ワインレッド", dark: "#5a2135", deep: "#35121f", mid: "#87475e", accent: "#f29aaf", soft: "#f8c7d2", paper: "#fbf0f2", panel: "rgba(255, 250, 251, .95)", darkRgb: "90, 33, 53", deepRgb: "53, 18, 31", accentRgb: "242, 154, 175", softRgb: "248, 199, 210" },
-      { id: "royal-purple", label: "ロイヤルパープル", dark: "#46305f", deep: "#2a1a3d", mid: "#755799", accent: "#c69cf4", soft: "#e1c8fb", paper: "#f5effa", panel: "rgba(253, 250, 255, .95)", darkRgb: "70, 48, 95", deepRgb: "42, 26, 61", accentRgb: "198, 156, 244", softRgb: "225, 200, 251" },
-      { id: "chocolate", label: "チョコレート", dark: "#563721", deep: "#342014", mid: "#865c39", accent: "#e7a65b", soft: "#f4cf9f", paper: "#f8f1e7", panel: "rgba(255, 252, 247, .95)", darkRgb: "86, 55, 33", deepRgb: "52, 32, 20", accentRgb: "231, 166, 91", softRgb: "244, 207, 159" },
-      { id: "charcoal", label: "チャコール", dark: "#333a40", deep: "#1e2429", mid: "#596873", accent: "#b9ced8", soft: "#dce8ed", paper: "#f0f3f4", panel: "rgba(251, 253, 254, .95)", darkRgb: "51, 58, 64", deepRgb: "30, 36, 41", accentRgb: "185, 206, 216", softRgb: "220, 232, 237" },
-      { id: "deep-teal", label: "ディープティール", dark: "#095c59", deep: "#053a38", mid: "#21817b", accent: "#55d6be", soft: "#a3eadc", paper: "#eaf7f4", panel: "rgba(248, 255, 253, .95)", darkRgb: "9, 92, 89", deepRgb: "5, 58, 56", accentRgb: "85, 214, 190", softRgb: "163, 234, 220" },
-      { id: "ruby-red", label: "ルビーレッド", dark: "#651f2d", deep: "#3d1019", mid: "#963d4d", accent: "#ff8b7b", soft: "#ffc1b8", paper: "#faefed", panel: "rgba(255, 250, 249, .95)", darkRgb: "101, 31, 45", deepRgb: "61, 16, 25", accentRgb: "255, 139, 123", softRgb: "255, 193, 184" },
-      { id: "indigo", label: "インディゴ", dark: "#303b73", deep: "#1b234c", mid: "#5665a5", accent: "#9dafff", soft: "#ccd5ff", paper: "#f0f2fb", panel: "rgba(250, 251, 255, .95)", darkRgb: "48, 59, 115", deepRgb: "27, 35, 76", accentRgb: "157, 175, 255", softRgb: "204, 213, 255" },
       { id: "jet-black", label: "ジェットブラック", dark: "#151515", deep: "#050505", mid: "#3a3a3a", accent: "#e0b84f", soft: "#f3d98f", paper: "#efefec", panel: "rgba(252, 252, 250, .96)", darkRgb: "21, 21, 21", deepRgb: "5, 5, 5", accentRgb: "224, 184, 79", softRgb: "243, 217, 143" },
-      { id: "snow-white", label: "スノーホワイト", dark: "#48545c", deep: "#263139", mid: "#6f7e87", accent: "#f7f9fa", soft: "#ffffff", paper: "#ffffff", panel: "rgba(255, 255, 255, .98)", darkRgb: "72, 84, 92", deepRgb: "38, 49, 57", accentRgb: "247, 249, 250", softRgb: "255, 255, 255" }
+      { id: "snow-white", label: "スノーホワイト", dark: "#48545c", deep: "#263139", mid: "#5b6972", accent: "#f7f9fa", soft: "#ffffff", paper: "#ffffff", panel: "rgba(255, 255, 255, .98)", darkRgb: "72, 84, 92", deepRgb: "38, 49, 57", accentRgb: "247, 249, 250", softRgb: "255, 255, 255" },
+      { id: "warm-beige", label: "ウォームベージュ", dark: "#6b5541", deep: "#453526", mid: "#796149", accent: "#e6c89b", soft: "#f5e4c7", paper: "#f5ead8", panel: "rgba(255, 250, 240, .97)", darkRgb: "107, 85, 65", deepRgb: "69, 53, 38", accentRgb: "230, 200, 155", softRgb: "245, 228, 199" }
     ];
     const topShortcutOptions = [
       { id: "info", label: "お知らせ", target: "info" },
@@ -5205,17 +5197,9 @@
       "好きな色を選ぶと、アプリ全体の見出し・背景・ボタンへすぐ反映されます。この端末のブラウザに保存されます。": "Choose a color to apply it instantly to headings, backgrounds, and buttons. It is saved in this device's browser.",
       "基本カラーを変更しました。": "Color theme updated.",
       "DRUMグリーン": "DRUM Green",
-      "オーシャンブルー": "Ocean Blue",
-      "ミッドナイトネイビー": "Midnight Navy",
-      "ワインレッド": "Wine Red",
-      "ロイヤルパープル": "Royal Purple",
-      "チョコレート": "Chocolate",
-      "チャコール": "Charcoal",
-      "ディープティール": "Deep Teal",
-      "ルビーレッド": "Ruby Red",
-      "インディゴ": "Indigo",
       "ジェットブラック": "Jet Black",
       "スノーホワイト": "Snow White",
+      "ウォームベージュ": "Warm Beige",
       "曲関連ページ": "Song Pages",
       "みんなのお気に入り": "Community Favorites",
       "歌える・演奏できる曲へ": "Songs People Can Sing or Play",
