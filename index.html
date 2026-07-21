@@ -2217,9 +2217,13 @@
     }
 
     .song-hub-nav {
+      width: 100%;
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
+      align-items: stretch;
+      justify-content: normal;
       margin: 0 0 22px;
       padding: 8px;
       border: 1px solid rgba(240, 138, 53, .42);
