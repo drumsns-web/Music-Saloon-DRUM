@@ -635,7 +635,8 @@
 
     body.customer-subview #customers .section-head,
     body.customer-subview #customers .song-tools .song-tool-card,
-    body.customer-subview #customers .song-list-card {
+    body.customer-subview #customers .song-list-card,
+    body.customer-subview #customers .song-list-navigation {
       display: none;
     }
 
@@ -1928,6 +1929,209 @@
       gap: 14px;
     }
 
+    .song-list-navigation {
+      position: sticky;
+      top: 108px;
+      z-index: 8;
+      display: grid;
+      gap: 9px;
+      margin: 0 0 16px;
+      padding: 12px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .5);
+      border-radius: 10px;
+      background: rgba(255, 253, 248, .97);
+      color: var(--ink);
+      box-shadow: 0 10px 24px rgba(var(--theme-deep-rgb), .16);
+      backdrop-filter: blur(12px);
+    }
+
+    .song-quick-search {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+    }
+
+    .song-quick-search input {
+      min-height: 46px;
+    }
+
+    .song-view-switch {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 7px;
+    }
+
+    .song-view-switch button,
+    .song-index-jump button {
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: #fff;
+      color: var(--forest);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .song-view-switch button.is-active {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: var(--forest-2);
+    }
+
+    .song-index-jump {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 1px 0 3px;
+      scrollbar-width: thin;
+    }
+
+    .song-index-jump button {
+      flex: 0 0 auto;
+      min-width: 40px;
+      min-height: 36px;
+      padding: 5px 9px;
+    }
+
+    .song-index-jump button:disabled {
+      opacity: .36;
+      cursor: default;
+    }
+
+    .song-index-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .auxiliary-index-jump {
+      margin: 12px 0 14px;
+    }
+
+    .compact-list-details {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .compact-list-details > summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .compact-list-details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .compact-list-details > summary::after {
+      content: "+";
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--forest-2);
+      font-weight: 900;
+    }
+
+    .compact-list-details[open] > summary::after {
+      content: "−";
+    }
+
+    .compact-list-body {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .song-group-row {
+      scroll-margin-top: 300px;
+      padding: 0;
+      background: var(--forest);
+    }
+
+    .song-group-row td {
+      padding: 0;
+      border-bottom-color: rgba(255, 255, 255, .12);
+    }
+
+    .song-group-toggle {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      border: 0;
+      padding: 12px 14px;
+      background: transparent;
+      color: var(--cream);
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+    }
+
+    .song-group-toggle-icon {
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--forest-2);
+      line-height: 1;
+    }
+
+    .song-group-song[hidden] {
+      display: none !important;
+    }
+
+    .compact-song-row {
+      cursor: pointer;
+    }
+
+    .compact-song-row:hover {
+      background: rgba(var(--theme-accent-rgb), .07);
+    }
+
+    .compact-song-row .song-detail-cell,
+    .compact-song-row .song-row-actions {
+      display: none;
+    }
+
+    .compact-song-row.is-expanded .song-detail-cell {
+      display: table-cell;
+    }
+
+    .compact-song-row.is-expanded .song-row-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 7px;
+    }
+
+    .song-detail-toggle {
+      min-height: 36px !important;
+      padding: 6px 10px !important;
+    }
+
+    .song-detail-stack {
+      display: grid;
+      gap: 6px;
+    }
+
+    .song-detail-stack p {
+      margin: 0;
+    }
+
     .kana-group {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -3148,6 +3352,15 @@
       .favorite-capability-entry .btn { width: 100%; }
       .song-hub-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .song-list-navigation { top: 106px; }
+      .song-view-switch {
+        display: flex;
+        overflow-x: auto;
+      }
+      .song-view-switch button {
+        flex: 0 0 auto;
+        min-width: 104px;
+      }
 
       table,
       thead,
@@ -3173,6 +3386,12 @@
         font-size: 12px;
         font-weight: 900;
       }
+      .song-group-row td::before,
+      .compact-song-row:not(.is-expanded) .action-cell::before {
+        display: none;
+      }
+      .song-group-toggle { padding: 11px 12px; }
+      .compact-song-row.is-expanded .song-detail-cell { display: block; }
     }
 
     @media (max-width: 390px) {
@@ -3764,7 +3983,7 @@
                 <button class="btn ghost" id="songOwnerFilterButton" type="button">歌う人を選ぶ</button>
                 <div class="tag-filter-panel" id="songOwnerFilterPanel"></div>
               </div>
-              <select id="songSort" aria-label="曲リストの並び順">
+              <select id="songSort" aria-label="曲リストの並び順" hidden>
                 <option value="recent">最近追加</option>
                 <option value="title">曲名順</option>
                 <option value="artist">歌手名順</option>
@@ -3833,6 +4052,21 @@
               </div>
             </div>
           </details>
+        </div>
+
+        <div class="song-list-navigation" id="songListNavigation">
+          <div class="song-quick-search">
+            <input id="songQuickSearch" type="search" placeholder="曲名・歌手名ですぐ検索" aria-label="曲リストをすぐ検索">
+            <strong id="songQuickCount">0件</strong>
+          </div>
+          <div class="song-view-switch" id="songViewSwitch" role="group" aria-label="曲リストの表示方法">
+            <button type="button" data-song-view-mode="artist">歌手別</button>
+            <button type="button" data-song-view-mode="title">曲名順</button>
+            <button type="button" data-song-view-mode="recent">最近追加</button>
+            <button type="button" data-song-view-mode="sung">よく歌う順</button>
+          </div>
+          <div class="song-index-jump" id="songIndexJump" aria-label="文字ジャンプ"></div>
+          <p class="song-index-note" id="songIndexNote"></p>
         </div>
 
         <div class="manager">
@@ -4359,6 +4593,7 @@
               </div>
               <strong id="favoriteCount">0曲</strong>
             </div>
+            <div class="song-index-jump auxiliary-index-jump" id="favoriteIndexJump" aria-label="文字ジャンプ"></div>
             <div class="song-groups" id="favoriteGroups"></div>
           </div>
         </div>
@@ -4390,6 +4625,7 @@
             <button class="btn ghost" id="refreshSharedRanking" type="button">ランキングを更新</button>
           </div>
           <p class="shared-ranking-status" id="sharedRankingStatus">ランキングを読み込んでいます。</p>
+          <div class="song-index-jump auxiliary-index-jump" id="communityIndexJump" aria-label="文字ジャンプ"></div>
           <div class="song-groups" id="sharedRankingGroups"></div>
         </div>
       </div>
@@ -4425,6 +4661,7 @@
           <div class="capability-local-toolbar">
             <input id="capabilityLocalSearch" placeholder="共有したい曲を検索">
           </div>
+          <div class="song-index-jump auxiliary-index-jump" id="capabilityLocalIndexJump" aria-label="文字ジャンプ"></div>
           <div class="capability-local-list" id="capabilityLocalList"></div>
           <p class="shared-ranking-status" id="capabilityShareStatus" aria-live="polite"></p>
         </div>
@@ -4438,6 +4675,7 @@
           </div>
           <input id="capabilitySearch" placeholder="名前・曲名・歌手名・パートで検索">
           <p class="shared-ranking-status" id="capabilityListStatus">共有一覧を読み込んでいます。</p>
+          <div class="song-index-jump auxiliary-index-jump" id="capabilitySharedIndexJump" aria-label="文字ジャンプ"></div>
           <div class="capability-shared-list" id="capabilitySharedList"></div>
         </div>
       </div>
@@ -4858,6 +5096,11 @@
     const nextSongList = document.getElementById("nextSongList");
     const searchBox = document.getElementById("searchBox");
     const songSort = document.getElementById("songSort");
+    const songQuickSearch = document.getElementById("songQuickSearch");
+    const songQuickCount = document.getElementById("songQuickCount");
+    const songViewSwitch = document.getElementById("songViewSwitch");
+    const songIndexJump = document.getElementById("songIndexJump");
+    const songIndexNote = document.getElementById("songIndexNote");
     const countText = document.getElementById("countText");
     const totalSongCount = document.getElementById("totalSongCount");
     const clearAll = document.getElementById("clearAll");
@@ -4894,12 +5137,14 @@
     const favoriteTagFilterPanel = document.getElementById("favoriteTagFilterPanel");
     const contactForm = document.getElementById("contactForm");
     const favoriteGroups = document.getElementById("favoriteGroups");
+    const favoriteIndexJump = document.getElementById("favoriteIndexJump");
     const favoriteSearch = document.getElementById("favoriteSearch");
     const favoriteCount = document.getElementById("favoriteCount");
     const shareFavoriteSongs = document.getElementById("shareFavoriteSongs");
     const refreshSharedRanking = document.getElementById("refreshSharedRanking");
     const sharedRankingStatus = document.getElementById("sharedRankingStatus");
     const sharedRankingGroups = document.getElementById("sharedRankingGroups");
+    const communityIndexJump = document.getElementById("communityIndexJump");
     const duetOnly = document.getElementById("duetOnly");
     const gachaIncludeDuet = document.getElementById("gachaIncludeDuet");
     const songTagOptions = document.getElementById("songTagOptions");
@@ -5025,11 +5270,13 @@
     const capabilityDisplayName = document.getElementById("capabilityDisplayName");
     const capabilityLocalSearch = document.getElementById("capabilityLocalSearch");
     const capabilityLocalList = document.getElementById("capabilityLocalList");
+    const capabilityLocalIndexJump = document.getElementById("capabilityLocalIndexJump");
     const capabilityShareStatus = document.getElementById("capabilityShareStatus");
     const refreshCapabilities = document.getElementById("refreshCapabilities");
     const capabilitySearch = document.getElementById("capabilitySearch");
     const capabilityListStatus = document.getElementById("capabilityListStatus");
     const capabilitySharedList = document.getElementById("capabilitySharedList");
+    const capabilitySharedIndexJump = document.getElementById("capabilitySharedIndexJump");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -5201,6 +5448,15 @@
       "スノーホワイト": "Snow White",
       "ウォームベージュ": "Warm Beige",
       "曲関連ページ": "Song Pages",
+      "曲名・歌手名ですぐ検索": "Quick search by title or artist",
+      "曲リストをすぐ検索": "Quick search song list",
+      "曲リストの表示方法": "Song list view",
+      "歌手別": "By Artist",
+      "文字ジャンプ": "Letter Jump",
+      "詳細": "Details",
+      "歌手名未登録": "Artist not entered",
+      "文字ジャンプは「歌手別」または「曲名順」で使えます。": "Letter jump is available in By Artist or Title Order views.",
+      "文字を押すと、最初の該当グループへ移動します。": "Choose a letter to jump to the first matching group.",
       "みんなのお気に入り": "Community Favorites",
       "歌える・演奏できる曲へ": "Songs People Can Sing or Play",
       "共有ページを開く": "Open Sharing Page",
@@ -6059,6 +6315,7 @@
     if (settings.enableSongOwners === undefined) settings.enableSongOwners = false;
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
+    if (!["artist", "title", "recent", "sung"].includes(settings.songViewMode)) settings.songViewMode = "artist";
     if (!appThemes.some((theme) => theme.id === settings.colorTheme)) settings.colorTheme = "drum-green";
     if (typeof settings.commuteDestination !== "string") settings.commuteDestination = "";
     if (!["江古田駅", "新江古田駅", "新桜台駅"].includes(settings.commuteStation)) settings.commuteStation = "江古田駅";
@@ -6118,6 +6375,8 @@
     const sharedRankingApiUrl = "https://music-saloon-drum.com/api/api.php";
     let sharedRankingSongs = [];
     let sharedCapabilities = [];
+    const expandedSongGroups = new Set();
+    const expandedSongRows = new Set();
 
     const drinkOptionGroups = [
       {
@@ -7799,6 +8058,7 @@
         });
 
       favoriteCount.textContent = currentLanguage === "en" ? `${filtered.length} songs` : `${filtered.length}曲`;
+      renderAuxiliaryIndex(favoriteIndexJump, filtered, "favoriteGroups", "artist");
 
       if (!filtered.length) {
         favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText("まだ歌った記録がありません。マイ曲リストで「記録」を押すとランキングに反映されます。"))}</div></div>`;
@@ -7810,16 +8070,16 @@
           <div class="kana-head"><span>${escapeText(uiText("よく歌うランキング"))}</span><span>${currentLanguage === "en" ? `${filtered.length} songs` : `${filtered.length}曲`}</span></div>
           <ul class="favorite-list">
             ${filtered.map((item, index) => `
-              <li class="favorite-item">
+              <li class="favorite-item" data-list-index-group="${escapeText(songIndexGroup(item, "artist"))}">
                 <span class="rank-badge">${index + 1}</span>
-                <div>
-                  <p class="favorite-title">${highlightText(item.title, query)}</p>
-                  <p class="favorite-meta">${highlightText(item.artist || "-", query)}${item.key ? ` / ${highlightText(uiKey(item.key), query)}` : ""}</p>
-                  ${item.owner ? `<p class="favorite-meta">${escapeText(uiText("歌う人"))}：${highlightText(item.owner, query)}</p>` : ""}
-                  <p class="favorite-meta">${currentLanguage === "en" ? `${item.count} times sung` : `${item.count}回歌唱`}${item.lastDate ? ` / ${escapeText(uiText("最終:"))} ${escapeText(item.lastDate)}` : ""}</p>
-                  ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>` : ""}
-                  ${item.memo ? `<p class="favorite-meta">${highlightText(item.memo, query)}</p>` : ""}
-                  ${item.sourceId ? (() => {
+                <details class="compact-list-details">
+                  <summary><span><span class="favorite-title">${highlightText(item.title, query)}</span><span class="favorite-meta">${highlightText(item.artist || "-", query)}${item.key ? ` / ${highlightText(uiKey(item.key), query)}` : ""}</span></span></summary>
+                  <div class="compact-list-body">
+                    ${item.owner ? `<p class="favorite-meta">${escapeText(uiText("歌う人"))}：${highlightText(item.owner, query)}</p>` : ""}
+                    <p class="favorite-meta">${currentLanguage === "en" ? `${item.count} times sung` : `${item.count}回歌唱`}${item.lastDate ? ` / ${escapeText(uiText("最終:"))} ${escapeText(item.lastDate)}` : ""}</p>
+                    ${item.tags.length ? `<div>${item.tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>` : ""}
+                    ${item.memo ? `<p class="favorite-meta">${highlightText(item.memo, query)}</p>` : ""}
+                    ${item.sourceId ? (() => {
                     const sourceSong = activeProfileSongs().find((song) => song.id === item.sourceId);
                     if (!sourceSong) return "";
                     const isFavorite = getSongTags(sourceSong).includes("お気に入り");
@@ -7829,8 +8089,9 @@
                         <button class="btn primary song-capability-action" type="button" data-open-capability="${escapeText(sourceSong.id)}">${escapeText(uiText("歌・演奏を共有"))}</button>
                       </div>
                     `;
-                  })() : ""}
-                </div>
+                    })() : ""}
+                  </div>
+                </details>
               </li>
             `).join("")}
           </ul>
@@ -7873,6 +8134,7 @@
       const ranked = Array.isArray(sharedRankingSongs) ? sharedRankingSongs : [];
       const candidates = sharedFavoriteCandidates();
       const unshared = candidates.filter((item) => !item.sharedFavoriteEventId);
+      renderAuxiliaryIndex(communityIndexJump, ranked, "sharedRankingGroups", "artist");
 
       shareFavoriteSongs.disabled = !unshared.length;
       if (!ranked.length) {
@@ -7883,17 +8145,18 @@
             <div class="kana-head"><span>${escapeText(uiText("共有ランキング"))}</span><span>${currentLanguage === "en" ? `${ranked.length} songs` : `${ranked.length}曲`}</span></div>
             <ul class="favorite-list">
               ${ranked.map((item, index) => `
-                <li class="favorite-item">
+                <li class="favorite-item" data-list-index-group="${escapeText(songIndexGroup(item, "artist"))}">
                   <span class="rank-badge">${index + 1}</span>
-                  <div>
-                    <p class="favorite-title">${escapeText(item.title || "-")}</p>
-                    <p class="favorite-meta">${escapeText(item.artist || "-")}</p>
-                    <p class="favorite-meta">${currentLanguage === "en" ? `${Number(item.favorite_count || 0)} favorites` : `お気に入り ${Number(item.favorite_count || 0)}件`}</p>
-                    ${(() => {
-                      const localSong = findLocalSongFromRanking(item);
-                      return `<button class="btn ${localSong ? "ghost" : "primary"} shared-ranking-add-action" type="button" data-ranking-song-toggle="${index}" aria-pressed="${localSong ? "true" : "false"}">${escapeText(uiText(localSong ? "マイ曲リストから登録解除" : "自分も歌える・マイ曲リストへ"))}</button>`;
-                    })()}
-                  </div>
+                  <details class="compact-list-details">
+                    <summary><span><span class="favorite-title">${escapeText(item.title || "-")}</span><span class="favorite-meta">${escapeText(item.artist || "-")}</span></span></summary>
+                    <div class="compact-list-body">
+                      <p class="favorite-meta">${currentLanguage === "en" ? `${Number(item.favorite_count || 0)} favorites` : `お気に入り ${Number(item.favorite_count || 0)}件`}</p>
+                      ${(() => {
+                        const localSong = findLocalSongFromRanking(item);
+                        return `<button class="btn ${localSong ? "ghost" : "primary"} shared-ranking-add-action" type="button" data-ranking-song-toggle="${index}" aria-pressed="${localSong ? "true" : "false"}">${escapeText(uiText(localSong ? "マイ曲リストから登録解除" : "自分も歌える・マイ曲リストへ"))}</button>`;
+                      })()}
+                    </div>
+                  </details>
                 </li>
               `).join("")}
             </ul>
@@ -8053,6 +8316,7 @@
       capabilityDisplayName.value = settings.capabilityDisplayName || "";
       const query = normalizeKana(capabilityLocalSearch.value);
       const profileSongs = activeProfileSongs().filter((item) => normalizeKana(songSearchText(item)).includes(query));
+      renderAuxiliaryIndex(capabilityLocalIndexJump, profileSongs, "capabilityLocalList", "artist");
       if (!profileSongs.length) {
         capabilityLocalList.innerHTML = `<div class="empty">${escapeText(uiText(query ? "検索に一致する曲がありません。" : "共有するには、先にマイ曲リストへ曲を登録してください。"))}</div>`;
         return;
@@ -8061,20 +8325,21 @@
         const parts = Array.isArray(item.playableParts) ? item.playableParts : [];
         const canSing = item.capabilityCanSing !== false;
         return `
-          <article class="capability-song-card" data-capability-song="${escapeText(item.id)}">
-            <h4>${escapeText(item.title || "-")}</h4>
-            <p class="favorite-meta">${escapeText(item.artist || "-")}</p>
-            <div class="capability-badges">${capabilityBadges(canSing, parts)}</div>
-            <div class="capability-song-actions">
-              <label class="check-row">
-                <input type="checkbox" data-capability-can-sing="${escapeText(item.id)}" ${canSing ? "checked" : ""}>
-                ${escapeText(uiText("歌える"))}
-              </label>
-              <button class="btn primary" type="button" data-capability-share="${escapeText(item.id)}">${escapeText(uiText(item.capabilityShared ? "共有内容を更新" : "共有する"))}</button>
-              ${item.capabilityShared ? `<button class="btn ghost" type="button" data-capability-remove="${escapeText(item.id)}">${escapeText(uiText("共有を取り消す"))}</button><span class="capability-share-state">${escapeText(uiText("共有中"))}</span>` : ""}
+          <details class="capability-song-card compact-list-details" data-capability-song="${escapeText(item.id)}" data-list-index-group="${escapeText(songIndexGroup(item, "artist"))}">
+            <summary><span><span class="favorite-title">${escapeText(item.title || "-")}</span><span class="favorite-meta">${escapeText(item.artist || "-")}</span></span></summary>
+            <div class="compact-list-body">
+              <div class="capability-badges">${capabilityBadges(canSing, parts)}</div>
+              <div class="capability-song-actions">
+                <label class="check-row">
+                  <input type="checkbox" data-capability-can-sing="${escapeText(item.id)}" ${canSing ? "checked" : ""}>
+                  ${escapeText(uiText("歌える"))}
+                </label>
+                <button class="btn primary" type="button" data-capability-share="${escapeText(item.id)}">${escapeText(uiText(item.capabilityShared ? "共有内容を更新" : "共有する"))}</button>
+                ${item.capabilityShared ? `<button class="btn ghost" type="button" data-capability-remove="${escapeText(item.id)}">${escapeText(uiText("共有を取り消す"))}</button><span class="capability-share-state">${escapeText(uiText("共有中"))}</span>` : ""}
+              </div>
+              ${parts.length ? "" : `<p class="small">${escapeText(uiText("演奏パートは曲の編集画面で追加できます。設定で表示を有効にしてください。"))}</p>`}
             </div>
-            ${parts.length ? "" : `<p class="small">${escapeText(uiText("演奏パートは曲の編集画面で追加できます。設定で表示を有効にしてください。"))}</p>`}
-          </article>
+          </details>
         `;
       }).join("");
     }
@@ -8086,6 +8351,7 @@
       window.setTimeout(() => {
         const card = capabilityLocalList.querySelector(`[data-capability-song="${CSS.escape(id)}"]`);
         if (!card) return;
+        card.open = true;
         capabilityLocalList.querySelectorAll(".is-guided").forEach((item) => item.classList.remove("is-guided"));
         card.classList.add("is-guided");
         card.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -8106,6 +8372,7 @@
         ? `${filtered.length} shared song${filtered.length === 1 ? "" : "s"}.`
         : `${filtered.length}件の共有があります。`;
       if (!filtered.length) {
+        renderAuxiliaryIndex(capabilitySharedIndexJump, [], "capabilitySharedList", "artist");
         capabilitySharedList.innerHTML = `<div class="empty">${escapeText(uiText(query ? "検索に一致する共有曲がありません。" : "まだ共有された曲がありません。"))}</div>`;
         return;
       }
@@ -8115,17 +8382,20 @@
         if (!grouped.has(name)) grouped.set(name, []);
         grouped.get(name).push(item);
       });
+      renderAuxiliaryIndex(capabilitySharedIndexJump, [...grouped.keys()].map((name) => ({ artist: name })), "capabilitySharedList", "artist");
       capabilitySharedList.innerHTML = [...grouped.entries()].map(([name, items]) => `
-        <article class="capability-person-card">
-          <h4>${escapeText(name)}</h4>
-          ${items.map((item) => `
-            <div class="capability-song-card">
-              <strong>${escapeText(item.title || "-")}</strong>
-              <p class="favorite-meta">${escapeText(item.artist || "-")}</p>
-              <div class="capability-badges">${capabilityBadges(Boolean(Number(item.can_sing)), item.parts)}</div>
-            </div>
-          `).join("")}
-        </article>
+        <details class="capability-person-card compact-list-details" data-list-index-group="${escapeText(songIndexGroup({ artist: name }, "artist"))}">
+          <summary><span class="favorite-title">${escapeText(name)}</span><span class="favorite-meta">${currentLanguage === "en" ? `${items.length} songs` : `${items.length}曲`}</span></summary>
+          <div class="compact-list-body">
+            ${items.map((item) => `
+              <div class="capability-song-card">
+                <strong>${escapeText(item.title || "-")}</strong>
+                <p class="favorite-meta">${escapeText(item.artist || "-")}</p>
+                <div class="capability-badges">${capabilityBadges(Boolean(Number(item.can_sing)), item.parts)}</div>
+              </div>
+            `).join("")}
+          </div>
+        </details>
       `).join("");
     }
 
@@ -8228,12 +8498,103 @@
       }
     }
 
+    function songIndexLabels() {
+      if (currentLanguage === "en") return [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "#"];
+      return ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "英数", "その他"];
+    }
+
+    function songReadingParts(item) {
+      return String(item && item.kana || "").trim().split(/\s+/).filter(Boolean);
+    }
+
+    function songSortText(item, mode) {
+      if (currentLanguage === "en") return normalizeKana(mode === "artist" ? item.artist || "" : item.title || "");
+      const parts = songReadingParts(item);
+      if (mode === "artist") return normalizeKana(parts.length > 1 ? parts[parts.length - 1] : (item.artist || ""));
+      return normalizeKana(parts.length ? parts[0] : (item.title || ""));
+    }
+
+    function songIndexGroup(item, mode) {
+      const source = currentLanguage === "en"
+        ? String(mode === "artist" ? item.artist || "" : item.title || "").trim()
+        : songSortText(item, mode);
+      const normalized = normalizeKana(source);
+      const first = normalized.charAt(0);
+      if (currentLanguage === "en") {
+        const latin = first.toUpperCase();
+        return /^[A-Z]$/.test(latin) ? latin : "#";
+      }
+      if (/^[a-z0-9]$/i.test(first)) return "英数";
+      const match = kanaGroups.find((group) => group.label !== "英数" && group.label !== "その他" && group.chars.includes(first));
+      return match ? match.label : "その他";
+    }
+
+    function renderAuxiliaryIndex(container, items, targetId, mode = "artist") {
+      if (!container) return;
+      const available = new Set((items || []).map((item) => songIndexGroup(item, mode)));
+      container.innerHTML = songIndexLabels().map((label) => `
+        <button type="button" data-aux-index-jump="${escapeText(label)}" data-aux-index-target="${escapeText(targetId)}" ${available.has(label) ? "" : "disabled"}>${escapeText(label)}</button>
+      `).join("");
+      container.hidden = !items || !items.length;
+    }
+
+    function renderSongViewControls(mode, availableIndexes = new Set()) {
+      songViewSwitch.querySelectorAll("[data-song-view-mode]").forEach((button) => {
+        const isActive = button.dataset.songViewMode === mode;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+      if (mode !== "artist" && mode !== "title") {
+        songIndexJump.innerHTML = "";
+        songIndexNote.textContent = uiText("文字ジャンプは「歌手別」または「曲名順」で使えます。");
+        return;
+      }
+      songIndexJump.innerHTML = songIndexLabels().map((label) => `
+        <button type="button" data-song-index-jump="${escapeText(label)}" ${availableIndexes.has(label) ? "" : "disabled"}>${escapeText(label)}</button>
+      `).join("");
+      songIndexNote.textContent = currentLanguage === "en"
+        ? "Jump to the first matching group."
+        : "文字を押すと、最初の該当グループへ移動します。";
+    }
+
+    function compactSongRowHtml(item, query, hidden = false) {
+      const isExpanded = expandedSongRows.has(item.id);
+      const tags = getSongTags(item);
+      const detailBits = [
+        item.owner ? `<p><strong>${escapeText(uiText("歌う人"))}：</strong>${highlightText(item.owner, query)}</p>` : "",
+        tags.length ? `<div>${tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>` : "",
+        settings.showPlayableParts && item.playableParts && item.playableParts.length
+          ? `<div class="capability-badges">${item.playableParts.map((part) => `<span class="capability-badge">${highlightText(uiText(part), query)}</span>`).join("")}</div>`
+          : "",
+        settings.showMemo ? `<p><strong>${escapeText(uiText("メモ"))}：</strong>${highlightText(item.memo || "-", query)}</p>` : ""
+      ].filter(Boolean).join("");
+      return `
+        <tr class="swipe-row compact-song-row ${isExpanded ? "is-expanded" : ""} song-group-song" data-song-id="${escapeText(item.id)}" ${hidden ? "hidden" : ""}>
+          <td class="song-title-cell" data-label="${escapeText(uiText("曲名"))}">${highlightText(item.title, query)}</td>
+          <td class="artist-cell" data-label="${escapeText(uiText("歌手名"))}">${highlightText(item.artist || "-", query)}</td>
+          <td data-label="${escapeText(uiText("キー"))}"><span class="status">${highlightText(uiKey(item.key), query)}</span></td>
+          <td class="song-detail-cell" data-label="${escapeText(uiText("詳細"))}"><div class="song-detail-stack">${detailBits}</div></td>
+          <td class="action-cell" data-label="${escapeText(uiText("操作"))}">
+            <button class="btn ghost song-detail-toggle" type="button" data-song-detail="${escapeText(item.id)}" aria-expanded="${isExpanded}">${escapeText(uiText(isExpanded ? "閉じる" : "詳細"))}</button>
+            <div class="song-row-actions">
+              <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
+              <button class="btn primary" type="button" data-record="${escapeText(item.id)}">${escapeText(uiText("記録"))}</button>
+              <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
+              <button class="btn ghost" type="button" data-delete="${escapeText(item.id)}">${escapeText(uiText("削除"))}</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
     function renderSongs() {
       renderArtistFilterPanel();
       renderOwnerFilterPanel();
       const query = searchBox.value.trim();
       const normalizedQuery = normalizeKana(query);
-      const sortMode = songSort ? songSort.value : "recent";
+      const sortMode = settings.songViewMode || "artist";
+      songSort.value = sortMode;
+      if (songQuickSearch.value !== searchBox.value) songQuickSearch.value = searchBox.value;
       const profileSongs = activeProfileSongs();
       const filtered = profileSongs.filter((item) => {
         const tags = getSongTags(item);
@@ -8241,10 +8602,10 @@
         return normalizeKana(songSearchText(item)).includes(normalizedQuery);
       }).sort((a, b) => {
         if (sortMode === "title") {
-          return (a.title || "").localeCompare(b.title || "", "ja") || (a.artist || "").localeCompare(b.artist || "", "ja");
+          return songSortText(a, "title").localeCompare(songSortText(b, "title"), "ja") || (a.title || "").localeCompare(b.title || "", "ja");
         }
         if (sortMode === "artist") {
-          return (a.artist || "").localeCompare(b.artist || "", "ja") || (a.title || "").localeCompare(b.title || "", "ja");
+          return songSortText(a, "artist").localeCompare(songSortText(b, "artist"), "ja") || (a.artist || "").localeCompare(b.artist || "", "ja") || songSortText(a, "title").localeCompare(songSortText(b, "title"), "ja");
         }
         if (sortMode === "sung") {
           const countDiff = songSungCount(b.id) - songSungCount(a.id);
@@ -8255,33 +8616,67 @@
 
       totalSongCount.textContent = currentLanguage === "en" ? `${profileSongs.length} songs` : `${profileSongs.length}曲`;
       countText.textContent = currentLanguage === "en" ? `${filtered.length} items` : `${filtered.length}件`;
+      songQuickCount.textContent = currentLanguage === "en" ? `${filtered.length} items` : `${filtered.length}件`;
       updateDrumGachaRateLabel();
 
       if (!filtered.length) {
+        renderSongViewControls(sortMode, new Set());
         list.innerHTML = `<tr><td class="empty" colspan="5">${escapeText(uiText("まだ登録がありません"))}</td></tr>`;
         renderNextSongs();
         return;
       }
 
-      list.innerHTML = filtered.map((item) => `
-        <tr class="swipe-row" data-song-id="${item.id}">
-          <td class="song-title-cell" data-label="${escapeText(uiText("曲名"))}">${highlightText(item.title, query)}</td>
-          <td class="artist-cell" data-label="${escapeText(uiText("歌手名"))}">
-            ${highlightText(item.artist || "-", query)}
-            ${item.owner ? `<div class="favorite-meta">${escapeText(uiText("歌う人"))}：${highlightText(item.owner, query)}</div>` : ""}
-            <div>${getSongTags(item).map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>
-            ${settings.showPlayableParts && item.playableParts && item.playableParts.length ? `<div class="capability-badges">${item.playableParts.map((part) => `<span class="capability-badge">${highlightText(uiText(part), query)}</span>`).join("")}</div>` : ""}
-          </td>
-          <td data-label="${escapeText(uiText("キー"))}"><span class="status">${highlightText(uiKey(item.key), query)}</span></td>
-          <td class="memo-cell" data-label="${escapeText(uiText("メモ"))}">${highlightText(item.memo || "-", query)}</td>
-          <td class="action-cell" data-label="${escapeText(uiText("操作"))}">
-            <button class="btn ghost" type="button" data-next="${item.id}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
-            <button class="btn primary" type="button" data-record="${item.id}">${escapeText(uiText("記録"))}</button>
-            <button class="btn ghost" type="button" data-edit="${item.id}">${escapeText(uiText("編集"))}</button>
-            <button class="btn ghost" type="button" data-delete="${item.id}">${escapeText(uiText("削除"))}</button>
-          </td>
-        </tr>
-      `).join("");
+      const availableIndexes = new Set();
+      if (sortMode === "artist") {
+        const groups = [];
+        const groupMap = new Map();
+        filtered.forEach((item) => {
+          const label = String(item.artist || "").trim() || uiText("歌手名未登録");
+          const key = `artist:${normalizeKana(label) || "unknown"}`;
+          if (!groupMap.has(key)) {
+            const group = { key, label, index: songIndexGroup(item, "artist"), items: [] };
+            groupMap.set(key, group);
+            groups.push(group);
+          }
+          groupMap.get(key).items.push(item);
+        });
+        list.innerHTML = groups.map((group) => {
+          availableIndexes.add(group.index);
+          const isExpanded = Boolean(query) || expandedSongGroups.has(group.key);
+          return `
+            <tr class="song-group-row" data-song-index-group="${escapeText(group.index)}" data-song-group-key="${escapeText(group.key)}">
+              <td colspan="5"><button class="song-group-toggle" type="button" data-song-group-toggle="${escapeText(group.key)}" aria-expanded="${isExpanded}"><span class="song-group-toggle-icon">${isExpanded ? "−" : "+"}</span><span>${escapeText(group.label)}</span><span>${currentLanguage === "en" ? `${group.items.length} songs` : `${group.items.length}曲`}</span></button></td>
+            </tr>
+            ${group.items.map((item) => compactSongRowHtml(item, query, !isExpanded)).join("")}
+          `;
+        }).join("");
+      } else if (sortMode === "title") {
+        const groups = [];
+        const groupMap = new Map();
+        filtered.forEach((item) => {
+          const label = songIndexGroup(item, "title");
+          const key = `title:${label}`;
+          if (!groupMap.has(key)) {
+            const group = { key, label, index: label, items: [] };
+            groupMap.set(key, group);
+            groups.push(group);
+          }
+          groupMap.get(key).items.push(item);
+        });
+        list.innerHTML = groups.map((group) => {
+          availableIndexes.add(group.index);
+          const isExpanded = Boolean(query) || expandedSongGroups.has(group.key);
+          return `
+            <tr class="song-group-row" data-song-index-group="${escapeText(group.index)}" data-song-group-key="${escapeText(group.key)}">
+              <td colspan="5"><button class="song-group-toggle" type="button" data-song-group-toggle="${escapeText(group.key)}" aria-expanded="${isExpanded}"><span class="song-group-toggle-icon">${isExpanded ? "−" : "+"}</span><span>${escapeText(group.label)}</span><span>${currentLanguage === "en" ? `${group.items.length} songs` : `${group.items.length}曲`}</span></button></td>
+            </tr>
+            ${group.items.map((item) => compactSongRowHtml(item, query, !isExpanded)).join("")}
+          `;
+        }).join("");
+      } else {
+        list.innerHTML = filtered.map((item) => compactSongRowHtml(item, query)).join("");
+      }
+      renderSongViewControls(sortMode, availableIndexes);
       renderNextSongs();
     }
 
@@ -8669,6 +9064,26 @@
     });
 
     list.addEventListener("click", (event) => {
+      const groupButton = event.target.closest("[data-song-group-toggle]");
+      if (groupButton) {
+        const key = groupButton.dataset.songGroupToggle;
+        if (expandedSongGroups.has(key)) expandedSongGroups.delete(key);
+        else expandedSongGroups.add(key);
+        renderSongs();
+        return;
+      }
+      const detailButton = event.target.closest("[data-song-detail]");
+      if (detailButton) {
+        const id = detailButton.dataset.songDetail;
+        const row = detailButton.closest(".compact-song-row");
+        const willExpand = !expandedSongRows.has(id);
+        if (willExpand) expandedSongRows.add(id);
+        else expandedSongRows.delete(id);
+        if (row) row.classList.toggle("is-expanded", willExpand);
+        detailButton.setAttribute("aria-expanded", String(willExpand));
+        detailButton.textContent = uiText(willExpand ? "閉じる" : "詳細");
+        return;
+      }
       const nextButton = event.target.closest("[data-next]");
       if (nextButton) {
         toggleNextWish(nextButton.dataset.next);
@@ -8685,8 +9100,14 @@
         return;
       }
       const button = event.target.closest("[data-delete]");
-      if (!button) return;
-      deleteSong(button.dataset.delete);
+      if (button) {
+        deleteSong(button.dataset.delete);
+        return;
+      }
+      const row = event.target.closest(".compact-song-row");
+      if (!row || event.target.closest("button, a, input, select, textarea")) return;
+      const rowDetailButton = row.querySelector("[data-song-detail]");
+      if (rowDetailButton) rowDetailButton.click();
     });
 
     enableSwipeDelete(list, "[data-song-id]", "songId", deleteSong);
@@ -8857,8 +9278,54 @@
       songExportText.value = createSongExportText();
     });
 
-    searchBox.addEventListener("input", renderSongs);
-    songSort.addEventListener("change", renderSongs);
+    searchBox.addEventListener("input", () => {
+      songQuickSearch.value = searchBox.value;
+      renderSongs();
+    });
+    songQuickSearch.addEventListener("input", () => {
+      searchBox.value = songQuickSearch.value;
+      renderSongs();
+    });
+    songSort.addEventListener("change", () => {
+      settings.songViewMode = songSort.value;
+      saveSettings();
+      expandedSongGroups.clear();
+      renderSongs();
+    });
+    songViewSwitch.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-song-view-mode]");
+      if (!button || !["artist", "title", "recent", "sung"].includes(button.dataset.songViewMode)) return;
+      settings.songViewMode = button.dataset.songViewMode;
+      saveSettings();
+      expandedSongGroups.clear();
+      renderSongs();
+    });
+    songIndexJump.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-song-index-jump]");
+      if (!button || button.disabled) return;
+      const label = button.dataset.songIndexJump;
+      let target = [...list.querySelectorAll("[data-song-index-group]")].find((row) => row.dataset.songIndexGroup === label);
+      if (!target) return;
+      const groupKey = target.dataset.songGroupKey;
+      if (groupKey && !expandedSongGroups.has(groupKey)) {
+        expandedSongGroups.add(groupKey);
+        renderSongs();
+        target = [...list.querySelectorAll("[data-song-index-group]")].find((row) => row.dataset.songIndexGroup === label);
+      }
+      if (target) window.requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
+    });
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-aux-index-jump]");
+      if (!button || button.disabled) return;
+      const container = document.getElementById(button.dataset.auxIndexTarget);
+      if (!container) return;
+      const label = button.dataset.auxIndexJump;
+      const target = [...container.querySelectorAll("[data-list-index-group]")].find((item) => item.dataset.listIndexGroup === label);
+      if (!target) return;
+      const details = target.matches("details") ? target : target.querySelector("details");
+      if (details) details.open = true;
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
     duetOnly.addEventListener("change", renderSongs);
     songKeyBase.addEventListener("change", updateKeyAdjustLabel);
     form.addEventListener("input", saveSongDraft);
@@ -8908,6 +9375,12 @@
       const button = event.target.closest("[data-filter-tag]");
       if (!button) return;
       setSearchByTag(searchBox, button.dataset.filterTag, renderSongs, songTagFilter);
+    });
+
+    songArtistFilterPanel.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter-artist]");
+      if (!button) return;
+      setSearchByTag(searchBox, button.dataset.filterArtist, renderSongs, songArtistFilter);
     });
 
     favoriteTagFilterPanel.addEventListener("click", (event) => {
