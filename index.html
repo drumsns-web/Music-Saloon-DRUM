@@ -1304,6 +1304,103 @@
       background: rgba(255, 247, 232, .9);
     }
 
+    .song-catalog-card {
+      margin: 0 0 18px;
+      border: 1px solid rgba(240, 138, 53, .5);
+      border-radius: 10px;
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(255, 253, 248, .98), rgba(255, 243, 220, .94));
+    }
+
+    .song-catalog-card h4 {
+      margin: 0 0 6px;
+      color: var(--forest);
+      font-size: 18px;
+    }
+
+    .song-catalog-search {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .song-catalog-search .btn {
+      min-width: 92px;
+    }
+
+    .song-catalog-status {
+      min-height: 1.5em;
+      margin: 8px 0 0;
+      color: #4c4035;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .song-catalog-results {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .song-catalog-result {
+      border: 1px solid rgba(16, 76, 54, .2);
+      border-radius: 9px;
+      padding: 11px;
+      background: #fffef9;
+    }
+
+    .song-catalog-result-title {
+      display: block;
+      color: #18251f;
+      font-size: 16px;
+    }
+
+    .song-catalog-result-artist {
+      margin: 2px 0 9px;
+      color: #514235;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .song-catalog-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .song-catalog-actions .btn {
+      min-height: 38px;
+      padding: 8px 11px;
+      font-size: 13px;
+    }
+
+    .song-title-with-links {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .song-external-search {
+      min-height: 30px;
+      border: 1px solid rgba(16, 76, 54, .22);
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: #173f30;
+      background: #fffef9;
+      font-size: 11px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .song-external-search:hover,
+    .song-external-search:focus-visible {
+      border-color: var(--orange);
+      outline: none;
+      background: #fff3dc;
+    }
+
     .photo-song-card h4 {
       margin: 0 0 8px;
       color: var(--forest);
@@ -1494,6 +1591,15 @@
 
       .song-profile-buttons {
         justify-content: flex-start;
+      }
+
+      .song-catalog-search {
+        grid-template-columns: 1fr;
+      }
+
+      .song-catalog-search .btn,
+      .song-catalog-actions .btn {
+        width: 100%;
       }
     }
 
@@ -4097,6 +4203,16 @@
             <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
             <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。</p>
             <p class="autosave-note" id="songDraftStatus" aria-live="polite">入力内容はこの端末に自動保存されます。</p>
+            <div class="song-catalog-card">
+              <h4>曲データから検索して登録</h4>
+              <p class="small">曲名または歌手名を入力すると候補が表示されます。候補は一般の音楽データベースから取得するため、カラオケ配信状況はDAM・JOYSOUNDの公式検索でご確認ください。</p>
+              <form class="song-catalog-search" id="songCatalogSearchForm">
+                <input id="songCatalogQuery" type="search" placeholder="例：いとしのエリー／サザンオールスターズ" autocomplete="off" aria-label="曲名または歌手名で曲データを検索">
+                <button class="btn primary" id="songCatalogSearchButton" type="submit">検索</button>
+              </form>
+              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">2文字以上入力して検索してください。</p>
+              <div class="song-catalog-results" id="songCatalogResults"></div>
+            </div>
             <div class="photo-song-card">
               <h4>写真から曲名を読み取る</h4>
               <p class="small">曲名と歌手名が写った写真から、登録したい1組だけを選んで読み取れます。</p>
@@ -5079,6 +5195,11 @@
     const songSubmitButton = document.getElementById("songSubmitButton");
     const songEditCancelButton = document.getElementById("songEditCancelButton");
     const songDraftStatus = document.getElementById("songDraftStatus");
+    const songCatalogSearchForm = document.getElementById("songCatalogSearchForm");
+    const songCatalogQuery = document.getElementById("songCatalogQuery");
+    const songCatalogSearchButton = document.getElementById("songCatalogSearchButton");
+    const songCatalogStatus = document.getElementById("songCatalogStatus");
+    const songCatalogResults = document.getElementById("songCatalogResults");
     const songProfileBar = document.getElementById("songProfileBar");
     const songProfileLabel = document.getElementById("songProfileLabel");
     const songProfileButtons = document.getElementById("songProfileButtons");
@@ -5486,6 +5607,25 @@
       "帰り道": "Getting Home",
       "今日は何をしますか？": "What would you like to do today?",
       "曲を探す": "Search Songs",
+      "コード": "Chords",
+      "歌詞": "Lyrics",
+      "曲データから検索して登録": "Search the Song Database",
+      "曲名または歌手名を入力すると候補が表示されます。候補は一般の音楽データベースから取得するため、カラオケ配信状況はDAM・JOYSOUNDの公式検索でご確認ください。": "Enter a song title or artist to see suggestions. Results come from a general music database, so please check the official DAM or JOYSOUND search for karaoke availability.",
+      "例：いとしのエリー／サザンオールスターズ": "Ex: Let It Be / The Beatles",
+      "曲名または歌手名で曲データを検索": "Search the song database by title or artist",
+      "検索": "Search",
+      "マイ曲へ": "Add to My Songs",
+      "お気に入りへ": "Add to Favorites",
+      "演奏できる": "Can play",
+      "入力欄へ入れました。演奏できるパートを選んで保存してください。": "Added to the form. Choose the parts you can play, then save.",
+      "2文字以上入力して検索してください。": "Enter at least two characters to search.",
+      "曲データを検索しています。": "Searching the song database...",
+      "検索結果がありません。表記を変えるか、手入力で登録してください。": "No matches. Try another spelling or enter the song manually.",
+      "曲データを取得できませんでした。時間をおいて再度お試しください。": "Could not load song data. Please try again later.",
+      "この曲はすでにマイ曲リストにあります。": "This song is already in My Songs.",
+      "マイ曲リストへ登録しました。": "Added to My Songs.",
+      "お気に入りへ登録しました。": "Added to Favorites.",
+      "歌える曲として登録しました。": "Added as a song you can sing.",
       "ルールを見る": "View Rules",
       "帰り道サポート": "Getting Home",
       "目的地を設定": "Set Destination",
@@ -6379,6 +6519,8 @@
     const sharedRankingApiUrl = "https://music-saloon-drum.com/api/api.php";
     let sharedRankingSongs = [];
     let sharedCapabilities = [];
+    let catalogSearchItems = [];
+    let catalogSearchController = null;
     const expandedSongGroups = new Set();
     const expandedSongRows = new Set();
 
@@ -8574,7 +8716,7 @@
       ].filter(Boolean).join("");
       return `
         <tr class="swipe-row compact-song-row ${isExpanded ? "is-expanded" : ""} song-group-song" data-song-id="${escapeText(item.id)}" ${hidden ? "hidden" : ""}>
-          <td class="song-title-cell" data-label="${escapeText(uiText("曲名"))}">${highlightText(item.title, query)}</td>
+          <td class="song-title-cell" data-label="${escapeText(uiText("曲名"))}"><span class="song-title-with-links"><span>${highlightText(item.title, query)}</span><button class="song-external-search" type="button" data-song-chords="${escapeText(item.id)}">♬ ${escapeText(uiText("コード"))}</button><button class="song-external-search" type="button" data-song-lyrics="${escapeText(item.id)}">歌 ${escapeText(uiText("歌詞"))}</button></span></td>
           <td class="artist-cell" data-label="${escapeText(uiText("歌手名"))}">${highlightText(item.artist || "-", query)}</td>
           <td data-label="${escapeText(uiText("キー"))}"><span class="status">${highlightText(uiKey(item.key), query)}</span></td>
           <td class="song-detail-cell" data-label="${escapeText(uiText("詳細"))}"><div class="song-detail-stack">${detailBits}</div></td>
@@ -9005,6 +9147,136 @@
     refreshCapabilities.addEventListener("click", loadSharedCapabilities);
     capabilitySearch.addEventListener("input", renderCapabilitySharedList);
 
+    function renderCatalogSearchResults() {
+      if (!catalogSearchItems.length) {
+        songCatalogResults.innerHTML = "";
+        return;
+      }
+      songCatalogResults.innerHTML = catalogSearchItems.map((item, index) => `
+        <article class="song-catalog-result">
+          <strong class="song-catalog-result-title">${escapeText(item.title || "-")}</strong>
+          <p class="song-catalog-result-artist">${escapeText(item.artist || uiText("歌手名未登録"))}</p>
+          <div class="song-catalog-actions">
+            <button class="btn ghost" type="button" data-catalog-add="song" data-catalog-index="${index}">${escapeText(uiText("マイ曲へ"))}</button>
+            <button class="btn primary" type="button" data-catalog-add="favorite" data-catalog-index="${index}">★ ${escapeText(uiText("お気に入りへ"))}</button>
+            <button class="btn ghost" type="button" data-catalog-add="sing" data-catalog-index="${index}">${escapeText(uiText("歌える"))}</button>
+            <button class="btn ghost" type="button" data-catalog-add="play" data-catalog-index="${index}">${escapeText(uiText("演奏できる"))}</button>
+          </div>
+        </article>
+      `).join("");
+      refreshLanguageSoon();
+    }
+
+    async function searchSongCatalog() {
+      const query = songCatalogQuery.value.trim();
+      if (query.length < 2) {
+        songCatalogStatus.textContent = uiText("2文字以上入力して検索してください。");
+        songCatalogQuery.focus();
+        return;
+      }
+      if (catalogSearchController) catalogSearchController.abort();
+      catalogSearchController = new AbortController();
+      songCatalogSearchButton.disabled = true;
+      songCatalogStatus.textContent = uiText("曲データを検索しています。");
+      songCatalogResults.innerHTML = "";
+      try {
+        const response = await fetch(`${sharedRankingApiUrl}?action=song_search&q=${encodeURIComponent(query)}`, {
+          cache: "no-store",
+          signal: catalogSearchController.signal
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("song search unavailable");
+        catalogSearchItems = payload.songs
+          .map((item) => ({ title: String(item.title || "").trim(), artist: String(item.artist || "").trim() }))
+          .filter((item) => item.title)
+          .slice(0, 12);
+        songCatalogStatus.textContent = catalogSearchItems.length
+          ? (currentLanguage === "en" ? `${catalogSearchItems.length} matches found.` : `${catalogSearchItems.length}件の候補が見つかりました。`)
+          : uiText("検索結果がありません。表記を変えるか、手入力で登録してください。");
+        renderCatalogSearchResults();
+      } catch (error) {
+        if (error.name === "AbortError") return;
+        console.warn(error);
+        catalogSearchItems = [];
+        songCatalogResults.innerHTML = "";
+        songCatalogStatus.textContent = uiText("曲データを取得できませんでした。時間をおいて再度お試しください。");
+      } finally {
+        songCatalogSearchButton.disabled = false;
+      }
+    }
+
+    function addCatalogSong(index, mode) {
+      const source = catalogSearchItems[Number(index)];
+      if (!source || !source.title) return;
+      if (mode === "play") {
+        document.getElementById("songTitle").value = source.title;
+        document.getElementById("artistName").value = source.artist || "";
+        saveSongDraft();
+        songCatalogStatus.textContent = uiText("入力欄へ入れました。演奏できるパートを選んで保存してください。");
+        const target = settings.showPlayableParts ? playablePartsField : document.getElementById("songTitle");
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (!settings.showPlayableParts) document.getElementById("songTitle").focus({ preventScroll: true });
+        return;
+      }
+
+      const normalizedTitle = normalizeKana(source.title);
+      const normalizedArtist = normalizeKana(source.artist);
+      let item = activeProfileSongs().find((song) =>
+        normalizeKana(song.title) === normalizedTitle && normalizeKana(song.artist || "") === normalizedArtist
+      );
+      const isNew = !item;
+      if (!item) {
+        item = {
+          id: createId(),
+          title: source.title,
+          artist: source.artist || "",
+          owner: "",
+          kana: "",
+          key: "",
+          memo: "",
+          duet: false,
+          tags: [],
+          playableParts: [],
+          nextWish: false,
+          profile: activeSongProfile(),
+          createdAt: new Date().toISOString()
+        };
+        songs.unshift(item);
+      }
+      if (mode === "favorite" && !getSongTags(item).includes("お気に入り")) item.tags = [...getSongTags(item), "お気に入り"];
+      if (mode === "sing") item.capabilityCanSing = true;
+      saveSongs();
+      renderSongs();
+      renderFavorites();
+      renderCapabilityLocalList();
+      songCatalogStatus.textContent = uiText(mode === "favorite"
+        ? "お気に入りへ登録しました。"
+        : mode === "sing"
+          ? "歌える曲として登録しました。"
+          : isNew ? "マイ曲リストへ登録しました。" : "この曲はすでにマイ曲リストにあります。");
+    }
+
+    songCatalogSearchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      searchSongCatalog();
+    });
+
+    songCatalogResults.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-catalog-add]");
+      if (!button) return;
+      addCatalogSong(button.dataset.catalogIndex, button.dataset.catalogAdd);
+    });
+
+    function openSongReference(id, type) {
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      const words = [item.title, item.artist].filter(Boolean).join(" ");
+      const url = type === "chords"
+        ? `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${words}`)}`
+        : `https://www.uta-net.com/search/?Aselect=2&Keyword=${encodeURIComponent(item.title || words)}&Bselect=3`;
+      window.open(url, "_blank", "noopener");
+    }
+
     chooseSongPhotoButton.addEventListener("click", () => {
       songPhotoInput.click();
     });
@@ -9068,6 +9340,16 @@
     });
 
     list.addEventListener("click", (event) => {
+      const chordButton = event.target.closest("[data-song-chords]");
+      if (chordButton) {
+        openSongReference(chordButton.dataset.songChords, "chords");
+        return;
+      }
+      const lyricButton = event.target.closest("[data-song-lyrics]");
+      if (lyricButton) {
+        openSongReference(lyricButton.dataset.songLyrics, "lyrics");
+        return;
+      }
       const groupButton = event.target.closest("[data-song-group-toggle]");
       if (groupButton) {
         const key = groupButton.dataset.songGroupToggle;
