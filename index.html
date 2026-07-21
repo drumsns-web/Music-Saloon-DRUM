@@ -1305,28 +1305,67 @@
     }
 
     .song-catalog-card {
-      margin: 0 0 18px;
-      border: 1px solid rgba(240, 138, 53, .5);
-      border-radius: 10px;
-      padding: 14px;
-      background: linear-gradient(135deg, rgba(255, 253, 248, .98), rgba(255, 243, 220, .94));
+      margin: 0 0 20px;
+      border: 3px solid var(--orange);
+      border-radius: 16px;
+      padding: clamp(16px, 3vw, 24px);
+      background: linear-gradient(145deg, #fffef9, #fff0d3);
+      box-shadow: 0 18px 42px rgba(240, 138, 53, .2);
     }
 
     .song-catalog-card h4 {
-      margin: 0 0 6px;
+      margin: 8px 0 6px;
       color: var(--forest);
-      font-size: 18px;
+      font-size: clamp(22px, 4vw, 28px);
+      line-height: 1.35;
+    }
+
+    .catalog-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 11px;
+      color: #132d22;
+      background: var(--orange);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .catalog-main-help {
+      margin: 0;
+      color: #3f352c;
+      font-weight: 800;
+      line-height: 1.7;
     }
 
     .song-catalog-search {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .song-catalog-search input {
+      min-height: 64px;
+      border: 3px solid var(--forest);
+      border-radius: 12px;
+      padding: 13px 16px;
+      color: #17231e;
+      background: #fff;
+      font-size: 18px;
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.7), 0 9px 24px rgba(15, 63, 45, .1);
+    }
+
+    .song-catalog-search input:focus {
+      border-color: var(--orange);
+      outline: 3px solid rgba(240, 138, 53, .22);
     }
 
     .song-catalog-search .btn {
-      min-width: 92px;
+      min-width: 118px;
+      min-height: 64px;
+      font-size: 18px;
     }
 
     .song-catalog-status {
@@ -1344,9 +1383,9 @@
     }
 
     .song-catalog-result {
-      border: 1px solid rgba(16, 76, 54, .2);
-      border-radius: 9px;
-      padding: 11px;
+      border: 2px solid rgba(16, 76, 54, .2);
+      border-radius: 12px;
+      padding: 14px;
       background: #fffef9;
     }
 
@@ -1363,6 +1402,41 @@
       font-weight: 800;
     }
 
+    .song-catalog-action-label {
+      display: block;
+      margin: 10px 0 6px;
+      color: #43372d;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .song-catalog-official-checks {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 7px;
+      margin: 10px 0;
+      border-top: 1px solid rgba(16, 76, 54, .14);
+      border-bottom: 1px solid rgba(16, 76, 54, .14);
+      padding: 10px 0;
+    }
+
+    .song-catalog-official-checks .btn {
+      min-height: 42px;
+      font-size: 13px;
+    }
+
+    .joysound-check {
+      color: #fff !important;
+      border-color: #e33945 !important;
+      background: #d92736 !important;
+    }
+
+    .dam-check {
+      color: #fff !important;
+      border-color: #1768b0 !important;
+      background: #125a9b !important;
+    }
+
     .song-catalog-actions {
       display: flex;
       flex-wrap: wrap;
@@ -1373,6 +1447,47 @@
       min-height: 38px;
       padding: 8px 11px;
       font-size: 13px;
+    }
+
+    .catalog-source-note {
+      margin: 14px 0 0;
+      border-left: 4px solid var(--orange);
+      padding: 9px 11px;
+      color: #4b4036;
+      background: rgba(255,255,255,.64);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    .alternative-register-heading {
+      margin: 18px 0 8px;
+      color: #493c31;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .secondary-entry {
+      margin: 0 0 10px;
+    }
+
+    .secondary-entry > summary {
+      cursor: pointer;
+      color: var(--forest);
+      font-size: 16px;
+      font-weight: 900;
+      list-style-position: inside;
+    }
+
+    .secondary-entry[open] > summary {
+      margin-bottom: 12px;
+    }
+
+    .manual-song-entry {
+      border: 1px solid rgba(240, 138, 53, .34);
+      border-radius: 8px;
+      padding: 14px;
+      background: rgba(255, 247, 232, .9);
     }
 
     .song-title-with-links {
@@ -1601,6 +1716,10 @@
       .song-catalog-actions .btn {
         width: 100%;
       }
+
+      .song-catalog-official-checks {
+        grid-template-columns: 1fr;
+      }
     }
 
     .optional-label {
@@ -1625,6 +1744,18 @@
       width: 100%;
       min-height: 52px;
       font-size: 17px;
+    }
+
+    .song-form-card .song-catalog-actions .btn.primary {
+      width: auto;
+      min-height: 38px;
+      font-size: 13px;
+    }
+
+    @media (max-width: 620px) {
+      .song-form-card .song-catalog-actions .btn {
+        width: 100%;
+      }
     }
 
     .backup-recommend {
@@ -4200,21 +4331,22 @@
 
           <div class="card song-form-card" id="songRegister">
             <h3 id="songFormTitle">曲を登録する</h3>
-            <p class="form-lead">まずは曲名だけで保存できます。歌手名・キー・タグ・メモは、わかる範囲であとから整えれば大丈夫です。</p>
-            <p class="quick-register-note">入力が面倒な時は、曲名だけ入れて「マイ曲リストに保存」を押してください。</p>
-            <p class="autosave-note" id="songDraftStatus" aria-live="polite">入力内容はこの端末に自動保存されます。</p>
+            <p class="form-lead">まず下の検索欄へ曲名または歌手名を入力してください。候補からかんたんに登録できます。</p>
             <div class="song-catalog-card">
-              <h4>曲データから検索して登録</h4>
-              <p class="small">曲名または歌手名を入力すると候補が表示されます。候補は一般の音楽データベースから取得するため、カラオケ配信状況はDAM・JOYSOUNDの公式検索でご確認ください。</p>
+              <span class="catalog-eyebrow">おすすめ・かんたん登録</span>
+              <h4>① 曲名または歌手名で検索</h4>
+              <p class="catalog-main-help">② 候補を確認　→　③ 登録先のボタンを押すだけです。</p>
               <form class="song-catalog-search" id="songCatalogSearchForm">
-                <input id="songCatalogQuery" type="search" placeholder="例：いとしのエリー／サザンオールスターズ" autocomplete="off" aria-label="曲名または歌手名で曲データを検索">
-                <button class="btn primary" id="songCatalogSearchButton" type="submit">検索</button>
+                <input id="songCatalogQuery" type="search" placeholder="ここに曲名・歌手名を入力" autocomplete="off" aria-label="曲名または歌手名で曲データを検索">
+                <button class="btn primary" id="songCatalogSearchButton" type="submit">曲を検索</button>
               </form>
               <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">2文字以上入力して検索してください。</p>
               <div class="song-catalog-results" id="songCatalogResults"></div>
+              <p class="catalog-source-note">候補は一般の音楽データベース（MusicBrainz）です。JOYSOUND・DAMの配信曲データではありません。候補にカバー歌手が表示された時は「JOYSOUNDで確認」「DAMで確認」から公式検索をご利用ください。</p>
             </div>
-            <div class="photo-song-card">
-              <h4>写真から曲名を読み取る</h4>
+            <p class="alternative-register-heading">ほかの登録方法</p>
+            <details class="photo-song-card secondary-entry">
+              <summary>📷 写真から曲名を読み取る</summary>
               <p class="small">曲名と歌手名が写った写真から、登録したい1組だけを選んで読み取れます。</p>
               <div class="control-row">
                 <button class="btn ghost" id="chooseSongPhotoButton" type="button">写真を選ぶ</button>
@@ -4242,8 +4374,11 @@
                   <button class="btn primary" id="applySongPhotoTextButton" type="button">曲名・歌手名に入れる</button>
                 </div>
               </div>
-            </div>
-            <form id="songForm">
+            </details>
+            <details class="manual-song-entry secondary-entry" id="manualSongEntry">
+              <summary>✍️ 手入力・キー・タグなどを詳しく登録</summary>
+              <p class="autosave-note" id="songDraftStatus" aria-live="polite">入力内容はこの端末に自動保存されます。</p>
+              <form id="songForm">
               <label>
                 曲名
                 <input id="songTitle" required placeholder="例：いとしのエリー">
@@ -4305,7 +4440,8 @@
                 <button class="btn ghost" id="songEditCancelButton" type="button" hidden>編集をやめる</button>
               </div>
             <p class="small">マイ曲リストはお使いの端末のブラウザ内に保存されます。<br>ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
-            </form>
+              </form>
+            </details>
           </div>
 
 </div>
@@ -5200,6 +5336,7 @@
     const songCatalogSearchButton = document.getElementById("songCatalogSearchButton");
     const songCatalogStatus = document.getElementById("songCatalogStatus");
     const songCatalogResults = document.getElementById("songCatalogResults");
+    const manualSongEntry = document.getElementById("manualSongEntry");
     const songProfileBar = document.getElementById("songProfileBar");
     const songProfileLabel = document.getElementById("songProfileLabel");
     const songProfileButtons = document.getElementById("songProfileButtons");
@@ -5610,6 +5747,19 @@
       "コード": "Chords",
       "歌詞": "Lyrics",
       "曲データから検索して登録": "Search the Song Database",
+      "おすすめ・かんたん登録": "Recommended · Quick Add",
+      "① 曲名または歌手名で検索": "1. Search by Song or Artist",
+      "② 候補を確認　→　③ 登録先のボタンを押すだけです。": "2. Check a suggestion → 3. Choose where to add it.",
+      "ここに曲名・歌手名を入力": "Enter a song title or artist",
+      "曲を検索": "Search Songs",
+      "ほかの登録方法": "Other Ways to Add",
+      "📷 写真から曲名を読み取る": "📷 Read a Song from a Photo",
+      "✍️ 手入力・キー・タグなどを詳しく登録": "✍️ Manual Entry, Key, Tags and More",
+      "候補は一般の音楽データベース（MusicBrainz）です。JOYSOUND・DAMの配信曲データではありません。候補にカバー歌手が表示された時は「JOYSOUNDで確認」「DAMで確認」から公式検索をご利用ください。": "Suggestions come from the general MusicBrainz database, not the JOYSOUND or DAM karaoke catalogs. If a cover artist appears, use the official JOYSOUND or DAM search buttons.",
+      "公式カラオケで配信確認": "Check Official Karaoke Catalogs",
+      "この候補を登録": "Add This Suggestion",
+      "JOYSOUNDで確認": "Check JOYSOUND",
+      "DAMで確認": "Check DAM",
       "曲名または歌手名を入力すると候補が表示されます。候補は一般の音楽データベースから取得するため、カラオケ配信状況はDAM・JOYSOUNDの公式検索でご確認ください。": "Enter a song title or artist to see suggestions. Results come from a general music database, so please check the official DAM or JOYSOUND search for karaoke availability.",
       "例：いとしのエリー／サザンオールスターズ": "Ex: Let It Be / The Beatles",
       "曲名または歌手名で曲データを検索": "Search the song database by title or artist",
@@ -8086,6 +8236,7 @@
       clearSongDraft();
       editingSongId = id;
       showView("song-register");
+      manualSongEntry.open = true;
       document.getElementById("songTitle").value = item.title || "";
       document.getElementById("artistName").value = item.artist || "";
       renderSongOwnerOptions(item.owner || "");
@@ -9156,6 +9307,12 @@
         <article class="song-catalog-result">
           <strong class="song-catalog-result-title">${escapeText(item.title || "-")}</strong>
           <p class="song-catalog-result-artist">${escapeText(item.artist || uiText("歌手名未登録"))}</p>
+          <span class="song-catalog-action-label">${escapeText(uiText("公式カラオケで配信確認"))}</span>
+          <div class="song-catalog-official-checks">
+            <button class="btn joysound-check" type="button" data-catalog-check="joysound" data-catalog-index="${index}">${escapeText(uiText("JOYSOUNDで確認"))} ↗</button>
+            <button class="btn dam-check" type="button" data-catalog-check="dam" data-catalog-index="${index}">${escapeText(uiText("DAMで確認"))} ↗</button>
+          </div>
+          <span class="song-catalog-action-label">${escapeText(uiText("この候補を登録"))}</span>
           <div class="song-catalog-actions">
             <button class="btn ghost" type="button" data-catalog-add="song" data-catalog-index="${index}">${escapeText(uiText("マイ曲へ"))}</button>
             <button class="btn primary" type="button" data-catalog-add="favorite" data-catalog-index="${index}">★ ${escapeText(uiText("お気に入りへ"))}</button>
@@ -9209,6 +9366,7 @@
       const source = catalogSearchItems[Number(index)];
       if (!source || !source.title) return;
       if (mode === "play") {
+        manualSongEntry.open = true;
         document.getElementById("songTitle").value = source.title;
         document.getElementById("artistName").value = source.artist || "";
         saveSongDraft();
@@ -9262,10 +9420,25 @@
     });
 
     songCatalogResults.addEventListener("click", (event) => {
+      const checkButton = event.target.closest("[data-catalog-check]");
+      if (checkButton) {
+        openOfficialKaraokeSearch(checkButton.dataset.catalogIndex, checkButton.dataset.catalogCheck);
+        return;
+      }
       const button = event.target.closest("[data-catalog-add]");
       if (!button) return;
       addCatalogSong(button.dataset.catalogIndex, button.dataset.catalogAdd);
     });
+
+    function openOfficialKaraokeSearch(index, service) {
+      const item = catalogSearchItems[Number(index)];
+      if (!item || !item.title) return;
+      const keyword = [item.title, item.artist].filter(Boolean).join(" ");
+      const url = service === "joysound"
+        ? `https://www.joysound.com/web/search/song?keyword=${encodeURIComponent(item.title)}&match=1`
+        : `https://www.clubdam.com/karaokesearch/?keyword=${encodeURIComponent(keyword)}&type=keyword`;
+      window.open(url, "_blank", "noopener");
+    }
 
     function openSongReference(id, type) {
       const item = songs.find((song) => song.id === id);
@@ -9301,6 +9474,7 @@
         setPhotoStatus("読み取った文字がありません。");
         return;
       }
+      manualSongEntry.open = true;
       document.getElementById("songTitle").value = lines[0] || "";
       if (lines[1]) document.getElementById("artistName").value = lines[1];
       setPhotoStatus("曲名を入力しました。必要なら直して保存してください。");
@@ -9623,7 +9797,7 @@
       else restoreSongDraft();
       showView("song-register");
       setTimeout(() => {
-        document.getElementById("songTitle").focus();
+        songCatalogQuery.focus();
       }, 320);
     });
 
