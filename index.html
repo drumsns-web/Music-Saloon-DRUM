@@ -1449,6 +1449,27 @@
       font-size: 13px;
     }
 
+    .song-catalog-result.has-registration {
+      border-color: #2d8a59;
+      box-shadow: inset 5px 0 0 #2d8a59;
+    }
+
+    .song-catalog-actions .btn.is-complete,
+    .song-form-card .song-catalog-actions .btn.is-complete {
+      color: #fff;
+      border-color: #237449;
+      background: #237449;
+      box-shadow: none;
+      opacity: 1;
+      cursor: default;
+    }
+
+    .song-catalog-actions .btn.is-complete:disabled {
+      color: #fff;
+      -webkit-text-fill-color: #fff;
+      opacity: 1;
+    }
+
     .catalog-source-note {
       margin: 14px 0 0;
       border-left: 4px solid var(--orange);
@@ -5760,6 +5781,10 @@
       "この候補を登録": "Add This Suggestion",
       "JOYSOUNDで確認": "Check JOYSOUND",
       "DAMで確認": "Check DAM",
+      "✓ マイ曲登録済み": "✓ Added to My Songs",
+      "✓ お気に入り登録済み": "✓ Added to Favorites",
+      "✓ 歌える曲に登録済み": "✓ Added as Can Sing",
+      "✓ 演奏パート登録済み": "✓ Playing Parts Saved",
       "曲名または歌手名を入力すると候補が表示されます。候補は一般の音楽データベースから取得するため、カラオケ配信状況はDAM・JOYSOUNDの公式検索でご確認ください。": "Enter a song title or artist to see suggestions. Results come from a general music database, so please check the official DAM or JOYSOUND search for karaoke availability.",
       "例：いとしのエリー／サザンオールスターズ": "Ex: Let It Be / The Beatles",
       "曲名または歌手名で曲データを検索": "Search the song database by title or artist",
@@ -6711,6 +6736,7 @@
       updateDrumGachaRateLabel();
       renderSharedRanking();
       renderCapabilityLocalList();
+      if (catalogSearchItems.length) renderCatalogSearchResults();
     }
 
     function activeSongProfile() {
@@ -8099,7 +8125,8 @@
     function showUndo(message, callback) {
       clearTimeout(undoTimer);
       undoText.textContent = message;
-      undoAction = callback;
+      undoAction = typeof callback === "function" ? callback : null;
+      undoButton.hidden = !undoAction;
       undoToast.classList.add("show");
       undoTimer = setTimeout(() => {
         undoToast.classList.remove("show");
@@ -9303,8 +9330,13 @@
         songCatalogResults.innerHTML = "";
         return;
       }
-      songCatalogResults.innerHTML = catalogSearchItems.map((item, index) => `
-        <article class="song-catalog-result">
+      songCatalogResults.innerHTML = catalogSearchItems.map((item, index) => {
+        const localSong = findCatalogLocalSong(item);
+        const isFavorite = Boolean(localSong && getSongTags(localSong).includes("お気に入り"));
+        const canSing = Boolean(localSong && localSong.capabilityCanSing === true);
+        const canPlay = Boolean(localSong && Array.isArray(localSong.playableParts) && localSong.playableParts.length);
+        return `
+        <article class="song-catalog-result${localSong ? " has-registration" : ""}">
           <strong class="song-catalog-result-title">${escapeText(item.title || "-")}</strong>
           <p class="song-catalog-result-artist">${escapeText(item.artist || uiText("歌手名未登録"))}</p>
           <span class="song-catalog-action-label">${escapeText(uiText("公式カラオケで配信確認"))}</span>
@@ -9314,14 +9346,24 @@
           </div>
           <span class="song-catalog-action-label">${escapeText(uiText("この候補を登録"))}</span>
           <div class="song-catalog-actions">
-            <button class="btn ghost" type="button" data-catalog-add="song" data-catalog-index="${index}">${escapeText(uiText("マイ曲へ"))}</button>
-            <button class="btn primary" type="button" data-catalog-add="favorite" data-catalog-index="${index}">★ ${escapeText(uiText("お気に入りへ"))}</button>
-            <button class="btn ghost" type="button" data-catalog-add="sing" data-catalog-index="${index}">${escapeText(uiText("歌える"))}</button>
-            <button class="btn ghost" type="button" data-catalog-add="play" data-catalog-index="${index}">${escapeText(uiText("演奏できる"))}</button>
+            <button class="btn ghost${localSong ? " is-complete" : ""}" type="button" data-catalog-add="song" data-catalog-index="${index}" ${localSong ? "disabled" : ""}>${escapeText(uiText(localSong ? "✓ マイ曲登録済み" : "マイ曲へ"))}</button>
+            <button class="btn primary${isFavorite ? " is-complete" : ""}" type="button" data-catalog-add="favorite" data-catalog-index="${index}" ${isFavorite ? "disabled" : ""}>${isFavorite ? "" : "★ "}${escapeText(uiText(isFavorite ? "✓ お気に入り登録済み" : "お気に入りへ"))}</button>
+            <button class="btn ghost${canSing ? " is-complete" : ""}" type="button" data-catalog-add="sing" data-catalog-index="${index}" ${canSing ? "disabled" : ""}>${escapeText(uiText(canSing ? "✓ 歌える曲に登録済み" : "歌える"))}</button>
+            <button class="btn ghost${canPlay ? " is-complete" : ""}" type="button" data-catalog-add="play" data-catalog-index="${index}" ${canPlay ? "disabled" : ""}>${escapeText(uiText(canPlay ? "✓ 演奏パート登録済み" : "演奏できる"))}</button>
           </div>
         </article>
-      `).join("");
+      `;
+      }).join("");
       refreshLanguageSoon();
+    }
+
+    function findCatalogLocalSong(source) {
+      if (!source) return null;
+      const normalizedTitle = normalizeKana(source.title);
+      const normalizedArtist = normalizeKana(source.artist);
+      return activeProfileSongs().find((song) =>
+        normalizeKana(song.title) === normalizedTitle && normalizeKana(song.artist || "") === normalizedArtist
+      ) || null;
     }
 
     async function searchSongCatalog() {
@@ -9370,7 +9412,9 @@
         document.getElementById("songTitle").value = source.title;
         document.getElementById("artistName").value = source.artist || "";
         saveSongDraft();
-        songCatalogStatus.textContent = uiText("入力欄へ入れました。演奏できるパートを選んで保存してください。");
+        showUndo(currentLanguage === "en"
+          ? `Added “${source.title}” to the form. Choose your playing parts, then save.`
+          : `「${source.title}」を入力欄へ入れました。演奏できるパートを選んで保存してください。`);
         const target = settings.showPlayableParts ? playablePartsField : document.getElementById("songTitle");
         target.scrollIntoView({ behavior: "smooth", block: "center" });
         if (!settings.showPlayableParts) document.getElementById("songTitle").focus({ preventScroll: true });
@@ -9379,9 +9423,7 @@
 
       const normalizedTitle = normalizeKana(source.title);
       const normalizedArtist = normalizeKana(source.artist);
-      let item = activeProfileSongs().find((song) =>
-        normalizeKana(song.title) === normalizedTitle && normalizeKana(song.artist || "") === normalizedArtist
-      );
+      let item = findCatalogLocalSong(source);
       const isNew = !item;
       if (!item) {
         item = {
@@ -9407,11 +9449,11 @@
       renderSongs();
       renderFavorites();
       renderCapabilityLocalList();
-      songCatalogStatus.textContent = uiText(mode === "favorite"
-        ? "お気に入りへ登録しました。"
-        : mode === "sing"
-          ? "歌える曲として登録しました。"
-          : isNew ? "マイ曲リストへ登録しました。" : "この曲はすでにマイ曲リストにあります。");
+      renderCatalogSearchResults();
+      const destination = mode === "favorite" ? "お気に入り" : mode === "sing" ? "歌える曲" : "マイ曲リスト";
+      showUndo(currentLanguage === "en"
+        ? (isNew || mode !== "song" ? `Added “${source.title}” to ${mode === "favorite" ? "Favorites" : mode === "sing" ? "Can Sing" : "My Songs"}.` : `“${source.title}” is already in My Songs.`)
+        : (isNew || mode !== "song" ? `✓「${source.title}」を${destination}へ追加しました。` : `「${source.title}」はすでにマイ曲リストへ登録されています。`));
     }
 
     songCatalogSearchForm.addEventListener("submit", (event) => {
