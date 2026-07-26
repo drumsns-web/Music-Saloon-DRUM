@@ -3415,6 +3415,50 @@
       text-align: center;
     }
 
+    .song-transfer-modal-panel {
+      width: min(560px, 100%);
+    }
+
+    .song-transfer-summary {
+      margin: 0 0 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--orange);
+      border-radius: 10px;
+      background: #fff8ec;
+      color: var(--ink);
+    }
+
+    .song-transfer-summary strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 18px;
+    }
+
+    .song-transfer-summary p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .song-transfer-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .song-transfer-actions .btn {
+      min-height: 50px;
+    }
+
+    .song-transfer-status {
+      min-height: 1.6em;
+      margin: 12px 0 0;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
     .gacha-hit {
       display: none;
       margin: 4px 0 14px;
@@ -3926,6 +3970,9 @@
       .custom-color-grid {
         grid-template-columns: 1fr;
       }
+      .song-transfer-actions {
+        grid-template-columns: 1fr;
+      }
       .commute-grid {
         grid-template-columns: 1fr;
       }
@@ -4050,17 +4097,17 @@
           <button class="btn primary js-open-guide-modal" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
-        <details class="app-update-card" id="appUpdateCard" data-setlist-entry open>
+        <details class="app-update-card" id="appUpdateCard" open>
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.26</span></span>
-              <h2 id="appUpdateTitle">マイセットリストを追加しました</h2>
+              <h2 id="appUpdateTitle">曲リスト間のコピー・移動を追加しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌃</span>
           </summary>
           <div class="app-update-body">
-            <p>マイ曲リストから曲を選び、LIVE練習や本番用のセットリストをタイトル付きで保存できます。</p>
-            <a class="btn primary" data-setlist-entry href="#saved-setlists">使ってみる</a>
+            <p>設定で別の曲リストを有効にすると、曲の「詳細」から自分とお客様・同僚・パートナーなどのリスト間でコピーまたは移動できます。</p>
+            <a class="btn primary" href="#customers">使ってみる</a>
           </div>
         </details>
         <div class="today-action-panel">
@@ -5643,6 +5690,28 @@
     <button id="undoButton" type="button">元に戻す</button>
   </div>
 
+  <div class="drink-modal" id="songTransferModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="songTransferModalTitle">
+    <div class="drink-modal-panel song-transfer-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2 id="songTransferModalTitle">別の曲リストへ</h2>
+          <p class="lead">コピーまたは移動を選んでください。</p>
+        </div>
+        <button class="btn ghost" id="closeSongTransferModal" type="button">閉じる</button>
+      </div>
+      <div class="song-transfer-summary">
+        <strong id="songTransferSongTitle">曲名</strong>
+        <p id="songTransferDestination">移動先</p>
+      </div>
+      <p class="small">コピーすると両方のリストに残ります。移動すると現在のリストからは削除されます。</p>
+      <div class="song-transfer-actions">
+        <button class="btn primary" id="copySongToOtherList" type="button">別リストへコピー</button>
+        <button class="btn ghost" id="moveSongToOtherList" type="button">別リストへ移動</button>
+      </div>
+      <p class="song-transfer-status" id="songTransferStatus" aria-live="polite"></p>
+    </div>
+  </div>
+
   <div class="drink-modal" id="homePromptModal" aria-hidden="true">
     <div class="drink-modal-panel gacha-modal-panel">
       <div class="section-head">
@@ -6052,6 +6121,13 @@
     const applyCustomColors = document.getElementById("applyCustomColors");
     const resetCustomColors = document.getElementById("resetCustomColors");
     const customColorStatus = document.getElementById("customColorStatus");
+    const songTransferModal = document.getElementById("songTransferModal");
+    const closeSongTransferModal = document.getElementById("closeSongTransferModal");
+    const songTransferSongTitle = document.getElementById("songTransferSongTitle");
+    const songTransferDestination = document.getElementById("songTransferDestination");
+    const copySongToOtherList = document.getElementById("copySongToOtherList");
+    const moveSongToOtherList = document.getElementById("moveSongToOtherList");
+    const songTransferStatus = document.getElementById("songTransferStatus");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
@@ -6305,6 +6381,18 @@
       "歌手別": "By Artist",
       "文字ジャンプ": "Letter Jump",
       "詳細": "Details",
+      "別リストへ": "Other List",
+      "別の曲リストへ": "Move or Copy to Another List",
+      "コピーまたは移動を選んでください。": "Choose whether to copy or move this song.",
+      "コピーすると両方のリストに残ります。移動すると現在のリストからは削除されます。": "Copy keeps the song in both lists. Move removes it from the current list.",
+      "別リストへコピー": "Copy to Other List",
+      "別リストへ移動": "Move to Other List",
+      "コピー先": "Copy or move to",
+      "コピー・移動先のリストに同じ曲が登録済みです。": "The same song is already registered in the destination list.",
+      "別の曲リストへコピーしました。": "Copied to the other song list.",
+      "別の曲リストへ移動しました。": "Moved to the other song list.",
+      "曲リスト間のコピー・移動を追加しました": "Copy or Move Songs Between Lists",
+      "設定で別の曲リストを有効にすると、曲の「詳細」から自分とお客様・同僚・パートナーなどのリスト間でコピーまたは移動できます。": "Enable another song list in Settings, then use a song's Details to copy or move it between your list and a customer, colleague, or partner list.",
       "歌手名未登録": "Artist not entered",
       "文字ジャンプは「歌手別」または「曲名順」で使えます。": "Letter jump is available in By Artist or Title Order views.",
       "文字を押すと、最初の該当グループへ移動します。": "Choose a letter to jump to the first matching group.",
@@ -7307,6 +7395,7 @@
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let editingSongId = null;
     let editingSavedSetlistId = null;
+    let transferringSongId = null;
     let savedSetlistDraftSongIds = [];
     let didAddDefaultTags = false;
     defaultGenreTags.forEach((tagName) => {
@@ -8253,7 +8342,7 @@
 
     function initAppUpdateCard() {
       if (!appUpdateCard) return;
-      const updateVersion = "2026-07-26-my-setlists";
+      const updateVersion = "2026-07-26-song-list-transfer";
       let state = {};
       try {
         state = JSON.parse(localStorage.getItem(appUpdateStorageKey) || "{}");
@@ -9179,6 +9268,93 @@
       });
     }
 
+    function otherSongProfile(item) {
+      return item && item.profile === "additional" ? "self" : "additional";
+    }
+
+    function matchingSongInProfile(item, profile) {
+      const title = normalizeKana(item && item.title);
+      const artist = normalizeKana(item && item.artist);
+      return songs.find((candidate) => (
+        candidate.id !== item.id
+        && (candidate.profile === "additional" ? "additional" : "self") === profile
+        && normalizeKana(candidate.title) === title
+        && normalizeKana(candidate.artist) === artist
+      ));
+    }
+
+    function openSongTransferPanel(id) {
+      if (!settings.enableAdditionalList) return;
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      const targetProfile = otherSongProfile(item);
+      transferringSongId = item.id;
+      songTransferSongTitle.textContent = itemLabel(item);
+      songTransferDestination.textContent = `${uiText("コピー先")}：${songProfileName(targetProfile)}`;
+      songTransferStatus.textContent = "";
+      songTransferModal.classList.add("show");
+      songTransferModal.setAttribute("aria-hidden", "false");
+      refreshLanguageSoon();
+    }
+
+    function closeSongTransferPanel() {
+      songTransferModal.classList.remove("show");
+      songTransferModal.setAttribute("aria-hidden", "true");
+      transferringSongId = null;
+      songTransferStatus.textContent = "";
+    }
+
+    function transferSongToOtherProfile(mode) {
+      const item = songs.find((song) => song.id === transferringSongId);
+      if (!item || !settings.enableAdditionalList) {
+        closeSongTransferPanel();
+        return;
+      }
+      const sourceProfile = item.profile === "additional" ? "additional" : "self";
+      const targetProfile = otherSongProfile(item);
+      const targetName = songProfileName(targetProfile);
+      if (matchingSongInProfile(item, targetProfile)) {
+        songTransferStatus.textContent = uiText("コピー・移動先のリストに同じ曲が登録済みです。");
+        return;
+      }
+      if (mode === "move") {
+        const message = currentLanguage === "en"
+          ? `Move ${itemLabel(item)} to ${targetName}? It will be removed from the current list.`
+          : `${itemLabel(item)}を「${targetName}」の曲リストへ移動しますか？現在のリストからは削除されます。`;
+        if (!confirm(message)) return;
+        item.profile = targetProfile;
+        saveSongs();
+        renderActiveSongProfileViews();
+        closeSongTransferPanel();
+        showUndo(`${itemLabel(item)}：${uiText("別の曲リストへ移動しました。")}`, () => {
+          item.profile = sourceProfile;
+          saveSongs();
+          renderActiveSongProfileViews();
+        });
+        return;
+      }
+      const copiedSong = {
+        ...item,
+        id: createId(),
+        profile: targetProfile,
+        nextWish: false,
+        tags: Array.isArray(item.tags) ? [...item.tags] : [],
+        playableParts: Array.isArray(item.playableParts) ? [...item.playableParts] : [],
+        capabilityShared: false,
+        capabilityShareKey: "",
+        createdAt: new Date().toISOString()
+      };
+      songs.unshift(copiedSong);
+      saveSongs();
+      renderActiveSongProfileViews();
+      closeSongTransferPanel();
+      showUndo(`${itemLabel(item)}：${uiText("別の曲リストへコピーしました。")}`, () => {
+        songs = songs.filter((song) => song.id !== copiedSong.id);
+        saveSongs();
+        renderActiveSongProfileViews();
+      });
+    }
+
     function toggleNextWish(id) {
       const item = songs.find((song) => song.id === id);
       if (!item) return;
@@ -9785,6 +9961,7 @@
             <div class="song-row-actions">
               <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
               <button class="btn primary" type="button" data-record="${escapeText(item.id)}">${escapeText(uiText("記録"))}</button>
+              ${settings.enableAdditionalList ? `<button class="btn ghost" type="button" data-song-transfer="${escapeText(item.id)}">${escapeText(uiText("別リストへ"))}</button>` : ""}
               <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
               <button class="btn ghost" type="button" data-delete="${escapeText(item.id)}">${escapeText(uiText("削除"))}</button>
             </div>
@@ -10476,6 +10653,11 @@
       const recordButton = event.target.closest("[data-record]");
       if (recordButton) {
         recordSong(recordButton.dataset.record);
+        return;
+      }
+      const transferButton = event.target.closest("[data-song-transfer]");
+      if (transferButton) {
+        openSongTransferPanel(transferButton.dataset.songTransfer);
         return;
       }
       const editButton = event.target.closest("[data-edit]");
@@ -11473,10 +11655,18 @@
       closeHomePromptModal();
     });
 
+    closeSongTransferModal.addEventListener("click", closeSongTransferPanel);
+    copySongToOtherList.addEventListener("click", () => transferSongToOtherProfile("copy"));
+    moveSongToOtherList.addEventListener("click", () => transferSongToOtherProfile("move"));
+    songTransferModal.addEventListener("click", (event) => {
+      if (event.target === songTransferModal) closeSongTransferPanel();
+    });
+
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
       if (settingsModal.classList.contains("show")) closeSettingsModal.click();
       if (guideModal.classList.contains("show")) closeGuideModalPanel();
+      if (songTransferModal.classList.contains("show")) closeSongTransferPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
       if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
