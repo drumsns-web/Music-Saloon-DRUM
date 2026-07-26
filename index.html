@@ -42,6 +42,38 @@
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    button,
+    .btn {
+      line-break: strict;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    p,
+    li,
+    dd,
+    small,
+    .small {
+      line-break: strict;
+      overflow-wrap: break-word;
+    }
+
+    @supports (word-break: auto-phrase) {
+      p,
+      li,
+      dd,
+      small,
+      .small {
+        word-break: auto-phrase;
+      }
+    }
+
     body {
       margin: 0;
       font-family: "BIZ UDPGothic", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, system-ui, sans-serif;
@@ -3620,6 +3652,13 @@
       width: min(600px, 100%);
     }
 
+    .quick-setlist-modal-panel .section-head h2 {
+      flex: 1 1 auto;
+      max-width: none;
+      font-size: clamp(28px, 3.2vw, 36px);
+      white-space: nowrap;
+    }
+
     .quick-setlist-options {
       display: grid;
       gap: 8px;
@@ -4225,6 +4264,9 @@
       .app-update-body { grid-template-columns: 1fr; }
       .app-update-body .btn { width: 100%; }
       .app-update-history-item { grid-template-columns: 1fr; }
+      .quick-setlist-modal-panel .section-head h2 {
+        white-space: normal;
+      }
       .setlist-picker-toolbar { grid-template-columns: 1fr; }
       .saved-setlist-song { grid-template-columns: 28px minmax(0, 1fr); }
       .setlist-song-actions { grid-column: 2; }
