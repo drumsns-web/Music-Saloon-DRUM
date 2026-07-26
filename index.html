@@ -3854,7 +3854,7 @@
         <aside class="app-update-card" data-setlist-entry aria-labelledby="appUpdateTitle">
           <div>
             <div class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.26</span></div>
-            <h2 id="appUpdateTitle">保存セットリストを追加しました</h2>
+            <h2 id="appUpdateTitle">マイセットリストを追加しました</h2>
             <p>マイ曲リストから曲を選び、LIVE練習や本番用のセットリストをタイトル付きで保存できます。</p>
           </div>
           <a class="btn primary" data-setlist-entry href="#saved-setlists">使ってみる</a>
@@ -3970,9 +3970,9 @@
           </article>
           <article class="card" data-setlist-entry>
             <span class="tag orange">Setlist</span>
-            <h3>セットリストを作る</h3>
+            <h3>マイセットリストを作る</h3>
             <p>マイ曲リストから曲を選び、LIVE練習や本番用の曲順をタイトル付きで保存できます。</p>
-            <a class="btn ghost" href="#saved-setlists">保存セットリストへ</a>
+            <a class="btn ghost" href="#saved-setlists">マイセットリストへ</a>
           </article>
           <article class="card">
             <span class="tag blue">Gacha</span>
@@ -4367,7 +4367,7 @@
           <a href="#favorites">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
-          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
+          <a data-setlist-entry href="#saved-setlists">マイセットリスト</a>
         </nav>
         <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← マイ曲リストに戻る</button>
 
@@ -4389,7 +4389,7 @@
             </div>
             <div class="control-row song-primary-actions">
               <button class="btn register-jump" id="focusSongFormButton" type="button">曲を登録する</button>
-              <a class="btn primary" data-setlist-entry href="#saved-setlists">セットリストを作る</a>
+              <a class="btn primary" data-setlist-entry href="#saved-setlists">マイセットリストを作る</a>
               <a class="btn primary" href="#gacha">曲ガチャ</a>
               <a class="btn primary" href="#favorites">よく歌う曲</a>
             </div>
@@ -4861,9 +4861,9 @@
             <h3>マイ曲リスト設定</h3>
             <label class="check-row">
               <input id="settingSavedSetlists" type="checkbox" checked>
-              保存セットリスト機能を表示する
+              マイセットリスト機能を表示する
             </label>
-            <p class="small">オフにしても、すでに保存したセットリストは削除されません。</p>
+            <p class="small">オフにしても、すでに保存したマイセットリストは削除されません。</p>
             <label class="check-row">
               <input id="settingMemo" type="checkbox">
               マイ曲リストにメモ欄を表示する
@@ -5013,7 +5013,7 @@
         <div class="section-head">
           <div>
             <span class="tag orange">Setlist</span>
-            <h2>保存セットリスト</h2>
+            <h2>マイセットリスト</h2>
             <p class="lead">LIVE練習や本番用など、マイ曲リストの曲をタイトル付きでまとめて保存できます。</p>
           </div>
         </div>
@@ -5022,14 +5022,14 @@
           <a href="#favorites">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
-          <a class="active" href="#saved-setlists" aria-current="page">セットリスト</a>
+          <a class="active" href="#saved-setlists" aria-current="page">マイセットリスト</a>
         </nav>
-        <p class="privacy-note">保存セットリストは、この端末のブラウザだけに保存されます。お店や他のお客様へ自動共有されることはありません。</p>
+        <p class="privacy-note">マイセットリストは、この端末のブラウザだけに保存されます。お店や他のお客様へ自動共有されることはありません。</p>
         <div class="setlist-builder">
           <form class="card" id="savedSetlistForm">
             <span class="tag orange">Create</span>
-            <h3 id="savedSetlistFormTitle">新しいセットリストを作る</h3>
-            <label for="savedSetlistTitle">セットリストのタイトル</label>
+            <h3 id="savedSetlistFormTitle">新しいマイセットリストを作る</h3>
+            <label for="savedSetlistTitle">マイセットリストのタイトル</label>
             <input id="savedSetlistTitle" maxlength="80" required placeholder="例：夏LIVE練習、第1部、次回やる曲">
             <div class="setlist-picker-toolbar">
               <input id="savedSetlistSearch" placeholder="曲名・歌手名で絞り込み">
@@ -5038,7 +5038,7 @@
             <p><strong id="savedSetlistSelectedCount">0曲を選択中</strong></p>
             <div class="setlist-picker" id="savedSetlistPicker"></div>
             <div class="setlist-form-actions">
-              <button class="btn primary" id="saveSavedSetlist" type="submit">セットリストを保存</button>
+              <button class="btn primary" id="saveSavedSetlist" type="submit">マイセットリストを保存</button>
               <button class="btn ghost" id="cancelSavedSetlistEdit" type="button" hidden>編集をやめる</button>
             </div>
             <p class="small" id="savedSetlistStatus" aria-live="polite"></p>
@@ -5047,7 +5047,7 @@
             <div class="section-head">
               <div>
                 <h3>保存済み</h3>
-                <p class="small">開くと曲順の変更、編集、コピー、削除ができます。</p>
+                <p class="small">開くと曲順の変更、編集、コピー、削除ができます。曲を左へスワイプしても削除できます。</p>
               </div>
               <strong id="savedSetlistCount">0件</strong>
             </div>
@@ -5070,7 +5070,7 @@
           <a class="active" href="#favorites" aria-current="page">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
-          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
+          <a data-setlist-entry href="#saved-setlists">マイセットリスト</a>
         </nav>
 
         <div class="favorite-capability-entry">
@@ -5120,7 +5120,7 @@
           <a href="#favorites">よく歌う曲</a>
           <a class="active" href="#community" aria-current="page">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
-          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
+          <a data-setlist-entry href="#saved-setlists">マイセットリスト</a>
         </nav>
         <div class="shared-ranking">
           <p class="small">「お気に入り」タグを付けた曲だけが共有の対象になります。</p>
@@ -5151,7 +5151,7 @@
           <a href="#favorites">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる</a>
-          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
+          <a data-setlist-entry href="#saved-setlists">マイセットリスト</a>
         </nav>
         <div class="capability-purpose">
           <p><strong>通常営業：</strong>「この曲なら○○さんが演奏できそう」と声をかける目安にします。</p>
@@ -5447,7 +5447,7 @@
         </button>
         <button class="guide-shortcut" data-setlist-entry type="button" data-guide-target="saved-setlists">
           <span class="guide-shortcut-icon">05</span>
-          <span><strong>保存セットリスト</strong><span>LIVE練習や本番用の曲順を保存</span></span>
+          <span><strong>マイセットリスト</strong><span>LIVE練習や本番用の曲順を保存</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="gacha">
@@ -5843,7 +5843,7 @@
       { id: "info", label: "お知らせ", target: "info" },
       { id: "menu", label: "メニュー", target: "menu" },
       { id: "customers", label: "マイ曲リスト", target: "customers" },
-      { id: "saved-setlists", label: "保存セットリスト", target: "saved-setlists" },
+      { id: "saved-setlists", label: "マイセットリスト", target: "saved-setlists" },
       { id: "song-register", label: "曲を登録", target: "song-register" },
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
@@ -6666,12 +6666,12 @@
       "練習中": "Practicing",
       "盛り上がる": "Crowd Pleaser",
       "しっとり": "Mellow",
-      "保存セットリスト": "Saved Setlists",
-      "セットリストを作る": "Create a Setlist",
-      "新しいセットリストを作る": "Create a New Setlist",
-      "セットリストを編集": "Edit Setlist",
-      "セットリストのタイトル": "Setlist Title",
-      "セットリストを保存": "Save Setlist",
+      "マイセットリスト": "My Setlists",
+      "マイセットリストを作る": "Create My Setlist",
+      "新しいマイセットリストを作る": "Create a New My Setlist",
+      "マイセットリストを編集": "Edit My Setlist",
+      "マイセットリストのタイトル": "My Setlist Title",
+      "マイセットリストを保存": "Save My Setlist",
       "変更を保存": "Save Changes",
       "編集をやめる": "Cancel Editing",
       "選択をすべて外す": "Clear Selection",
@@ -6682,19 +6682,20 @@
       "複製": "Duplicate",
       "更新": "Updated",
       "曲が入っていません。": "No songs in this setlist.",
-      "保存済みのセットリストはありません。": "No saved setlists yet.",
+      "保存済みのマイセットリストはありません。": "No saved my setlists yet.",
       "左の作成欄でタイトルと曲を選んで保存してください。": "Choose a title and songs in the creation form, then save.",
       "先にマイ曲リストへ曲を登録してください。": "Add songs to My Song List first.",
       "条件に合う曲がありません。": "No matching songs.",
       "タイトルを入力してください。": "Enter a title.",
-      "セットリストに入れる曲を1曲以上選んでください。": "Select at least one song.",
-      "セットリストを保存しました。": "Setlist saved.",
-      "セットリストを更新しました。": "Setlist updated.",
-      "セットリストを削除しました。": "Setlist deleted.",
-      "セットリストを複製しました。": "Setlist duplicated.",
+      "マイセットリストに入れる曲を1曲以上選んでください。": "Select at least one song.",
+      "マイセットリストを保存しました。": "My setlist saved.",
+      "マイセットリストを更新しました。": "My setlist updated.",
+      "マイセットリストを削除しました。": "My setlist deleted.",
+      "マイセットリストから曲を削除しました。": "Song removed from my setlist.",
+      "マイセットリストを複製しました。": "My setlist duplicated.",
       "曲順をコピーしました。": "Song order copied.",
       "編集を取り消しました。": "Editing canceled.",
-      "保存セットリスト機能を表示する": "Show saved setlist feature",
+      "マイセットリスト機能を表示する": "Show my setlist feature",
       "iPhone（Safari推奨）": "iPhone (Safari Recommended)",
       "Android（Chrome）": "Android (Chrome)"
     };
@@ -7483,8 +7484,8 @@
       savedSetlistDraftSongIds = [];
       savedSetlistTitle.value = "";
       savedSetlistSearch.value = "";
-      savedSetlistFormTitle.textContent = uiText("新しいセットリストを作る");
-      saveSavedSetlist.textContent = uiText("セットリストを保存");
+      savedSetlistFormTitle.textContent = uiText("新しいマイセットリストを作る");
+      saveSavedSetlist.textContent = uiText("マイセットリストを保存");
       cancelSavedSetlistEdit.hidden = true;
       savedSetlistStatus.textContent = message;
       renderSavedSetlistPicker();
@@ -7522,14 +7523,14 @@
       if (!savedSetlistList) return;
       savedSetlistCount.textContent = currentLanguage === "en" ? `${savedSetlists.length} lists` : `${savedSetlists.length}件`;
       if (!savedSetlists.length) {
-        savedSetlistList.innerHTML = `<div class="setlist-empty"><strong>${escapeText(uiText("保存済みのセットリストはありません。"))}</strong><br>${escapeText(uiText("左の作成欄でタイトルと曲を選んで保存してください。"))}</div>`;
+        savedSetlistList.innerHTML = `<div class="setlist-empty"><strong>${escapeText(uiText("保存済みのマイセットリストはありません。"))}</strong><br>${escapeText(uiText("左の作成欄でタイトルと曲を選んで保存してください。"))}</div>`;
         return;
       }
       savedSetlistList.innerHTML = savedSetlists.map((setlist, setlistIndex) => {
         const rows = setlist.items.map((storedItem, itemIndex) => {
           const item = resolvedSetlistItem(storedItem);
           return `
-            <li class="saved-setlist-song">
+            <li class="saved-setlist-song swipe-row" data-setlist-swipe-key="${escapeText(setlist.id)}::${itemIndex}">
               <span class="saved-setlist-number">${itemIndex + 1}</span>
               <span><strong>${escapeText(item.title)}</strong><small>${escapeText(item.artist || uiText("歌手名未設定"))}${item.key ? ` / ${escapeText(uiKey(item.key))}` : ""}</small></span>
               <span class="setlist-song-actions">
@@ -7568,7 +7569,7 @@
       savedSetlistDraftSongIds = setlist.items.map((item) => item.songId).filter(Boolean);
       savedSetlistTitle.value = setlist.title;
       savedSetlistSearch.value = "";
-      savedSetlistFormTitle.textContent = uiText("セットリストを編集");
+      savedSetlistFormTitle.textContent = uiText("マイセットリストを編集");
       saveSavedSetlist.textContent = uiText("変更を保存");
       cancelSavedSetlistEdit.hidden = false;
       savedSetlistStatus.textContent = "";
@@ -7584,6 +7585,25 @@
           return `${index + 1}. ${item.title}${item.artist ? ` / ${item.artist}` : ""}${item.key ? ` / ${uiKey(item.key)}` : ""}`;
         })
       ].join("\n");
+    }
+
+    function removeSongFromSavedSetlist(swipeKey) {
+      const separatorIndex = String(swipeKey || "").lastIndexOf("::");
+      if (separatorIndex < 0) return;
+      const setlistId = swipeKey.slice(0, separatorIndex);
+      const itemIndex = Number(swipeKey.slice(separatorIndex + 2));
+      const setlist = savedSetlists.find((entry) => entry.id === setlistId);
+      if (!setlist || !Number.isInteger(itemIndex) || !setlist.items[itemIndex]) return;
+      const item = resolvedSetlistItem(setlist.items[itemIndex]);
+      const message = currentLanguage === "en"
+        ? `Remove “${item.title}” from this setlist?`
+        : `「${item.title}」をこのマイセットリストから削除しますか？`;
+      if (!confirm(message)) return;
+      setlist.items.splice(itemIndex, 1);
+      setlist.updatedAt = new Date().toISOString();
+      saveSavedSetlists();
+      renderSavedSetlists();
+      savedSetlistStatus.textContent = uiText("マイセットリストから曲を削除しました。");
     }
 
     function saveSettings() {
@@ -10554,7 +10574,7 @@
         return;
       }
       if (!savedSetlistDraftSongIds.length) {
-        savedSetlistStatus.textContent = uiText("セットリストに入れる曲を1曲以上選んでください。");
+        savedSetlistStatus.textContent = uiText("マイセットリストに入れる曲を1曲以上選んでください。");
         return;
       }
       const editingSetlist = savedSetlists.find((setlist) => setlist.id === editingSavedSetlistId);
@@ -10579,7 +10599,7 @@
       }
       saveSavedSetlists();
       renderSavedSetlists();
-      resetSavedSetlistForm(uiText(editingSetlist ? "セットリストを更新しました。" : "セットリストを保存しました。"));
+      resetSavedSetlistForm(uiText(editingSetlist ? "マイセットリストを更新しました。" : "マイセットリストを保存しました。"));
     });
 
     savedSetlistList.addEventListener("click", async (event) => {
@@ -10590,7 +10610,8 @@
         const itemIndex = Number(itemButton.dataset.setlistItemIndex);
         if (!setlist || !Number.isInteger(itemIndex) || !setlist.items[itemIndex]) return;
         if (itemButton.dataset.setlistRemoveSong) {
-          setlist.items.splice(itemIndex, 1);
+          removeSongFromSavedSetlist(`${setlistId}::${itemIndex}`);
+          return;
         } else {
           const targetIndex = itemButton.dataset.setlistMoveUp ? itemIndex - 1 : itemIndex + 1;
           if (!setlist.items[targetIndex]) return;
@@ -10637,7 +10658,7 @@
         });
         saveSavedSetlists();
         renderSavedSetlists();
-        savedSetlistStatus.textContent = uiText("セットリストを複製しました。");
+        savedSetlistStatus.textContent = uiText("マイセットリストを複製しました。");
         return;
       }
 
@@ -10649,9 +10670,16 @@
         saveSavedSetlists();
         renderSavedSetlists();
         if (editingSavedSetlistId === setlist.id) resetSavedSetlistForm();
-        savedSetlistStatus.textContent = uiText("セットリストを削除しました。");
+        savedSetlistStatus.textContent = uiText("マイセットリストを削除しました。");
       }
     });
+
+    enableSwipeDelete(
+      savedSetlistList,
+      "[data-setlist-swipe-key]",
+      "setlistSwipeKey",
+      removeSongFromSavedSetlist
+    );
 
     settingSavedSetlists.addEventListener("change", () => {
       settings.showSavedSetlists = settingSavedSetlists.checked;
