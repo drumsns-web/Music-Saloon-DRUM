@@ -2758,6 +2758,13 @@
       text-shadow: none;
     }
 
+    .app-update-history-action {
+      min-height: 36px;
+      margin-top: 8px;
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
     .setlist-builder {
       display: grid;
       grid-template-columns: minmax(280px, .8fr) minmax(0, 1.2fr);
@@ -4305,15 +4312,15 @@
               <div class="app-update-history-list">
                 <article class="app-update-history-item">
                   <time datetime="2026-07-26">2026.07.26</time>
-                  <div><strong>曲の操作ボタンを改善</strong><p>「セットリストへ」「別リストへ」を曲ごとに常時表示し、別リストへのコピー・移動にも対応しました。</p></div>
+                  <div><strong>曲の操作ボタンを改善</strong><p>「セットリストへ」「別リストへ」を曲ごとに常時表示し、別リストへのコピー・移動にも対応しました。</p><a class="btn ghost app-update-history-action" href="#customers">使ってみる</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-26">2026.07.26</time>
-                  <div><strong>画面カラーの調整機能を追加</strong><p>設定から本文の文字色と強調ボタンの色を選べるようにし、文字の読みやすさも自動確認するようにしました。</p></div>
+                  <div><strong>画面カラーの調整機能を追加</strong><p>設定から本文の文字色と強調ボタンの色を選べるようにし、文字の読みやすさも自動確認するようにしました。</p><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-theme">使ってみる</button></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-26">2026.07.26</time>
-                  <div><strong>マイセットリストを追加</strong><p>LIVE練習や本番用に、曲順とタイトルを付けたセットリストを保存できるようになりました。</p></div>
+                  <div><strong>マイセットリストを追加</strong><p>LIVE練習や本番用に、曲順とタイトルを付けたセットリストを保存できるようになりました。</p><a class="btn ghost app-update-history-action" data-setlist-entry href="#saved-setlists">使ってみる</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-25">2026.07.25</time>
@@ -4321,11 +4328,11 @@
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-22">2026.07.22</time>
-                  <div><strong>曲データ検索を追加</strong><p>曲名・歌手名の候補検索、JOYSOUND・DAMでの確認、コード・歌詞検索への移動に対応しました。</p></div>
+                  <div><strong>曲データ検索を追加</strong><p>曲名・歌手名の候補検索、JOYSOUND・DAMでの確認、コード・歌詞検索への移動に対応しました。</p><a class="btn ghost app-update-history-action" href="#song-register">使ってみる</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-21">2026.07.21</time>
-                  <div><strong>曲リストを探しやすく改善</strong><p>歌手別の折りたたみ、50音・A〜Zジャンプ、コンパクト表示を追加しました。</p></div>
+                  <div><strong>曲リストを探しやすく改善</strong><p>歌手別の折りたたみ、50音・A〜Zジャンプ、コンパクト表示を追加しました。</p><a class="btn ghost app-update-history-action" href="#customers">使ってみる</a></div>
                 </article>
               </div>
             </details>
@@ -6652,6 +6659,7 @@
       "各曲に「セットへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。": "Each song now always shows Setlist and Other List buttons, so you can add, copy, or move songs without opening Details.",
       "各曲に「セットリストへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。": "Each song now always shows Add to Setlist and Other List buttons, so you can add, copy, or move songs without opening Details.",
       "これまでの更新履歴を見る": "View Previous Updates",
+      "使ってみる": "Try It",
       "曲の操作ボタンを改善": "Improved Song Action Buttons",
       "「セットリストへ」「別リストへ」を曲ごとに常時表示し、別リストへのコピー・移動にも対応しました。": "Add to Setlist and Other List are always shown for each song, with copy and move support.",
       "画面カラーの調整機能を追加": "Added Color Customization",
@@ -11933,6 +11941,21 @@
       const headerHeight = settingsModalHeader.getBoundingClientRect().height;
       const nextTop = settingsModalPanel.scrollTop + targetTop - panelTop - headerHeight - 14;
       settingsModalPanel.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
+    });
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-update-settings-target]");
+      if (!button) return;
+      const target = document.getElementById(button.dataset.updateSettingsTarget);
+      if (!target) return;
+      openSettingsPanel();
+      window.requestAnimationFrame(() => {
+        const panelTop = settingsModalPanel.getBoundingClientRect().top;
+        const targetTop = target.getBoundingClientRect().top;
+        const headerHeight = settingsModalHeader.getBoundingClientRect().height;
+        const nextTop = settingsModalPanel.scrollTop + targetTop - panelTop - headerHeight - 14;
+        settingsModalPanel.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
+      });
     });
 
     settingsModal.addEventListener("click", (event) => {
