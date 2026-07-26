@@ -2196,7 +2196,7 @@
     }
 
     .action-cell {
-      width: 190px;
+      width: 260px;
       white-space: normal;
     }
 
@@ -2205,6 +2205,18 @@
       margin: 2px;
       padding: 7px 10px;
       font-size: 13px;
+    }
+
+    .song-quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .song-quick-actions .btn {
+      margin: 0;
+      white-space: nowrap;
     }
 
     .song-groups {
@@ -3459,6 +3471,54 @@
       font-weight: 900;
     }
 
+    .quick-setlist-modal-panel {
+      width: min(600px, 100%);
+    }
+
+    .quick-setlist-options {
+      display: grid;
+      gap: 8px;
+      max-height: 360px;
+      overflow: auto;
+      margin: 14px 0;
+    }
+
+    .quick-setlist-option {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 52px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: var(--ink);
+      background: #fff;
+      text-align: left;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .quick-setlist-option small {
+      color: var(--muted);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .quick-setlist-option:hover,
+    .quick-setlist-option:focus-visible {
+      border-color: var(--orange);
+      background: color-mix(in srgb, var(--orange) 10%, #fff);
+      outline: none;
+    }
+
+    .quick-setlist-option:disabled {
+      opacity: .62;
+      cursor: default;
+    }
+
     .gacha-hit {
       display: none;
       margin: 4px 0 14px;
@@ -4044,6 +4104,9 @@
         border: 0;
         padding: 6px 12px;
       }
+      .action-cell {
+        width: 100%;
+      }
       td::before {
         content: attr(data-label);
         display: block;
@@ -4101,12 +4164,12 @@
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.26</span></span>
-              <h2 id="appUpdateTitle">曲リスト間のコピー・移動を追加しました</h2>
+              <h2 id="appUpdateTitle">曲の追加操作を見やすくしました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌃</span>
           </summary>
           <div class="app-update-body">
-            <p>設定で別の曲リストを有効にすると、曲の「詳細」から自分とお客様・同僚・パートナーなどのリスト間でコピーまたは移動できます。</p>
+            <p>各曲に「セットへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。</p>
             <a class="btn primary" href="#customers">使ってみる</a>
           </div>
         </details>
@@ -5712,6 +5775,25 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="quickSetlistModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="quickSetlistModalTitle">
+    <div class="drink-modal-panel quick-setlist-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2 id="quickSetlistModalTitle">マイセットリストへ追加</h2>
+          <p class="lead">追加先のマイセットリストを選んでください。</p>
+        </div>
+        <button class="btn ghost" id="closeQuickSetlistModal" type="button">閉じる</button>
+      </div>
+      <div class="song-transfer-summary">
+        <strong id="quickSetlistSongTitle">曲名</strong>
+        <p>保存済みのセットリストへ追加できます。</p>
+      </div>
+      <div class="quick-setlist-options" id="quickSetlistOptions"></div>
+      <button class="btn ghost" id="createSetlistWithSong" type="button">新しいマイセットリストを作る</button>
+      <p class="song-transfer-status" id="quickSetlistStatus" aria-live="polite"></p>
+    </div>
+  </div>
+
   <div class="drink-modal" id="homePromptModal" aria-hidden="true">
     <div class="drink-modal-panel gacha-modal-panel">
       <div class="section-head">
@@ -6128,6 +6210,12 @@
     const copySongToOtherList = document.getElementById("copySongToOtherList");
     const moveSongToOtherList = document.getElementById("moveSongToOtherList");
     const songTransferStatus = document.getElementById("songTransferStatus");
+    const quickSetlistModal = document.getElementById("quickSetlistModal");
+    const closeQuickSetlistModal = document.getElementById("closeQuickSetlistModal");
+    const quickSetlistSongTitle = document.getElementById("quickSetlistSongTitle");
+    const quickSetlistOptions = document.getElementById("quickSetlistOptions");
+    const createSetlistWithSong = document.getElementById("createSetlistWithSong");
+    const quickSetlistStatus = document.getElementById("quickSetlistStatus");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
@@ -6382,6 +6470,7 @@
       "文字ジャンプ": "Letter Jump",
       "詳細": "Details",
       "別リストへ": "Other List",
+      "セットへ": "Setlist",
       "別の曲リストへ": "Move or Copy to Another List",
       "コピーまたは移動を選んでください。": "Choose whether to copy or move this song.",
       "コピーすると両方のリストに残ります。移動すると現在のリストからは削除されます。": "Copy keeps the song in both lists. Move removes it from the current list.",
@@ -6391,8 +6480,17 @@
       "コピー・移動先のリストに同じ曲が登録済みです。": "The same song is already registered in the destination list.",
       "別の曲リストへコピーしました。": "Copied to the other song list.",
       "別の曲リストへ移動しました。": "Moved to the other song list.",
+      "マイセットリストへ追加": "Add to My Setlist",
+      "追加先のマイセットリストを選んでください。": "Choose a My Setlist to add this song to.",
+      "保存済みのセットリストへ追加できます。": "Add this song to a saved setlist.",
+      "新しいマイセットリストを作る": "Create a New My Setlist",
+      "この曲は追加済みです": "Already Added",
+      "マイセットリストへ追加しました。": "Added to My Setlist.",
+      "曲を選択しました。タイトルを入力して保存してください。": "Song selected. Enter a title and save the setlist.",
       "曲リスト間のコピー・移動を追加しました": "Copy or Move Songs Between Lists",
       "設定で別の曲リストを有効にすると、曲の「詳細」から自分とお客様・同僚・パートナーなどのリスト間でコピーまたは移動できます。": "Enable another song list in Settings, then use a song's Details to copy or move it between your list and a customer, colleague, or partner list.",
+      "曲の追加操作を見やすくしました": "Song Actions Are Now Easier to Reach",
+      "各曲に「セットへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。": "Each song now always shows Setlist and Other List buttons, so you can add, copy, or move songs without opening Details.",
       "歌手名未登録": "Artist not entered",
       "文字ジャンプは「歌手別」または「曲名順」で使えます。": "Letter jump is available in By Artist or Title Order views.",
       "文字を押すと、最初の該当グループへ移動します。": "Choose a letter to jump to the first matching group.",
@@ -7396,6 +7494,7 @@
     let editingSongId = null;
     let editingSavedSetlistId = null;
     let transferringSongId = null;
+    let quickSetlistSongId = null;
     let savedSetlistDraftSongIds = [];
     let didAddDefaultTags = false;
     defaultGenreTags.forEach((tagName) => {
@@ -8342,7 +8441,7 @@
 
     function initAppUpdateCard() {
       if (!appUpdateCard) return;
-      const updateVersion = "2026-07-26-song-list-transfer";
+      const updateVersion = "2026-07-26-song-quick-actions";
       let state = {};
       try {
         state = JSON.parse(localStorage.getItem(appUpdateStorageKey) || "{}");
@@ -9355,6 +9454,95 @@
       });
     }
 
+    function prepareNewSetlistWithSong(item) {
+      editingSavedSetlistId = null;
+      savedSetlistDraftSongIds = [item.id];
+      savedSetlistTitle.value = "";
+      savedSetlistSearch.value = "";
+      savedSetlistFormTitle.textContent = uiText("新しいマイセットリストを作る");
+      saveSavedSetlist.textContent = uiText("マイセットリストを保存");
+      cancelSavedSetlistEdit.hidden = true;
+      savedSetlistStatus.textContent = uiText("曲を選択しました。タイトルを入力して保存してください。");
+      renderSavedSetlistPicker();
+      showView("saved-setlists");
+      window.requestAnimationFrame(() => {
+        savedSetlistForm.scrollIntoView({ behavior: "smooth", block: "start" });
+        savedSetlistTitle.focus();
+      });
+    }
+
+    function renderQuickSetlistOptions(item) {
+      quickSetlistOptions.innerHTML = savedSetlists.map((setlist) => {
+        const alreadyAdded = setlist.items.some((entry) => entry.songId === item.id);
+        return `
+          <button class="quick-setlist-option" type="button" data-quick-setlist-target="${escapeText(setlist.id)}" ${alreadyAdded ? "disabled" : ""}>
+            <span>${escapeText(setlist.title)}</span>
+            <small>${alreadyAdded ? escapeText(uiText("この曲は追加済みです")) : `${setlist.items.length}${escapeText(uiText("曲"))}`}</small>
+          </button>
+        `;
+      }).join("");
+      refreshLanguageSoon();
+    }
+
+    function openQuickSetlistPanel(id) {
+      if (!settings.showSavedSetlists) return;
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      if (!savedSetlists.length) {
+        prepareNewSetlistWithSong(item);
+        return;
+      }
+      quickSetlistSongId = item.id;
+      quickSetlistSongTitle.textContent = itemLabel(item);
+      quickSetlistStatus.textContent = "";
+      renderQuickSetlistOptions(item);
+      quickSetlistModal.classList.add("show");
+      quickSetlistModal.setAttribute("aria-hidden", "false");
+      refreshLanguageSoon();
+    }
+
+    function closeQuickSetlistPanel() {
+      quickSetlistModal.classList.remove("show");
+      quickSetlistModal.setAttribute("aria-hidden", "true");
+      quickSetlistSongId = null;
+      quickSetlistStatus.textContent = "";
+    }
+
+    function addSongToSavedSetlist(setlistId) {
+      const item = songs.find((song) => song.id === quickSetlistSongId);
+      const setlist = savedSetlists.find((entry) => entry.id === setlistId);
+      if (!item || !setlist) return;
+      if (setlist.items.some((entry) => entry.songId === item.id)) {
+        quickSetlistStatus.textContent = uiText("この曲は追加済みです");
+        return;
+      }
+      const insertedIndex = setlist.items.length;
+      setlist.items.push(setlistSongSnapshot(item));
+      setlist.updatedAt = new Date().toISOString();
+      saveSavedSetlists();
+      renderSavedSetlists();
+      closeQuickSetlistPanel();
+      showUndo(`${itemLabel(item)}：${uiText("マイセットリストへ追加しました。")}`, () => {
+        const currentSetlist = savedSetlists.find((entry) => entry.id === setlist.id);
+        if (!currentSetlist) return;
+        if (currentSetlist.items[insertedIndex] && currentSetlist.items[insertedIndex].songId === item.id) {
+          currentSetlist.items.splice(insertedIndex, 1);
+        } else {
+          let fallbackIndex = -1;
+          for (let index = currentSetlist.items.length - 1; index >= 0; index -= 1) {
+            if (currentSetlist.items[index].songId === item.id) {
+              fallbackIndex = index;
+              break;
+            }
+          }
+          if (fallbackIndex >= 0) currentSetlist.items.splice(fallbackIndex, 1);
+        }
+        currentSetlist.updatedAt = new Date().toISOString();
+        saveSavedSetlists();
+        renderSavedSetlists();
+      });
+    }
+
     function toggleNextWish(id) {
       const item = songs.find((song) => song.id === id);
       if (!item) return;
@@ -9957,11 +10145,14 @@
           <td data-label="${escapeText(uiText("キー"))}"><span class="status">${highlightText(uiKey(item.key), query)}</span></td>
           <td class="song-detail-cell" data-label="${escapeText(uiText("詳細"))}"><div class="song-detail-stack">${detailBits}</div></td>
           <td class="action-cell" data-label="${escapeText(uiText("操作"))}">
-            <button class="btn ghost song-detail-toggle" type="button" data-song-detail="${escapeText(item.id)}" aria-expanded="${isExpanded}">${escapeText(uiText(isExpanded ? "閉じる" : "詳細"))}</button>
+            <div class="song-quick-actions">
+              <button class="btn ghost song-detail-toggle" type="button" data-song-detail="${escapeText(item.id)}" aria-expanded="${isExpanded}">${escapeText(uiText(isExpanded ? "閉じる" : "詳細"))}</button>
+              ${settings.showSavedSetlists ? `<button class="btn ghost" type="button" data-quick-setlist="${escapeText(item.id)}">＋ ${escapeText(uiText("セットへ"))}</button>` : ""}
+              ${settings.enableAdditionalList ? `<button class="btn ghost" type="button" data-song-transfer="${escapeText(item.id)}">⇄ ${escapeText(uiText("別リストへ"))}</button>` : ""}
+            </div>
             <div class="song-row-actions">
               <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
               <button class="btn primary" type="button" data-record="${escapeText(item.id)}">${escapeText(uiText("記録"))}</button>
-              ${settings.enableAdditionalList ? `<button class="btn ghost" type="button" data-song-transfer="${escapeText(item.id)}">${escapeText(uiText("別リストへ"))}</button>` : ""}
               <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
               <button class="btn ghost" type="button" data-delete="${escapeText(item.id)}">${escapeText(uiText("削除"))}</button>
             </div>
@@ -10655,6 +10846,11 @@
         recordSong(recordButton.dataset.record);
         return;
       }
+      const quickSetlistButton = event.target.closest("[data-quick-setlist]");
+      if (quickSetlistButton) {
+        openQuickSetlistPanel(quickSetlistButton.dataset.quickSetlist);
+        return;
+      }
       const transferButton = event.target.closest("[data-song-transfer]");
       if (transferButton) {
         openSongTransferPanel(transferButton.dataset.songTransfer);
@@ -11274,6 +11470,7 @@
       settings.showSavedSetlists = settingSavedSetlists.checked;
       saveSettings();
       applySettings();
+      renderSongs();
       if (!settings.showSavedSetlists && location.hash === "#saved-setlists") showView("customers");
     });
 
@@ -11661,12 +11858,28 @@
     songTransferModal.addEventListener("click", (event) => {
       if (event.target === songTransferModal) closeSongTransferPanel();
     });
+    closeQuickSetlistModal.addEventListener("click", closeQuickSetlistPanel);
+    quickSetlistOptions.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-quick-setlist-target]");
+      if (!button || button.disabled) return;
+      addSongToSavedSetlist(button.dataset.quickSetlistTarget);
+    });
+    createSetlistWithSong.addEventListener("click", () => {
+      const item = songs.find((song) => song.id === quickSetlistSongId);
+      if (!item) return;
+      closeQuickSetlistPanel();
+      prepareNewSetlistWithSong(item);
+    });
+    quickSetlistModal.addEventListener("click", (event) => {
+      if (event.target === quickSetlistModal) closeQuickSetlistPanel();
+    });
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
       if (settingsModal.classList.contains("show")) closeSettingsModal.click();
       if (guideModal.classList.contains("show")) closeGuideModalPanel();
       if (songTransferModal.classList.contains("show")) closeSongTransferPanel();
+      if (quickSetlistModal.classList.contains("show")) closeQuickSetlistPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
       if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
