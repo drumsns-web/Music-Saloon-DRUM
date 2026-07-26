@@ -26,6 +26,7 @@
       --paper: #fbf4e5;
       --panel: rgba(255, 252, 244, .94);
       --ink: #241d17;
+      --button-text: #0b2b1e;
       --muted: #51463b;
       --line: rgba(20, 63, 44, .18);
       --blue: #376e9f;
@@ -399,6 +400,15 @@
       font-weight: 900;
     }
 
+    .today-action-panel strong .small {
+      display: inline;
+      margin-left: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .34);
+    }
+
     .today-action-grid {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -422,6 +432,7 @@
 
     .today-action-grid a.primary-action {
       background: var(--orange);
+      color: var(--button-text);
     }
 
     .commute-panel {
@@ -603,7 +614,7 @@
     }
 
     .btn:hover { transform: translateY(-1px); }
-    .btn.primary { color: var(--forest-2); background: var(--orange); box-shadow: 0 12px 28px rgba(240, 138, 53, .28); }
+    .btn.primary { color: var(--button-text); background: var(--orange); box-shadow: 0 12px 28px rgba(240, 138, 53, .28); }
     .btn.primary:hover { background: var(--orange-2); }
     .btn.secondary { color: var(--forest); background: rgba(255, 247, 232, .94); }
     .btn.ghost { color: var(--forest); background: #fff; border-color: var(--line); }
@@ -2791,6 +2802,95 @@
       font-weight: 900;
     }
 
+    .custom-color-settings {
+      margin-top: 18px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .82);
+      color: var(--ink);
+    }
+
+    .custom-color-settings h4 {
+      margin: 0 0 4px;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .custom-color-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .custom-color-field {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 46px;
+      align-items: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .custom-color-field input[type="color"] {
+      width: 46px;
+      height: 38px;
+      padding: 2px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .custom-color-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .custom-color-status {
+      min-height: 1.5em;
+      margin: 9px 0 0;
+      color: var(--forest);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .daily-news-label,
+    .nav-links a.active-nav,
+    .top-shortcut-grid a:hover,
+    .top-shortcut-grid a:focus-visible,
+    .commute-action:hover,
+    .commute-action:focus-visible,
+    .top-shortcut-preview-list span,
+    #guide .card .btn,
+    .tag,
+    .menu-favorite-button.active,
+    .menu-shortcut-buttons .btn.primary,
+    .menu-sub-back,
+    .song-search-icon,
+    .catalog-eyebrow,
+    .song-profile-buttons .btn.active,
+    .song-view-switch button.is-active,
+    .compact-list-details > summary::after,
+    .song-group-toggle-icon,
+    .song-hub-nav a.active,
+    .rank-badge,
+    .karaoke-request-list li::before,
+    .drink-category-buttons .btn.active,
+    #closeGuideModal.guide-close-button,
+    #guideModal .language-toggle,
+    .guide-category-heading span,
+    .undo-toast button {
+      color: var(--button-text);
+    }
+
     /* The selected theme also colors the large app surfaces that previously
        used fixed DRUM green values. */
     body {
@@ -3813,6 +3913,14 @@
       }
       .today-action-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .today-action-panel strong .small {
+        display: block;
+        margin: 4px 0 0;
+        line-height: 1.5;
+      }
+      .custom-color-grid {
+        grid-template-columns: 1fr;
       }
       .commute-grid {
         grid-template-columns: 1fr;
@@ -4947,6 +5055,25 @@
             <p class="small">好きな色を選ぶと、アプリ全体の見出し・背景・ボタンへすぐ反映されます。この端末のブラウザに保存されます。</p>
             <div class="theme-picker" id="themePicker" role="radiogroup" aria-label="アプリの基本カラー"></div>
             <p class="theme-status" id="themeStatus" aria-live="polite"></p>
+            <div class="custom-color-settings">
+              <h4>色を細かく調整</h4>
+              <p class="small">本文・カードの文字色と、強調ボタンの色を選べます。ボタン上の文字は読みやすい白または黒へ自動調整されます。</p>
+              <div class="custom-color-grid">
+                <label class="custom-color-field">
+                  <span>本文の文字色</span>
+                  <input id="customTextColor" type="color" value="#241d17" aria-label="本文の文字色">
+                </label>
+                <label class="custom-color-field">
+                  <span>強調ボタンの色</span>
+                  <input id="customButtonColor" type="color" value="#f08a35" aria-label="強調ボタンの色">
+                </label>
+              </div>
+              <div class="custom-color-actions">
+                <button class="btn primary" type="button" id="applyCustomColors">この色を適用</button>
+                <button class="btn ghost" type="button" id="resetCustomColors">標準色に戻す</button>
+              </div>
+              <p class="custom-color-status" id="customColorStatus" aria-live="polite"></p>
+            </div>
           </article>
           <article class="card settings-target" id="settings-shortcuts">
             <span class="tag orange">Home</span>
@@ -5916,6 +6043,11 @@
     const settingsQuickMenu = document.getElementById("settingsQuickMenu");
     const themePicker = document.getElementById("themePicker");
     const themeStatus = document.getElementById("themeStatus");
+    const customTextColor = document.getElementById("customTextColor");
+    const customButtonColor = document.getElementById("customButtonColor");
+    const applyCustomColors = document.getElementById("applyCustomColors");
+    const resetCustomColors = document.getElementById("resetCustomColors");
+    const customColorStatus = document.getElementById("customColorStatus");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
@@ -6149,6 +6281,15 @@
       "アプリの基本カラー": "App Color Theme",
       "好きな色を選ぶと、アプリ全体の見出し・背景・ボタンへすぐ反映されます。この端末のブラウザに保存されます。": "Choose a color to apply it instantly to headings, backgrounds, and buttons. It is saved in this device's browser.",
       "基本カラーを変更しました。": "Color theme updated.",
+      "色を細かく調整": "Fine-tune Colors",
+      "本文・カードの文字色と、強調ボタンの色を選べます。ボタン上の文字は読みやすい白または黒へ自動調整されます。": "Choose the text color for content and cards and the accent button color. Button text automatically changes to readable white or black.",
+      "本文の文字色": "Main Text Color",
+      "強調ボタンの色": "Accent Button Color",
+      "この色を適用": "Apply Colors",
+      "標準色に戻す": "Restore Default Colors",
+      "好みの色を適用しました。": "Your custom colors have been applied.",
+      "文字色が背景色に近すぎるため適用できません。もっと濃い色を選んでください。": "That text color is too close to the background. Please choose a darker color.",
+      "個別の色設定を標準に戻しました。": "Custom colors restored to defaults.",
       "DRUMグリーン": "DRUM Green",
       "ジェットブラック": "Jet Black",
       "スノーホワイト": "Snow White",
@@ -7102,6 +7243,8 @@
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
     if (!["artist", "title", "recent", "sung"].includes(settings.songViewMode)) settings.songViewMode = "artist";
     if (!appThemes.some((theme) => theme.id === settings.colorTheme)) settings.colorTheme = "drum-green";
+    if (!/^#[0-9a-f]{6}$/i.test(String(settings.customTextColor || ""))) settings.customTextColor = "";
+    if (!/^#[0-9a-f]{6}$/i.test(String(settings.customButtonColor || ""))) settings.customButtonColor = "";
     if (typeof settings.commuteDestination !== "string") settings.commuteDestination = "";
     if (!["江古田駅", "新江古田駅", "新桜台駅"].includes(settings.commuteStation)) settings.commuteStation = "江古田駅";
     if (typeof settings.lastTrainTime !== "string") settings.lastTrainTime = "";
@@ -7802,25 +7945,89 @@
       `).join("");
     }
 
+    function colorRgb(hex) {
+      const normalized = String(hex || "").trim().replace(/^#/, "");
+      if (!/^[0-9a-f]{6}$/i.test(normalized)) return null;
+      return {
+        r: parseInt(normalized.slice(0, 2), 16),
+        g: parseInt(normalized.slice(2, 4), 16),
+        b: parseInt(normalized.slice(4, 6), 16)
+      };
+    }
+
+    function colorRgbText(hex) {
+      const rgb = colorRgb(hex);
+      return rgb ? `${rgb.r}, ${rgb.g}, ${rgb.b}` : "0, 0, 0";
+    }
+
+    function colorLuminance(hex) {
+      const rgb = colorRgb(hex);
+      if (!rgb) return 0;
+      const channels = [rgb.r, rgb.g, rgb.b].map((value) => {
+        const channel = value / 255;
+        return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+      });
+      return channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722;
+    }
+
+    function colorContrast(first, second) {
+      const firstLuminance = colorLuminance(first);
+      const secondLuminance = colorLuminance(second);
+      const lighter = Math.max(firstLuminance, secondLuminance);
+      const darker = Math.min(firstLuminance, secondLuminance);
+      return (lighter + .05) / (darker + .05);
+    }
+
+    function readableButtonText(background) {
+      return colorContrast(background, "#ffffff") >= colorContrast(background, "#111111")
+        ? "#ffffff"
+        : "#111111";
+    }
+
+    function mixColors(first, second, amount) {
+      const firstRgb = colorRgb(first);
+      const secondRgb = colorRgb(second);
+      if (!firstRgb || !secondRgb) return first;
+      const channel = (name) => Math.round(firstRgb[name] + (secondRgb[name] - firstRgb[name]) * amount)
+        .toString(16)
+        .padStart(2, "0");
+      return `#${channel("r")}${channel("g")}${channel("b")}`;
+    }
+
+    function renderCustomColorControls() {
+      const theme = selectedAppTheme();
+      customTextColor.value = settings.customTextColor || "#241d17";
+      customButtonColor.value = settings.customButtonColor || theme.accent;
+    }
+
     function applyColorTheme() {
       const theme = selectedAppTheme();
       settings.colorTheme = theme.id;
+      const textColor = settings.customTextColor || "#241d17";
+      const buttonColor = settings.customButtonColor || theme.accent;
+      const buttonTextColor = readableButtonText(buttonColor);
+      const buttonHoverColor = settings.customButtonColor
+        ? mixColors(buttonColor, buttonTextColor === "#ffffff" ? "#000000" : "#ffffff", .14)
+        : theme.soft;
       const rootStyle = document.documentElement.style;
       rootStyle.setProperty("--forest", theme.dark);
       rootStyle.setProperty("--forest-2", theme.deep);
       rootStyle.setProperty("--leaf", theme.mid);
-      rootStyle.setProperty("--orange", theme.accent);
-      rootStyle.setProperty("--orange-2", theme.soft);
+      rootStyle.setProperty("--orange", buttonColor);
+      rootStyle.setProperty("--orange-2", buttonHoverColor);
       rootStyle.setProperty("--paper", theme.paper);
       rootStyle.setProperty("--panel", theme.panel);
+      rootStyle.setProperty("--ink", textColor);
+      rootStyle.setProperty("--button-text", buttonTextColor);
       rootStyle.setProperty("--line", `rgba(${theme.darkRgb}, .18)`);
       rootStyle.setProperty("--shadow", `0 18px 50px rgba(${theme.deepRgb}, .2)`);
       rootStyle.setProperty("--theme-dark-rgb", theme.darkRgb);
       rootStyle.setProperty("--theme-deep-rgb", theme.deepRgb);
-      rootStyle.setProperty("--theme-accent-rgb", theme.accentRgb);
-      rootStyle.setProperty("--theme-soft-rgb", theme.softRgb);
+      rootStyle.setProperty("--theme-accent-rgb", colorRgbText(buttonColor));
+      rootStyle.setProperty("--theme-soft-rgb", colorRgbText(buttonHoverColor));
       document.documentElement.dataset.appTheme = theme.id;
       renderThemePicker();
+      renderCustomColorControls();
     }
 
     function saveTags() {
@@ -11186,6 +11393,35 @@
       saveSettings();
       applyColorTheme();
       themeStatus.textContent = uiText("基本カラーを変更しました。");
+      refreshLanguageSoon();
+    });
+
+    applyCustomColors.addEventListener("click", () => {
+      const requestedTextColor = customTextColor.value.toLowerCase();
+      const requestedButtonColor = customButtonColor.value.toLowerCase();
+      const theme = selectedAppTheme();
+      const minimumContrast = Math.min(
+        colorContrast(requestedTextColor, theme.paper),
+        colorContrast(requestedTextColor, "#ffffff")
+      );
+      if (minimumContrast < 4.5) {
+        customColorStatus.textContent = uiText("文字色が背景色に近すぎるため適用できません。もっと濃い色を選んでください。");
+        return;
+      }
+      settings.customTextColor = requestedTextColor;
+      settings.customButtonColor = requestedButtonColor;
+      saveSettings();
+      applyColorTheme();
+      customColorStatus.textContent = uiText("好みの色を適用しました。");
+      refreshLanguageSoon();
+    });
+
+    resetCustomColors.addEventListener("click", () => {
+      settings.customTextColor = "";
+      settings.customButtonColor = "";
+      saveSettings();
+      applyColorTheme();
+      customColorStatus.textContent = uiText("個別の色設定を標準に戻しました。");
       refreshLanguageSoon();
     });
 
