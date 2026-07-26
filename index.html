@@ -4,8 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Music Saloon DRUM | 店舗・曲管理アプリ</title>
-  <link rel="icon" href="drum-icon.jpg">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="application-name" content="Music Saloon DRUM">
+  <meta name="apple-mobile-web-app-title" content="Music Saloon DRUM">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#143f2c">
+  <link rel="manifest" href="manifest.webmanifest?v=20260726">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=20260726">
+  <link rel="icon" type="image/png" sizes="192x192" href="app-icon-192.png?v=20260726">
+  <link rel="shortcut icon" href="favicon-32.png?v=20260726">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20260726">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="apple-touch-icon.png?v=20260726">
   <style>
     :root {
       --forest: #143f2c;
@@ -2522,6 +2531,147 @@
       box-shadow: 0 5px 12px rgba(240, 138, 53, .2);
     }
 
+    .app-update-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      margin: 18px 0;
+      padding: 16px 18px;
+      border: 2px solid var(--orange);
+      border-radius: 14px;
+      background: rgba(255, 250, 240, .96);
+      color: var(--ink);
+      box-shadow: 0 12px 26px rgba(20, 33, 25, .18);
+    }
+
+    .app-update-card h2,
+    .app-update-card p { margin: 0; }
+
+    .app-update-card h2 {
+      margin-top: 3px;
+      font-size: clamp(20px, 3vw, 28px);
+    }
+
+    .app-update-label {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .setlist-builder {
+      display: grid;
+      grid-template-columns: minmax(280px, .8fr) minmax(0, 1.2fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .setlist-builder .card { margin: 0; }
+
+    .setlist-form-actions,
+    .setlist-card-actions,
+    .setlist-song-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .setlist-picker-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      margin: 12px 0 8px;
+    }
+
+    .setlist-picker {
+      max-height: 420px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .setlist-picker label {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .setlist-picker label:last-child { border-bottom: 0; }
+    .setlist-picker input { margin-top: 5px; }
+    .setlist-picker small { display: block; color: var(--muted); }
+
+    .saved-setlist-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .saved-setlist-card {
+      overflow: hidden;
+      border: 1px solid rgba(var(--theme-accent-rgb), .58);
+      border-radius: 12px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 8px 22px rgba(20, 33, 25, .09);
+    }
+
+    .saved-setlist-card > summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 15px 16px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .saved-setlist-card > summary::-webkit-details-marker { display: none; }
+    .saved-setlist-card > summary strong { display: block; font-size: 18px; }
+    .saved-setlist-card > summary small { color: var(--muted); }
+    .saved-setlist-body { padding: 0 16px 16px; }
+
+    .saved-setlist-songs {
+      margin: 0 0 14px;
+      padding: 0;
+      list-style: none;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .saved-setlist-song {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 9px;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .saved-setlist-song:last-child { border-bottom: 0; }
+    .saved-setlist-number { font-weight: 900; color: var(--forest); }
+    .saved-setlist-song small { display: block; color: var(--muted); }
+    .setlist-song-actions .btn { min-height: 34px; padding: 5px 9px; }
+
+    .setlist-empty {
+      padding: 24px;
+      border: 1px dashed rgba(var(--theme-accent-rgb), .75);
+      border-radius: 12px;
+      text-align: center;
+      background: rgba(255, 250, 240, .84);
+      color: var(--ink);
+    }
+
     .theme-settings-card {
       grid-column: 1 / -1;
     }
@@ -3614,6 +3764,12 @@
       .favorite-capability-entry { grid-template-columns: 1fr; }
       .favorite-capability-entry .btn { width: 100%; }
       .song-hub-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .app-update-card,
+      .setlist-builder { grid-template-columns: 1fr; }
+      .app-update-card .btn { width: 100%; }
+      .setlist-picker-toolbar { grid-template-columns: 1fr; }
+      .saved-setlist-song { grid-template-columns: 28px minmax(0, 1fr); }
+      .setlist-song-actions { grid-column: 2; }
       .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .song-list-navigation { top: 106px; }
       .song-view-switch {
@@ -3695,6 +3851,14 @@
           <button class="btn primary js-open-guide-modal" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
+        <aside class="app-update-card" data-setlist-entry aria-labelledby="appUpdateTitle">
+          <div>
+            <div class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.26</span></div>
+            <h2 id="appUpdateTitle">保存セットリストを追加しました</h2>
+            <p>マイ曲リストから曲を選び、LIVE練習や本番用のセットリストをタイトル付きで保存できます。</p>
+          </div>
+          <a class="btn primary" data-setlist-entry href="#saved-setlists">使ってみる</a>
+        </aside>
         <div class="today-action-panel">
           <strong>今日は何をしますか？</strong>
           <div class="today-action-grid">
@@ -3803,6 +3967,12 @@
             <h3>曲を探す</h3>
             <p>曲名、歌手名、タグ、メモで検索できます。タグ選択から探すこともできます。</p>
             <a class="btn ghost" href="#customers">マイ曲リストへ</a>
+          </article>
+          <article class="card" data-setlist-entry>
+            <span class="tag orange">Setlist</span>
+            <h3>セットリストを作る</h3>
+            <p>マイ曲リストから曲を選び、LIVE練習や本番用の曲順をタイトル付きで保存できます。</p>
+            <a class="btn ghost" href="#saved-setlists">保存セットリストへ</a>
           </article>
           <article class="card">
             <span class="tag blue">Gacha</span>
@@ -4197,6 +4367,7 @@
           <a href="#favorites">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
+          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
         </nav>
         <button class="btn ghost customers-sub-back" id="customersBackButton" type="button">← マイ曲リストに戻る</button>
 
@@ -4218,6 +4389,7 @@
             </div>
             <div class="control-row song-primary-actions">
               <button class="btn register-jump" id="focusSongFormButton" type="button">曲を登録する</button>
+              <a class="btn primary" data-setlist-entry href="#saved-setlists">セットリストを作る</a>
               <a class="btn primary" href="#gacha">曲ガチャ</a>
               <a class="btn primary" href="#favorites">よく歌う曲</a>
             </div>
@@ -4688,6 +4860,11 @@
             <span class="tag">Song List</span>
             <h3>マイ曲リスト設定</h3>
             <label class="check-row">
+              <input id="settingSavedSetlists" type="checkbox" checked>
+              保存セットリスト機能を表示する
+            </label>
+            <p class="small">オフにしても、すでに保存したセットリストは削除されません。</p>
+            <label class="check-row">
               <input id="settingMemo" type="checkbox">
               マイ曲リストにメモ欄を表示する
             </label>
@@ -4831,6 +5008,55 @@
       </div>
     </div>
 
+    <section id="saved-setlists" class="dark-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="tag orange">Setlist</span>
+            <h2>保存セットリスト</h2>
+            <p class="lead">LIVE練習や本番用など、マイ曲リストの曲をタイトル付きでまとめて保存できます。</p>
+          </div>
+        </div>
+        <nav class="song-hub-nav" aria-label="曲関連ページ">
+          <a href="#customers">マイ曲リスト</a>
+          <a href="#favorites">よく歌う曲</a>
+          <a href="#community">みんなのお気に入り</a>
+          <a href="#performance-share">歌える・演奏できる</a>
+          <a class="active" href="#saved-setlists" aria-current="page">セットリスト</a>
+        </nav>
+        <p class="privacy-note">保存セットリストは、この端末のブラウザだけに保存されます。お店や他のお客様へ自動共有されることはありません。</p>
+        <div class="setlist-builder">
+          <form class="card" id="savedSetlistForm">
+            <span class="tag orange">Create</span>
+            <h3 id="savedSetlistFormTitle">新しいセットリストを作る</h3>
+            <label for="savedSetlistTitle">セットリストのタイトル</label>
+            <input id="savedSetlistTitle" maxlength="80" required placeholder="例：夏LIVE練習、第1部、次回やる曲">
+            <div class="setlist-picker-toolbar">
+              <input id="savedSetlistSearch" placeholder="曲名・歌手名で絞り込み">
+              <button class="btn ghost" id="clearSavedSetlistSelection" type="button">選択をすべて外す</button>
+            </div>
+            <p><strong id="savedSetlistSelectedCount">0曲を選択中</strong></p>
+            <div class="setlist-picker" id="savedSetlistPicker"></div>
+            <div class="setlist-form-actions">
+              <button class="btn primary" id="saveSavedSetlist" type="submit">セットリストを保存</button>
+              <button class="btn ghost" id="cancelSavedSetlistEdit" type="button" hidden>編集をやめる</button>
+            </div>
+            <p class="small" id="savedSetlistStatus" aria-live="polite"></p>
+          </form>
+          <div>
+            <div class="section-head">
+              <div>
+                <h3>保存済み</h3>
+                <p class="small">開くと曲順の変更、編集、コピー、削除ができます。</p>
+              </div>
+              <strong id="savedSetlistCount">0件</strong>
+            </div>
+            <div class="saved-setlist-list" id="savedSetlistList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section id="favorites" class="dark-section">
       <div class="wrap">
         <div class="section-head">
@@ -4844,6 +5070,7 @@
           <a class="active" href="#favorites" aria-current="page">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
+          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
         </nav>
 
         <div class="favorite-capability-entry">
@@ -4893,6 +5120,7 @@
           <a href="#favorites">よく歌う曲</a>
           <a class="active" href="#community" aria-current="page">みんなのお気に入り</a>
           <a href="#performance-share">歌える・演奏できる</a>
+          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
         </nav>
         <div class="shared-ranking">
           <p class="small">「お気に入り」タグを付けた曲だけが共有の対象になります。</p>
@@ -4923,6 +5151,7 @@
           <a href="#favorites">よく歌う曲</a>
           <a href="#community">みんなのお気に入り</a>
           <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる</a>
+          <a data-setlist-entry href="#saved-setlists">セットリスト</a>
         </nav>
         <div class="capability-purpose">
           <p><strong>通常営業：</strong>「この曲なら○○さんが演奏できそう」と声をかける目安にします。</p>
@@ -5151,12 +5380,17 @@
       </div>
       <div class="home-add-steps">
         <div class="home-add-step">
-          <strong>iPhone</strong>
-          <p>共有ボタン → ホーム画面に追加 → 追加</p>
+          <strong>iPhone（Safari推奨）</strong>
+          <p>Safariで開き、共有ボタン → ホーム画面に追加 → 追加</p>
+          <p class="privacy-note">ChromeやGoogleアプリで「ホーム画面に追加」が見つからない場合は、右上の共有メニューなどから「Safariで開く」を選んでください。</p>
         </div>
         <div class="home-add-step">
-          <strong>Android</strong>
-          <p>メニュー → ホーム画面に追加 → 追加</p>
+          <strong>Android（Chrome）</strong>
+          <p>右上の︙メニュー → ホーム画面に追加、または「アプリをインストール」→ 追加</p>
+        </div>
+        <div class="home-add-step">
+          <strong>Firefox</strong>
+          <p>iPhone：アドレスバーの共有ボタン → ホーム画面に追加 → 追加<br>Android：右上の︙メニュー → ホーム画面に追加 → 追加</p>
         </div>
         <div class="home-add-step">
           <strong>保存について</strong>
@@ -5211,63 +5445,68 @@
           <span><strong>マイ曲リスト</strong><span>検索、タグ、編集はこちら</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
-        <button class="guide-shortcut" type="button" data-guide-target="gacha">
+        <button class="guide-shortcut" data-setlist-entry type="button" data-guide-target="saved-setlists">
           <span class="guide-shortcut-icon">05</span>
+          <span><strong>保存セットリスト</strong><span>LIVE練習や本番用の曲順を保存</span></span>
+          <span class="guide-shortcut-arrow">›</span>
+        </button>
+        <button class="guide-shortcut" type="button" data-guide-target="gacha">
+          <span class="guide-shortcut-icon">06</span>
           <span><strong>曲ガチャ</strong><span>次に歌う曲に迷った時に</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="favorites">
-          <span class="guide-shortcut-icon">06</span>
+          <span class="guide-shortcut-icon">07</span>
           <span><strong>よく歌う曲</strong><span>歌った回数ランキング</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="community">
-          <span class="guide-shortcut-icon">07</span>
+          <span class="guide-shortcut-icon">08</span>
           <span><strong>みんなのお気に入り曲</strong><span>DRUMで人気の曲ランキング</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="performance-share">
-          <span class="guide-shortcut-icon">08</span>
+          <span class="guide-shortcut-icon">09</span>
           <span><strong>歌える・演奏できる曲</strong><span>名前付き共有、即席バンドの目安</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="history">
-          <span class="guide-shortcut-icon">09</span>
+          <span class="guide-shortcut-icon">10</span>
           <span><strong>歌った記録</strong><span>日付ごとに歌った曲を保存</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="daily">
-          <span class="guide-shortcut-icon">10</span>
+          <span class="guide-shortcut-icon">11</span>
           <span><strong>今日の記録</strong><span>セットリスト、ドリンク、メモ</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="drum-gacha">
-          <span class="guide-shortcut-icon">11</span>
+          <span class="guide-shortcut-icon">12</span>
           <span><strong>DRUMガチャ</strong><span>ご来店中の運だめし</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="song-backup">
-          <span class="guide-shortcut-icon">12</span>
+          <span class="guide-shortcut-icon">13</span>
           <span><strong>バックアップ</strong><span>曲リストの保存・復元</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="about">
-          <span class="guide-shortcut-icon">13</span>
+          <span class="guide-shortcut-icon">14</span>
           <span><strong>店舗情報</strong><span>アクセス、営業時間、連絡先</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="features">
-          <span class="guide-shortcut-icon">14</span>
+          <span class="guide-shortcut-icon">15</span>
           <span><strong>遊び方・ルール</strong><span>カラオケと楽器のマナー</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="youtube">
-          <span class="guide-shortcut-icon">15</span>
+          <span class="guide-shortcut-icon">16</span>
           <span><strong>YouTubeを見る</strong><span>店内の様子や出演動画を再生</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
         <button class="guide-shortcut" type="button" data-guide-target="contact">
-          <span class="guide-shortcut-icon">16</span>
+          <span class="guide-shortcut-icon">17</span>
           <span><strong>問い合わせる</strong><span>予約、貸切、イベント利用など</span></span>
           <span class="guide-shortcut-arrow">›</span>
         </button>
@@ -5339,6 +5578,7 @@
     const menuFavoriteStorageKey = "music-saloon-drum-menu-favorites";
     const dailyMemoStorageKey = "music-saloon-drum-daily-memos";
     const settingsStorageKey = "music-saloon-drum-settings";
+    const savedSetlistStorageKey = "music-saloon-drum-saved-setlists";
     const songDraftStorageKey = "music-saloon-drum-song-form-draft";
     const tagStorageKey = "music-saloon-drum-tags";
     const drumGachaStorageKey = "music-saloon-drum-drum-gacha";
@@ -5469,6 +5709,7 @@
     const settingSetlistCopy = document.getElementById("settingSetlistCopy");
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
     const settingPlayableParts = document.getElementById("settingPlayableParts");
+    const settingSavedSetlists = document.getElementById("settingSavedSetlists");
     const settingWeatherRadar = document.getElementById("settingWeatherRadar");
     const settingTaxiSupport = document.getElementById("settingTaxiSupport");
     const settingEkodaRoute = document.getElementById("settingEkodaRoute");
@@ -5561,6 +5802,18 @@
     const capabilityListStatus = document.getElementById("capabilityListStatus");
     const capabilitySharedList = document.getElementById("capabilitySharedList");
     const capabilitySharedIndexJump = document.getElementById("capabilitySharedIndexJump");
+    const savedSetlistForm = document.getElementById("savedSetlistForm");
+    const savedSetlistFormTitle = document.getElementById("savedSetlistFormTitle");
+    const savedSetlistTitle = document.getElementById("savedSetlistTitle");
+    const savedSetlistSearch = document.getElementById("savedSetlistSearch");
+    const clearSavedSetlistSelection = document.getElementById("clearSavedSetlistSelection");
+    const savedSetlistSelectedCount = document.getElementById("savedSetlistSelectedCount");
+    const savedSetlistPicker = document.getElementById("savedSetlistPicker");
+    const saveSavedSetlist = document.getElementById("saveSavedSetlist");
+    const cancelSavedSetlistEdit = document.getElementById("cancelSavedSetlistEdit");
+    const savedSetlistStatus = document.getElementById("savedSetlistStatus");
+    const savedSetlistCount = document.getElementById("savedSetlistCount");
+    const savedSetlistList = document.getElementById("savedSetlistList");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -5590,6 +5843,7 @@
       { id: "info", label: "お知らせ", target: "info" },
       { id: "menu", label: "メニュー", target: "menu" },
       { id: "customers", label: "マイ曲リスト", target: "customers" },
+      { id: "saved-setlists", label: "保存セットリスト", target: "saved-setlists" },
       { id: "song-register", label: "曲を登録", target: "song-register" },
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
@@ -6411,7 +6665,38 @@
       "お気に入り": "Favorite",
       "練習中": "Practicing",
       "盛り上がる": "Crowd Pleaser",
-      "しっとり": "Mellow"
+      "しっとり": "Mellow",
+      "保存セットリスト": "Saved Setlists",
+      "セットリストを作る": "Create a Setlist",
+      "新しいセットリストを作る": "Create a New Setlist",
+      "セットリストを編集": "Edit Setlist",
+      "セットリストのタイトル": "Setlist Title",
+      "セットリストを保存": "Save Setlist",
+      "変更を保存": "Save Changes",
+      "編集をやめる": "Cancel Editing",
+      "選択をすべて外す": "Clear Selection",
+      "曲名・歌手名で絞り込み": "Filter by song or artist",
+      "保存済み": "Saved",
+      "曲順をコピー": "Copy Song Order",
+      "外す": "Remove",
+      "複製": "Duplicate",
+      "更新": "Updated",
+      "曲が入っていません。": "No songs in this setlist.",
+      "保存済みのセットリストはありません。": "No saved setlists yet.",
+      "左の作成欄でタイトルと曲を選んで保存してください。": "Choose a title and songs in the creation form, then save.",
+      "先にマイ曲リストへ曲を登録してください。": "Add songs to My Song List first.",
+      "条件に合う曲がありません。": "No matching songs.",
+      "タイトルを入力してください。": "Enter a title.",
+      "セットリストに入れる曲を1曲以上選んでください。": "Select at least one song.",
+      "セットリストを保存しました。": "Setlist saved.",
+      "セットリストを更新しました。": "Setlist updated.",
+      "セットリストを削除しました。": "Setlist deleted.",
+      "セットリストを複製しました。": "Setlist duplicated.",
+      "曲順をコピーしました。": "Song order copied.",
+      "編集を取り消しました。": "Editing canceled.",
+      "保存セットリスト機能を表示する": "Show saved setlist feature",
+      "iPhone（Safari推奨）": "iPhone (Safari Recommended)",
+      "Android（Chrome）": "Android (Chrome)"
     };
 
     const phraseTranslations = [
@@ -6618,6 +6903,7 @@
     let menuFavorites = JSON.parse(localStorage.getItem(menuFavoriteStorageKey) || "[]");
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
+    let savedSetlists = JSON.parse(localStorage.getItem(savedSetlistStorageKey) || "[]");
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     if (settings.settingsVersion === undefined) {
       settings.showDrink = true;
@@ -6628,6 +6914,7 @@
     if (settings.showHistoryMemo === undefined) settings.showHistoryMemo = true;
     if (settings.showDrinkTotal === undefined) settings.showDrinkTotal = true;
     if (settings.showPlayableParts === undefined) settings.showPlayableParts = false;
+    if (settings.showSavedSetlists === undefined) settings.showSavedSetlists = true;
     if (typeof settings.capabilityDisplayName !== "string") settings.capabilityDisplayName = "";
     if (settings.enableAdditionalList === undefined) settings.enableAdditionalList = false;
     if (!settings.additionalListName) settings.additionalListName = "パートナー";
@@ -6648,6 +6935,20 @@
     if (settings.showShinSakuradaiRoute === undefined) settings.showShinSakuradaiRoute = legacyCommuteVisible;
     if (settings.lastTrainReminderEnabled === undefined) settings.lastTrainReminderEnabled = false;
     if (![5, 10, 15, 20, 25, 30].includes(Number(settings.lastTrainReminderMinutes))) settings.lastTrainReminderMinutes = 30;
+    if (!Array.isArray(savedSetlists)) savedSetlists = [];
+    savedSetlists = savedSetlists.map((setlist) => ({
+      id: String(setlist.id || createId()),
+      title: String(setlist.title || "").trim(),
+      items: Array.isArray(setlist.items) ? setlist.items.map((item) => ({
+        songId: String(item.songId || ""),
+        title: String(item.title || "").trim(),
+        artist: String(item.artist || "").trim(),
+        key: String(item.key || "").trim()
+      })).filter((item) => item.title) : [],
+      createdAt: setlist.createdAt || new Date().toISOString(),
+      updatedAt: setlist.updatedAt || setlist.createdAt || new Date().toISOString()
+    })).filter((setlist) => setlist.title);
+    localStorage.setItem(savedSetlistStorageKey, JSON.stringify(savedSetlists));
     let didMigrateProfiles = false;
     songs.forEach((item) => {
       if (item.profile !== "additional") {
@@ -6680,6 +6981,8 @@
     }
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let editingSongId = null;
+    let editingSavedSetlistId = null;
+    let savedSetlistDraftSongIds = [];
     let didAddDefaultTags = false;
     defaultGenreTags.forEach((tagName) => {
       if (!genreTags.includes(tagName)) {
@@ -6737,6 +7040,8 @@
       updateDrumGachaRateLabel();
       renderSharedRanking();
       renderCapabilityLocalList();
+      renderSavedSetlistPicker();
+      renderSavedSetlists();
       if (catalogSearchItems.length) renderCatalogSearchResults();
     }
 
@@ -6963,7 +7268,7 @@
       return JSON.stringify({
         app: "Music Saloon DRUM",
         type: "song-list-backup",
-        version: 4,
+        version: 5,
         exportedAt: new Date().toISOString(),
         songs,
         genreTags,
@@ -6971,6 +7276,7 @@
         drinkHistory,
         favoriteDrinks,
         dailyMemos,
+        savedSetlists,
         additionalList: {
           enabled: Boolean(settings.enableAdditionalList),
           name: additionalProfileName()
@@ -7018,6 +7324,18 @@
         drinkHistory: Array.isArray(data.drinkHistory) ? data.drinkHistory : null,
         favoriteDrinks: Array.isArray(data.favoriteDrinks) ? data.favoriteDrinks.map(String) : null,
         dailyMemos: data.dailyMemos && typeof data.dailyMemos === "object" ? data.dailyMemos : null,
+        savedSetlists: Array.isArray(data.savedSetlists) ? data.savedSetlists.map((setlist) => ({
+          id: String(setlist.id || createId()),
+          title: String(setlist.title || "").trim(),
+          items: Array.isArray(setlist.items) ? setlist.items.map((item) => ({
+            songId: String(item.songId || ""),
+            title: String(item.title || "").trim(),
+            artist: String(item.artist || "").trim(),
+            key: String(item.key || "").trim()
+          })).filter((item) => item.title) : [],
+          createdAt: setlist.createdAt || new Date().toISOString(),
+          updatedAt: setlist.updatedAt || setlist.createdAt || new Date().toISOString()
+        })).filter((setlist) => setlist.title) : null,
         additionalList: data.additionalList && typeof data.additionalList === "object"
           ? {
             enabled: Boolean(data.additionalList.enabled),
@@ -7140,6 +7458,132 @@
 
     function saveDailyMemos() {
       localStorage.setItem(dailyMemoStorageKey, JSON.stringify(dailyMemos));
+    }
+
+    function saveSavedSetlists() {
+      localStorage.setItem(savedSetlistStorageKey, JSON.stringify(savedSetlists));
+    }
+
+    function setlistSongSnapshot(song) {
+      return {
+        songId: String(song.id || ""),
+        title: String(song.title || "").trim(),
+        artist: String(song.artist || "").trim(),
+        key: String(song.key || "").trim()
+      };
+    }
+
+    function resolvedSetlistItem(item) {
+      const currentSong = songs.find((song) => song.id === item.songId);
+      return currentSong ? setlistSongSnapshot(currentSong) : item;
+    }
+
+    function resetSavedSetlistForm(message = "") {
+      editingSavedSetlistId = null;
+      savedSetlistDraftSongIds = [];
+      savedSetlistTitle.value = "";
+      savedSetlistSearch.value = "";
+      savedSetlistFormTitle.textContent = uiText("新しいセットリストを作る");
+      saveSavedSetlist.textContent = uiText("セットリストを保存");
+      cancelSavedSetlistEdit.hidden = true;
+      savedSetlistStatus.textContent = message;
+      renderSavedSetlistPicker();
+    }
+
+    function renderSavedSetlistPicker() {
+      if (!savedSetlistPicker) return;
+      const query = normalizeKana(savedSetlistSearch.value.trim());
+      const pickerSongs = activeProfileSongs()
+        .filter((song) => !query || normalizeKana(`${song.title} ${song.artist} ${song.kana || ""}`).includes(query))
+        .sort((a, b) => `${a.artist || ""}${a.title || ""}`.localeCompare(`${b.artist || ""}${b.title || ""}`, "ja"));
+      savedSetlistSelectedCount.textContent = currentLanguage === "en"
+        ? `${savedSetlistDraftSongIds.length} selected`
+        : `${savedSetlistDraftSongIds.length}曲を選択中`;
+      if (!pickerSongs.length) {
+        savedSetlistPicker.innerHTML = `<p class="setlist-empty">${escapeText(uiText(activeProfileSongs().length ? "条件に合う曲がありません。" : "先にマイ曲リストへ曲を登録してください。"))}</p>`;
+        return;
+      }
+      savedSetlistPicker.innerHTML = pickerSongs.map((song) => `
+        <label>
+          <input type="checkbox" data-setlist-song="${escapeText(song.id)}" ${savedSetlistDraftSongIds.includes(song.id) ? "checked" : ""}>
+          <span><strong>${escapeText(song.title)}</strong><small>${escapeText(song.artist || uiText("歌手名未設定"))}${song.key ? ` / ${escapeText(uiKey(song.key))}` : ""}</small></span>
+        </label>
+      `).join("");
+      refreshLanguageSoon();
+    }
+
+    function savedSetlistDate(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "";
+      return date.toLocaleDateString(currentLanguage === "en" ? "en-US" : "ja-JP");
+    }
+
+    function renderSavedSetlists() {
+      if (!savedSetlistList) return;
+      savedSetlistCount.textContent = currentLanguage === "en" ? `${savedSetlists.length} lists` : `${savedSetlists.length}件`;
+      if (!savedSetlists.length) {
+        savedSetlistList.innerHTML = `<div class="setlist-empty"><strong>${escapeText(uiText("保存済みのセットリストはありません。"))}</strong><br>${escapeText(uiText("左の作成欄でタイトルと曲を選んで保存してください。"))}</div>`;
+        return;
+      }
+      savedSetlistList.innerHTML = savedSetlists.map((setlist, setlistIndex) => {
+        const rows = setlist.items.map((storedItem, itemIndex) => {
+          const item = resolvedSetlistItem(storedItem);
+          return `
+            <li class="saved-setlist-song">
+              <span class="saved-setlist-number">${itemIndex + 1}</span>
+              <span><strong>${escapeText(item.title)}</strong><small>${escapeText(item.artist || uiText("歌手名未設定"))}${item.key ? ` / ${escapeText(uiKey(item.key))}` : ""}</small></span>
+              <span class="setlist-song-actions">
+                <button class="btn ghost" type="button" data-setlist-move-up="${escapeText(setlist.id)}" data-setlist-item-index="${itemIndex}" ${itemIndex === 0 ? "disabled" : ""} aria-label="上へ">↑</button>
+                <button class="btn ghost" type="button" data-setlist-move-down="${escapeText(setlist.id)}" data-setlist-item-index="${itemIndex}" ${itemIndex === setlist.items.length - 1 ? "disabled" : ""} aria-label="下へ">↓</button>
+                <button class="btn ghost" type="button" data-setlist-remove-song="${escapeText(setlist.id)}" data-setlist-item-index="${itemIndex}">${escapeText(uiText("外す"))}</button>
+              </span>
+            </li>
+          `;
+        }).join("");
+        return `
+          <details class="saved-setlist-card" ${setlistIndex === 0 ? "open" : ""}>
+            <summary>
+              <span><strong>${escapeText(setlist.title)}</strong><small>${setlist.items.length}${escapeText(uiText("曲"))} / ${escapeText(uiText("更新"))}: ${escapeText(savedSetlistDate(setlist.updatedAt))}</small></span>
+              <span aria-hidden="true">⌄</span>
+            </summary>
+            <div class="saved-setlist-body">
+              ${rows ? `<ol class="saved-setlist-songs">${rows}</ol>` : `<p class="setlist-empty">${escapeText(uiText("曲が入っていません。"))}</p>`}
+              <div class="setlist-card-actions">
+                <button class="btn primary" type="button" data-setlist-edit="${escapeText(setlist.id)}">${escapeText(uiText("編集"))}</button>
+                <button class="btn ghost" type="button" data-setlist-copy="${escapeText(setlist.id)}">${escapeText(uiText("曲順をコピー"))}</button>
+                <button class="btn ghost" type="button" data-setlist-duplicate="${escapeText(setlist.id)}">${escapeText(uiText("複製"))}</button>
+                <button class="btn danger" type="button" data-setlist-delete="${escapeText(setlist.id)}">${escapeText(uiText("削除"))}</button>
+              </div>
+            </div>
+          </details>
+        `;
+      }).join("");
+      refreshLanguageSoon();
+    }
+
+    function startSavedSetlistEdit(id) {
+      const setlist = savedSetlists.find((item) => item.id === id);
+      if (!setlist) return;
+      editingSavedSetlistId = id;
+      savedSetlistDraftSongIds = setlist.items.map((item) => item.songId).filter(Boolean);
+      savedSetlistTitle.value = setlist.title;
+      savedSetlistSearch.value = "";
+      savedSetlistFormTitle.textContent = uiText("セットリストを編集");
+      saveSavedSetlist.textContent = uiText("変更を保存");
+      cancelSavedSetlistEdit.hidden = false;
+      savedSetlistStatus.textContent = "";
+      renderSavedSetlistPicker();
+      savedSetlistForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function savedSetlistCopyText(setlist) {
+      return [
+        setlist.title,
+        ...setlist.items.map((storedItem, index) => {
+          const item = resolvedSetlistItem(storedItem);
+          return `${index + 1}. ${item.title}${item.artist ? ` / ${item.artist}` : ""}${item.key ? ` / ${uiKey(item.key)}` : ""}`;
+        })
+      ].join("\n");
     }
 
     function saveSettings() {
@@ -7313,6 +7757,8 @@
       renderHistory();
       renderTopShortcuts();
       renderTopShortcutSettings();
+      renderSavedSetlistPicker();
+      renderSavedSetlists();
       updateDrumGachaRateLabel();
     }
 
@@ -7574,6 +8020,7 @@
     }
 
     function showView(targetId, shouldUpdateHash = true) {
+      if (targetId === "saved-setlists" && !settings.showSavedSetlists) targetId = "customers";
       const menuPageId = menuPageMap[targetId];
       const customerPageId = customerPageMap[targetId];
       const viewId = menuPageId ? "menu" : (customerPageId ? "customers" : (targetId || "top"));
@@ -7674,6 +8121,7 @@
 
     function selectedTopShortcutIds() {
       return topShortcutOptions
+        .filter((option) => settings.showSavedSetlists || option.id !== "saved-setlists")
         .filter((option) => settings.topShortcuts.includes(option.id))
         .map((option) => option.id);
     }
@@ -7696,7 +8144,9 @@
     }
 
     function renderTopShortcutSettings() {
-      topShortcutSettings.innerHTML = topShortcutOptions.map((option) => `
+      topShortcutSettings.innerHTML = topShortcutOptions
+        .filter((option) => settings.showSavedSetlists || option.id !== "saved-setlists")
+        .map((option) => `
         <label class="check-row">
           <input type="checkbox" data-top-shortcut="${escapeText(option.id)}" ${settings.topShortcuts.includes(option.id) ? "checked" : ""}>
           ${escapeText(uiText(option.label))}
@@ -7727,6 +8177,10 @@
       settingMemo.checked = settings.showMemo;
       settingSongCount.checked = settings.showSongCount;
       settingPlayableParts.checked = Boolean(settings.showPlayableParts);
+      settingSavedSetlists.checked = Boolean(settings.showSavedSetlists);
+      document.querySelectorAll("[data-setlist-entry]").forEach((element) => {
+        element.classList.toggle("feature-hidden", !settings.showSavedSetlists);
+      });
       playablePartsField.classList.toggle("feature-hidden", !settings.showPlayableParts);
       settingDrink.checked = settings.showDrink;
       settingDrinkTotal.checked = settings.showDrinkTotal;
@@ -9662,6 +10116,7 @@
       let restoredDrinks = null;
       let restoredFavoriteDrinks = null;
       let restoredDailyMemos = null;
+      let restoredSavedSetlists = null;
       try {
         const restored = parseSongJsonBackup(songJsonRestoreText.value);
         restoredSongs = restored.songs;
@@ -9672,6 +10127,7 @@
         restoredDrinks = restored.drinkHistory;
         restoredFavoriteDrinks = restored.favoriteDrinks;
         restoredDailyMemos = restored.dailyMemos;
+        restoredSavedSetlists = restored.savedSetlists;
       } catch (error) {
         alert(uiText("JSONを読み込めませんでした。保存したJSONをそのまま貼り付けてください。"));
         return;
@@ -9686,6 +10142,7 @@
       if (restoredDrinks) drinkHistory = restoredDrinks;
       if (restoredFavoriteDrinks) favoriteDrinks = restoredFavoriteDrinks;
       if (restoredDailyMemos) dailyMemos = restoredDailyMemos;
+      if (restoredSavedSetlists) savedSetlists = restoredSavedSetlists;
       if (restoredAdditionalList) {
         settings.enableAdditionalList = restoredAdditionalList.enabled;
         settings.additionalListName = restoredAdditionalList.name;
@@ -9708,10 +10165,12 @@
       saveDrinks();
       saveFavoriteDrinks();
       saveDailyMemos();
+      saveSavedSetlists();
       applySettings();
       renderActiveSongProfileViews();
       renderDrinkButtons();
       renderDailyMemo();
+      renderSavedSetlists();
       songJsonRestoreText.value = "";
       songJsonBackupText.value = createSongJsonBackup();
       songExportText.value = createSongExportText();
@@ -10061,6 +10520,144 @@
         renderHistory();
         renderFavorites();
       });
+    });
+
+    savedSetlistSearch.addEventListener("input", renderSavedSetlistPicker);
+
+    savedSetlistPicker.addEventListener("change", (event) => {
+      const checkbox = event.target.closest("[data-setlist-song]");
+      if (!checkbox) return;
+      const songId = checkbox.dataset.setlistSong;
+      if (checkbox.checked) {
+        if (!savedSetlistDraftSongIds.includes(songId)) savedSetlistDraftSongIds.push(songId);
+      } else {
+        savedSetlistDraftSongIds = savedSetlistDraftSongIds.filter((id) => id !== songId);
+      }
+      renderSavedSetlistPicker();
+    });
+
+    clearSavedSetlistSelection.addEventListener("click", () => {
+      savedSetlistDraftSongIds = [];
+      renderSavedSetlistPicker();
+    });
+
+    cancelSavedSetlistEdit.addEventListener("click", () => {
+      resetSavedSetlistForm(uiText("編集を取り消しました。"));
+    });
+
+    savedSetlistForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const title = savedSetlistTitle.value.trim();
+      if (!title) {
+        savedSetlistStatus.textContent = uiText("タイトルを入力してください。");
+        savedSetlistTitle.focus();
+        return;
+      }
+      if (!savedSetlistDraftSongIds.length) {
+        savedSetlistStatus.textContent = uiText("セットリストに入れる曲を1曲以上選んでください。");
+        return;
+      }
+      const editingSetlist = savedSetlists.find((setlist) => setlist.id === editingSavedSetlistId);
+      const previousItems = editingSetlist ? editingSetlist.items : [];
+      const items = savedSetlistDraftSongIds.map((songId) => {
+        const song = songs.find((item) => item.id === songId);
+        return song ? setlistSongSnapshot(song) : previousItems.find((item) => item.songId === songId);
+      }).filter(Boolean);
+      const now = new Date().toISOString();
+      if (editingSetlist) {
+        editingSetlist.title = title;
+        editingSetlist.items = items;
+        editingSetlist.updatedAt = now;
+      } else {
+        savedSetlists.unshift({
+          id: createId(),
+          title,
+          items,
+          createdAt: now,
+          updatedAt: now
+        });
+      }
+      saveSavedSetlists();
+      renderSavedSetlists();
+      resetSavedSetlistForm(uiText(editingSetlist ? "セットリストを更新しました。" : "セットリストを保存しました。"));
+    });
+
+    savedSetlistList.addEventListener("click", async (event) => {
+      const itemButton = event.target.closest("[data-setlist-item-index]");
+      if (itemButton) {
+        const setlistId = itemButton.dataset.setlistMoveUp || itemButton.dataset.setlistMoveDown || itemButton.dataset.setlistRemoveSong;
+        const setlist = savedSetlists.find((entry) => entry.id === setlistId);
+        const itemIndex = Number(itemButton.dataset.setlistItemIndex);
+        if (!setlist || !Number.isInteger(itemIndex) || !setlist.items[itemIndex]) return;
+        if (itemButton.dataset.setlistRemoveSong) {
+          setlist.items.splice(itemIndex, 1);
+        } else {
+          const targetIndex = itemButton.dataset.setlistMoveUp ? itemIndex - 1 : itemIndex + 1;
+          if (!setlist.items[targetIndex]) return;
+          [setlist.items[itemIndex], setlist.items[targetIndex]] = [setlist.items[targetIndex], setlist.items[itemIndex]];
+        }
+        setlist.updatedAt = new Date().toISOString();
+        saveSavedSetlists();
+        renderSavedSetlists();
+        return;
+      }
+
+      const editButton = event.target.closest("[data-setlist-edit]");
+      if (editButton) {
+        startSavedSetlistEdit(editButton.dataset.setlistEdit);
+        return;
+      }
+
+      const copyButton = event.target.closest("[data-setlist-copy]");
+      if (copyButton) {
+        const setlist = savedSetlists.find((item) => item.id === copyButton.dataset.setlistCopy);
+        if (!setlist) return;
+        const text = savedSetlistCopyText(setlist);
+        try {
+          await navigator.clipboard.writeText(text);
+          savedSetlistStatus.textContent = uiText("曲順をコピーしました。");
+        } catch (error) {
+          window.prompt(uiText("下の内容をコピーしてください。"), text);
+        }
+        return;
+      }
+
+      const duplicateButton = event.target.closest("[data-setlist-duplicate]");
+      if (duplicateButton) {
+        const source = savedSetlists.find((item) => item.id === duplicateButton.dataset.setlistDuplicate);
+        if (!source) return;
+        const now = new Date().toISOString();
+        savedSetlists.unshift({
+          ...source,
+          id: createId(),
+          title: `${source.title}${currentLanguage === "en" ? " (Copy)" : "（コピー）"}`,
+          items: source.items.map((item) => ({ ...item })),
+          createdAt: now,
+          updatedAt: now
+        });
+        saveSavedSetlists();
+        renderSavedSetlists();
+        savedSetlistStatus.textContent = uiText("セットリストを複製しました。");
+        return;
+      }
+
+      const deleteButton = event.target.closest("[data-setlist-delete]");
+      if (deleteButton) {
+        const setlist = savedSetlists.find((item) => item.id === deleteButton.dataset.setlistDelete);
+        if (!setlist || !confirm(currentLanguage === "en" ? `Delete “${setlist.title}”?` : `「${setlist.title}」を削除しますか？`)) return;
+        savedSetlists = savedSetlists.filter((item) => item.id !== setlist.id);
+        saveSavedSetlists();
+        renderSavedSetlists();
+        if (editingSavedSetlistId === setlist.id) resetSavedSetlistForm();
+        savedSetlistStatus.textContent = uiText("セットリストを削除しました。");
+      }
+    });
+
+    settingSavedSetlists.addEventListener("change", () => {
+      settings.showSavedSetlists = settingSavedSetlists.checked;
+      saveSettings();
+      applySettings();
+      if (!settings.showSavedSetlists && location.hash === "#saved-setlists") showView("customers");
     });
 
     settingMemo.addEventListener("change", () => {
@@ -10588,6 +11185,8 @@
     renderCapabilityLocalList();
     renderCapabilitySharedList();
     loadSharedCapabilities();
+    renderSavedSetlistPicker();
+    renderSavedSetlists();
     renderSongs();
     renderHistory();
     showView(location.hash.replace("#", "") || "top", false);
