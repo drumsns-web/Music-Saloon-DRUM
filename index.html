@@ -116,15 +116,22 @@
     }
 
     .daily-news-track {
-      display: inline-block;
-      min-width: max-content;
+      display: flex;
+      width: max-content;
       padding: 4px 0;
       font-size: 12px;
       font-weight: 800;
       line-height: 20px;
       letter-spacing: 0;
-      animation: daily-news-scroll 24s linear infinite;
+      animation: daily-news-scroll 28s linear infinite;
+      animation-play-state: running !important;
       will-change: transform;
+      backface-visibility: hidden;
+    }
+
+    .daily-news-item {
+      flex: 0 0 auto;
+      padding-right: 64px;
     }
 
     .daily-news-label {
@@ -140,16 +147,13 @@
     }
 
     @keyframes daily-news-scroll {
-      0% { transform: translateX(100vw); }
-      78% { transform: translateX(-100%); }
-      100% { transform: translateX(-100%); }
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(-50%, 0, 0); }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .daily-news-track {
-        padding-left: 14px;
-        animation: none;
-        transform: none;
+        animation-duration: 40s;
       }
     }
 
@@ -944,6 +948,49 @@
       text-align: right;
       word-break: keep-all;
       overflow-wrap: normal;
+    }
+
+    #regularMenu .menu-list li:not(.drink-menu-row) {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 82px 42px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    #regularMenu .menu-list li:not(.drink-menu-row) > span:first-child {
+      min-width: 0;
+      max-width: none;
+      line-break: strict;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+
+    @supports (word-break: auto-phrase) {
+      #regularMenu .menu-list li:not(.drink-menu-row) > span:first-child {
+        word-break: auto-phrase;
+      }
+    }
+
+    #regularMenu .menu-list li:not(.drink-menu-row) > span:nth-child(2) {
+      min-width: 82px;
+      justify-self: end;
+      color: #2f261d;
+      font-variant-numeric: tabular-nums;
+      font-weight: 900;
+      line-height: 1.2;
+      text-align: right;
+      white-space: nowrap;
+      word-break: normal;
+      overflow-wrap: normal;
+    }
+
+    #regularMenu .menu-list li:not(.drink-menu-row) > .menu-favorite-button {
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      min-height: 42px;
+      padding: 0;
+      justify-self: end;
     }
 
     .drink-name-list {
@@ -3917,6 +3964,21 @@
     }
 
     @media (max-width: 560px) {
+      #regularMenu .menu-list li:not(.drink-menu-row) {
+        grid-template-columns: minmax(0, 1fr) 78px 42px;
+        gap: 8px;
+        padding: 10px;
+      }
+
+      #regularMenu .menu-list li:not(.drink-menu-row) > span:first-child,
+      #regularMenu .menu-list li:not(.drink-menu-row) > span:nth-child(2) {
+        font-size: clamp(14px, 3.7vw, 16px);
+      }
+
+      #regularMenu .menu-list li:not(.drink-menu-row) > span:nth-child(2) {
+        min-width: 78px;
+      }
+
       .drink-buttons {
         grid-template-columns: 1fr;
       }
@@ -4342,7 +4404,7 @@
       </div>
     </nav>
     <div class="daily-news-ticker" aria-label="今日の一言">
-      <div class="daily-news-track" id="dailyShopMessage"><span class="daily-news-label">今日の一言</span>迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。　｜　ご来店ありがとうございます♪ 本日もお楽しみください♪</div>
+      <div class="daily-news-track" id="dailyShopMessage"><span class="daily-news-item"><span class="daily-news-label">今日の一言</span>迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。　｜　ご来店ありがとうございます♪ 本日もお楽しみください♪</span><span class="daily-news-item" aria-hidden="true"><span class="daily-news-label">今日の一言</span>迷ったらDRUMガイドから、メニュー・曲リスト・ルールをすぐ確認できます。　｜　ご来店ありがとうございます♪ 本日もお楽しみください♪</span></div>
     </div>
   </header>
 
@@ -8669,7 +8731,8 @@
         ? "Thank you for visiting♪ Enjoy your time today♪"
         : "ご来店ありがとうございます♪ 本日もお楽しみください♪";
       const body = currentLanguage === "en" ? message.en : message.ja;
-      dailyShopMessage.innerHTML = `<span class="daily-news-label">${escapeText(label)}</span>${escapeText(body)}　｜　${escapeText(greeting)}`;
+      const messageHtml = `<span class="daily-news-label">${escapeText(label)}</span>${escapeText(body)}　｜　${escapeText(greeting)}`;
+      dailyShopMessage.innerHTML = `<span class="daily-news-item">${messageHtml}</span><span class="daily-news-item" aria-hidden="true">${messageHtml}</span>`;
     }
 
     function getHomePromptState() {
