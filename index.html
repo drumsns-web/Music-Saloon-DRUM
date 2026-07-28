@@ -640,6 +640,9 @@
       z-index: 35;
       width: min(620px, calc(100% - 20px));
       transform: translateX(-50%);
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
       border: 1px solid rgba(240, 138, 53, .72);
       border-radius: 18px;
       padding: 7px;
@@ -655,13 +658,22 @@
 
     .floating-page-nav-buttons {
       display: flex;
+      flex: 1 1 auto;
       gap: 5px;
+      width: 100%;
       min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      overscroll-behavior-inline: contain;
     }
 
-    .floating-page-nav button {
-      flex: 1 1 0;
-      min-width: 0;
+    .floating-page-nav-buttons::-webkit-scrollbar {
+      display: none;
+    }
+
+    .floating-page-nav-buttons button {
+      flex: 1 0 52px;
+      min-width: 52px;
       min-height: 54px;
       display: inline-flex;
       flex-direction: column;
@@ -678,14 +690,16 @@
       cursor: pointer;
     }
 
-    .floating-page-nav button:hover,
-    .floating-page-nav button:focus-visible {
+    .floating-page-nav-buttons button:hover,
+    .floating-page-nav-buttons button:focus-visible,
+    .floating-nav-collapse-button:hover,
+    .floating-nav-collapse-button:focus-visible {
       color: var(--button-text);
       background: rgba(var(--theme-accent-rgb), .92);
       outline: none;
     }
 
-    .floating-page-nav button.is-current {
+    .floating-page-nav-buttons button.is-current {
       color: var(--button-text);
       background: var(--orange);
       box-shadow: 0 5px 12px rgba(var(--theme-accent-rgb), .28);
@@ -714,8 +728,50 @@
       white-space: nowrap;
     }
 
+    .floating-nav-collapse-button {
+      flex: 0 0 48px;
+      width: 48px;
+      min-height: 54px;
+      display: inline-grid;
+      place-items: center;
+      align-self: stretch;
+      border: 1px solid rgba(255, 255, 255, .22);
+      border-radius: 12px;
+      padding: 0;
+      color: #fff8ed;
+      background: rgba(255, 255, 255, .08);
+      font: inherit;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .floating-page-nav.is-collapsed {
+      left: auto;
+      right: 10px;
+      width: 58px;
+      transform: none;
+      padding: 5px;
+      border-radius: 16px;
+    }
+
+    .floating-page-nav.is-collapsed .floating-page-nav-buttons {
+      display: none;
+    }
+
+    .floating-page-nav.is-collapsed .floating-nav-collapse-button {
+      flex-basis: 46px;
+      width: 46px;
+      min-height: 46px;
+    }
+
     body.floating-nav-visible footer {
       padding-bottom: calc(108px + env(safe-area-inset-bottom));
+    }
+
+    body.floating-nav-collapsed footer {
+      padding-bottom: calc(82px + env(safe-area-inset-bottom));
     }
 
     body.floating-nav-visible .undo-toast {
@@ -4392,8 +4448,13 @@
         border-radius: 16px;
         padding: 6px;
       }
-      .floating-page-nav button {
+      .floating-page-nav-buttons button {
         min-height: 52px;
+      }
+      .floating-page-nav.is-collapsed {
+        right: 8px;
+        width: 56px;
+        padding: 5px;
       }
       .section-head { align-items: flex-start; flex-direction: column; }
       .settings-modal-panel .section-head {
@@ -4526,14 +4587,14 @@
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>画面下部にフローティングバーを追加しました。長い検索結果を見ている途中でも、トップ・曲登録・曲リスト・メニューなど、選んだページへすぐ移動できます。</p>
+            <p>画面下部にフローティングバーを追加しました。最大8件のページを選べ、使わない時は右端のボタンで小さく収納できます。</p>
             <button class="btn primary" type="button" data-update-settings-target="settings-floating-nav">設定してみる</button>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
                 <article class="app-update-history-item">
                   <time datetime="2026-07-28">2026.07.28</time>
-                  <div><strong>フローティングバーを追加</strong><p>画面下部から、選んだページへいつでも移動できるようになりました。表示・非表示とボタンは設定で変更できます。</p><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-floating-nav">この機能を設定する →</button></div>
+                  <div><strong>フローティングバーを追加</strong><p>最大8件のページへいつでも移動でき、使わない時は小さなボタンへ収納できます。表示・非表示と移動先は設定で変更できます。</p><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-floating-nav">この機能を設定する →</button></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-26">2026.07.26</time>
@@ -5598,7 +5659,7 @@
               <input id="settingFloatingNav" type="checkbox" checked>
               画面下部にフローティングバーを表示する
             </label>
-            <p class="small">長いページを見ている途中でも、選んだページへすぐ移動できます。表示するボタンは最大5項目まで選べます。</p>
+            <p class="small">長いページを見ている途中でも、選んだページへすぐ移動できます。最大8項目まで選べ、幅に収まらない場合はバー内を横へ動かせます。</p>
             <div class="top-shortcut-settings floating-nav-settings" id="floatingNavSettings"></div>
             <div class="top-shortcut-preview">
               <strong>現在フローティングバーに表示中</strong>
@@ -6156,6 +6217,7 @@
 
   <nav class="floating-page-nav" id="floatingPageNav" aria-label="ページショートカット" hidden>
     <div class="floating-page-nav-buttons" id="floatingPageNavButtons"></div>
+    <button class="floating-nav-collapse-button" id="floatingNavCollapseButton" type="button" aria-label="フローティングバーを小さく収納" title="フローティングバーを小さく収納">−</button>
   </nav>
 
   <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
@@ -6636,6 +6698,7 @@
     const floatingNavStatus = document.getElementById("floatingNavStatus");
     const floatingPageNav = document.getElementById("floatingPageNav");
     const floatingPageNavButtons = document.getElementById("floatingPageNavButtons");
+    const floatingNavCollapseButton = document.getElementById("floatingNavCollapseButton");
     const restoreHistoryBackup = document.getElementById("restoreHistoryBackup");
     const restoreHistoryStatus = document.getElementById("restoreHistoryStatus");
     const newTagName = document.getElementById("newTagName");
@@ -6717,6 +6780,7 @@
     const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌", "十八番", "お気に入り", "練習中", "盛り上がる", "しっとり"];
     const defaultTopShortcutIds = ["info", "menu", "customers"];
     const defaultFloatingNavIds = ["top", "song-register", "customers", "menu"];
+    const maxFloatingNavItems = 8;
     const playablePartChoices = ["ギター", "ベース", "ドラム", "キーボード", "ピアノ", "パーカッション", "管楽器", "その他"];
     const appThemes = [
       { id: "drum-green", label: "DRUMグリーン", dark: "#143f2c", deep: "#0b2b1e", mid: "#2f6b4b", accent: "#f08a35", soft: "#ffc07a", paper: "#fbf4e5", panel: "rgba(255, 252, 244, .94)", darkRgb: "20, 63, 44", deepRgb: "11, 43, 30", accentRgb: "240, 138, 53", softRgb: "255, 192, 122" },
@@ -6881,11 +6945,13 @@
       "下部バー": "Bottom Bar",
       "フローティングバー設定": "Floating Bar Settings",
       "画面下部にフローティングバーを表示する": "Show the floating bar at the bottom of the screen",
-      "長いページを見ている途中でも、選んだページへすぐ移動できます。表示するボタンは最大5項目まで選べます。": "Jump to selected pages even while viewing a long page. You can choose up to five buttons.",
+      "長いページを見ている途中でも、選んだページへすぐ移動できます。最大8項目まで選べ、幅に収まらない場合はバー内を横へ動かせます。": "Jump to selected pages even while viewing a long page. Choose up to eight items and scroll within the bar when needed.",
       "現在フローティングバーに表示中": "Currently Shown in the Floating Bar",
       "表示するページを選んでください。": "Choose pages to show.",
-      "最大5項目まで選べます。": "You can choose up to five items.",
+      "最大8項目まで選べます。": "You can choose up to eight items.",
       "フローティングバーは非表示です。": "The floating bar is hidden.",
+      "フローティングバーを小さく収納": "Collapse the floating bar",
+      "フローティングバーを開く": "Open the floating bar",
       "トップ": "Home",
       "曲登録": "Add Song",
       "曲リスト": "Song List",
@@ -6902,9 +6968,9 @@
       "瓶：アサヒスーパードライ": "Bottle: Asahi Super Dry",
       "瓶：ハートランド": "Bottle: Heartland",
       "好きなページへすぐ移動できるようになりました": "Jump to Your Favorite Pages",
-      "画面下部にフローティングバーを追加しました。長い検索結果を見ている途中でも、トップ・曲登録・曲リスト・メニューなど、選んだページへすぐ移動できます。": "A floating bar is now available at the bottom of the screen. Jump to selected pages such as Home, Add Song, Song List, or Menu even while viewing long search results.",
+      "画面下部にフローティングバーを追加しました。最大8件のページを選べ、使わない時は右端のボタンで小さく収納できます。": "A floating bar is now available at the bottom of the screen. Choose up to eight pages and collapse it with the button on the right.",
       "フローティングバーを追加": "Added a Floating Bar",
-      "画面下部から、選んだページへいつでも移動できるようになりました。表示・非表示とボタンは設定で変更できます。": "Jump to selected pages from the bottom of the screen at any time. Visibility and buttons can be changed in Settings.",
+      "最大8件のページへいつでも移動でき、使わない時は小さなボタンへ収納できます。表示・非表示と移動先は設定で変更できます。": "Jump to up to eight pages at any time and collapse the bar to a small button when not in use. Visibility and destinations can be changed in Settings.",
       "この機能を設定する →": "Configure This Feature →",
       "曲リスト・記録": "Song List & Records",
       "タグ・歌う人": "Tags & Singers",
@@ -7915,10 +7981,11 @@
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
     if (settings.showFloatingNav === undefined) settings.showFloatingNav = true;
+    if (settings.floatingNavCollapsed === undefined) settings.floatingNavCollapsed = false;
     if (!Array.isArray(settings.floatingNavItems)) settings.floatingNavItems = [...defaultFloatingNavIds];
     settings.floatingNavItems = settings.floatingNavItems
       .filter((id, index, items) => floatingNavOptions.some((option) => option.id === id) && items.indexOf(id) === index)
-      .slice(0, 5);
+      .slice(0, maxFloatingNavItems);
     if (!["artist", "title", "recent", "sung"].includes(settings.songViewMode)) settings.songViewMode = "artist";
     if (!appThemes.some((theme) => theme.id === settings.colorTheme)) settings.colorTheme = "drum-green";
     if (!/^#[0-9a-f]{6}$/i.test(String(settings.customTextColor || ""))) settings.customTextColor = "";
@@ -9294,7 +9361,15 @@
       const selected = selectedFloatingNavOptions();
       const isVisible = Boolean(settings.showFloatingNav && selected.length);
       floatingPageNav.hidden = !isVisible;
+      floatingPageNav.classList.toggle("is-collapsed", Boolean(settings.floatingNavCollapsed));
       document.body.classList.toggle("floating-nav-visible", isVisible);
+      document.body.classList.toggle("floating-nav-collapsed", isVisible && Boolean(settings.floatingNavCollapsed));
+      const collapseLabel = settings.floatingNavCollapsed
+        ? uiText("フローティングバーを開く")
+        : uiText("フローティングバーを小さく収納");
+      floatingNavCollapseButton.textContent = settings.floatingNavCollapsed ? "▦" : "−";
+      floatingNavCollapseButton.setAttribute("aria-label", collapseLabel);
+      floatingNavCollapseButton.title = collapseLabel;
       if (!isVisible) {
         floatingPageNavButtons.innerHTML = "";
         return;
@@ -9335,8 +9410,8 @@
         floatingNavStatus.textContent = uiText("フローティングバーは非表示です。");
       } else {
         floatingNavStatus.textContent = currentLanguage === "en"
-          ? `${selected.length} of 5 selected.`
-          : `5項目中${selected.length}項目を選択中です。`;
+          ? `${selected.length} of ${maxFloatingNavItems} selected.`
+          : `${maxFloatingNavItems}項目中${selected.length}項目を選択中です。`;
       }
     }
 
@@ -9347,9 +9422,9 @@
       const availableIds = availableFloatingNavOptions().map((option) => option.id);
       settings.floatingNavItems = settings.floatingNavItems.filter((id) => availableIds.includes(id));
       if (checkbox.checked) {
-        if (selectedFloatingNavOptions().length >= 5) {
+        if (selectedFloatingNavOptions().length >= maxFloatingNavItems) {
           checkbox.checked = false;
-          floatingNavStatus.textContent = uiText("最大5項目まで選べます。");
+          floatingNavStatus.textContent = uiText("最大8項目まで選べます。");
           return;
         }
         if (!settings.floatingNavItems.includes(itemId)) settings.floatingNavItems.push(itemId);
@@ -12370,6 +12445,12 @@
       refreshLanguageSoon();
     });
     floatingNavSettings.addEventListener("change", handleFloatingNavChange);
+    floatingNavCollapseButton.addEventListener("click", () => {
+      settings.floatingNavCollapsed = !settings.floatingNavCollapsed;
+      saveSettings();
+      renderFloatingNav();
+      refreshLanguageSoon();
+    });
     floatingPageNavButtons.addEventListener("click", (event) => {
       const button = event.target.closest("[data-floating-nav-target]");
       if (!button) return;
