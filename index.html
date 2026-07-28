@@ -629,6 +629,88 @@
       font-weight: 900;
     }
 
+    .floating-nav-settings.is-disabled {
+      opacity: .5;
+    }
+
+    .floating-page-nav {
+      position: fixed;
+      left: 50%;
+      bottom: calc(10px + env(safe-area-inset-bottom));
+      z-index: 35;
+      width: min(620px, calc(100% - 20px));
+      transform: translateX(-50%);
+      border: 1px solid rgba(240, 138, 53, .72);
+      border-radius: 18px;
+      padding: 7px;
+      background: rgba(var(--theme-deep-rgb), .94);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .32);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .floating-page-nav[hidden] {
+      display: none !important;
+    }
+
+    .floating-page-nav-buttons {
+      display: flex;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .floating-page-nav button {
+      flex: 1 1 0;
+      min-width: 0;
+      min-height: 54px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      border: 0;
+      border-radius: 12px;
+      padding: 5px 3px;
+      color: #fff8ed;
+      background: transparent;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .floating-page-nav button:hover,
+    .floating-page-nav button:focus-visible {
+      color: var(--button-text);
+      background: rgba(var(--theme-accent-rgb), .92);
+      outline: none;
+    }
+
+    .floating-page-nav button.is-current {
+      color: var(--button-text);
+      background: var(--orange);
+      box-shadow: 0 5px 12px rgba(var(--theme-accent-rgb), .28);
+    }
+
+    .floating-page-nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .floating-page-nav-label {
+      max-width: 100%;
+      font-size: 10px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    body.floating-nav-visible footer {
+      padding-bottom: calc(108px + env(safe-area-inset-bottom));
+    }
+
+    body.floating-nav-visible .undo-toast {
+      bottom: calc(88px + env(safe-area-inset-bottom));
+    }
+
     button,
     input,
     textarea,
@@ -4294,6 +4376,14 @@
       .top-shortcut-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+      .floating-page-nav {
+        width: calc(100% - 16px);
+        border-radius: 16px;
+        padding: 6px;
+      }
+      .floating-page-nav button {
+        min-height: 52px;
+      }
       .section-head { align-items: flex-start; flex-direction: column; }
       .settings-modal-panel .section-head {
         flex-direction: row;
@@ -4419,17 +4509,21 @@
         <details class="app-update-card" id="appUpdateCard" open>
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.26</span></span>
-              <h2 id="appUpdateTitle">曲の追加操作を見やすくしました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.28</span></span>
+              <h2 id="appUpdateTitle">好きなページへすぐ移動できるようになりました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>各曲に「セットリストへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。</p>
-            <a class="btn primary" href="#customers">使ってみる</a>
+            <p>画面下部にフローティングバーを追加しました。長い検索結果を見ている途中でも、トップ・曲登録・曲リスト・メニューなど、選んだページへすぐ移動できます。</p>
+            <button class="btn primary" type="button" data-update-settings-target="settings-floating-nav">設定してみる</button>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-07-28">2026.07.28</time>
+                  <div><strong>フローティングバーを追加</strong><p>画面下部から、選んだページへいつでも移動できるようになりました。表示・非表示とボタンは設定で変更できます。</p><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-floating-nav">この機能を設定する →</button></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-26">2026.07.26</time>
                   <div><strong>曲の操作ボタンを改善</strong><p>「セットリストへ」「別リストへ」を曲ごとに常時表示し、別リストへのコピー・移動にも対応しました。</p><a class="btn ghost app-update-history-action" href="#customers">この機能を使ってみる →</a></div>
@@ -4835,9 +4929,9 @@
             <span class="tag">Beer</span>
             <h3>ビール</h3>
             <ul class="menu-list">
-              <li><span>生ビール：アサヒスーパードライ</span><span>1,000円</span></li>
-              <li><span>瓶ビール：アサヒスーパードライ</span><span>1,000円</span></li>
-              <li><span>瓶ビール：ハートランド</span><span>1,000円</span></li>
+              <li><span>生：アサヒスーパードライ</span><span>1,000円</span></li>
+              <li><span>瓶：アサヒスーパードライ</span><span>1,000円</span></li>
+              <li><span>瓶：ハートランド</span><span>1,000円</span></li>
             </ul>
           </article>
           <article class="card">
@@ -5440,6 +5534,7 @@
             <div class="settings-quick-menu-list">
               <button type="button" data-settings-target="settings-theme">カラー</button>
               <button type="button" data-settings-target="settings-shortcuts">トップ表示</button>
+              <button type="button" data-settings-target="settings-floating-nav">下部バー</button>
               <button type="button" data-settings-target="settings-song-list">曲リスト・記録</button>
               <button type="button" data-settings-target="settings-tags">タグ・歌う人</button>
               <button type="button" data-settings-target="settings-commute">帰り道</button>
@@ -5483,6 +5578,21 @@
               <strong>現在トップ画面に表示中</strong>
               <div class="top-shortcut-preview-list" id="topShortcutPreview"></div>
               <p class="top-shortcut-status" id="topShortcutStatus">チェックするとトップ画面にすぐ反映されます。</p>
+            </div>
+          </article>
+          <article class="card settings-target" id="settings-floating-nav">
+            <span class="tag blue">Navigation</span>
+            <h3>フローティングバー設定</h3>
+            <label class="check-row">
+              <input id="settingFloatingNav" type="checkbox" checked>
+              画面下部にフローティングバーを表示する
+            </label>
+            <p class="small">長いページを見ている途中でも、選んだページへすぐ移動できます。表示するボタンは最大5項目まで選べます。</p>
+            <div class="top-shortcut-settings floating-nav-settings" id="floatingNavSettings"></div>
+            <div class="top-shortcut-preview">
+              <strong>現在フローティングバーに表示中</strong>
+              <div class="top-shortcut-preview-list" id="floatingNavPreview"></div>
+              <p class="top-shortcut-status" id="floatingNavStatus">表示するページを選んでください。</p>
             </div>
           </article>
           <article class="card settings-target" id="settings-song-list">
@@ -6033,6 +6143,10 @@
     </div>
   </footer>
 
+  <nav class="floating-page-nav" id="floatingPageNav" aria-label="ページショートカット" hidden>
+    <div class="floating-page-nav-buttons" id="floatingPageNavButtons"></div>
+  </nav>
+
   <div class="undo-toast" id="undoToast" role="status" aria-live="polite">
     <span id="undoText">削除しました</span>
     <button id="undoButton" type="button">元に戻す</button>
@@ -6505,6 +6619,12 @@
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
     const topShortcutStatus = document.getElementById("topShortcutStatus");
+    const settingFloatingNav = document.getElementById("settingFloatingNav");
+    const floatingNavSettings = document.getElementById("floatingNavSettings");
+    const floatingNavPreview = document.getElementById("floatingNavPreview");
+    const floatingNavStatus = document.getElementById("floatingNavStatus");
+    const floatingPageNav = document.getElementById("floatingPageNav");
+    const floatingPageNavButtons = document.getElementById("floatingPageNavButtons");
     const restoreHistoryBackup = document.getElementById("restoreHistoryBackup");
     const restoreHistoryStatus = document.getElementById("restoreHistoryStatus");
     const newTagName = document.getElementById("newTagName");
@@ -6585,6 +6705,7 @@
 
     const defaultGenreTags = ["アニソン", "洋楽", "JPOP", "デュエット", "ロック", "バラード", "昭和歌謡", "演歌", "十八番", "お気に入り", "練習中", "盛り上がる", "しっとり"];
     const defaultTopShortcutIds = ["info", "menu", "customers"];
+    const defaultFloatingNavIds = ["top", "song-register", "customers", "menu"];
     const playablePartChoices = ["ギター", "ベース", "ドラム", "キーボード", "ピアノ", "パーカッション", "管楽器", "その他"];
     const appThemes = [
       { id: "drum-green", label: "DRUMグリーン", dark: "#143f2c", deep: "#0b2b1e", mid: "#2f6b4b", accent: "#f08a35", soft: "#ffc07a", paper: "#fbf4e5", panel: "rgba(255, 252, 244, .94)", darkRgb: "20, 63, 44", deepRgb: "11, 43, 30", accentRgb: "240, 138, 53", softRgb: "255, 192, 122" },
@@ -6610,6 +6731,26 @@
       { id: "features", label: "遊び方・ルール", target: "features" },
       { id: "contact", label: "問い合わせ", target: "contact" },
       { id: "song-backup", label: "バックアップ", target: "song-backup" }
+    ];
+    const floatingNavOptions = [
+      { id: "top", label: "トップ", shortLabel: "トップ", target: "top", icon: "⌂" },
+      { id: "song-register", label: "曲を登録", shortLabel: "曲登録", target: "song-register", icon: "＋" },
+      { id: "customers", label: "マイ曲リスト", shortLabel: "曲リスト", target: "customers", icon: "♪" },
+      { id: "saved-setlists", label: "マイセットリスト", shortLabel: "セットリスト", target: "saved-setlists", icon: "≡" },
+      { id: "menu", label: "メニュー", shortLabel: "メニュー", target: "menu", icon: "♨" },
+      { id: "info", label: "お知らせ", shortLabel: "お知らせ", target: "info", icon: "●" },
+      { id: "favorites", label: "よく歌う曲", shortLabel: "よく歌う", target: "favorites", icon: "↻" },
+      { id: "community", label: "みんなのお気に入り曲", shortLabel: "みんなの曲", target: "community", icon: "★" },
+      { id: "performance-share", label: "歌える・演奏できる曲", shortLabel: "歌・演奏", target: "performance-share", icon: "♬" },
+      { id: "history", label: "歌った記録", shortLabel: "歌った記録", target: "history", icon: "◷" },
+      { id: "daily", label: "今日の記録", shortLabel: "今日の記録", target: "daily", icon: "✓" },
+      { id: "gacha", label: "曲ガチャ", shortLabel: "曲ガチャ", target: "gacha", icon: "◇" },
+      { id: "drum-gacha", label: "DRUMガチャ", shortLabel: "DRUMガチャ", target: "drum-gacha", icon: "◆" },
+      { id: "about", label: "店舗情報", shortLabel: "店舗情報", target: "about", icon: "⌖" },
+      { id: "youtube", label: "YouTube", shortLabel: "YouTube", target: "youtube", icon: "▶" },
+      { id: "features", label: "遊び方・ルール", shortLabel: "ルール", target: "features", icon: "♫" },
+      { id: "contact", label: "問い合わせ", shortLabel: "問い合わせ", target: "contact", icon: "✉" },
+      { id: "song-backup", label: "バックアップ", shortLabel: "バックアップ", target: "song-backup", icon: "⇩" }
     ];
 
     const dailyShopMessages = [
@@ -6726,6 +6867,34 @@
       "DRUMガイドを見る": "View DRUM Guide",
       "設定メニュー": "Settings Menu",
       "トップ表示": "Home Shortcuts",
+      "下部バー": "Bottom Bar",
+      "フローティングバー設定": "Floating Bar Settings",
+      "画面下部にフローティングバーを表示する": "Show the floating bar at the bottom of the screen",
+      "長いページを見ている途中でも、選んだページへすぐ移動できます。表示するボタンは最大5項目まで選べます。": "Jump to selected pages even while viewing a long page. You can choose up to five buttons.",
+      "現在フローティングバーに表示中": "Currently Shown in the Floating Bar",
+      "表示するページを選んでください。": "Choose pages to show.",
+      "最大5項目まで選べます。": "You can choose up to five items.",
+      "フローティングバーは非表示です。": "The floating bar is hidden.",
+      "トップ": "Home",
+      "曲登録": "Add Song",
+      "曲リスト": "Song List",
+      "セットリスト": "Setlist",
+      "よく歌う": "Most Sung",
+      "みんなの曲": "Community",
+      "歌・演奏": "Sing / Play",
+      "今日の記録": "Today",
+      "店舗情報": "Venue",
+      "ルール": "Rules",
+      "問い合わせ": "Contact",
+      "バックアップ": "Backup",
+      "生：アサヒスーパードライ": "Draft: Asahi Super Dry",
+      "瓶：アサヒスーパードライ": "Bottle: Asahi Super Dry",
+      "瓶：ハートランド": "Bottle: Heartland",
+      "好きなページへすぐ移動できるようになりました": "Jump to Your Favorite Pages",
+      "画面下部にフローティングバーを追加しました。長い検索結果を見ている途中でも、トップ・曲登録・曲リスト・メニューなど、選んだページへすぐ移動できます。": "A floating bar is now available at the bottom of the screen. Jump to selected pages such as Home, Add Song, Song List, or Menu even while viewing long search results.",
+      "フローティングバーを追加": "Added a Floating Bar",
+      "画面下部から、選んだページへいつでも移動できるようになりました。表示・非表示とボタンは設定で変更できます。": "Jump to selected pages from the bottom of the screen at any time. Visibility and buttons can be changed in Settings.",
+      "この機能を設定する →": "Configure This Feature →",
       "曲リスト・記録": "Song List & Records",
       "タグ・歌う人": "Tags & Singers",
       "歌える・演奏できる曲": "Songs People Can Sing or Play",
@@ -7734,6 +7903,11 @@
     if (settings.enableSongOwners === undefined) settings.enableSongOwners = false;
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
+    if (settings.showFloatingNav === undefined) settings.showFloatingNav = true;
+    if (!Array.isArray(settings.floatingNavItems)) settings.floatingNavItems = [...defaultFloatingNavIds];
+    settings.floatingNavItems = settings.floatingNavItems
+      .filter((id, index, items) => floatingNavOptions.some((option) => option.id === id) && items.indexOf(id) === index)
+      .slice(0, 5);
     if (!["artist", "title", "recent", "sung"].includes(settings.songViewMode)) settings.songViewMode = "artist";
     if (!appThemes.some((theme) => theme.id === settings.colorTheme)) settings.colorTheme = "drum-green";
     if (!/^#[0-9a-f]{6}$/i.test(String(settings.customTextColor || ""))) settings.customTextColor = "";
@@ -8656,6 +8830,8 @@
       renderHistory();
       renderTopShortcuts();
       renderTopShortcutSettings();
+      renderFloatingNavSettings();
+      renderFloatingNav();
       renderSavedSetlistPicker();
       renderSavedSetlists();
       updateDrumGachaRateLabel();
@@ -8911,6 +9087,7 @@
         const hash = pageId === "songBackupPanel" ? "song-backup" : "song-register";
         history.pushState(null, "", `#${hash}`);
       }
+      renderFloatingNav();
       window.scrollTo({ top: 0, behavior: "smooth" });
       refreshLanguageSoon();
     }
@@ -8934,6 +9111,7 @@
       }
 
       if (shouldUpdateHash) history.pushState(null, "", `#${menuPageHashes[pageId] || "menu-drinks"}`);
+      renderFloatingNav();
       window.scrollTo({ top: 0, behavior: "smooth" });
       refreshLanguageSoon();
     }
@@ -8958,10 +9136,10 @@
 
       if (viewId === "menu" && menuPageId) {
         clearCustomerSubpage();
-        showMenuSubpage(menuPageId, false);
+        showMenuSubpage(menuPageId, shouldUpdateHash);
       } else if (viewId === "customers" && customerPageId) {
         clearMenuSubpage();
-        showCustomerSubpage(customerPageId, false);
+        showCustomerSubpage(customerPageId, shouldUpdateHash);
       } else {
         clearMenuSubpage();
         clearCustomerSubpage();
@@ -8969,6 +9147,7 @@
         if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+      renderFloatingNav();
     }
 
     function renderNewsImages() {
@@ -9089,6 +9268,84 @@
       refreshLanguageSoon();
     }
 
+    function availableFloatingNavOptions() {
+      return floatingNavOptions.filter((option) => settings.showSavedSetlists || option.id !== "saved-setlists");
+    }
+
+    function selectedFloatingNavOptions() {
+      const available = availableFloatingNavOptions();
+      return settings.floatingNavItems
+        .map((id) => available.find((option) => option.id === id))
+        .filter(Boolean);
+    }
+
+    function renderFloatingNav() {
+      const selected = selectedFloatingNavOptions();
+      const isVisible = Boolean(settings.showFloatingNav && selected.length);
+      floatingPageNav.hidden = !isVisible;
+      document.body.classList.toggle("floating-nav-visible", isVisible);
+      if (!isVisible) {
+        floatingPageNavButtons.innerHTML = "";
+        return;
+      }
+
+      const currentHash = location.hash.replace("#", "") || "top";
+      const currentTarget = menuPageMap[currentHash]
+        ? "menu"
+        : (customerPageMap[currentHash] ? currentHash : currentHash);
+      floatingPageNavButtons.innerHTML = selected.map((option) => `
+        <button type="button" data-floating-nav-target="${escapeText(option.target)}" class="${option.target === currentTarget ? "is-current" : ""}" aria-label="${escapeText(uiText(option.label))}">
+          <span class="floating-page-nav-icon" aria-hidden="true">${escapeText(option.icon)}</span>
+          <span class="floating-page-nav-label">${escapeText(uiText(option.shortLabel))}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderFloatingNavSettings() {
+      settingFloatingNav.checked = Boolean(settings.showFloatingNav);
+      floatingNavSettings.classList.toggle("is-disabled", !settings.showFloatingNav);
+      floatingNavSettings.innerHTML = availableFloatingNavOptions().map((option) => `
+        <label class="check-row">
+          <input type="checkbox" data-floating-nav-item="${escapeText(option.id)}" ${settings.floatingNavItems.includes(option.id) ? "checked" : ""} ${settings.showFloatingNav ? "" : "disabled"}>
+          ${escapeText(uiText(option.label))}
+        </label>
+      `).join("");
+
+      const selected = selectedFloatingNavOptions();
+      floatingNavPreview.innerHTML = selected.length
+        ? selected.map((option) => `<span>${escapeText(uiText(option.label))}</span>`).join("")
+        : `<span>${escapeText(uiText("表示なし"))}</span>`;
+      if (!settings.showFloatingNav) {
+        floatingNavStatus.textContent = uiText("フローティングバーは非表示です。");
+      } else {
+        floatingNavStatus.textContent = currentLanguage === "en"
+          ? `${selected.length} of 5 selected.`
+          : `5項目中${selected.length}項目を選択中です。`;
+      }
+    }
+
+    function handleFloatingNavChange(event) {
+      const checkbox = event.target.closest("[data-floating-nav-item]");
+      if (!checkbox) return;
+      const itemId = checkbox.dataset.floatingNavItem;
+      const availableIds = availableFloatingNavOptions().map((option) => option.id);
+      settings.floatingNavItems = settings.floatingNavItems.filter((id) => availableIds.includes(id));
+      if (checkbox.checked) {
+        if (selectedFloatingNavOptions().length >= 5) {
+          checkbox.checked = false;
+          floatingNavStatus.textContent = uiText("最大5項目まで選べます。");
+          return;
+        }
+        if (!settings.floatingNavItems.includes(itemId)) settings.floatingNavItems.push(itemId);
+      } else {
+        settings.floatingNavItems = settings.floatingNavItems.filter((id) => id !== itemId);
+      }
+      saveSettings();
+      renderFloatingNavSettings();
+      renderFloatingNav();
+      refreshLanguageSoon();
+    }
+
     function applySettings() {
       applyColorTheme();
       document.body.classList.toggle("memo-disabled", !settings.showMemo);
@@ -9139,6 +9396,8 @@
       lastTrainReminderMinutes.value = String(settings.lastTrainReminderMinutes || 30);
       renderTopShortcuts();
       renderTopShortcutSettings();
+      renderFloatingNavSettings();
+      renderFloatingNav();
       renderSongProfileSwitcher();
       renderCommuteSupport();
       renderCapabilityLocalList();
@@ -12087,6 +12346,19 @@
     });
 
     topShortcutSettings.addEventListener("change", handleTopShortcutChange);
+    settingFloatingNav.addEventListener("change", () => {
+      settings.showFloatingNav = settingFloatingNav.checked;
+      saveSettings();
+      renderFloatingNavSettings();
+      renderFloatingNav();
+      refreshLanguageSoon();
+    });
+    floatingNavSettings.addEventListener("change", handleFloatingNavChange);
+    floatingPageNavButtons.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-floating-nav-target]");
+      if (!button) return;
+      showView(button.dataset.floatingNavTarget);
+    });
 
     themePicker.addEventListener("change", (event) => {
       const input = event.target.closest('input[name="app-color-theme"]');
