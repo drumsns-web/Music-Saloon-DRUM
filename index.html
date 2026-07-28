@@ -696,6 +696,17 @@
       line-height: 1;
     }
 
+    .floating-page-nav-icon svg {
+      display: block;
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .floating-page-nav-label {
       max-width: 100%;
       font-size: 10px;
@@ -6737,7 +6748,7 @@
       { id: "song-register", label: "曲を登録", shortLabel: "曲登録", target: "song-register", icon: "＋" },
       { id: "customers", label: "マイ曲リスト", shortLabel: "曲リスト", target: "customers", icon: "♪" },
       { id: "saved-setlists", label: "マイセットリスト", shortLabel: "セットリスト", target: "saved-setlists", icon: "≡" },
-      { id: "menu", label: "メニュー", shortLabel: "メニュー", target: "menu", icon: "🍸" },
+      { id: "menu", label: "メニュー", shortLabel: "メニュー", target: "menu", icon: "drink" },
       { id: "info", label: "お知らせ", shortLabel: "お知らせ", target: "info", icon: "●" },
       { id: "favorites", label: "よく歌う曲", shortLabel: "よく歌う", target: "favorites", icon: "↻" },
       { id: "community", label: "みんなのお気に入り曲", shortLabel: "みんなの曲", target: "community", icon: "★" },
@@ -9293,12 +9304,17 @@
       const currentTarget = menuPageMap[currentHash]
         ? "menu"
         : (customerPageMap[currentHash] ? currentHash : currentHash);
-      floatingPageNavButtons.innerHTML = selected.map((option) => `
-        <button type="button" data-floating-nav-target="${escapeText(option.target)}" class="${option.target === currentTarget ? "is-current" : ""}" aria-label="${escapeText(uiText(option.label))}">
-          <span class="floating-page-nav-icon" aria-hidden="true">${escapeText(option.icon)}</span>
-          <span class="floating-page-nav-label">${escapeText(uiText(option.shortLabel))}</span>
-        </button>
-      `).join("");
+      floatingPageNavButtons.innerHTML = selected.map((option) => {
+        const iconMarkup = option.icon === "drink"
+          ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14l-1.7 18H6.7L5 3Z"></path><path d="M6.1 10h11.8"></path></svg>'
+          : escapeText(option.icon);
+        return `
+          <button type="button" data-floating-nav-target="${escapeText(option.target)}" class="${option.target === currentTarget ? "is-current" : ""}" aria-label="${escapeText(uiText(option.label))}">
+            <span class="floating-page-nav-icon" aria-hidden="true">${iconMarkup}</span>
+            <span class="floating-page-nav-label">${escapeText(uiText(option.shortLabel))}</span>
+          </button>
+        `;
+      }).join("");
     }
 
     function renderFloatingNavSettings() {
