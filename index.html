@@ -640,13 +640,14 @@
       bottom: auto;
       z-index: 35;
       width: min(620px, calc(100% - 20px));
+      min-height: 0;
       transform: translateX(-50%);
       display: flex;
       align-items: stretch;
       gap: 6px;
       border: 1px solid rgba(240, 138, 53, .72);
       border-radius: 18px;
-      padding: 7px;
+      padding: 5px;
       background: rgba(var(--theme-deep-rgb), .94);
       box-shadow: 0 12px 32px rgba(0, 0, 0, .32);
       backdrop-filter: blur(12px);
@@ -673,17 +674,17 @@
     }
 
     .floating-page-nav-buttons button {
-      flex: 1 0 52px;
-      min-width: 52px;
-      min-height: 54px;
+      flex: 1 0 50px;
+      min-width: 50px;
+      min-height: 46px;
       display: inline-flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 1px;
       border: 0;
       border-radius: 12px;
-      padding: 5px 3px;
+      padding: 3px 2px;
       color: #fff8ed;
       background: transparent;
       font: inherit;
@@ -707,14 +708,14 @@
     }
 
     .floating-page-nav-icon {
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1;
     }
 
     .floating-page-nav-icon svg {
       display: block;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       fill: none;
       stroke: currentColor;
       stroke-width: 1.8;
@@ -724,15 +725,15 @@
 
     .floating-page-nav-label {
       max-width: 100%;
-      font-size: 10px;
+      font-size: 9px;
       line-height: 1.2;
       white-space: nowrap;
     }
 
     .floating-nav-collapse-button {
-      flex: 0 0 48px;
-      width: 48px;
-      min-height: 54px;
+      flex: 0 0 44px;
+      width: 44px;
+      min-height: 46px;
       display: inline-grid;
       place-items: center;
       align-self: stretch;
@@ -742,7 +743,7 @@
       color: #fff8ed;
       background: rgba(255, 255, 255, .08);
       font: inherit;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 900;
       line-height: 1;
       cursor: pointer;
@@ -768,11 +769,7 @@
     }
 
     body.floating-nav-visible main > section.active-view {
-      padding-top: 78px;
-    }
-
-    body.floating-nav-collapsed main > section.active-view {
-      padding-top: 62px;
+      padding-top: var(--floating-nav-space, 66px);
     }
 
     main > section {
@@ -2495,6 +2492,66 @@
       backdrop-filter: blur(12px);
     }
 
+    .song-record-help {
+      margin: -2px 0 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .45);
+      border-left: 5px solid var(--orange);
+      border-radius: 10px;
+      background: #fff8ec;
+      color: #21372d;
+      line-height: 1.65;
+    }
+
+    .song-record-help strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 1rem;
+    }
+
+    .song-record-help p {
+      margin: 0;
+    }
+
+    .song-row-actions [data-record] {
+      white-space: nowrap;
+    }
+
+    .song-record-confirm-panel {
+      width: min(520px, 100%);
+    }
+
+    .song-record-confirm-copy {
+      margin: 4px 0 18px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--orange);
+      border-radius: 10px;
+      background: #fff8ec;
+      color: #21372d;
+      line-height: 1.7;
+    }
+
+    .song-record-confirm-copy p {
+      margin: 0;
+    }
+
+    .song-record-skip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: #21372d;
+      font-weight: 800;
+    }
+
+    .song-record-skip input {
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      margin: 0;
+    }
+
     .song-quick-search {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -3950,6 +4007,15 @@
       line-height: 1.6;
     }
 
+    .home-add-line {
+      display: block;
+      text-wrap: balance;
+    }
+
+    .home-add-path .home-add-line {
+      white-space: nowrap;
+    }
+
     .settings-modal-panel .section-head {
       position: sticky;
       top: -22px;
@@ -4447,10 +4513,10 @@
       .floating-page-nav {
         width: calc(100% - 16px);
         border-radius: 16px;
-        padding: 6px;
+        padding: 5px;
       }
       .floating-page-nav-buttons button {
-        min-height: 52px;
+        min-height: 46px;
       }
       .floating-page-nav.is-collapsed {
         right: 8px;
@@ -5285,6 +5351,11 @@
           <p class="song-index-note" id="songIndexNote"></p>
         </div>
 
+        <aside class="song-record-help" aria-label="歌った曲の記録について">
+          <strong>「歌った曲を記録」ボタンについて</strong>
+          <p>この曲を歌い終わった時に押します。今日の日付と歌った回数が保存され、「今日の記録」と「よく歌う曲ランキング」に反映されます。</p>
+        </aside>
+
         <div class="manager">
           <div class="song-list-card">
             <table>
@@ -5476,7 +5547,7 @@
               日付
               <input id="historyDate" type="date">
             </label>
-            <p class="small">マイ曲リストの「記録」ボタンを押すと、今日の記録に追加されます。</p>
+            <p class="small">マイ曲リストの「歌った曲を記録」ボタンを押すと、今日の記録に追加されます。</p>
           </article>
           <article class="card">
             <span class="tag green">Today</span>
@@ -5549,7 +5620,7 @@
           <article class="card">
             <span class="tag">Set List</span>
             <h3>今日のセットリスト</h3>
-            <p class="small">マイ曲リストで「記録」を押した曲が、今日のセットリストとして残ります。</p>
+            <p class="small">マイ曲リストで「歌った曲を記録」を押した曲が、今日のセットリストとして残ります。</p>
             <ul class="mini-list" id="todaySetlist"></ul>
             <div id="todaySetlistCopyBlock">
               <label>
@@ -5889,7 +5960,7 @@
         <div class="section-head">
           <div>
             <h2>よく歌う曲</h2>
-            <p class="lead">マイ曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
+            <p class="lead">マイ曲リストの「歌った曲を記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。</p>
           </div>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
@@ -5922,7 +5993,7 @@
           <div class="card">
             <span class="tag">Ranking</span>
             <h3>歌った回数ランキング</h3>
-            <p>マイ曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
+            <p>マイ曲リストで「歌った曲を記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。</p>
             <p class="privacy-note">ランキングもこの端末のブラウザだけに保存されます。<br>別の席や別のお客様からは見えません。</p>
           </div>
 
@@ -6267,28 +6338,51 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="songRecordConfirmModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="songRecordConfirmTitle">
+    <div class="drink-modal-panel song-record-confirm-panel">
+      <div class="section-head">
+        <div>
+          <h2 id="songRecordConfirmTitle">今日歌った記録として保存しますか？</h2>
+          <p class="lead" id="songRecordConfirmSong">選択した曲</p>
+        </div>
+        <button class="btn ghost" id="closeSongRecordConfirm" type="button">閉じる</button>
+      </div>
+      <div class="song-record-confirm-copy">
+        <p>今日の日付で保存し、歌った回数と「よく歌う曲ランキング」に反映します。</p>
+      </div>
+      <label class="song-record-skip">
+        <input id="skipSongRecordConfirm" type="checkbox">
+        <span>次回から確認せずに記録する</span>
+      </label>
+      <div class="control-row">
+        <button class="btn primary" id="confirmSongRecord" type="button">今日歌った曲として記録する</button>
+        <button class="btn ghost" id="cancelSongRecord" type="button">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
   <div class="drink-modal" id="homePromptModal" aria-hidden="true">
     <div class="drink-modal-panel gacha-modal-panel">
       <div class="section-head">
         <div>
           <h2>ホーム画面に追加できます</h2>
-          <p class="lead">スマホのホーム画面に追加しておくと、次回からすぐに開けます。</p>
+          <p class="lead"><span class="home-add-line">スマホのホーム画面に追加しておくと、</span><span class="home-add-line">次回からすぐに開けます。</span></p>
         </div>
         <button class="btn ghost" id="closeHomePrompt" type="button">閉じる</button>
       </div>
       <div class="home-add-steps">
         <div class="home-add-step">
           <strong>iPhone（Safari推奨）</strong>
-          <p>Safariで開き、共有ボタン → ホーム画面に追加 → 追加</p>
-          <p class="privacy-note">ChromeやGoogleアプリで「ホーム画面に追加」が見つからない場合は、右上の共有メニューなどから「Safariで開く」を選んでください。</p>
+          <p class="home-add-path"><span class="home-add-line">Safariで開く</span><span class="home-add-line">共有ボタン → ホーム画面に追加</span><span class="home-add-line">→ 追加</span></p>
+          <p class="privacy-note"><span class="home-add-line">ChromeやGoogleアプリで</span><span class="home-add-line">「ホーム画面に追加」が見つからない場合は、</span><span class="home-add-line">右上の共有メニューなどから</span><span class="home-add-line">「Safariで開く」を選んでください。</span></p>
         </div>
         <div class="home-add-step">
           <strong>Android（Chrome）</strong>
-          <p>右上の︙メニュー → ホーム画面に追加、または「アプリをインストール」→ 追加</p>
+          <p class="home-add-path"><span class="home-add-line">右上の︙メニュー → ホーム画面に追加</span><span class="home-add-line">または「アプリをインストール」→ 追加</span></p>
         </div>
         <div class="home-add-step">
           <strong>Firefox</strong>
-          <p>iPhone：アドレスバーの共有ボタン → ホーム画面に追加 → 追加<br>Android：右上の︙メニュー → ホーム画面に追加 → 追加</p>
+          <p class="home-add-path"><span class="home-add-line">iPhone：アドレスバーの共有ボタン</span><span class="home-add-line">→ ホーム画面に追加 → 追加</span><span class="home-add-line">Android：右上の︙メニュー</span><span class="home-add-line">→ ホーム画面に追加 → 追加</span></p>
         </div>
         <div class="home-add-step">
           <strong>保存について</strong>
@@ -6507,6 +6601,7 @@
     const languageStorageKey = "music-saloon-drum-language";
     const homePromptStorageKey = "music-saloon-drum-home-prompt";
     const appUpdateStorageKey = "music-saloon-drum-app-update";
+    const songRecordConfirmStorageKey = "music-saloon-drum-song-record-confirm";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
     const heroImageCount = 7;
@@ -6690,6 +6785,12 @@
     const quickSetlistOptions = document.getElementById("quickSetlistOptions");
     const createSetlistWithSong = document.getElementById("createSetlistWithSong");
     const quickSetlistStatus = document.getElementById("quickSetlistStatus");
+    const songRecordConfirmModal = document.getElementById("songRecordConfirmModal");
+    const songRecordConfirmSong = document.getElementById("songRecordConfirmSong");
+    const closeSongRecordConfirm = document.getElementById("closeSongRecordConfirm");
+    const cancelSongRecord = document.getElementById("cancelSongRecord");
+    const confirmSongRecord = document.getElementById("confirmSongRecord");
+    const skipSongRecordConfirm = document.getElementById("skipSongRecordConfirm");
     const topShortcutButtons = document.getElementById("topShortcutButtons");
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
@@ -7750,13 +7851,35 @@
       "マイセットリスト機能を表示する": "Show my setlist feature",
       "iPhone（Safari推奨）": "iPhone (Safari Recommended)",
       "Android（Chrome）": "Android (Chrome)",
+      "スマホのホーム画面に追加しておくと、": "Add this app to your phone's home screen,",
+      "次回からすぐに開けます。": "so you can open it quickly next time.",
+      "Safariで開く": "Open in Safari",
+      "共有ボタン → ホーム画面に追加": "Share → Add to Home Screen",
+      "→ 追加": "→ Add",
+      "ChromeやGoogleアプリで": "In Chrome or the Google app,",
+      "「ホーム画面に追加」が見つからない場合は、": "if you cannot find “Add to Home Screen,”",
+      "右上の共有メニューなどから": "use the Share menu in the upper right",
+      "「Safariで開く」を選んでください。": "and choose “Open in Safari.”",
+      "右上の︙メニュー → ホーム画面に追加": "Upper-right ⋮ menu → Add to Home Screen",
+      "または「アプリをインストール」→ 追加": "or “Install app” → Add",
+      "iPhone：アドレスバーの共有ボタン": "iPhone: Share button in the address bar",
+      "Android：右上の︙メニュー": "Android: Upper-right ⋮ menu",
       "自分の曲": "My Songs",
       "みんなの曲": "Community Songs",
       "お店": "Shop",
       "記録・便利機能": "Logs & Tools",
       "まず何をしますか？": "What would you like to do first?",
       "初めての方は「曲を登録する」から始められます": "New users can start with Add a Song",
-      "初めての方はここから始められます": "New users can start here"
+      "初めての方はここから始められます": "New users can start here",
+      "「歌った曲を記録」ボタンについて": "About “Log This Song”",
+      "歌った曲の記録について": "About sung-song records",
+      "歌った曲を記録": "Log This Song",
+      "今日歌った記録として保存しますか？": "Save this as a song you sang today?",
+      "選択した曲": "Selected song",
+      "次回から確認せずに記録する": "Log without asking next time",
+      "今日歌った曲として記録する": "Save as Sung Today",
+      "歌い終わった時に押します": "Press after you finish singing",
+      "歌い終わった時に押す（今日の日付・回数を記録）": "Press after singing (logs today's date and count)"
     };
 
     const phraseTranslations = [
@@ -7854,6 +7977,9 @@
       ["歌う曲に迷ったら、マイ曲リストからおすすめを選べます。", "Not sure what to sing? Let the app pick from your song list."],
       ["その日に歌った曲を日記のように残せます。日付を選ぶと、いつ何を歌ったか確認できます。", "Keep a diary-like record of songs you sang. Choose a date to see what you sang."],
       ["マイ曲リストの「記録」ボタンを押すと、今日の記録に追加されます。", "Press “Log” in My Song List to add a song to today's record."],
+      ["マイ曲リストの「歌った曲を記録」ボタンを押すと、今日の記録に追加されます。", "Press “Log This Song” in My Song List to add a song to today's record."],
+      ["この曲を歌い終わった時に押します。今日の日付と歌った回数が保存され、「今日の記録」と「よく歌う曲ランキング」に反映されます。", "Press after you finish singing this song. Today's date and your play count are saved and reflected in Today’s Log and Most Sung Songs."],
+      ["今日の日付で保存し、歌った回数と「よく歌う曲ランキング」に反映します。", "This saves the song under today's date and updates its count and the Most Sung Songs ranking."],
       ["同じ曲を何度歌っても、その日の記録として残せます。", "Even if you sing the same song multiple times, it will be saved as a record for that day."],
       ["この日付に、歌った曲を追加します。", "Add sung songs to this date."],
       ["マイ曲リストにない曲は、曲名だけでも登録しながら記録できます。", "For songs not in your song list, you can save them with just the title and add them to your record."],
@@ -7880,6 +8006,7 @@
       ["マイ曲リストに登録している曲が候補になります。まだ曲がない場合は、先にマイ曲リストへ歌いたい曲を保存してください。", "Songs in My Song List become candidates. If there are no songs yet, save some songs first."],
       ["チェックを外しておくと、デュエット曲は候補から外れます。二人で歌う時だけオンにできます。", "Leave this unchecked to exclude duet songs. Turn it on only when singing with two people."],
       ["マイ曲リストで「記録」を押した曲が、今日のセットリストとして残ります。", "Songs you press “Log” for in the song list are saved as today's set list."],
+      ["マイ曲リストで「歌った曲を記録」を押した曲が、今日のセットリストとして残ります。", "Songs you press “Log This Song” for in My Song List are saved as today's set list."],
       ["健康管理や飲みすぎ防止の目安として、自分用に今日飲んだものを残せます。", "You can keep a personal drink log as a guide for health management or preventing overdrinking."],
       ["ドリンク記録とメモは、この端末のブラウザ内に保存されます。他のお客様やお店側へ自動共有されません。", "Drink logs and notes are saved only in this device's browser. They are not automatically shared with other customers or the shop."],
       ["ジャンルだけでなく、十八番・お気に入り・練習中・盛り上がる曲など、自分用の印も追加できます。", "You can add personal tags such as go-to song, favorite, practicing, or crowd pleaser, not just genres."],
@@ -7888,6 +8015,9 @@
       ["曲を保存するときに「デュエット曲として登録」を選ぶと、マイ曲リストでデュエット曲だけを表示できます。", "When saving a song, choose “Mark as duet” to filter duet songs later."],
       ["マイ曲リストで「記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。", "When you press “Log” in My Song List, that song's count increases. Songs you sing more often appear higher in the ranking."],
       ["マイ曲リストの「記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。", "Use the “Log” button in My Song List to automatically build your frequently sung ranking."],
+      ["マイ曲リストで「歌った曲を記録」を押すと、その曲の回数が増えます。歌った記録をもとに、自分の中で頻度が多い曲を上から表示します。", "When you press “Log This Song” in My Song List, that song's count increases. Songs you sing more often appear higher in the ranking."],
+      ["マイ曲リストの「歌った曲を記録」ボタンから、自分がよく歌う曲を自動でランキング表示します。", "Use the “Log This Song” button in My Song List to automatically build your frequently sung ranking."],
+      ["まだ歌った記録がありません。マイ曲リストで「歌った曲を記録」を押すとランキングに反映されます。", "There are no sung-song records yet. Press “Log This Song” in My Song List to update the ranking."],
       ["ランキングもこの端末のブラウザだけに保存されます。別の席や別のお客様からは見えません。", "Rankings are saved only in this device's browser. Other seats and customers cannot see them."],
       ["西武池袋線 江古田駅 徒歩1分", "Seibu Ikebukuro Line: Ekoda Station, 1 minute on foot"],
       ["都営大江戸線 新江古田駅 徒歩7分", "Toei Oedo Line: Shin-Ekoda Station, 7 minutes on foot"],
@@ -7964,6 +8094,7 @@
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     let savedSetlists = JSON.parse(localStorage.getItem(savedSetlistStorageKey) || "[]");
+    let pendingSongRecordId = "";
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     if (settings.settingsVersion === undefined) {
       settings.showDrink = true;
@@ -9361,7 +9492,11 @@
 
     function updateFloatingNavPosition() {
       const headerHeight = appHeader ? Math.ceil(appHeader.getBoundingClientRect().height) : 102;
-      document.documentElement.style.setProperty("--floating-nav-top", `${headerHeight + 8}px`);
+      document.documentElement.style.setProperty("--floating-nav-top", `${headerHeight + 2}px`);
+      if (floatingPageNav && !floatingPageNav.hidden) {
+        const barHeight = Math.ceil(floatingPageNav.getBoundingClientRect().height);
+        document.documentElement.style.setProperty("--floating-nav-space", `${barHeight + 12}px`);
+      }
     }
 
     function renderFloatingNav() {
@@ -9379,6 +9514,7 @@
       floatingNavCollapseButton.title = collapseLabel;
       if (!isVisible) {
         floatingPageNavButtons.innerHTML = "";
+        window.requestAnimationFrame(updateFloatingNavPosition);
         return;
       }
 
@@ -9397,6 +9533,7 @@
           </button>
         `;
       }).join("");
+      window.requestAnimationFrame(updateFloatingNavPosition);
     }
 
     function renderFloatingNavSettings() {
@@ -9811,6 +9948,33 @@
       updateDailyMemoStatus.timer = window.setTimeout(() => {
         dailyMemoStatus.textContent = uiText("この端末のブラウザ内に保存されます。");
       }, 1600);
+    }
+
+    function shouldConfirmSongRecord() {
+      const isTouchLayout = window.matchMedia("(hover: none), (pointer: coarse), (max-width: 760px)").matches;
+      return isTouchLayout && localStorage.getItem(songRecordConfirmStorageKey) !== "skip";
+    }
+
+    function closeSongRecordConfirmPanel() {
+      songRecordConfirmModal.classList.remove("show");
+      songRecordConfirmModal.setAttribute("aria-hidden", "true");
+      pendingSongRecordId = "";
+      skipSongRecordConfirm.checked = false;
+    }
+
+    function requestSongRecord(id) {
+      const item = activeProfileSongs().find((song) => song.id === id);
+      if (!item) return;
+      if (!shouldConfirmSongRecord()) {
+        recordSong(id);
+        return;
+      }
+      pendingSongRecordId = id;
+      songRecordConfirmSong.textContent = itemLabel(item);
+      skipSongRecordConfirm.checked = false;
+      songRecordConfirmModal.classList.add("show");
+      songRecordConfirmModal.setAttribute("aria-hidden", "false");
+      window.setTimeout(() => confirmSongRecord.focus(), 0);
     }
 
     function recordSong(id) {
@@ -10292,7 +10456,7 @@
       renderAuxiliaryIndex(favoriteIndexJump, filtered, "favoriteGroups", "artist");
 
       if (!filtered.length) {
-        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText("まだ歌った記録がありません。マイ曲リストで「記録」を押すとランキングに反映されます。"))}</div></div>`;
+        favoriteGroups.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText("まだ歌った記録がありません。マイ曲リストで「歌った曲を記録」を押すとランキングに反映されます。"))}</div></div>`;
         return;
       }
 
@@ -10790,6 +10954,7 @@
 
     function compactSongRowHtml(item, query, hidden = false) {
       const isExpanded = expandedSongRows.has(item.id);
+      const recordButtonHelp = uiText("歌い終わった時に押す（今日の日付・回数を記録）");
       const tags = getSongTags(item);
       const detailBits = [
         item.owner ? `<p><strong>${escapeText(uiText("歌う人"))}：</strong>${highlightText(item.owner, query)}</p>` : "",
@@ -10813,7 +10978,7 @@
             </div>
             <div class="song-row-actions">
               <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
-              <button class="btn primary" type="button" data-record="${escapeText(item.id)}">${escapeText(uiText("記録"))}</button>
+              <button class="btn primary" type="button" data-record="${escapeText(item.id)}" title="${escapeText(recordButtonHelp)}" aria-label="${escapeText(recordButtonHelp)}">${escapeText(uiText("歌った曲を記録"))}</button>
               <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
               <button class="btn ghost" type="button" data-delete="${escapeText(item.id)}">${escapeText(uiText("削除"))}</button>
             </div>
@@ -11504,7 +11669,7 @@
       }
       const recordButton = event.target.closest("[data-record]");
       if (recordButton) {
-        recordSong(recordButton.dataset.record);
+        requestSongRecord(recordButton.dataset.record);
         return;
       }
       const quickSetlistButton = event.target.closest("[data-quick-setlist]");
@@ -12568,6 +12733,20 @@
     quickSetlistModal.addEventListener("click", (event) => {
       if (event.target === quickSetlistModal) closeQuickSetlistPanel();
     });
+    closeSongRecordConfirm.addEventListener("click", closeSongRecordConfirmPanel);
+    cancelSongRecord.addEventListener("click", closeSongRecordConfirmPanel);
+    confirmSongRecord.addEventListener("click", () => {
+      const songId = pendingSongRecordId;
+      if (!songId) return;
+      if (skipSongRecordConfirm.checked) {
+        localStorage.setItem(songRecordConfirmStorageKey, "skip");
+      }
+      closeSongRecordConfirmPanel();
+      recordSong(songId);
+    });
+    songRecordConfirmModal.addEventListener("click", (event) => {
+      if (event.target === songRecordConfirmModal) closeSongRecordConfirmPanel();
+    });
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
@@ -12575,6 +12754,7 @@
       if (guideModal.classList.contains("show")) closeGuideModalPanel();
       if (songTransferModal.classList.contains("show")) closeSongTransferPanel();
       if (quickSetlistModal.classList.contains("show")) closeQuickSetlistPanel();
+      if (songRecordConfirmModal.classList.contains("show")) closeSongRecordConfirmPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
       if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
