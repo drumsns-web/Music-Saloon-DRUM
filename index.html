@@ -2668,6 +2668,82 @@
       color: #66594e;
     }
 
+    .staff-favorite-song-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .staff-favorite-song-heading span {
+      color: #66594e;
+      font-size: .82rem;
+      white-space: nowrap;
+    }
+
+    .staff-all-songs-button {
+      width: 100%;
+      margin-top: 9px;
+    }
+
+    .staff-songs-modal-panel {
+      width: min(720px, 100%);
+    }
+
+    .staff-songs-modal-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: staff-song;
+    }
+
+    .staff-songs-modal-list li {
+      position: relative;
+      min-width: 0;
+      padding: 12px 12px 12px 46px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff8ec;
+      color: #21372d;
+      line-height: 1.5;
+      counter-increment: staff-song;
+    }
+
+    .staff-songs-modal-list li::before {
+      content: counter(staff-song);
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: grid;
+      place-items: center;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--button-text);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .staff-songs-modal-list strong,
+    .staff-songs-modal-list small {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .staff-songs-modal-list small {
+      margin-top: 3px;
+      color: #66594e;
+    }
+
+    .staff-songs-modal-list .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+
     .staff-profile-tags {
       display: flex;
       flex-wrap: wrap;
@@ -4781,6 +4857,7 @@
       .setlist-song-actions { grid-column: 2; }
       .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .staff-profile-grid { grid-template-columns: 1fr; }
+      .staff-songs-modal-list { grid-template-columns: 1fr; }
       .staff-directory-toolbar { grid-template-columns: 1fr; }
       .staff-directory-toolbar strong { text-align: left; }
       .song-list-navigation { top: 106px; }
@@ -6613,6 +6690,20 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="staffSongsModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="staffSongsModalTitle">
+    <div class="drink-modal-panel staff-songs-modal-panel">
+      <div class="section-head">
+        <div>
+          <span class="tag orange">Favorite Songs</span>
+          <h2 id="staffSongsModalTitle">好きな曲</h2>
+          <p class="lead" id="staffSongsModalName">スタッフ名</p>
+        </div>
+        <button class="btn ghost" id="closeStaffSongsModal" type="button">閉じる</button>
+      </div>
+      <ol class="staff-songs-modal-list" id="staffSongsModalList"></ol>
+    </div>
+  </div>
+
   <div class="drink-modal" id="homePromptModal" aria-hidden="true">
     <div class="drink-modal-panel gacha-modal-panel">
       <div class="section-head">
@@ -7112,6 +7203,11 @@
     const staffSearch = document.getElementById("staffSearch");
     const staffCount = document.getElementById("staffCount");
     const staffProfileGrid = document.getElementById("staffProfileGrid");
+    const staffSongsModal = document.getElementById("staffSongsModal");
+    const staffSongsModalTitle = document.getElementById("staffSongsModalTitle");
+    const staffSongsModalName = document.getElementById("staffSongsModalName");
+    const staffSongsModalList = document.getElementById("staffSongsModalList");
+    const closeStaffSongsModal = document.getElementById("closeStaffSongsModal");
     const savedSetlistForm = document.getElementById("savedSetlistForm");
     const savedSetlistFormTitle = document.getElementById("savedSetlistFormTitle");
     const savedSetlistTitle = document.getElementById("savedSetlistTitle");
@@ -7145,6 +7241,7 @@
     const defaultFloatingNavIds = ["top", "song-register", "customers", "menu"];
     const maxFloatingNavItems = 8;
     const maxStaffProfiles = 15;
+    const maxFavoriteSongsPerStaff = 20;
     const playablePartChoices = ["ギター", "ベース", "ドラム", "キーボード", "ピアノ", "パーカッション", "管楽器", "その他"];
     const appThemes = [
       { id: "drum-green", label: "DRUMグリーン", dark: "#143f2c", deep: "#0b2b1e", mid: "#2f6b4b", accent: "#f08a35", soft: "#ffc07a", paper: "#fbf4e5", panel: "rgba(255, 252, 244, .94)", darkRgb: "20, 63, 44", deepRgb: "11, 43, 30", accentRgb: "240, 138, 53", softRgb: "255, 192, 122" },
@@ -7201,7 +7298,7 @@
     //   name: "スタッフ名",
     //   photo: "staff/staff-1.jpg",
     //   catchphrase: "ひとこと",
-    //   favoriteSongs: [{ title: "好きな曲", artist: "歌手名" }],
+    //   favoriteSongs: [{ title: "好きな曲", artist: "歌手名" }], // 最大20曲
     //   favoriteArtists: ["好きなアーティスト"],
     //   likes: ["趣味", "好きなこと"],
     //   ownerIntroduction: "店主から見た、このスタッフの紹介文",
@@ -7215,6 +7312,7 @@
     // }
     const staffProfiles = [
     ].slice(0, maxStaffProfiles);
+    let openStaffSongsProfileIndex = -1;
 
     const dailyShopMessages = [
       { ja: "今日の一曲が、いい夜のきっかけになりますように。", en: "May today's song be the start of a great night." },
@@ -7997,6 +8095,8 @@
       "スタッフ紹介を見る": "Meet the Staff",
       "スタッフとの会話のきっかけに": "Start a Conversation",
       "好きな曲": "Favorite Songs",
+      "好きな曲をすべて見る": "View All Favorite Songs",
+      "マイ曲リストへ追加": "Add to My Song List",
       "好きなアーティスト": "Favorite Artists",
       "好きなこと・趣味": "Interests & Hobbies",
       "店主からの紹介": "From the Owner",
@@ -9346,6 +9446,7 @@
       renderHistoryBackupStatus();
       renderDailyMemo();
       renderStaffProfiles();
+      if (staffSongsModal.classList.contains("show")) renderStaffSongsModal();
       renderFavorites();
       renderSharedRanking();
       renderSongs();
@@ -9399,7 +9500,7 @@
     }
 
     function staffProfileSearchText(profile) {
-      const songText = (profile.favoriteSongs || [])
+      const songText = (profile.favoriteSongs || []).slice(0, maxFavoriteSongsPerStaff)
         .map((song) => `${song.title || ""} ${song.artist || ""}`)
         .join(" ");
       return [
@@ -9411,11 +9512,11 @@
       ].join(" ");
     }
 
-    function staffSongListHtml(items) {
+    function staffSongListHtml(items, limit = 3) {
       if (!Array.isArray(items) || !items.length) return "";
       return `
         <ul class="staff-profile-list">
-          ${items.map((song) => `
+          ${items.slice(0, limit).map((song) => `
             <li>
               <strong>${escapeText(song.title || "-")}</strong>
               ${song.artist ? `<small>${escapeText(song.artist)}</small>` : ""}
@@ -9489,7 +9590,11 @@
       }
 
       staffProfileGrid.innerHTML = visibleProfiles.map((profile) => {
-        const favoriteSongs = staffSongListHtml(profile.favoriteSongs);
+        const profileIndex = staffProfiles.indexOf(profile);
+        const favoriteSongItems = Array.isArray(profile.favoriteSongs)
+          ? profile.favoriteSongs.slice(0, maxFavoriteSongsPerStaff)
+          : [];
+        const favoriteSongs = staffSongListHtml(favoriteSongItems);
         const favoriteArtists = staffTagListHtml(profile.favoriteArtists);
         const likes = staffTagListHtml(profile.likes);
         const promotions = staffPromotionListHtml(profile.promotions, profile.name);
@@ -9503,7 +9608,13 @@
               </div>
             </div>
             <div class="staff-profile-body">
-              ${favoriteSongs ? `<section class="staff-profile-block"><h3>${escapeText(uiText("好きな曲"))}</h3>${favoriteSongs}</section>` : ""}
+              ${favoriteSongs ? `
+                <section class="staff-profile-block">
+                  <h3 class="staff-favorite-song-heading"><span>${escapeText(uiText("好きな曲"))}</span><span>${currentLanguage === "en" ? `${favoriteSongItems.length} songs` : `${favoriteSongItems.length}曲`}</span></h3>
+                  ${favoriteSongs}
+                  <button class="btn ghost staff-all-songs-button" type="button" data-staff-songs="${profileIndex}">${escapeText(uiText("好きな曲をすべて見る"))}</button>
+                </section>
+              ` : ""}
               ${favoriteArtists ? `<section class="staff-profile-block"><h3>${escapeText(uiText("好きなアーティスト"))}</h3>${favoriteArtists}</section>` : ""}
               ${likes ? `<section class="staff-profile-block"><h3>${escapeText(uiText("好きなこと・趣味"))}</h3>${likes}</section>` : ""}
               ${profile.ownerIntroduction ? `<p class="staff-owner-introduction"><strong>${escapeText(uiText("店主からの紹介"))}</strong>${escapeText(profile.ownerIntroduction)}</p>` : ""}
@@ -9526,6 +9637,83 @@
         }, { once: true });
       });
       refreshLanguageSoon();
+    }
+
+    function closeStaffSongsPanel() {
+      staffSongsModal.classList.remove("show");
+      staffSongsModal.setAttribute("aria-hidden", "true");
+      openStaffSongsProfileIndex = -1;
+    }
+
+    function renderStaffSongsModal(profileIndex = openStaffSongsProfileIndex) {
+      const profile = staffProfiles[Number(profileIndex)];
+      if (!profile) return;
+      const favoriteSongs = Array.isArray(profile.favoriteSongs)
+        ? profile.favoriteSongs.slice(0, maxFavoriteSongsPerStaff)
+        : [];
+      openStaffSongsProfileIndex = Number(profileIndex);
+      staffSongsModalTitle.textContent = currentLanguage === "en"
+        ? `Favorite Songs (${favoriteSongs.length})`
+        : `好きな曲（${favoriteSongs.length}曲）`;
+      staffSongsModalName.textContent = profile.name;
+      staffSongsModalList.innerHTML = favoriteSongs.map((song, songIndex) => {
+        const localSong = findLocalSongFromRanking(song);
+        return `
+          <li>
+            <strong>${escapeText(song.title || "-")}</strong>
+            ${song.artist ? `<small>${escapeText(song.artist)}</small>` : ""}
+            <button class="btn ${localSong ? "ghost" : "primary"}" type="button" data-staff-song-add="${profileIndex}:${songIndex}" ${localSong ? "disabled" : ""}>${escapeText(uiText(localSong ? "✓ マイ曲登録済み" : "マイ曲リストへ追加"))}</button>
+          </li>
+        `;
+      }).join("");
+      refreshLanguageSoon();
+    }
+
+    function openStaffSongsPanel(profileIndex) {
+      const profile = staffProfiles[Number(profileIndex)];
+      if (!profile) return;
+      renderStaffSongsModal(profileIndex);
+      staffSongsModal.classList.add("show");
+      staffSongsModal.setAttribute("aria-hidden", "false");
+      window.setTimeout(() => closeStaffSongsModal.focus(), 0);
+    }
+
+    function addStaffSongToMyList(profileIndex, songIndex) {
+      const profile = staffProfiles[Number(profileIndex)];
+      const favoriteSongs = profile && Array.isArray(profile.favoriteSongs)
+        ? profile.favoriteSongs.slice(0, maxFavoriteSongsPerStaff)
+        : [];
+      const source = favoriteSongs[Number(songIndex)];
+      if (!source || !String(source.title || "").trim() || findLocalSongFromRanking(source)) return;
+      const newSong = {
+        id: createId(),
+        title: String(source.title || "").trim(),
+        artist: String(source.artist || "").trim(),
+        owner: "",
+        kana: "",
+        key: "",
+        memo: "",
+        duet: false,
+        nextWish: false,
+        profile: activeSongProfile(),
+        tags: [],
+        playableParts: [],
+        capabilityCanSing: false,
+        capabilityShared: false,
+        createdAt: new Date().toISOString()
+      };
+      songs.unshift(newSong);
+      saveSongs();
+      renderSongs();
+      renderStaffSongsModal(profileIndex);
+      showUndo(currentLanguage === "en"
+        ? `Added ${itemLabel(newSong)} to My Song List`
+        : `${itemLabel(newSong)}をマイ曲リストに追加しました`, () => {
+          songs = songs.filter((song) => song.id !== newSong.id);
+          saveSongs();
+          renderSongs();
+          if (staffSongsModal.classList.contains("show")) renderStaffSongsModal(profileIndex);
+        });
     }
 
     function songSearchText(item) {
@@ -11800,6 +11988,20 @@
 
     favoriteSearch.addEventListener("input", renderFavorites);
     staffSearch.addEventListener("input", renderStaffProfiles);
+    staffProfileGrid.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-staff-songs]");
+      if (button) openStaffSongsPanel(button.dataset.staffSongs);
+    });
+    closeStaffSongsModal.addEventListener("click", closeStaffSongsPanel);
+    staffSongsModal.addEventListener("click", (event) => {
+      if (event.target === staffSongsModal) closeStaffSongsPanel();
+    });
+    staffSongsModalList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-staff-song-add]");
+      if (!button || button.disabled) return;
+      const [profileIndex, songIndex] = button.dataset.staffSongAdd.split(":");
+      addStaffSongToMyList(profileIndex, songIndex);
+    });
 
     favoriteGroups.addEventListener("click", (event) => {
       const capabilityButton = event.target.closest("[data-open-capability]");
@@ -13198,6 +13400,7 @@
       if (songTransferModal.classList.contains("show")) closeSongTransferPanel();
       if (quickSetlistModal.classList.contains("show")) closeQuickSetlistPanel();
       if (songRecordConfirmModal.classList.contains("show")) closeSongRecordConfirmPanel();
+      if (staffSongsModal.classList.contains("show")) closeStaffSongsPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
       if (drumGachaModal.classList.contains("show")) closeDrumGachaModal.click();
