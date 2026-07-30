@@ -2552,6 +2552,224 @@
       margin: 0;
     }
 
+    .staff-intro-card {
+      margin-bottom: 18px;
+      border-left: 5px solid var(--orange);
+    }
+
+    .staff-directory-toolbar {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 12px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .45);
+      border-radius: 10px;
+      background: rgba(255, 253, 248, .97);
+      color: #21372d;
+    }
+
+    .staff-directory-toolbar input {
+      min-height: 48px;
+    }
+
+    .staff-directory-toolbar strong {
+      min-width: 54px;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .staff-profile-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .staff-profile-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(var(--theme-accent-rgb), .46);
+      border-radius: 14px;
+      background: #fffdf8;
+      color: #21372d;
+      box-shadow: 0 14px 30px rgba(var(--theme-deep-rgb), .13);
+    }
+
+    .staff-profile-head {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      align-items: center;
+      gap: 14px;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(var(--theme-accent-rgb), .2), rgba(255, 255, 255, .82));
+    }
+
+    .staff-profile-photo {
+      width: 92px;
+      height: 92px;
+      border: 3px solid var(--orange);
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--forest);
+    }
+
+    .staff-profile-name {
+      margin: 0;
+      color: #153f2d;
+      font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+      line-height: 1.25;
+      text-wrap: pretty;
+    }
+
+    .staff-profile-catchphrase {
+      margin: 6px 0 0;
+      color: #55483d;
+      font-weight: 800;
+      line-height: 1.55;
+      text-wrap: pretty;
+    }
+
+    .staff-profile-body {
+      display: grid;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    .staff-profile-block {
+      min-width: 0;
+    }
+
+    .staff-profile-block h3 {
+      margin: 0 0 7px;
+      color: #153f2d;
+      font-size: 1rem;
+    }
+
+    .staff-profile-list {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .staff-profile-list li {
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #f8f0e2;
+      line-height: 1.5;
+      text-wrap: pretty;
+      overflow-wrap: anywhere;
+    }
+
+    .staff-profile-list small {
+      display: block;
+      color: #66594e;
+    }
+
+    .staff-profile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .staff-profile-tag {
+      display: inline-flex;
+      padding: 6px 10px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .42);
+      border-radius: 999px;
+      background: #fff8ec;
+      color: #21372d;
+      font-size: .86rem;
+      font-weight: 800;
+    }
+
+    .staff-owner-introduction {
+      margin: 0;
+      padding: 13px 14px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .42);
+      border-left: 5px solid var(--orange);
+      border-radius: 9px;
+      background: #f8f0e2;
+      color: #21372d;
+      line-height: 1.7;
+      text-wrap: pretty;
+      overflow-wrap: anywhere;
+    }
+
+    .staff-owner-introduction strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #153f2d;
+    }
+
+    .staff-promotion-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .staff-promotion {
+      overflow: hidden;
+      border: 1px solid rgba(var(--theme-accent-rgb), .5);
+      border-radius: 10px;
+      background: #fff8ec;
+    }
+
+    .staff-promotion-flyer-link {
+      display: block;
+      background: #eee5d6;
+    }
+
+    .staff-promotion-flyer {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      background: #eee5d6;
+    }
+
+    .staff-promotion-copy {
+      padding: 12px;
+    }
+
+    .staff-promotion-copy strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #153f2d;
+      font-size: 1.04rem;
+    }
+
+    .staff-promotion-copy p {
+      margin: 0;
+      line-height: 1.65;
+      text-wrap: pretty;
+      overflow-wrap: anywhere;
+    }
+
+    .staff-promotion-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .staff-promotion-actions .btn {
+      min-height: 40px;
+      padding: 8px 12px;
+      font-size: .88rem;
+    }
+
+    .staff-empty {
+      grid-column: 1 / -1;
+      padding: 30px 20px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .45);
+      border-radius: 12px;
+      background: #fffdf8;
+      color: #21372d;
+      text-align: center;
+    }
+
     .song-quick-search {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -4562,6 +4780,9 @@
       .saved-setlist-song { grid-template-columns: 28px minmax(0, 1fr); }
       .setlist-song-actions { grid-column: 2; }
       .theme-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .staff-profile-grid { grid-template-columns: 1fr; }
+      .staff-directory-toolbar { grid-template-columns: 1fr; }
+      .staff-directory-toolbar strong { text-align: left; }
       .song-list-navigation { top: 106px; }
       .song-view-switch {
         display: flex;
@@ -4653,17 +4874,21 @@
         <details class="app-update-card" id="appUpdateCard" open>
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.28</span></span>
-              <h2 id="appUpdateTitle">好きなページへすぐ移動できるようになりました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.30</span></span>
+              <h2 id="appUpdateTitle">スタッフ紹介ページを追加しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>「今日の一言」の下にフローティングバーを追加しました。最大8件のページを選べ、使わない時は右端のボタンで小さく収納できます。</p>
-            <button class="btn primary" type="button" data-update-settings-target="settings-floating-nav">設定してみる</button>
+            <p>好きな曲やアーティスト、趣味などから、スタッフとの会話のきっかけを見つけられます。</p>
+            <a class="btn primary" href="#staff">スタッフ紹介を見る</a>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-07-30">2026.07.30</time>
+                  <div><strong>スタッフ紹介ページを追加</strong><p>スタッフの好きな曲・アーティスト、趣味やお知らせなどを見られるページを追加しました。</p><a class="btn ghost app-update-history-action" href="#staff">スタッフ紹介を見る →</a></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-28">2026.07.28</time>
                   <div><strong>フローティングバーを追加</strong><p>最大8件のページへいつでも移動でき、使わない時は小さなボタンへ収納できます。表示・非表示と移動先は設定で変更できます。</p><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-floating-nav">この機能を設定する →</button></div>
@@ -6116,6 +6341,27 @@
       </div>
     </section>
 
+    <section id="staff">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="tag orange">Our Team</span>
+            <h2>DRUMのスタッフ紹介</h2>
+            <p class="lead">好きな曲やアーティスト、趣味をきっかけに、気軽に声をかけてください。</p>
+          </div>
+        </div>
+        <article class="card staff-intro-card">
+          <h3>スタッフとの会話のきっかけに</h3>
+          <p>「このアーティストが好き」「この曲を歌ってほしい」「同じ趣味かも」など、気になることがあればぜひお話しください。音楽の話はもちろん、好きなことのお話も大歓迎です。</p>
+        </article>
+        <div class="staff-directory-toolbar">
+          <input id="staffSearch" type="search" placeholder="名前・好きな曲・アーティスト・趣味で検索" aria-label="名前や好きな音楽、趣味からスタッフを検索">
+          <strong id="staffCount">0名</strong>
+        </div>
+        <div class="staff-profile-grid" id="staffProfileGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
     <section id="about">
       <div class="wrap">
         <div class="section-head">
@@ -6170,6 +6416,12 @@
             <h3>お店の特徴・遊び方</h3>
             <p>カラオケと楽器を一緒に楽しむためのルールやマナーをまとめています。</p>
             <a class="btn ghost" href="#features">遊び方を見る</a>
+          </article>
+          <article class="card">
+            <span class="tag orange">Our Team</span>
+            <h3>スタッフ紹介</h3>
+            <p>好きな曲やアーティスト、趣味などをご紹介します。会話のきっかけにどうぞ。</p>
+            <a class="btn primary" href="#staff">スタッフ紹介を見る</a>
           </article>
         </div>
       </div>
@@ -6475,6 +6727,11 @@
             <button class="guide-shortcut" type="button" data-guide-target="menu">
               <span class="guide-shortcut-icon">🍸</span>
               <span><strong>メニューを見る</strong><span>飲み放題、ボトル、フードを確認</span></span>
+              <span class="guide-shortcut-arrow">›</span>
+            </button>
+            <button class="guide-shortcut" type="button" data-guide-target="staff">
+              <span class="guide-shortcut-icon">♩</span>
+              <span><strong>スタッフ紹介</strong><span>好きな曲、アーティストや趣味</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="about">
@@ -6852,6 +7109,9 @@
     const capabilityListStatus = document.getElementById("capabilityListStatus");
     const capabilitySharedList = document.getElementById("capabilitySharedList");
     const capabilitySharedIndexJump = document.getElementById("capabilitySharedIndexJump");
+    const staffSearch = document.getElementById("staffSearch");
+    const staffCount = document.getElementById("staffCount");
+    const staffProfileGrid = document.getElementById("staffProfileGrid");
     const savedSetlistForm = document.getElementById("savedSetlistForm");
     const savedSetlistFormTitle = document.getElementById("savedSetlistFormTitle");
     const savedSetlistTitle = document.getElementById("savedSetlistTitle");
@@ -6884,6 +7144,7 @@
     const defaultTopShortcutIds = ["info", "menu", "customers"];
     const defaultFloatingNavIds = ["top", "song-register", "customers", "menu"];
     const maxFloatingNavItems = 8;
+    const maxStaffProfiles = 15;
     const playablePartChoices = ["ギター", "ベース", "ドラム", "キーボード", "ピアノ", "パーカッション", "管楽器", "その他"];
     const appThemes = [
       { id: "drum-green", label: "DRUMグリーン", dark: "#143f2c", deep: "#0b2b1e", mid: "#2f6b4b", accent: "#f08a35", soft: "#ffc07a", paper: "#fbf4e5", panel: "rgba(255, 252, 244, .94)", darkRgb: "20, 63, 44", deepRgb: "11, 43, 30", accentRgb: "240, 138, 53", softRgb: "255, 192, 122" },
@@ -6901,6 +7162,7 @@
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
       { id: "community", label: "みんなのお気に入り曲", target: "community" },
       { id: "performance-share", label: "歌える・演奏できる曲", target: "performance-share" },
+      { id: "staff", label: "スタッフ紹介", target: "staff" },
       { id: "history", label: "歌った記録", target: "history" },
       { id: "daily", label: "今日の記録", target: "daily" },
       { id: "drum-gacha", label: "DRUMガチャ", target: "drum-gacha" },
@@ -6920,6 +7182,7 @@
       { id: "favorites", label: "よく歌う曲", shortLabel: "よく歌う", target: "favorites", icon: "↻" },
       { id: "community", label: "みんなのお気に入り曲", shortLabel: "みんなの曲", target: "community", icon: "★" },
       { id: "performance-share", label: "歌える・演奏できる曲", shortLabel: "歌・演奏", target: "performance-share", icon: "♬" },
+      { id: "staff", label: "スタッフ紹介", shortLabel: "スタッフ", target: "staff", icon: "♩" },
       { id: "history", label: "歌った記録", shortLabel: "歌った記録", target: "history", icon: "◷" },
       { id: "daily", label: "今日の記録", shortLabel: "今日の記録", target: "daily", icon: "✓" },
       { id: "gacha", label: "曲ガチャ", shortLabel: "曲ガチャ", target: "gacha", icon: "◇" },
@@ -6930,6 +7193,28 @@
       { id: "contact", label: "問い合わせ", shortLabel: "問い合わせ", target: "contact", icon: "✉" },
       { id: "song-backup", label: "バックアップ", shortLabel: "バックアップ", target: "song-backup", icon: "⇩" }
     ];
+
+    // 公開するスタッフ情報をここへ追加します。最大15名まで表示されます。
+    // 写真を指定しない場合は店舗アイコンを表示します。
+    // 例:
+    // {
+    //   name: "スタッフ名",
+    //   photo: "staff/staff-1.jpg",
+    //   catchphrase: "ひとこと",
+    //   favoriteSongs: [{ title: "好きな曲", artist: "歌手名" }],
+    //   favoriteArtists: ["好きなアーティスト"],
+    //   likes: ["趣味", "好きなこと"],
+    //   ownerIntroduction: "店主から見た、このスタッフの紹介文",
+    //   promotions: [{
+    //     title: "出演イベントのお知らせ",
+    //     message: "宣伝やアピールのメッセージ",
+    //     flyer: "staff/staff-1-flyer.jpg",
+    //     link: "https://example.com/",
+    //     linkLabel: "詳しく見る"
+    //   }]
+    // }
+    const staffProfiles = [
+    ].slice(0, maxStaffProfiles);
 
     const dailyShopMessages = [
       { ja: "今日の一曲が、いい夜のきっかけになりますように。", en: "May today's song be the start of a great night." },
@@ -7706,6 +7991,25 @@
       "曲を保存するときに「デュエット曲として登録」を選ぶと、マイ曲リストでデュエット曲だけを表示できます。": "When saving a song, choose “Mark as duet” to filter duet songs later.",
       "歌った回数ランキング": "Singing Frequency Ranking",
       "アクセス": "Access",
+      "スタッフ紹介": "Meet the Staff",
+      "スタッフ": "Staff",
+      "DRUMのスタッフ紹介": "Meet the DRUM Staff",
+      "スタッフ紹介を見る": "Meet the Staff",
+      "スタッフとの会話のきっかけに": "Start a Conversation",
+      "好きな曲": "Favorite Songs",
+      "好きなアーティスト": "Favorite Artists",
+      "好きなこと・趣味": "Interests & Hobbies",
+      "店主からの紹介": "From the Owner",
+      "お知らせ・アピール": "News & Highlights",
+      "チラシを大きく見る": "View Flyer",
+      "詳しく見る": "Learn More",
+      "名前・好きな曲・アーティスト・趣味で検索": "Search by name, favorite song, artist, or hobby",
+      "名前や好きな音楽、趣味からスタッフを検索": "Search staff by name, favorite music, or hobby",
+      "スタッフ紹介は順次公開します。": "Staff profiles will be published soon.",
+      "好きな曲や趣味など、スタッフのプロフィールを準備しています。": "We are preparing profiles featuring our staff's favorite songs and hobbies.",
+      "条件に合うスタッフが見つかりませんでした。": "No matching staff members were found.",
+      "スタッフ紹介ページを追加しました": "We Added a Staff Profile Page",
+      "スタッフ紹介ページを追加": "Added a Staff Profile Page",
       "店内写真": "Shop Photo",
       "団体利用": "Group Use",
       "問い合わせ": "Contact",
@@ -7910,6 +8214,12 @@
       ["曲リストの保存・復元", "Save and restore your song list"],
       ["アクセス、営業時間、公式LINE、問い合わせ先などを確認できます。", "Check access, hours, Official LINE, and contact information."],
       ["アクセス、営業時間、連絡先", "Access, hours, and contact"],
+      ["好きな曲やアーティスト、趣味をきっかけに、気軽に声をかけてください。", "Use favorite songs, artists, and hobbies as an easy way to start a conversation."],
+      ["「このアーティストが好き」「この曲を歌ってほしい」「同じ趣味かも」など、気になることがあればぜひお話しください。音楽の話はもちろん、好きなことのお話も大歓迎です。", "If you like the same artist, want to hear a song, or share a hobby, please come talk to us. Music and other favorite topics are always welcome."],
+      ["好きな曲やアーティスト、趣味などをご紹介します。会話のきっかけにどうぞ。", "Discover our staff's favorite songs, artists, and hobbies as conversation starters."],
+      ["好きな曲、アーティストや趣味", "Favorite songs, artists, and hobbies"],
+      ["好きな曲やアーティスト、趣味などから、スタッフとの会話のきっかけを見つけられます。", "Find conversation starters through our staff's favorite songs, artists, and hobbies."],
+      ["スタッフの好きな曲・アーティスト、趣味やお知らせなどを見られるページを追加しました。", "We added a page featuring staff favorite songs and artists, hobbies, and announcements."],
       ["カラオケと楽器を一緒に楽しむためのルールやマナーを確認できます。", "Check the rules and manners for enjoying karaoke and instruments together."],
       ["カラオケと楽器のマナー", "Karaoke and instrument manners"],
       ["公式LINE、Instagram、YouTubeなどのリンクを確認できます。", "Check links such as Official LINE, Instagram, and YouTube."],
@@ -9035,6 +9345,7 @@
       renderDailyShopMessage();
       renderHistoryBackupStatus();
       renderDailyMemo();
+      renderStaffProfiles();
       renderFavorites();
       renderSharedRanking();
       renderSongs();
@@ -9087,6 +9398,136 @@
         .replace(/[ァ-ン]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 96));
     }
 
+    function staffProfileSearchText(profile) {
+      const songText = (profile.favoriteSongs || [])
+        .map((song) => `${song.title || ""} ${song.artist || ""}`)
+        .join(" ");
+      return [
+        profile.name,
+        profile.catchphrase,
+        songText,
+        ...(profile.favoriteArtists || []),
+        ...(profile.likes || [])
+      ].join(" ");
+    }
+
+    function staffSongListHtml(items) {
+      if (!Array.isArray(items) || !items.length) return "";
+      return `
+        <ul class="staff-profile-list">
+          ${items.map((song) => `
+            <li>
+              <strong>${escapeText(song.title || "-")}</strong>
+              ${song.artist ? `<small>${escapeText(song.artist)}</small>` : ""}
+            </li>
+          `).join("")}
+        </ul>
+      `;
+    }
+
+    function staffTagListHtml(items) {
+      if (!Array.isArray(items) || !items.length) return "";
+      return `<div class="staff-profile-tags">${items.map((item) => `<span class="staff-profile-tag">${escapeText(item)}</span>`).join("")}</div>`;
+    }
+
+    function staffPromotionListHtml(items, staffName) {
+      if (!Array.isArray(items) || !items.length) return "";
+      return `
+        <div class="staff-promotion-list">
+          ${items.slice(0, 3).map((promotion) => {
+            const flyer = String(promotion.flyer || "").trim();
+            const link = String(promotion.link || "").trim();
+            const hasPublicLink = /^https?:\/\//i.test(link);
+            return `
+              <article class="staff-promotion">
+                ${flyer ? `
+                  <a class="staff-promotion-flyer-link" href="${escapeText(flyer)}" target="_blank" rel="noopener">
+                    <img class="staff-promotion-flyer" src="${escapeText(flyer)}" alt="${escapeText(`${staffName}の宣伝チラシ`)}">
+                  </a>
+                ` : ""}
+                <div class="staff-promotion-copy">
+                  ${promotion.title ? `<strong>${escapeText(promotion.title)}</strong>` : ""}
+                  ${promotion.message ? `<p>${escapeText(promotion.message)}</p>` : ""}
+                  ${(flyer || hasPublicLink) ? `
+                    <div class="staff-promotion-actions">
+                      ${flyer ? `<a class="btn ghost" href="${escapeText(flyer)}" target="_blank" rel="noopener">${escapeText(uiText("チラシを大きく見る"))}</a>` : ""}
+                      ${hasPublicLink ? `<a class="btn primary" href="${escapeText(link)}" target="_blank" rel="noopener">${escapeText(promotion.linkLabel || uiText("詳しく見る"))}</a>` : ""}
+                    </div>
+                  ` : ""}
+                </div>
+              </article>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderStaffProfiles() {
+      if (!staffProfileGrid || !staffCount) return;
+      const query = normalizeKana(staffSearch ? staffSearch.value : "");
+      const visibleProfiles = staffProfiles.filter((profile) => {
+        if (!profile || !String(profile.name || "").trim()) return false;
+        return !query || normalizeKana(staffProfileSearchText(profile)).includes(query);
+      });
+      staffCount.textContent = currentLanguage === "en"
+        ? `${visibleProfiles.length} staff`
+        : `${visibleProfiles.length}名`;
+
+      if (!staffProfiles.length) {
+        staffProfileGrid.innerHTML = `
+          <div class="staff-empty">
+            <strong>${escapeText(uiText("スタッフ紹介は順次公開します。"))}</strong>
+            <p>${escapeText(uiText("好きな曲や趣味など、スタッフのプロフィールを準備しています。"))}</p>
+          </div>
+        `;
+        return;
+      }
+
+      if (!visibleProfiles.length) {
+        staffProfileGrid.innerHTML = `<div class="staff-empty">${escapeText(uiText("条件に合うスタッフが見つかりませんでした。"))}</div>`;
+        return;
+      }
+
+      staffProfileGrid.innerHTML = visibleProfiles.map((profile) => {
+        const favoriteSongs = staffSongListHtml(profile.favoriteSongs);
+        const favoriteArtists = staffTagListHtml(profile.favoriteArtists);
+        const likes = staffTagListHtml(profile.likes);
+        const promotions = staffPromotionListHtml(profile.promotions, profile.name);
+        return `
+          <article class="staff-profile-card">
+            <div class="staff-profile-head">
+              <img class="staff-profile-photo" src="${escapeText(profile.photo || "drum-icon.jpg")}" alt="${escapeText(`${profile.name}の写真`)}">
+              <div>
+                <h2 class="staff-profile-name">${escapeText(profile.name)}</h2>
+                ${profile.catchphrase ? `<p class="staff-profile-catchphrase">${escapeText(profile.catchphrase)}</p>` : ""}
+              </div>
+            </div>
+            <div class="staff-profile-body">
+              ${favoriteSongs ? `<section class="staff-profile-block"><h3>${escapeText(uiText("好きな曲"))}</h3>${favoriteSongs}</section>` : ""}
+              ${favoriteArtists ? `<section class="staff-profile-block"><h3>${escapeText(uiText("好きなアーティスト"))}</h3>${favoriteArtists}</section>` : ""}
+              ${likes ? `<section class="staff-profile-block"><h3>${escapeText(uiText("好きなこと・趣味"))}</h3>${likes}</section>` : ""}
+              ${profile.ownerIntroduction ? `<p class="staff-owner-introduction"><strong>${escapeText(uiText("店主からの紹介"))}</strong>${escapeText(profile.ownerIntroduction)}</p>` : ""}
+              ${promotions ? `<section class="staff-profile-block"><h3>${escapeText(uiText("お知らせ・アピール"))}</h3>${promotions}</section>` : ""}
+            </div>
+          </article>
+        `;
+      }).join("");
+
+      staffProfileGrid.querySelectorAll(".staff-profile-photo").forEach((image) => {
+        image.addEventListener("error", () => {
+          if (image.getAttribute("src") === "drum-icon.jpg") return;
+          image.src = "drum-icon.jpg";
+        }, { once: true });
+      });
+      staffProfileGrid.querySelectorAll(".staff-promotion-flyer").forEach((image) => {
+        image.addEventListener("error", () => {
+          const link = image.closest(".staff-promotion-flyer-link");
+          if (link) link.hidden = true;
+        }, { once: true });
+      });
+      refreshLanguageSoon();
+    }
+
     function songSearchText(item) {
       return [item.title, item.artist, item.owner, item.kana, item.key, item.memo, ...getSongTags(item), ...(item.playableParts || [])].join(" ");
     }
@@ -9132,7 +9573,7 @@
 
     function initAppUpdateCard() {
       if (!appUpdateCard) return;
-      const updateVersion = "2026-07-26-song-quick-actions-v2";
+      const updateVersion = "2026-07-30-staff-profiles-v1";
       let state = {};
       try {
         state = JSON.parse(localStorage.getItem(appUpdateStorageKey) || "{}");
@@ -9355,6 +9796,7 @@
         clearMenuSubpage();
         clearCustomerSubpage();
         if (viewId === "info") renderNewsImages();
+        if (viewId === "staff") renderStaffProfiles();
         if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -11357,6 +11799,7 @@
     }
 
     favoriteSearch.addEventListener("input", renderFavorites);
+    staffSearch.addEventListener("input", renderStaffProfiles);
 
     favoriteGroups.addEventListener("click", (event) => {
       const capabilityButton = event.target.closest("[data-open-capability]");
@@ -12921,6 +13364,7 @@
     renderDailyShopMessage();
     initAppUpdateCard();
     applySettings();
+    renderStaffProfiles();
     updateKeyAdjustLabel();
     renderHistoryBackupStatus();
     renderDailyMemo();
