@@ -3363,6 +3363,12 @@
       padding-top: 12px;
     }
 
+    .app-update-latest-actions {
+      display: grid;
+      gap: 8px;
+      min-width: 190px;
+    }
+
     .app-update-card h2,
     .app-update-card p { margin: 0; }
 
@@ -5100,17 +5106,24 @@
         <details class="app-update-card" id="appUpdateCard" open>
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.07.30</span></span>
-              <h2 id="appUpdateTitle">スタッフ紹介ページを追加しました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.01</span></span>
+              <h2 id="appUpdateTitle">曲の登録と一覧表示を使いやすくしました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>好きな曲やアーティスト、趣味などから、スタッフとの会話のきっかけを見つけられます。</p>
-            <a class="btn primary" href="#staff">スタッフ紹介を見る</a>
+            <p>曲リストの一括登録、写真からの曲名・歌手名入力、通常表示と簡易一覧の切り替えを追加しました。</p>
+            <div class="app-update-latest-actions">
+              <a class="btn primary" href="#song-register">曲を登録してみる</a>
+              <a class="btn ghost" href="#customers">簡易一覧を見てみる</a>
+            </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-01">2026.08.01</time>
+                  <div><strong>曲の登録方法と一覧表示を改善</strong><p>曲リストの一括登録、カメラロールからの写真入力、曲名・歌手名の個別読み取り、通常表示と簡易一覧の切り替えを追加しました。</p><div class="control-row"><a class="btn ghost app-update-history-action" href="#song-register">曲を登録してみる →</a><a class="btn ghost app-update-history-action" href="#customers">簡易一覧を見てみる →</a></div></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-07-30">2026.07.30</time>
                   <div><strong>スタッフ紹介ページを追加</strong><p>スタッフの好きな曲・アーティスト、趣味やお知らせなどを見られるページを追加しました。</p><a class="btn ghost app-update-history-action" href="#staff">スタッフ紹介を見る →</a></div>
@@ -7693,6 +7706,15 @@
       "曲の追加操作を見やすくしました": "Song Actions Are Now Easier to Reach",
       "各曲に「セットへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。": "Each song now always shows Setlist and Other List buttons, so you can add, copy, or move songs without opening Details.",
       "各曲に「セットリストへ」と「別リストへ」を常時表示し、詳細を開かなくてもセットリスト追加や別リストへのコピー・移動ができるようになりました。": "Each song now always shows Add to Setlist and Other List buttons, so you can add, copy, or move songs without opening Details.",
+      "アプリ更新情報　2026.08.01": "App Update · 2026.08.01",
+      "曲の登録と一覧表示を使いやすくしました": "Song Registration and List Display Are Easier to Use",
+      "曲リストの一括登録、写真からの曲名・歌手名入力、通常表示と簡易一覧の切り替えを追加しました。": "Added bulk song-list registration, separate title and artist input from photos, and Standard/Simple list switching.",
+      "曲を登録してみる": "Try Song Registration",
+      "簡易一覧を見てみる": "Try Simple List",
+      "曲の登録方法と一覧表示を改善": "Improved Song Registration and List Display",
+      "曲リストの一括登録、カメラロールからの写真入力、曲名・歌手名の個別読み取り、通常表示と簡易一覧の切り替えを追加しました。": "Added bulk song-list registration, camera-roll photo selection, separate title and artist reading, and Standard/Simple list switching.",
+      "曲を登録してみる →": "Try Song Registration →",
+      "簡易一覧を見てみる →": "Try Simple List →",
       "これまでの更新履歴を見る": "View Previous Updates",
       "使ってみる": "Try It",
       "この機能を使ってみる →": "Try This Feature →",
@@ -10053,7 +10075,7 @@
 
     function initAppUpdateCard() {
       if (!appUpdateCard) return;
-      const updateVersion = "2026-07-30-staff-profiles-v1";
+      const updateVersion = "2026-08-01-song-register-simple-list-v1";
       let state = {};
       try {
         state = JSON.parse(localStorage.getItem(appUpdateStorageKey) || "{}");
