@@ -2921,6 +2921,13 @@
       font-weight: 800;
     }
 
+    .song-display-status {
+      margin-top: 2px;
+      color: #8b4716;
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
     .song-display-switch-buttons {
       display: flex;
       gap: 6px;
@@ -2991,6 +2998,10 @@
     .simple-song-row .simple-song-artist-name { min-width: 0; color: #51483f; overflow-wrap: anywhere; }
     .simple-song-key { white-space: nowrap; font-weight: 900; color: #8b4716; }
     .simple-song-group.artist-grouped .simple-song-artist-name { display: none; }
+
+    #songListCard { scroll-margin-top: 310px; }
+    #songListCard.is-simple-display #songListTable { display: none !important; }
+    #songListCard:not(.is-simple-display) #simpleSongList { display: none !important; }
 
     .bulk-import-preview {
       display: grid;
@@ -5797,6 +5808,7 @@
             <span class="song-display-switch-copy">
               <strong>表示を切り替える</strong>
               <small>通常：操作ボタンあり　／　簡易：曲名・歌手名・キーだけ</small>
+              <span class="song-display-status" id="songDisplayStatus" aria-live="polite">現在：通常表示</span>
             </span>
             <div class="song-display-switch-buttons">
               <button type="button" data-song-display="standard">通常表示</button>
@@ -7179,10 +7191,12 @@
     const songQuickCount = document.getElementById("songQuickCount");
     const songViewSwitch = document.getElementById("songViewSwitch");
     const songDisplaySwitch = document.getElementById("songDisplaySwitch");
+    const songDisplayStatus = document.getElementById("songDisplayStatus");
     const songIndexJump = document.getElementById("songIndexJump");
     const songIndexNote = document.getElementById("songIndexNote");
     const songListTable = document.getElementById("songListTable");
     const simpleSongList = document.getElementById("simpleSongList");
+    const songListCard = document.getElementById("songListCard");
     const countText = document.getElementById("countText");
     const totalSongCount = document.getElementById("totalSongCount");
     const clearAll = document.getElementById("clearAll");
@@ -9717,7 +9731,7 @@
           const parent = node.parentElement;
           if (!parent) return NodeFilter.FILTER_REJECT;
           if (["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
-          if (parent.closest("#languageToggle")) return NodeFilter.FILTER_REJECT;
+          if (parent.closest("#languageToggle, #songDisplayStatus, #songPhotoCropHelp, #songPhotoResultLabel, #applySongPhotoTextButton")) return NodeFilter.FILTER_REJECT;
           if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
           return NodeFilter.FILTER_ACCEPT;
         }
@@ -11888,6 +11902,11 @@
         button.classList.toggle("is-active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
       });
+      const isSimpleDisplay = settings.songDisplayMode === "simple";
+      songListCard.classList.toggle("is-simple-display", isSimpleDisplay);
+      songDisplayStatus.textContent = currentLanguage === "en"
+        ? `Current: ${isSimpleDisplay ? "Simple List" : "Standard"}`
+        : `現在：${isSimpleDisplay ? "簡易一覧" : "通常表示"}`;
       if (mode !== "artist" && mode !== "title") {
         songIndexJump.innerHTML = "";
         songIndexNote.textContent = uiText("文字ジャンプは「歌手別」または「曲名順」で使えます。");
@@ -13004,9 +13023,13 @@
     songDisplaySwitch.addEventListener("click", (event) => {
       const button = event.target.closest("[data-song-display]");
       if (!button || !["standard", "simple"].includes(button.dataset.songDisplay)) return;
+      if (settings.songDisplayMode === button.dataset.songDisplay) return;
       settings.songDisplayMode = button.dataset.songDisplay;
       saveSettings();
       renderSongs();
+      window.requestAnimationFrame(() => {
+        songListCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     });
     songIndexJump.addEventListener("click", (event) => {
       const button = event.target.closest("[data-song-index-jump]");
