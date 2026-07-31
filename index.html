@@ -1832,10 +1832,12 @@
 
     .song-photo-crop-stage {
       position: relative;
-      display: inline-block;
+      display: block;
+      width: 100%;
       max-width: 100%;
+      max-height: 420px;
       margin-top: 10px;
-      overflow: hidden;
+      overflow: auto;
       border: 1px solid #d7d0c3;
       border-radius: 7px;
       background: #25221d;
@@ -1846,9 +1848,35 @@
 
     .song-photo-crop-stage img {
       display: block;
-      width: auto;
-      max-width: 100%;
-      max-height: 420px;
+      width: 100%;
+      max-width: none;
+      height: auto;
+    }
+
+    .song-photo-crop-stage.is-pan-mode {
+      touch-action: pan-x pan-y;
+      cursor: grab;
+    }
+
+    .photo-zoom-controls {
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .photo-zoom-controls .btn {
+      min-width: 48px;
+      padding-inline: 14px;
+    }
+
+    .photo-zoom-controls input[type="range"] {
+      flex: 1 1 150px;
+      min-width: 120px;
+    }
+
+    .photo-zoom-value {
+      min-width: 58px;
+      text-align: center;
+      font-weight: 900;
     }
 
     .song-photo-crop-selection {
@@ -5865,7 +5893,7 @@
                 <input id="songCatalogQuery" type="search" placeholder="ここに曲名・歌手名を入力" autocomplete="off" aria-label="曲名または歌手名で曲データを検索">
                 <button class="btn primary" id="songCatalogSearchButton" type="submit">曲を検索</button>
               </form>
-              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">2文字以上入力して検索してください。</p>
+              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">1文字から検索できます。</p>
               <div class="song-catalog-results" id="songCatalogResults"></div>
               <p class="catalog-source-note">候補は一般の音楽データベース（MusicBrainz）です。JOYSOUND・DAMの配信曲データではありません。候補にカバー歌手が表示された時は「JOYSOUNDで確認」「DAMで確認」から公式検索をご利用ください。</p>
             </div>
@@ -5895,6 +5923,7 @@
               <summary>📷 写真から曲名・歌手名を入力</summary>
               <p class="small">曲名と歌手名を分けて読み取ります。最初に、どちらへ入力するか選んでください。</p>
               <p class="privacy-note"><strong>例えば、デンモクの画面を撮影して登録できます。</strong><br>検索結果や予約確認画面など、曲名と歌手名が大きく、はっきり写るように撮ると読み取りやすくなります。</p>
+              <p class="small"><strong>読み取りのコツ：</strong>反射を避けて正面から撮り、「鱗（うろこ）」のような読み仮名も含め、入力したい文字だけを枠内へ大きく入れてください。</p>
               <div class="control-row photo-target-switch" id="songPhotoTargetSwitch" role="group" aria-label="写真から入力する項目">
                 <button class="btn primary is-active" type="button" data-photo-target="title" aria-pressed="true">曲名を読み取る</button>
                 <button class="btn ghost" type="button" data-photo-target="artist" aria-pressed="false">歌手名を読み取る</button>
@@ -5908,6 +5937,13 @@
               <input id="songPhotoInput" type="file" accept="image/*" hidden>
               <div class="photo-cropper" id="songPhotoCropper">
                 <p class="small" id="songPhotoCropHelp">入力したい曲名の部分だけを指で囲ってください。文字を大きく切り取るほど、読み取りやすくなります。</p>
+                <div class="control-row photo-zoom-controls" aria-label="写真の拡大操作">
+                  <button class="btn ghost" id="songPhotoZoomOutButton" type="button" aria-label="縮小">－</button>
+                  <input id="songPhotoZoomRange" type="range" min="100" max="300" step="10" value="100" aria-label="写真の拡大率">
+                  <span class="photo-zoom-value" id="songPhotoZoomValue">100%</span>
+                  <button class="btn ghost" id="songPhotoZoomInButton" type="button" aria-label="拡大">＋</button>
+                  <button class="btn ghost" id="songPhotoPanButton" type="button" aria-pressed="false">画像を動かす</button>
+                </div>
                 <div class="song-photo-crop-stage" id="songPhotoCropStage">
                   <img id="songPhotoPreview" alt="選んだ写真のプレビュー">
                   <div class="song-photo-crop-selection" id="songPhotoCropSelection"></div>
@@ -7175,6 +7211,11 @@
     const songPhotoPreview = document.getElementById("songPhotoPreview");
     const songPhotoCropSelection = document.getElementById("songPhotoCropSelection");
     const songPhotoCropHelp = document.getElementById("songPhotoCropHelp");
+    const songPhotoZoomOutButton = document.getElementById("songPhotoZoomOutButton");
+    const songPhotoZoomRange = document.getElementById("songPhotoZoomRange");
+    const songPhotoZoomValue = document.getElementById("songPhotoZoomValue");
+    const songPhotoZoomInButton = document.getElementById("songPhotoZoomInButton");
+    const songPhotoPanButton = document.getElementById("songPhotoPanButton");
     const readSongPhotoCropButton = document.getElementById("readSongPhotoCropButton");
     const resetSongPhotoCropButton = document.getElementById("resetSongPhotoCropButton");
     const songPhotoResult = document.getElementById("songPhotoResult");
@@ -7820,7 +7861,7 @@
       "お気に入りへ": "Add to Favorites",
       "演奏できる": "Can play",
       "入力欄へ入れました。演奏できるパートを選んで保存してください。": "Added to the form. Choose the parts you can play, then save.",
-      "2文字以上入力して検索してください。": "Enter at least two characters to search.",
+      "1文字から検索できます。": "You can search with one or more characters.",
       "曲データを検索しています。": "Searching the song database...",
       "検索結果がありません。表記を変えるか、手入力で登録してください。": "No matches. Try another spelling or enter the song manually.",
       "曲データを取得できませんでした。時間をおいて再度お試しください。": "Could not load song data. Please try again later.",
@@ -9827,6 +9868,47 @@
         .replace(/[ァ-ン]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 96));
     }
 
+    function normalizeSongDuplicateText(value) {
+      return normalizeKana(String(value || "").normalize("NFKC"))
+        .replace(/[\s\u3000]+/g, "")
+        .replace(/[‐‑‒–—―ーｰ]/g, "-")
+        .replace(/[・･]/g, "・");
+    }
+
+    function findDuplicateSong(source, excludeId = "") {
+      const title = normalizeSongDuplicateText(source?.title);
+      const artist = normalizeSongDuplicateText(source?.artist);
+      if (!title) return null;
+      return activeProfileSongs().find((song) => {
+        if (song.id === excludeId || normalizeSongDuplicateText(song.title) !== title) return false;
+        const savedArtist = normalizeSongDuplicateText(song.artist);
+        return !artist || !savedArtist || savedArtist === artist;
+      }) || null;
+    }
+
+    function openExistingDuplicateSong(song) {
+      if (!song) return;
+      searchBox.value = song.title || "";
+      songQuickSearch.value = searchBox.value;
+      window.location.hash = "#customers";
+      window.setTimeout(() => {
+        renderSongs();
+        document.getElementById("songListCard")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 120);
+    }
+
+    function confirmDuplicateSongRegistration(source, excludeId = "") {
+      const duplicate = findDuplicateSong(source, excludeId);
+      if (!duplicate) return true;
+      const title = String(source?.title || duplicate.title || "").trim();
+      const message = currentLanguage === "en"
+        ? `“${title}” is already in My Song List.\n\nOK: Add it again\nCancel: Do not add it and show the existing song`
+        : `「${title}」はすでにマイ曲リストに登録されています。\n\n［OK］重複したまま登録する\n［キャンセル］登録せず、既存の曲を確認する`;
+      if (window.confirm(message)) return true;
+      openExistingDuplicateSong(duplicate);
+      return false;
+    }
+
     function staffProfileSearchText(profile) {
       const songText = (profile.favoriteSongs || []).slice(0, maxFavoriteSongsPerStaff)
         .map((song) => `${song.title || ""} ${song.artist || ""}`)
@@ -10833,6 +10915,8 @@
         historyNewTitle.focus();
         return;
       }
+      const artist = historyNewArtist.value.trim();
+      if (!confirmDuplicateSongRegistration({ title, artist })) return;
       const selectedDate = historyDate.value || todayString();
       if (historyAddDate && historyAddDate.value) historyDate.value = historyAddDate.value;
       const addDate = (historyAddDate && historyAddDate.value) || selectedDate;
@@ -10841,7 +10925,7 @@
       const item = {
         id: createId(),
         title,
-        artist: historyNewArtist.value.trim(),
+        artist,
         owner: "",
         kana: "",
         key: historyNewKey.value || "キー未設定",
@@ -12257,6 +12341,8 @@
     let songPhotoTarget = "title";
     let songPhotoCrop = { x: 0.08, y: 0.22, w: 0.84, h: 0.34 };
     let songPhotoPointerStart = null;
+    let songPhotoZoom = 1;
+    let songPhotoPanMode = false;
 
     function songPhotoTargetName() {
       return songPhotoTarget === "artist" ? "歌手名" : "曲名";
@@ -12287,11 +12373,48 @@
 
     function updateSongPhotoCropSelection() {
       if (!songPhotoCropSelection || !songPhotoImage) return;
-      songPhotoCropSelection.style.left = `${songPhotoCrop.x * 100}%`;
-      songPhotoCropSelection.style.top = `${songPhotoCrop.y * 100}%`;
-      songPhotoCropSelection.style.width = `${songPhotoCrop.w * 100}%`;
-      songPhotoCropSelection.style.height = `${songPhotoCrop.h * 100}%`;
+      const displayWidth = songPhotoPreview.offsetWidth;
+      const displayHeight = songPhotoPreview.offsetHeight;
+      songPhotoCropSelection.style.left = `${songPhotoCrop.x * displayWidth}px`;
+      songPhotoCropSelection.style.top = `${songPhotoCrop.y * displayHeight}px`;
+      songPhotoCropSelection.style.width = `${songPhotoCrop.w * displayWidth}px`;
+      songPhotoCropSelection.style.height = `${songPhotoCrop.h * displayHeight}px`;
       songPhotoCropSelection.classList.add("is-visible");
+    }
+
+    function updateSongPhotoZoom(nextZoom, preserveCenter = true) {
+      if (!songPhotoPreview || !songPhotoCropStage) return;
+      const boundedZoom = Math.min(3, Math.max(1, Number(nextZoom) || 1));
+      const oldScrollWidth = Math.max(1, songPhotoCropStage.scrollWidth);
+      const oldScrollHeight = Math.max(1, songPhotoCropStage.scrollHeight);
+      const centerX = (songPhotoCropStage.scrollLeft + (songPhotoCropStage.clientWidth / 2)) / oldScrollWidth;
+      const centerY = (songPhotoCropStage.scrollTop + (songPhotoCropStage.clientHeight / 2)) / oldScrollHeight;
+      songPhotoZoom = boundedZoom;
+      songPhotoPreview.style.width = `${songPhotoZoom * 100}%`;
+      if (songPhotoZoomRange) songPhotoZoomRange.value = String(Math.round(songPhotoZoom * 100));
+      if (songPhotoZoomValue) songPhotoZoomValue.textContent = `${Math.round(songPhotoZoom * 100)}%`;
+      requestAnimationFrame(() => {
+        updateSongPhotoCropSelection();
+        if (preserveCenter) {
+          songPhotoCropStage.scrollLeft = Math.max(0, (centerX * songPhotoCropStage.scrollWidth) - (songPhotoCropStage.clientWidth / 2));
+          songPhotoCropStage.scrollTop = Math.max(0, (centerY * songPhotoCropStage.scrollHeight) - (songPhotoCropStage.clientHeight / 2));
+        }
+      });
+    }
+
+    function setSongPhotoPanMode(active) {
+      songPhotoPanMode = Boolean(active);
+      songPhotoPointerStart = null;
+      songPhotoCropStage.classList.toggle("is-pan-mode", songPhotoPanMode);
+      songPhotoPanButton.classList.toggle("primary", songPhotoPanMode);
+      songPhotoPanButton.classList.toggle("ghost", !songPhotoPanMode);
+      songPhotoPanButton.setAttribute("aria-pressed", String(songPhotoPanMode));
+      songPhotoPanButton.textContent = songPhotoPanMode
+        ? (currentLanguage === "en" ? "Select area" : "範囲を選ぶ")
+        : (currentLanguage === "en" ? "Move image" : "画像を動かす");
+      setPhotoStatus(songPhotoPanMode
+        ? (currentLanguage === "en" ? "Drag the enlarged image to move it. Then switch back to Select area." : "拡大した画像を指で動かせます。移動後は「範囲を選ぶ」に戻してください。")
+        : (currentLanguage === "en" ? "Drag around the text you want to read." : "読み取りたい文字を指で囲ってください。"));
     }
 
     function resetSongPhotoCrop() {
@@ -12303,7 +12426,7 @@
     }
 
     function photoPointerPosition(event) {
-      const rect = songPhotoCropStage.getBoundingClientRect();
+      const rect = songPhotoPreview.getBoundingClientRect();
       return {
         x: clampPhotoCropValue((event.clientX - rect.left) / rect.width),
         y: clampPhotoCropValue((event.clientY - rect.top) / rect.height)
@@ -12311,7 +12434,7 @@
     }
 
     function startSongPhotoCrop(event) {
-      if (!songPhotoImage) return;
+      if (!songPhotoImage || songPhotoPanMode) return;
       songPhotoPointerStart = photoPointerPosition(event);
       songPhotoCrop = { x: songPhotoPointerStart.x, y: songPhotoPointerStart.y, w: 0.01, h: 0.01 };
       songPhotoCropStage.setPointerCapture?.(event.pointerId);
@@ -12320,7 +12443,7 @@
     }
 
     function moveSongPhotoCrop(event) {
-      if (!songPhotoPointerStart) return;
+      if (!songPhotoPointerStart || songPhotoPanMode) return;
       const point = photoPointerPosition(event);
       songPhotoCrop = {
         x: Math.min(songPhotoPointerStart.x, point.x),
@@ -12343,51 +12466,144 @@
       setPhotoStatus("範囲を選びました。「選択範囲を読み取る」を押してください。");
     }
 
-    function createPhotoReadCanvas() {
+    function photoOtsuThreshold(imageData) {
+      const histogram = new Array(256).fill(0);
+      const pixels = imageData.data;
+      let totalLuminance = 0;
+      const pixelCount = Math.max(1, pixels.length / 4);
+      for (let index = 0; index < pixels.length; index += 4) {
+        const luminance = Math.round((pixels[index] * 0.299) + (pixels[index + 1] * 0.587) + (pixels[index + 2] * 0.114));
+        histogram[luminance] += 1;
+        totalLuminance += luminance;
+      }
+      let backgroundWeight = 0;
+      let backgroundSum = 0;
+      let bestVariance = -1;
+      let bestThreshold = 128;
+      for (let threshold = 0; threshold < 256; threshold += 1) {
+        backgroundWeight += histogram[threshold];
+        if (!backgroundWeight) continue;
+        const foregroundWeight = pixelCount - backgroundWeight;
+        if (!foregroundWeight) break;
+        backgroundSum += threshold * histogram[threshold];
+        const backgroundMean = backgroundSum / backgroundWeight;
+        const foregroundMean = (totalLuminance - backgroundSum) / foregroundWeight;
+        const variance = backgroundWeight * foregroundWeight * Math.pow(backgroundMean - foregroundMean, 2);
+        if (variance > bestVariance) {
+          bestVariance = variance;
+          bestThreshold = threshold;
+        }
+      }
+      return { threshold: bestThreshold, average: totalLuminance / pixelCount };
+    }
+
+    function createPhotoReadCanvas(mode = "balanced") {
       const sourceWidth = Math.max(1, Math.round(songPhotoImage.naturalWidth * songPhotoCrop.w));
       const sourceHeight = Math.max(1, Math.round(songPhotoImage.naturalHeight * songPhotoCrop.h));
       const sourceX = Math.round(songPhotoImage.naturalWidth * songPhotoCrop.x);
       const sourceY = Math.round(songPhotoImage.naturalHeight * songPhotoCrop.y);
-      const scale = Math.min(3, Math.max(1, 1800 / Math.max(sourceWidth, sourceHeight)));
+      const scale = Math.min(4, Math.max(1.35, 2400 / Math.max(sourceWidth, sourceHeight)));
+      const innerWidth = Math.max(1, Math.round(sourceWidth * scale));
+      const innerHeight = Math.max(1, Math.round(sourceHeight * scale));
+      const innerCanvas = document.createElement("canvas");
+      innerCanvas.width = innerWidth;
+      innerCanvas.height = innerHeight;
+      const innerContext = innerCanvas.getContext("2d", { willReadFrequently: true });
+      innerContext.imageSmoothingEnabled = true;
+      innerContext.imageSmoothingQuality = "high";
+      innerContext.fillStyle = "#ffffff";
+      innerContext.fillRect(0, 0, innerWidth, innerHeight);
+      innerContext.filter = mode === "binary"
+        ? "grayscale(1) contrast(1.35)"
+        : "grayscale(1) contrast(2.05) brightness(1.06)";
+      innerContext.drawImage(songPhotoImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, innerWidth, innerHeight);
+      innerContext.filter = "none";
+
+      if (mode === "binary") {
+        const imageData = innerContext.getImageData(0, 0, innerWidth, innerHeight);
+        const analysis = photoOtsuThreshold(imageData);
+        const shouldInvert = analysis.average < 118;
+        const threshold = shouldInvert ? 255 - analysis.threshold : analysis.threshold;
+        for (let index = 0; index < imageData.data.length; index += 4) {
+          let luminance = Math.round((imageData.data[index] * 0.299) + (imageData.data[index + 1] * 0.587) + (imageData.data[index + 2] * 0.114));
+          if (shouldInvert) luminance = 255 - luminance;
+          const value = luminance >= threshold ? 255 : 0;
+          imageData.data[index] = value;
+          imageData.data[index + 1] = value;
+          imageData.data[index + 2] = value;
+          imageData.data[index + 3] = 255;
+        }
+        innerContext.putImageData(imageData, 0, 0);
+      }
+
+      const padding = Math.max(24, Math.round(Math.min(innerWidth, innerHeight) * 0.12));
       const canvas = document.createElement("canvas");
-      canvas.width = Math.round(sourceWidth * scale);
-      canvas.height = Math.round(sourceHeight * scale);
+      canvas.width = innerWidth + (padding * 2);
+      canvas.height = innerHeight + (padding * 2);
       const context = canvas.getContext("2d", { willReadFrequently: true });
       context.fillStyle = "#ffffff";
       context.fillRect(0, 0, canvas.width, canvas.height);
-      context.filter = "grayscale(1) contrast(2.25) brightness(1.12)";
-      context.drawImage(songPhotoImage, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, canvas.width, canvas.height);
-      context.filter = "none";
+      context.drawImage(innerCanvas, padding, padding);
       return canvas;
+    }
+
+    function songPhotoOcrCandidate(result) {
+      const rawText = result?.data?.text || "";
+      const text = photoTextLines(rawText).join(" ").replace(/\s+([）)】］])/g, "$1").replace(/([（(【［])\s+/g, "$1").trim();
+      const confidence = Number(result?.data?.confidence || 0);
+      const usefulLength = text.replace(/[\s\p{P}\p{S}]/gu, "").length;
+      const suspiciousLength = (text.match(/[|{}<>_=]/g) || []).length;
+      const pairedReading = /[（(][^）)]+[）)]/.test(text) ? 3 : 0;
+      const score = confidence + Math.min(12, usefulLength * 0.65) + pairedReading - (suspiciousLength * 4);
+      return { text, confidence, usefulLength, score };
+    }
+
+    async function recognizeSongPhotoCanvas(Tesseract, canvas, pageMode, passNumber) {
+      return Tesseract.recognize(canvas, "jpn+eng", {
+        tessedit_pageseg_mode: String(pageMode),
+        preserve_interword_spaces: "1",
+        logger: (message) => {
+          if (message.status === "recognizing text" && Number.isFinite(message.progress)) {
+            const passText = currentLanguage === "en" ? `pass ${passNumber}` : `${passNumber}回目`;
+            setPhotoStatus(`${uiText("写真を読み取っています")}（${passText}） ${Math.round(message.progress * 100)}%`);
+          }
+        }
+      });
     }
 
     async function readSongPhotoSelection() {
       if (!songPhotoImage || !songPhotoText || !songPhotoResult) return;
       setPhotoStatus("写真読み取りの準備中です");
+      readSongPhotoCropButton.disabled = true;
       try {
         const Tesseract = await loadPhotoReader();
-        setPhotoStatus("写真を読み取っています");
-        const readCanvas = createPhotoReadCanvas();
-        const result = await Tesseract.recognize(readCanvas, "jpn+eng", {
-          tessedit_pageseg_mode: "6",
-          preserve_interword_spaces: "1",
-          logger: (message) => {
-            if (message.status === "recognizing text" && Number.isFinite(message.progress)) {
-              setPhotoStatus(`${uiText("写真を読み取っています")} ${Math.round(message.progress * 100)}%`);
-            }
-          }
-        });
-        const text = (result && result.data && result.data.text ? result.data.text : "").trim();
-        if (!text) {
+        const firstResult = await recognizeSongPhotoCanvas(Tesseract, createPhotoReadCanvas("balanced"), 7, 1);
+        const candidates = [songPhotoOcrCandidate(firstResult)];
+        const firstCandidate = candidates[0];
+        const needsComparison = firstCandidate.confidence < 92 || firstCandidate.usefulLength < 3 || /[（(][^）)]*$/.test(firstCandidate.text);
+        if (needsComparison) {
+          const secondResult = await recognizeSongPhotoCanvas(Tesseract, createPhotoReadCanvas("binary"), 6, 2);
+          candidates.push(songPhotoOcrCandidate(secondResult));
+        }
+        const bestCandidate = candidates.sort((left, right) => right.score - left.score)[0];
+        if (!bestCandidate?.text) {
           setPhotoStatus("文字を読み取れませんでした。明るく、文字が大きく写った写真でお試しください。");
           return;
         }
-        songPhotoText.value = photoTextLines(text).join("\n");
+        songPhotoText.value = bestCandidate.text;
         songPhotoResult.classList.add("is-visible");
-        setPhotoStatus("読み取りました。必要なら直してから入れてください。");
+        if (bestCandidate.confidence < 70) {
+          setPhotoStatus("読み取り結果を確認してください。文字だけを大きく囲むと精度が上がります。");
+        } else if (candidates.length > 1) {
+          setPhotoStatus("2種類の補正結果を比較して読み取りました。必要なら直してから入れてください。");
+        } else {
+          setPhotoStatus("読み取りました。必要なら直してから入れてください。");
+        }
       } catch (error) {
         console.warn(error);
         setPhotoStatus("写真読み取り機能を読み込めませんでした。通信状態を確認して、もう一度お試しください。");
+      } finally {
+        readSongPhotoCropButton.disabled = false;
       }
     }
 
@@ -12401,6 +12617,10 @@
           songPhotoCropper.classList.add("is-visible");
           songPhotoResult.classList.remove("is-visible");
           songPhotoText.value = "";
+          setSongPhotoPanMode(false);
+          updateSongPhotoZoom(1, false);
+          songPhotoCropStage.scrollLeft = 0;
+          songPhotoCropStage.scrollTop = 0;
           resetSongPhotoCrop();
         };
         songPhotoPreview.src = reader.result;
@@ -12502,18 +12722,13 @@
     }
 
     function findCatalogLocalSong(source) {
-      if (!source) return null;
-      const normalizedTitle = normalizeKana(source.title);
-      const normalizedArtist = normalizeKana(source.artist);
-      return activeProfileSongs().find((song) =>
-        normalizeKana(song.title) === normalizedTitle && normalizeKana(song.artist || "") === normalizedArtist
-      ) || null;
+      return source ? findDuplicateSong(source) : null;
     }
 
     async function searchSongCatalog() {
       const query = songCatalogQuery.value.trim();
-      if (query.length < 2) {
-        songCatalogStatus.textContent = uiText("2文字以上入力して検索してください。");
+      if (query.length < 1) {
+        songCatalogStatus.textContent = uiText("1文字から検索できます。");
         songCatalogQuery.focus();
         return;
       }
@@ -12562,6 +12777,10 @@
         const target = settings.showPlayableParts ? playablePartsField : document.getElementById("songTitle");
         target.scrollIntoView({ behavior: "smooth", block: "center" });
         if (!settings.showPlayableParts) document.getElementById("songTitle").focus({ preventScroll: true });
+        catalogSearchItems = [];
+        songCatalogQuery.value = "";
+        songCatalogResults.innerHTML = "";
+        songCatalogStatus.textContent = currentLanguage === "en" ? "Song details were added to the form." : "曲情報を入力欄へ移しました。演奏パートを選んで保存してください。";
         return;
       }
 
@@ -12598,6 +12817,10 @@
       showUndo(currentLanguage === "en"
         ? (isNew || mode !== "song" ? `Added “${source.title}” to ${mode === "favorite" ? "Favorites" : mode === "sing" ? "Can Sing" : "My Songs"}.` : `“${source.title}” is already in My Songs.`)
         : (isNew || mode !== "song" ? `✓「${source.title}」を${destination}へ追加しました。` : `「${source.title}」はすでにマイ曲リストへ登録されています。`));
+      catalogSearchItems = [];
+      songCatalogQuery.value = "";
+      songCatalogResults.innerHTML = "";
+      songCatalogStatus.textContent = currentLanguage === "en" ? "Added. Search results were cleared." : "登録しました。検索結果を閉じました。";
     }
 
     songCatalogSearchForm.addEventListener("submit", (event) => {
@@ -12668,6 +12891,14 @@
     songPhotoCropStage.addEventListener("pointerup", finishSongPhotoCrop);
     songPhotoCropStage.addEventListener("pointercancel", finishSongPhotoCrop);
 
+    songPhotoZoomRange.addEventListener("input", () => updateSongPhotoZoom(Number(songPhotoZoomRange.value) / 100));
+    songPhotoZoomOutButton.addEventListener("click", () => updateSongPhotoZoom(songPhotoZoom - 0.2));
+    songPhotoZoomInButton.addEventListener("click", () => updateSongPhotoZoom(songPhotoZoom + 0.2));
+    songPhotoPanButton.addEventListener("click", () => setSongPhotoPanMode(!songPhotoPanMode));
+    window.addEventListener("resize", () => {
+      if (songPhotoImage) requestAnimationFrame(updateSongPhotoCropSelection);
+    });
+
     resetSongPhotoCropButton.addEventListener("click", resetSongPhotoCrop);
     readSongPhotoCropButton.addEventListener("click", readSongPhotoSelection);
 
@@ -12704,6 +12935,7 @@
           ? selectedPlayableParts()
           : (editingSongId ? (songs.find((song) => song.id === editingSongId)?.playableParts || []) : [])
       };
+      if (!confirmDuplicateSongRegistration(formData, editingSongId)) return;
       if (editingSongId) {
         const item = songs.find((song) => song.id === editingSongId);
         if (item) Object.assign(item, formData);
@@ -12986,6 +13218,25 @@
       if (!imported.length) {
         alert(uiText("読み込める曲がありません。曲名、歌手名、キーの順で貼り付けてください。"));
         return;
+      }
+      const duplicateTitles = [];
+      imported.forEach((item, index) => {
+        const duplicateInList = findDuplicateSong(item);
+        const duplicateInImport = imported.slice(0, index).some((other) => {
+          const sameTitle = normalizeSongDuplicateText(other.title) === normalizeSongDuplicateText(item.title);
+          const leftArtist = normalizeSongDuplicateText(other.artist);
+          const rightArtist = normalizeSongDuplicateText(item.artist);
+          return sameTitle && (!leftArtist || !rightArtist || leftArtist === rightArtist);
+        });
+        if (duplicateInList || duplicateInImport) duplicateTitles.push(item.title);
+      });
+      if (duplicateTitles.length) {
+        const titleList = [...new Set(duplicateTitles)].slice(0, 6).map((title) => `・${title}`).join("\n");
+        const moreText = duplicateTitles.length > 6 ? (currentLanguage === "en" ? "\n…and more" : "\nほか") : "";
+        const duplicateMessage = currentLanguage === "en"
+          ? `${duplicateTitles.length} possible duplicate song(s) were found:\n${titleList}${moreText}\n\nAdd them anyway?`
+          : `すでに登録済み、または貼り付け内で重複している可能性がある曲が${duplicateTitles.length}曲あります。\n${titleList}${moreText}\n\n重複したまま登録しますか？`;
+        if (!confirm(duplicateMessage)) return;
       }
       if (!confirm(currentLanguage === "en" ? `Add ${imported.length} songs to the song list?` : `${imported.length}曲をマイ曲リストに追加しますか？`)) return;
       songs = [...imported, ...songs];
