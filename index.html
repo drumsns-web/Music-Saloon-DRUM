@@ -2873,6 +2873,110 @@
       color: var(--forest-2);
     }
 
+    .song-display-switch {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .84);
+    }
+
+    .song-display-switch > span {
+      color: var(--forest);
+      font-size: .84rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .song-display-switch-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .song-display-switch button {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 6px 12px;
+      background: #fff;
+      color: var(--forest);
+      font: inherit;
+      font-size: .84rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .song-display-switch button.is-active {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: var(--forest-2);
+    }
+
+    .simple-song-list {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+    }
+
+    .simple-song-group {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fffdf8;
+      scroll-margin-top: 310px;
+    }
+
+    .simple-song-artist {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 12px;
+      background: var(--forest);
+      color: var(--cream);
+      font-weight: 900;
+    }
+
+    .simple-song-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(110px, .65fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+      border-top: 1px solid var(--line);
+      color: #21372d;
+    }
+
+    .simple-song-row:first-child { border-top: 0; }
+    .simple-song-group > div + div .simple-song-row { border-top: 1px solid var(--line); }
+    .simple-song-title { min-width: 0; font-weight: 900; overflow-wrap: anywhere; }
+    .simple-song-row .simple-song-artist-name { min-width: 0; color: #51483f; overflow-wrap: anywhere; }
+    .simple-song-key { white-space: nowrap; font-weight: 900; color: #8b4716; }
+
+    .bulk-import-preview {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .bulk-import-preview-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(100px, .55fr) auto;
+      gap: 7px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fffdf8;
+    }
+
+    .bulk-import-preview-row input { min-width: 0; min-height: 40px; padding: 7px 9px; }
+    .bulk-import-remove { min-width: 40px; min-height: 40px; padding: 6px !important; }
+    .bulk-import-status { margin: 10px 0 0; font-weight: 800; }
+
     .song-index-jump {
       display: flex;
       gap: 6px;
@@ -4862,6 +4966,22 @@
         flex: 0 0 auto;
         min-width: 104px;
       }
+      .song-display-switch { align-items: stretch; }
+      .song-display-switch-buttons { flex: 1; }
+      .song-display-switch button { flex: 1; padding-inline: 8px; }
+      .simple-song-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 4px 10px;
+      }
+      .simple-song-row .simple-song-artist-name {
+        grid-column: 1;
+        font-size: .8rem;
+      }
+      .simple-song-key { grid-column: 2; grid-row: 1 / span 2; }
+      .bulk-import-preview-row { grid-template-columns: minmax(0, 1fr) auto; }
+      .bulk-import-preview-row input:nth-child(2),
+      .bulk-import-preview-row input:nth-child(3) { grid-column: 1; }
+      .bulk-import-remove { grid-column: 2; grid-row: 1 / span 3; }
 
       table,
       thead,
@@ -5620,12 +5740,23 @@
                 </div>
               </div>
               <div>
-                <label for="songImportText">テキスト読み込み</label>
-                <p class="small">1行に1曲ずつ貼り付けできます。例：海　サザンオールスターズ　原曲キー。曲名だけでも登録できます。検索用よみ（曲名・歌手名・別名）を入れる場合は4つ目に入れてください。</p>
-                <textarea id="songImportText" placeholder="例：海　サザンオールスターズ　原曲キー　うみ さざん"></textarea>
+                <label for="songImportText">まとめて貼り付け・一括登録</label>
+                <p class="small">「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。</p>
+                <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
+                <label>
+                  貼り付けたキー表記の基準
+                  <select id="songImportKeyBase">
+                    <option value="karaoke">カラオケ標準キー基準</option>
+                    <option value="original">原曲キー基準</option>
+                  </select>
+                </label>
+                <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
                 <div class="control-row">
-                  <button class="btn ghost" id="importSongsButton" type="button">貼り付けた曲を読み込む</button>
+                  <button class="btn ghost" id="previewSongImportButton" type="button">解析して確認する</button>
+                  <button class="btn primary" id="importSongsButton" type="button" disabled>確認した曲を登録する</button>
                 </div>
+                <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
+                <div class="bulk-import-preview" id="songImportPreview"></div>
               </div>
             </div>
           </details>
@@ -5642,6 +5773,13 @@
             <button type="button" data-song-view-mode="recent">最近追加</button>
             <button type="button" data-song-view-mode="sung">よく歌う順</button>
           </div>
+          <div class="song-display-switch" id="songDisplaySwitch" role="group" aria-label="曲リストの詳しさ">
+            <span>一覧の表示</span>
+            <div class="song-display-switch-buttons">
+              <button type="button" data-song-display="standard">通常表示</button>
+              <button type="button" data-song-display="simple">簡易一覧</button>
+            </div>
+          </div>
           <div class="song-index-jump" id="songIndexJump" aria-label="文字ジャンプ"></div>
           <p class="song-index-note" id="songIndexNote"></p>
         </div>
@@ -5652,8 +5790,8 @@
         </aside>
 
         <div class="manager">
-          <div class="song-list-card">
-            <table>
+          <div class="song-list-card" id="songListCard">
+            <table id="songListTable">
               <thead>
                 <tr>
                   <th>曲名</th>
@@ -5665,6 +5803,7 @@
               </thead>
               <tbody id="songList"></tbody>
             </table>
+            <div class="simple-song-list" id="simpleSongList" hidden></div>
             <div class="subtle-actions">
               <button class="btn danger" id="clearAll" type="button">マイ曲リストを全削除</button>
             </div>
@@ -6974,8 +7113,11 @@
     const songQuickSearch = document.getElementById("songQuickSearch");
     const songQuickCount = document.getElementById("songQuickCount");
     const songViewSwitch = document.getElementById("songViewSwitch");
+    const songDisplaySwitch = document.getElementById("songDisplaySwitch");
     const songIndexJump = document.getElementById("songIndexJump");
     const songIndexNote = document.getElementById("songIndexNote");
+    const songListTable = document.getElementById("songListTable");
+    const simpleSongList = document.getElementById("simpleSongList");
     const countText = document.getElementById("countText");
     const totalSongCount = document.getElementById("totalSongCount");
     const clearAll = document.getElementById("clearAll");
@@ -6983,6 +7125,10 @@
     const songJsonRestoreText = document.getElementById("songJsonRestoreText");
     const songExportText = document.getElementById("songExportText");
     const songImportText = document.getElementById("songImportText");
+    const songImportKeyBase = document.getElementById("songImportKeyBase");
+    const songImportStatus = document.getElementById("songImportStatus");
+    const songImportPreview = document.getElementById("songImportPreview");
+    const previewSongImportButton = document.getElementById("previewSongImportButton");
     const exportJsonButton = document.getElementById("exportJsonButton");
     const copyJsonButton = document.getElementById("copyJsonButton");
     const saveJsonFileButton = document.getElementById("saveJsonFileButton");
@@ -7513,6 +7659,20 @@
       "歌手名未登録": "Artist not entered",
       "文字ジャンプは「歌手別」または「曲名順」で使えます。": "Letter jump is available in By Artist or Title Order views.",
       "文字を押すと、最初の該当グループへ移動します。": "Choose a letter to jump to the first matching group.",
+      "一覧の表示": "List Display",
+      "通常表示": "Standard",
+      "簡易一覧": "Simple List",
+      "曲リストの詳しさ": "Song list detail level",
+      "まとめて貼り付け・一括登録": "Paste and Add Multiple Songs",
+      "貼り付けたキー表記の基準": "Key Base for Pasted Songs",
+      "カラオケ標準キー基準": "Karaoke Standard Key Base",
+      "原曲キー基準": "Original Key Base",
+      "解析して確認する": "Parse and Review",
+      "確認した曲を登録する": "Add Reviewed Songs",
+      "読み込める曲がありません。": "No songs could be read.",
+      "曲名の区切りとキーを確認してから登録してください。": "Check song boundaries and keys before adding.",
+      "「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。": "Lists headed by 【Artist】 are supported. For reliable separation, put each song on a new line or separate the title and key with ／.",
+      "キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。": "Songs without a key use the selected base with no adjustment. ▲2/+2, ▼2/-2, full-width symbols, and ranges are supported.",
       "みんなのお気に入り": "Community Favorites",
       "歌える・演奏できる曲へ": "Songs People Can Sing or Play",
       "共有ページを開く": "Open Sharing Page",
@@ -8488,6 +8648,7 @@
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     let savedSetlists = JSON.parse(localStorage.getItem(savedSetlistStorageKey) || "[]");
+    let pendingSongImports = [];
     let pendingSongRecordId = "";
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     if (settings.settingsVersion === undefined) {
@@ -8514,6 +8675,9 @@
       .filter((id, index, items) => floatingNavOptions.some((option) => option.id === id) && items.indexOf(id) === index)
       .slice(0, maxFloatingNavItems);
     if (!["artist", "title", "recent", "sung"].includes(settings.songViewMode)) settings.songViewMode = "artist";
+    if (!["standard", "simple"].includes(settings.songDisplayMode)) settings.songDisplayMode = "standard";
+    if (!["karaoke", "original"].includes(settings.songImportKeyBase)) settings.songImportKeyBase = "karaoke";
+    songImportKeyBase.value = settings.songImportKeyBase;
     if (!appThemes.some((theme) => theme.id === settings.colorTheme)) settings.colorTheme = "drum-green";
     if (!/^#[0-9a-f]{6}$/i.test(String(settings.customTextColor || ""))) settings.customTextColor = "";
     if (!/^#[0-9a-f]{6}$/i.test(String(settings.customButtonColor || ""))) settings.customButtonColor = "";
@@ -8984,40 +9148,112 @@
       downloadBlob(blob, filename);
     }
 
+    const groupedImportKeyPattern = /(?:原曲(?:キー)?(?:オクターブ下げ)?(?:\s*(?:[+＋\-－]\s*\d+(?:\s*(?:or|または|,|、|／)\s*[+＋\-－]?\s*\d+)*)?)?|原音(?:\s*(?:→)?\s*[+＋\-－]?\s*\d+|\s*±\s*0)?|[▲▼▽△]\s*\d+(?:\s*[〜～~\-]\s*\d+)?(?:音下げ)?|[♭♯]\s*\d+(?:\s*[〜～~\-]\s*\d+)?|[+＋\-－]\s*\d+(?:\s*[〜～~]\s*[+＋\-－]?\s*\d+)?)(?:\s*(?:or|または|,|、|／)\s*(?:原音)?[+＋\-－▲▼]?\s*\d+(?:\s*[〜～~\-]\s*\d+)?)*/gi;
+
+    function importKeyBaseLabel() {
+      return (songImportKeyBase && songImportKeyBase.value === "original") ? "原曲キー" : "カラオケ標準キー";
+    }
+
+    function importedKeyLabel(rawKey = "") {
+      const raw = String(rawKey || "").trim();
+      if (!raw) return importKeyBaseLabel();
+      if (/^(?:原曲(?:キー)?|原音(?:±?0)?)$/i.test(raw)) return "原曲キー";
+      if (/^(?:カラオケ)?標準キー/.test(raw) || /^原曲キー/.test(raw)) return raw;
+      return `${importKeyBaseLabel()} ${raw}`.trim();
+    }
+
+    function importedSong(title, artist = "", key = "", kana = "") {
+      const cleanTitle = String(title || "").replace(/^[・●○\-–—\s]+/, "").trim();
+      if (!cleanTitle) return null;
+      return {
+        id: createId(),
+        title: cleanTitle,
+        artist: String(artist || "").trim(),
+        key: importedKeyLabel(key),
+        kana: String(kana || "").trim(),
+        memo: "",
+        nextWish: false,
+        profile: activeSongProfile(),
+        tags: []
+      };
+    }
+
+    function splitGroupedSongLine(line, artist) {
+      const cleanLine = String(line || "").replace(/\*\*/g, "").trim();
+      if (!cleanLine) return [];
+      const results = [];
+      let start = 0;
+      groupedImportKeyPattern.lastIndex = 0;
+      let match;
+      while ((match = groupedImportKeyPattern.exec(cleanLine))) {
+        let title = cleanLine.slice(start, match.index).trim().replace(/[／/、,;；]+$/, "").trim();
+        if (title) {
+          const song = importedSong(title, artist, match[0]);
+          if (song) results.push(song);
+        }
+        start = groupedImportKeyPattern.lastIndex;
+      }
+      const remainder = cleanLine.slice(start).trim().replace(/^[／/、,;；]+/, "").trim();
+      if (remainder) {
+        remainder.split(/\s*[;；|｜]\s*/).filter(Boolean).forEach((title) => {
+          const song = importedSong(title, artist);
+          if (song) results.push(song);
+        });
+      }
+      return results.length ? results : [importedSong(cleanLine, artist)].filter(Boolean);
+    }
+
+    function parseGroupedSongImport(text) {
+      const source = String(text || "").replace(/\r/g, "");
+      const headingPattern = /\*{0,2}【([^】]+)】\*{0,2}/g;
+      const headings = [...source.matchAll(headingPattern)];
+      if (!headings.length) return null;
+      const parsed = [];
+      headings.forEach((heading, index) => {
+        const artist = String(heading[1] || "").trim();
+        const start = heading.index + heading[0].length;
+        const end = index + 1 < headings.length ? headings[index + 1].index : source.length;
+        const block = source.slice(start, end).trim();
+        const lines = block.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+        (lines.length ? lines : [block]).forEach((line) => parsed.push(...splitGroupedSongLine(line, artist)));
+      });
+      return parsed.filter(Boolean);
+    }
+
     function parseSongImportText(text) {
-      return text.split(/\r?\n/)
+      const grouped = parseGroupedSongImport(text);
+      if (grouped) return grouped;
+      return String(text || "").split(/\r?\n/)
         .map((line) => line.trim())
         .filter(Boolean)
         .filter((line, index) => !(index === 0 && line.includes("曲名") && line.includes("歌手名")))
         .map((line) => {
-          const usesLooseSpace = !line.includes("\t") && !/[／/,、]/.test(line);
           const parts = line.includes("\t")
             ? line.split("\t")
-            : (usesLooseSpace ? line.split(/\s+/) : line.split(/\s*[/／,、]\s*/));
+            : line.split(/\s*[／|｜]\s*/);
+          if (parts.length === 1) return importedSong(parts[0]);
           const title = (parts[0] || "").trim();
-          if (!title) return null;
-          let artist = (parts[1] || "").trim();
-          let key = (parts[2] || "").trim();
-          let kana = (parts[3] || "").trim();
-          if (usesLooseSpace && parts[3] && /^[+-][123]$/.test(parts[3].trim())) {
-            key = `${key} ${parts[3].trim()}`.trim();
-            kana = parts.slice(4).join(" ").trim();
-          } else if (usesLooseSpace && parts.length > 4) {
-            kana = parts.slice(3).join(" ").trim();
-          }
-          return {
-            id: createId(),
-            title,
-            artist,
-            key,
-            kana,
-            memo: "",
-            nextWish: false,
-            profile: activeSongProfile(),
-            tags: []
-          };
+          const artist = (parts[1] || "").trim();
+          const key = (parts[2] || "").trim();
+          const kana = parts.slice(3).join(" ").trim();
+          return importedSong(title, artist, key, kana);
         })
         .filter(Boolean);
+    }
+
+    function renderSongImportPreview() {
+      songImportPreview.innerHTML = pendingSongImports.map((item, index) => `
+        <div class="bulk-import-preview-row" data-import-preview-row="${index}">
+          <input value="${escapeText(item.title)}" data-import-field="title" aria-label="${escapeText(uiText("曲名"))}">
+          <input value="${escapeText(item.artist)}" data-import-field="artist" aria-label="${escapeText(uiText("歌手名"))}">
+          <input value="${escapeText(item.key || importKeyBaseLabel())}" data-import-field="key" aria-label="${escapeText(uiText("キー"))}">
+          <button class="btn ghost bulk-import-remove" type="button" data-remove-import-row="${index}" aria-label="${escapeText(uiText("削除"))}">×</button>
+        </div>
+      `).join("");
+      importSongsButton.disabled = !pendingSongImports.length;
+      songImportStatus.textContent = pendingSongImports.length
+        ? (currentLanguage === "en" ? `${pendingSongImports.length} songs found. Check and edit them before saving.` : `${pendingSongImports.length}曲を読み取りました。曲名の区切りとキーを確認してから登録してください。`)
+        : uiText("読み込める曲がありません。");
     }
 
     function saveHistory() {
@@ -11553,6 +11789,11 @@
         button.classList.toggle("is-active", isActive);
         button.setAttribute("aria-pressed", String(isActive));
       });
+      songDisplaySwitch.querySelectorAll("[data-song-display]").forEach((button) => {
+        const isActive = button.dataset.songDisplay === settings.songDisplayMode;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
       if (mode !== "artist" && mode !== "title") {
         songIndexJump.innerHTML = "";
         songIndexNote.textContent = uiText("文字ジャンプは「歌手別」または「曲名順」で使えます。");
@@ -11564,6 +11805,55 @@
       songIndexNote.textContent = currentLanguage === "en"
         ? "Jump to the first matching group."
         : "文字を押すと、最初の該当グループへ移動します。";
+    }
+
+    function simpleSongRowHtml(item, query) {
+      return `
+        <div class="simple-song-row">
+          <span class="simple-song-title">${highlightText(item.title, query)}</span>
+          <span class="simple-song-artist-name">${highlightText(item.artist || uiText("歌手名未登録"), query)}</span>
+          <span class="simple-song-key">${highlightText(uiKey(item.key || "カラオケ標準キー"), query)}</span>
+        </div>
+      `;
+    }
+
+    function renderSimpleSongs(filtered, sortMode, query) {
+      songListTable.hidden = true;
+      simpleSongList.hidden = false;
+      const availableIndexes = new Set();
+      if (!filtered.length) {
+        simpleSongList.innerHTML = `<div class="empty">${escapeText(uiText("まだ登録がありません"))}</div>`;
+        return availableIndexes;
+      }
+      if (sortMode === "artist") {
+        const groups = [];
+        const groupMap = new Map();
+        filtered.forEach((item) => {
+          const label = String(item.artist || "").trim() || uiText("歌手名未登録");
+          const key = `artist:${normalizeKana(label) || "unknown"}`;
+          if (!groupMap.has(key)) {
+            const group = { label, index: songIndexGroup(item, "artist"), items: [] };
+            groupMap.set(key, group);
+            groups.push(group);
+          }
+          groupMap.get(key).items.push(item);
+        });
+        simpleSongList.innerHTML = groups.map((group) => {
+          availableIndexes.add(group.index);
+          return `
+            <section class="simple-song-group" data-song-index-group="${escapeText(group.index)}">
+              <div class="simple-song-artist"><span>【${escapeText(group.label)}】</span><span>${currentLanguage === "en" ? `${group.items.length} songs` : `${group.items.length}曲`}</span></div>
+              <div>${group.items.map((item) => simpleSongRowHtml(item, query)).join("")}</div>
+            </section>
+          `;
+        }).join("");
+      } else {
+        simpleSongList.innerHTML = `<section class="simple-song-group">${filtered.map((item) => {
+          if (sortMode === "title") availableIndexes.add(songIndexGroup(item, "title"));
+          return `<div data-song-index-group="${escapeText(sortMode === "title" ? songIndexGroup(item, "title") : "")}">${simpleSongRowHtml(item, query)}</div>`;
+        }).join("")}</section>`;
+      }
+      return availableIndexes;
     }
 
     function compactSongRowHtml(item, query, hidden = false) {
@@ -11632,6 +11922,16 @@
       countText.textContent = currentLanguage === "en" ? `${filtered.length} items` : `${filtered.length}件`;
       songQuickCount.textContent = currentLanguage === "en" ? `${filtered.length} items` : `${filtered.length}件`;
       updateDrumGachaRateLabel();
+
+      if (settings.songDisplayMode === "simple") {
+        const availableIndexes = renderSimpleSongs(filtered, sortMode, query);
+        renderSongViewControls(sortMode, availableIndexes);
+        renderNextSongs();
+        return;
+      }
+
+      songListTable.hidden = false;
+      simpleSongList.hidden = true;
 
       if (!filtered.length) {
         renderSongViewControls(sortMode, new Set());
@@ -12486,8 +12786,42 @@
       }, 320);
     });
 
+    previewSongImportButton.addEventListener("click", () => {
+      pendingSongImports = parseSongImportText(songImportText.value);
+      renderSongImportPreview();
+    });
+
+    songImportKeyBase.addEventListener("change", () => {
+      settings.songImportKeyBase = songImportKeyBase.value;
+      saveSettings();
+      if (songImportText.value.trim()) {
+        pendingSongImports = parseSongImportText(songImportText.value);
+        renderSongImportPreview();
+      }
+    });
+
+    songImportPreview.addEventListener("input", (event) => {
+      const input = event.target.closest("[data-import-field]");
+      const row = event.target.closest("[data-import-preview-row]");
+      if (!input || !row) return;
+      const index = Number(row.dataset.importPreviewRow);
+      if (!pendingSongImports[index]) return;
+      pendingSongImports[index][input.dataset.importField] = input.value;
+    });
+
+    songImportPreview.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove-import-row]");
+      if (!button) return;
+      const index = Number(button.dataset.removeImportRow);
+      if (!Number.isInteger(index)) return;
+      pendingSongImports.splice(index, 1);
+      renderSongImportPreview();
+    });
+
     importSongsButton.addEventListener("click", () => {
-      const imported = parseSongImportText(songImportText.value);
+      const imported = pendingSongImports
+        .map((item) => ({ ...item, title: String(item.title || "").trim(), artist: String(item.artist || "").trim(), key: String(item.key || "").trim() || importKeyBaseLabel() }))
+        .filter((item) => item.title);
       if (!imported.length) {
         alert(uiText("読み込める曲がありません。曲名、歌手名、キーの順で貼り付けてください。"));
         return;
@@ -12497,6 +12831,9 @@
       saveSongs();
       renderSongs();
       songImportText.value = "";
+      pendingSongImports = [];
+      renderSongImportPreview();
+      songImportStatus.textContent = currentLanguage === "en" ? "Songs were added." : `${imported.length}曲をマイ曲リストへ登録しました。`;
       songExportText.value = createSongExportText();
     });
 
@@ -12522,17 +12859,25 @@
       expandedSongGroups.clear();
       renderSongs();
     });
+    songDisplaySwitch.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-song-display]");
+      if (!button || !["standard", "simple"].includes(button.dataset.songDisplay)) return;
+      settings.songDisplayMode = button.dataset.songDisplay;
+      saveSettings();
+      renderSongs();
+    });
     songIndexJump.addEventListener("click", (event) => {
       const button = event.target.closest("[data-song-index-jump]");
       if (!button || button.disabled) return;
       const label = button.dataset.songIndexJump;
-      let target = [...list.querySelectorAll("[data-song-index-group]")].find((row) => row.dataset.songIndexGroup === label);
+      const listRoot = settings.songDisplayMode === "simple" ? simpleSongList : list;
+      let target = [...listRoot.querySelectorAll("[data-song-index-group]")].find((row) => row.dataset.songIndexGroup === label);
       if (!target) return;
       const groupKey = target.dataset.songGroupKey;
       if (groupKey && !expandedSongGroups.has(groupKey)) {
         expandedSongGroups.add(groupKey);
         renderSongs();
-        target = [...list.querySelectorAll("[data-song-index-group]")].find((row) => row.dataset.songIndexGroup === label);
+        target = [...listRoot.querySelectorAll("[data-song-index-group]")].find((row) => row.dataset.songIndexGroup === label);
       }
       if (target) window.requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
     });
