@@ -3168,7 +3168,7 @@
     }
 
     .compact-song-row {
-      cursor: pointer;
+      cursor: default;
     }
 
     .compact-song-row:hover {
@@ -3203,6 +3203,148 @@
 
     .song-detail-stack p {
       margin: 0;
+    }
+
+    #songListTable > thead {
+      display: none;
+    }
+
+    .compact-song-card-cell {
+      padding: 0 !important;
+    }
+
+    .compact-song-card {
+      display: grid;
+      gap: 9px;
+      padding: 14px;
+      background: var(--panel);
+    }
+
+    .compact-song-card-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .compact-song-card-heading strong {
+      min-width: 0;
+      font-size: 1.05rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .compact-song-links,
+    .compact-song-card-meta,
+    .compact-song-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .compact-song-card-meta {
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: rgba(var(--theme-accent-rgb), .07);
+    }
+
+    .compact-song-meta-item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .compact-song-meta-item + .compact-song-meta-item {
+      padding-left: 10px;
+      border-left: 1px solid var(--line);
+    }
+
+    .compact-song-meta-label {
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .compact-song-card-details:empty {
+      display: none;
+    }
+
+    .song-tag-memo {
+      position: relative;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .song-tag-memo > summary {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffdf8;
+      color: var(--button-text);
+      font-weight: 900;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .song-tag-memo > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .song-tag-memo-popover {
+      position: absolute;
+      z-index: 12;
+      left: 0;
+      top: calc(100% + 7px);
+      display: none;
+      width: min(360px, 78vw);
+      padding: 12px;
+      border: 2px solid var(--orange);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+    }
+
+    .song-tag-memo[open] > .song-tag-memo-popover {
+      display: grid;
+      gap: 8px;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .song-tag-memo:hover > .song-tag-memo-popover,
+      .song-tag-memo:focus-within > .song-tag-memo-popover {
+        display: grid;
+        gap: 8px;
+      }
+    }
+
+    .compact-song-card-actions .btn {
+      min-height: 38px;
+      padding: 7px 11px;
+    }
+
+    body.song-editing #songRegister > .form-lead,
+    body.song-editing #songRegister > .song-catalog-card,
+    body.song-editing #songRegister > .alternative-register-heading,
+    body.song-editing #songRegister > .bulk-song-entry,
+    body.song-editing #songRegister > .photo-song-card {
+      display: none !important;
+    }
+
+    body.song-editing #manualSongEntry {
+      margin-top: 0;
+      border: 0;
+      box-shadow: none;
+    }
+
+    body.song-editing #manualSongEntry > summary {
+      display: none;
     }
 
     .kana-group {
@@ -5097,6 +5239,33 @@
       }
       .song-group-toggle { padding: 11px 12px; }
       .compact-song-row.is-expanded .song-detail-cell { display: block; }
+      .compact-song-card {
+        gap: 7px;
+        padding: 12px;
+      }
+      .compact-song-card-heading {
+        display: grid;
+        gap: 7px;
+      }
+      .compact-song-card-meta {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+      .compact-song-meta-item + .compact-song-meta-item {
+        padding-left: 8px;
+      }
+      .compact-song-card-actions .btn {
+        flex: 1 1 auto;
+      }
+      .song-tag-memo {
+        width: 100%;
+      }
+      .song-tag-memo-popover {
+        position: static;
+        width: 100%;
+        margin-top: 7px;
+        box-shadow: none;
+      }
     }
 
     @media (max-width: 390px) {
@@ -10318,7 +10487,7 @@
     }
 
     function clearCustomerSubpage() {
-      document.body.classList.remove("customer-subview", "customer-register", "customer-backup");
+      document.body.classList.remove("customer-subview", "customer-register", "customer-backup", "song-editing");
       if (songBackupPanel) songBackupPanel.open = false;
     }
 
@@ -10767,8 +10936,16 @@
 
     function renderArtistFilterPanel() {
       if (!songArtistFilterPanel) return;
-      const artists = [...new Set(activeProfileSongs().map((item) => (item.artist || "").trim()).filter(Boolean))]
-        .sort((a, b) => a.localeCompare(b, "ja"));
+      const artistItems = new Map();
+      activeProfileSongs().forEach((item) => {
+        const artist = String(item.artist || "").trim();
+        if (artist && !artistItems.has(artist)) artistItems.set(artist, item);
+      });
+      const artists = [...artistItems.keys()].sort((a, b) => {
+        const itemA = artistItems.get(a);
+        const itemB = artistItems.get(b);
+        return compareSongReading(itemA, itemB, "artist") || a.localeCompare(b, "ja");
+      });
       songArtistFilterPanel.innerHTML = artists.length
         ? artists.map((artist) => `<button type="button" data-filter-artist="${escapeText(artist)}">${escapeText(artist)}</button>`).join("")
         : `<span class="filter-empty">${escapeText(uiText("歌手名の登録がありません"))}</span>`;
@@ -11183,6 +11360,7 @@
 
     function resetSongFormMode() {
       editingSongId = null;
+      document.body.classList.remove("song-editing");
       songFormTitle.textContent = uiText("曲を登録する");
       songSubmitButton.textContent = uiText("マイ曲リストに保存");
       songEditCancelButton.hidden = true;
@@ -11200,6 +11378,7 @@
       clearSongDraft();
       editingSongId = id;
       showView("song-register");
+      document.body.classList.add("song-editing");
       manualSongEntry.open = true;
       document.getElementById("songTitle").value = item.title || "";
       document.getElementById("artistName").value = item.artist || "";
@@ -11216,7 +11395,10 @@
       songFormTitle.textContent = uiText("曲を編集する");
       songSubmitButton.textContent = uiText("変更を保存");
       songEditCancelButton.hidden = false;
-      setTimeout(() => document.getElementById("songTitle").focus(), 160);
+      setTimeout(() => {
+        manualSongEntry.scrollIntoView({ behavior: "smooth", block: "start" });
+        document.getElementById("songTitle").focus({ preventScroll: true });
+      }, 180);
     }
 
     function deleteSong(id) {
@@ -11937,7 +12119,7 @@
 
     function songIndexLabels() {
       if (currentLanguage === "en") return [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "#"];
-      return ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "英数", "その他"];
+      return ["あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ", "その他", "英数"];
     }
 
     function songReadingParts(item) {
@@ -11964,6 +12146,16 @@
       if (/^[a-z0-9]$/i.test(first)) return "英数";
       const match = kanaGroups.find((group) => group.label !== "英数" && group.label !== "その他" && group.chars.includes(first));
       return match ? match.label : "その他";
+    }
+
+    function compareSongReading(a, b, mode) {
+      const labels = songIndexLabels();
+      const groupA = songIndexGroup(a, mode);
+      const groupB = songIndexGroup(b, mode);
+      const rankA = labels.includes(groupA) ? labels.indexOf(groupA) : labels.length;
+      const rankB = labels.includes(groupB) ? labels.indexOf(groupB) : labels.length;
+      if (rankA !== rankB) return rankA - rankB;
+      return songSortText(a, mode).localeCompare(songSortText(b, mode), "ja", { numeric: true, sensitivity: "base" });
     }
 
     function renderAuxiliaryIndex(container, items, targetId, mode = "artist") {
@@ -12054,35 +12246,46 @@
     }
 
     function compactSongRowHtml(item, query, hidden = false) {
-      const isExpanded = expandedSongRows.has(item.id);
       const recordButtonHelp = uiText("歌い終わった時に押す（今日の日付・回数を記録）");
       const tags = getSongTags(item);
+      const tagMemoContent = [
+        tags.length ? `<div><strong>${escapeText(uiText("タグ"))}：</strong> ${tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join(" ")}</div>` : "",
+        settings.showMemo && item.memo ? `<p><strong>${escapeText(uiText("メモ"))}：</strong>${highlightText(item.memo, query)}</p>` : ""
+      ].filter(Boolean).join("");
       const detailBits = [
         item.owner ? `<p><strong>${escapeText(uiText("歌う人"))}：</strong>${highlightText(item.owner, query)}</p>` : "",
-        tags.length ? `<div>${tags.map((tagName) => `<span class="pill">${highlightText(uiText(tagName), query)}</span>`).join("")}</div>` : "",
         settings.showPlayableParts && item.playableParts && item.playableParts.length
           ? `<div class="capability-badges">${item.playableParts.map((part) => `<span class="capability-badge">${highlightText(uiText(part), query)}</span>`).join("")}</div>`
           : "",
-        settings.showMemo ? `<p><strong>${escapeText(uiText("メモ"))}：</strong>${highlightText(item.memo || "-", query)}</p>` : ""
+        tagMemoContent
+          ? `<details class="song-tag-memo"><summary>${currentLanguage === "en" ? "Tags & Notes" : "タグ・メモ"}</summary><div class="song-tag-memo-popover">${tagMemoContent}</div></details>`
+          : ""
       ].filter(Boolean).join("");
       return `
-        <tr class="swipe-row compact-song-row ${isExpanded ? "is-expanded" : ""} song-group-song" data-song-id="${escapeText(item.id)}" ${hidden ? "hidden" : ""}>
-          <td class="song-title-cell" data-label="${escapeText(uiText("曲名"))}"><span class="song-title-with-links"><span>${highlightText(item.title, query)}</span><button class="song-external-search" type="button" data-song-chords="${escapeText(item.id)}">♬ ${escapeText(uiText("コード"))}</button><button class="song-external-search" type="button" data-song-lyrics="${escapeText(item.id)}">歌 ${escapeText(uiText("歌詞"))}</button></span></td>
-          <td class="artist-cell" data-label="${escapeText(uiText("歌手名"))}">${highlightText(item.artist || "-", query)}</td>
-          <td data-label="${escapeText(uiText("キー"))}"><span class="status">${highlightText(uiKey(item.key), query)}</span></td>
-          <td class="song-detail-cell" data-label="${escapeText(uiText("詳細"))}"><div class="song-detail-stack">${detailBits}</div></td>
-          <td class="action-cell" data-label="${escapeText(uiText("操作"))}">
-            <div class="song-quick-actions">
-              <button class="btn ghost song-detail-toggle" type="button" data-song-detail="${escapeText(item.id)}" aria-expanded="${isExpanded}">${escapeText(uiText(isExpanded ? "閉じる" : "詳細"))}</button>
-              ${settings.showSavedSetlists ? `<button class="btn song-quick-action quick-setlist-button" type="button" data-quick-setlist="${escapeText(item.id)}">＋ ${escapeText(uiText("セットリストへ"))}</button>` : ""}
-              ${settings.enableAdditionalList ? `<button class="btn song-quick-action quick-transfer-button" type="button" data-song-transfer="${escapeText(item.id)}">⇄ ${escapeText(uiText("別リストへ"))}</button>` : ""}
-            </div>
-            <div class="song-row-actions">
-              <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
-              <button class="btn primary" type="button" data-record="${escapeText(item.id)}" title="${escapeText(recordButtonHelp)}" aria-label="${escapeText(recordButtonHelp)}">${escapeText(uiText("歌った曲を記録"))}</button>
-              <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
-              <button class="btn ghost" type="button" data-delete="${escapeText(item.id)}">${escapeText(uiText("削除"))}</button>
-            </div>
+        <tr class="swipe-row compact-song-row song-group-song" data-song-id="${escapeText(item.id)}" ${hidden ? "hidden" : ""}>
+          <td class="compact-song-card-cell" colspan="5">
+            <article class="compact-song-card">
+              <div class="compact-song-card-heading">
+                <strong>${highlightText(item.title, query)}</strong>
+                <span class="compact-song-links">
+                  <button class="song-external-search" type="button" data-song-chords="${escapeText(item.id)}">♬ ${escapeText(uiText("コード"))}</button>
+                  <button class="song-external-search" type="button" data-song-lyrics="${escapeText(item.id)}">歌 ${escapeText(uiText("歌詞"))}</button>
+                </span>
+              </div>
+              <div class="compact-song-card-meta">
+                <span class="compact-song-meta-item"><span class="compact-song-meta-label">${escapeText(uiText("歌手名"))}</span><strong>${highlightText(item.artist || uiText("歌手名未登録"), query)}</strong></span>
+                <span class="compact-song-meta-item"><span class="compact-song-meta-label">${escapeText(uiText("キー"))}</span><span class="status">${highlightText(uiKey(item.key), query)}</span></span>
+              </div>
+              <div class="compact-song-card-details song-detail-stack">${detailBits}</div>
+              <div class="compact-song-card-actions">
+                ${settings.showSavedSetlists ? `<button class="btn song-quick-action quick-setlist-button" type="button" data-quick-setlist="${escapeText(item.id)}">＋ ${escapeText(uiText("セットリストへ"))}</button>` : ""}
+                ${settings.enableAdditionalList ? `<button class="btn song-quick-action quick-transfer-button" type="button" data-song-transfer="${escapeText(item.id)}">⇄ ${escapeText(uiText("別リストへ"))}</button>` : ""}
+                <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
+                <button class="btn primary" type="button" data-record="${escapeText(item.id)}" title="${escapeText(recordButtonHelp)}" aria-label="${escapeText(recordButtonHelp)}">${escapeText(uiText("歌った曲を記録"))}</button>
+                <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
+                <button class="btn ghost" type="button" data-delete="${escapeText(item.id)}">${escapeText(uiText("削除"))}</button>
+              </div>
+            </article>
           </td>
         </tr>
       `;
@@ -12103,10 +12306,10 @@
         return normalizeKana(songSearchText(item)).includes(normalizedQuery);
       }).sort((a, b) => {
         if (sortMode === "title") {
-          return songSortText(a, "title").localeCompare(songSortText(b, "title"), "ja") || (a.title || "").localeCompare(b.title || "", "ja");
+          return compareSongReading(a, b, "title") || (a.title || "").localeCompare(b.title || "", "ja");
         }
         if (sortMode === "artist") {
-          return songSortText(a, "artist").localeCompare(songSortText(b, "artist"), "ja") || (a.artist || "").localeCompare(b.artist || "", "ja") || songSortText(a, "title").localeCompare(songSortText(b, "title"), "ja");
+          return compareSongReading(a, b, "artist") || (a.artist || "").localeCompare(b.artist || "", "ja") || compareSongReading(a, b, "title");
         }
         if (sortMode === "sung") {
           const countDiff = songSungCount(b.id) - songSungCount(a.id);
@@ -12922,6 +13125,7 @@
 
     form.addEventListener("submit", (event) => {
       event.preventDefault();
+      const wasEditing = Boolean(editingSongId);
       const formData = {
         title: document.getElementById("songTitle").value.trim(),
         artist: document.getElementById("artistName").value.trim(),
@@ -12951,9 +13155,14 @@
       saveSongs();
       resetSongFormMode();
       renderSongs();
+      if (wasEditing) showView("customers");
     });
 
     list.addEventListener("click", (event) => {
+      const activeTagMemo = event.target.closest(".song-tag-memo");
+      list.querySelectorAll(".song-tag-memo[open]").forEach((details) => {
+        if (details !== activeTagMemo) details.open = false;
+      });
       const chordButton = event.target.closest("[data-song-chords]");
       if (chordButton) {
         openSongReference(chordButton.dataset.songChords, "chords");
@@ -13313,7 +13522,10 @@
     songKeyBase.addEventListener("change", updateKeyAdjustLabel);
     form.addEventListener("input", saveSongDraft);
     form.addEventListener("change", saveSongDraft);
-    songEditCancelButton.addEventListener("click", resetSongFormMode);
+    songEditCancelButton.addEventListener("click", () => {
+      resetSongFormMode();
+      showView("customers");
+    });
 
     focusSongFormButton.addEventListener("click", () => {
       if (editingSongId) resetSongFormMode();
