@@ -4592,42 +4592,187 @@
       line-height: 1.5;
     }
 
-    .home-add-steps {
+    .home-os-choices {
       display: grid;
-      gap: 10px;
-      margin: 0 0 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0 0 12px;
     }
 
-    .home-add-step {
-      border: 1px solid rgba(240, 138, 53, .28);
-      border-radius: 8px;
-      padding: 12px 14px;
-      background: rgba(255, 247, 232, .74);
+    .home-install-button {
+      width: 100%;
+      min-height: 58px;
+      margin-bottom: 5px;
+      font-size: 18px;
+    }
+
+    .home-install-help {
+      margin: 0 0 14px;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .home-os-card {
+      overflow: hidden;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: #fffdf8;
       color: #2f261d;
     }
 
-    .home-add-step strong {
+    .home-os-card.iphone-card {
+      border-color: rgba(55, 110, 159, .48);
+    }
+
+    .home-os-card.android-card {
+      border-color: rgba(47, 107, 75, .5);
+    }
+
+    .home-os-card > summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      min-height: 76px;
+      padding: 12px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .home-os-card > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .home-os-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 46px;
+      height: 46px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .home-os-badge svg {
+      width: 27px;
+      height: 27px;
       display: block;
-      margin-bottom: 4px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .iphone-card .home-os-badge { background: var(--blue); }
+    .android-card .home-os-badge { background: var(--leaf); }
+
+    .home-os-title strong,
+    .home-os-title small {
+      display: block;
+    }
+
+    .home-os-title strong {
       color: var(--forest);
-      font-size: 15px;
+      font-size: 18px;
+    }
+
+    .home-os-title small {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .home-os-chevron {
+      font-size: 24px;
+      font-weight: 900;
+      transition: transform .2s ease;
+    }
+
+    .home-os-card[open] .home-os-chevron {
+      transform: rotate(90deg);
+    }
+
+    .home-os-body {
+      padding: 0 14px 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .home-add-numbered {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .home-add-numbered li {
+      display: grid;
+      grid-template-columns: 30px minmax(0, 1fr);
+      align-items: center;
+      gap: 9px;
+      min-height: 44px;
+      padding: 7px 9px;
+      border-radius: 8px;
+      background: rgba(var(--theme-accent-rgb), .08);
       font-weight: 900;
     }
 
-    .home-add-step p {
+    .home-step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--forest-2);
+    }
+
+    .home-browser-note,
+    .home-save-note {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 247, 232, .7);
+    }
+
+    .home-browser-note + .home-browser-note {
+      margin-top: 7px;
+    }
+
+    .home-browser-note > summary,
+    .home-save-note > summary {
+      padding: 9px 11px;
+      color: var(--forest);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .home-browser-note p,
+    .home-save-note p {
       margin: 0;
-      font-size: 15px;
+      padding: 0 11px 11px;
+      margin: 0;
       font-weight: 800;
       line-height: 1.6;
     }
 
-    .home-add-line {
-      display: block;
-      text-wrap: balance;
+    .home-save-note {
+      margin-bottom: 16px;
     }
 
-    .home-add-path .home-add-line {
-      white-space: nowrap;
+    @media (max-width: 620px) {
+      .home-os-choices {
+        grid-template-columns: 1fr;
+      }
+      .home-os-card > summary {
+        min-height: 68px;
+      }
     }
 
     .settings-modal-panel .section-head {
@@ -7110,29 +7255,61 @@
       <div class="section-head">
         <div>
           <h2>ホーム画面に追加できます</h2>
-          <p class="lead"><span class="home-add-line">スマホのホーム画面に追加しておくと、</span><span class="home-add-line">次回からすぐに開けます。</span></p>
+          <p class="lead">お使いのスマホを選ぶと、必要な手順だけ表示します。</p>
         </div>
         <button class="btn ghost" id="closeHomePrompt" type="button">閉じる</button>
       </div>
-      <div class="home-add-steps">
-        <div class="home-add-step">
-          <strong>iPhone（Safari推奨）</strong>
-          <p class="home-add-path"><span class="home-add-line">Safariで開く</span><span class="home-add-line">共有ボタン → ホーム画面に追加</span><span class="home-add-line">→ 追加</span></p>
-          <p class="privacy-note"><span class="home-add-line">ChromeやGoogleアプリで</span><span class="home-add-line">「ホーム画面に追加」が見つからない場合は、</span><span class="home-add-line">右上の共有メニューなどから</span><span class="home-add-line">「Safariで開く」を選んでください。</span></p>
-        </div>
-        <div class="home-add-step">
-          <strong>Android（Chrome）</strong>
-          <p class="home-add-path"><span class="home-add-line">右上の︙メニュー → ホーム画面に追加</span><span class="home-add-line">または「アプリをインストール」→ 追加</span></p>
-        </div>
-        <div class="home-add-step">
-          <strong>Firefox</strong>
-          <p class="home-add-path"><span class="home-add-line">iPhone：アドレスバーの共有ボタン</span><span class="home-add-line">→ ホーム画面に追加 → 追加</span><span class="home-add-line">Android：右上の︙メニュー</span><span class="home-add-line">→ ホーム画面に追加 → 追加</span></p>
-        </div>
-        <div class="home-add-step">
-          <strong>保存について</strong>
-          <p>マイ曲リストや記録は、<br>この端末のブラウザ内に保存されます。</p>
-        </div>
+      <button class="btn primary home-install-button" id="installHomeAppButton" type="button">ホーム画面に追加</button>
+      <p class="small home-install-help" id="homeInstallHelp">Androidの対応ブラウザでは、追加の確認画面を直接開けます。</p>
+      <div class="home-os-choices">
+        <details class="home-os-card iphone-card" id="homeIphoneGuide">
+          <summary>
+            <span class="home-os-badge">iOS</span>
+            <span class="home-os-title"><strong>iPhone</strong><small>Safari推奨</small></span>
+            <span class="home-os-chevron" aria-hidden="true">›</span>
+          </summary>
+          <div class="home-os-body">
+            <ol class="home-add-numbered">
+              <li><span class="home-step-number">1</span><span>Safariで開く</span></li>
+              <li><span class="home-step-number">2</span><span>共有ボタンを押す</span></li>
+              <li><span class="home-step-number">3</span><span>「ホーム画面に追加」→「追加」</span></li>
+            </ol>
+            <details class="home-browser-note">
+              <summary>Chrome・Googleアプリ・Firefoxの場合</summary>
+              <p>共有メニューから「Safariで開く」を選ぶと、店のアイコンで追加しやすくなります。</p>
+            </details>
+          </div>
+        </details>
+        <details class="home-os-card android-card" id="homeAndroidGuide">
+          <summary>
+            <span class="home-os-badge" aria-hidden="true">
+              <svg viewBox="0 0 32 32" focusable="false">
+                <path d="M9 12h14a3 3 0 0 1 3 3v8H6v-8a3 3 0 0 1 3-3Z"></path>
+                <path d="M10 12a6 6 0 0 1 12 0M11 6 9 3M21 6l2-3M6 16H3v6M26 16h3v6M10 23v5M22 23v5"></path>
+                <circle cx="12" cy="9" r=".7" fill="currentColor" stroke="none"></circle>
+                <circle cx="20" cy="9" r=".7" fill="currentColor" stroke="none"></circle>
+              </svg>
+            </span>
+            <span class="home-os-title"><strong>Android</strong><small>Chrome推奨</small></span>
+            <span class="home-os-chevron" aria-hidden="true">›</span>
+          </summary>
+          <div class="home-os-body">
+            <ol class="home-add-numbered">
+              <li><span class="home-step-number">1</span><span>右上の「︙」メニューを開く</span></li>
+              <li><span class="home-step-number">2</span><span>「ホーム画面に追加」または「アプリをインストール」</span></li>
+              <li><span class="home-step-number">3</span><span>「追加」を押す</span></li>
+            </ol>
+            <details class="home-browser-note">
+              <summary>Firefoxの場合</summary>
+              <p>右上の「︙」メニューから「ホーム画面に追加」を選んでください。</p>
+            </details>
+          </div>
+        </details>
       </div>
+      <details class="home-save-note">
+        <summary>保存について</summary>
+        <p>マイ曲リストや記録は、この端末のブラウザ内に保存されます。</p>
+      </details>
       <div class="control-row">
         <button class="btn primary" id="dismissHomePromptToday" type="button">今日は閉じる</button>
         <button class="btn ghost" id="disableHomePrompt" type="button">今後は表示しない</button>
@@ -7586,8 +7763,12 @@
     const favoriteDrinkButtons = document.getElementById("favoriteDrinkButtons");
     const drinkCategoryButtons = document.getElementById("drinkCategoryButtons");
     const drinkCategoryListTitle = document.getElementById("drinkCategoryListTitle");
-    const homePromptModal = document.getElementById("homePromptModal");
-    const appUpdateCard = document.getElementById("appUpdateCard");
+	    const homePromptModal = document.getElementById("homePromptModal");
+	    const installHomeAppButton = document.getElementById("installHomeAppButton");
+	    const homeInstallHelp = document.getElementById("homeInstallHelp");
+	    const homeIphoneGuide = document.getElementById("homeIphoneGuide");
+	    const homeAndroidGuide = document.getElementById("homeAndroidGuide");
+	    const appUpdateCard = document.getElementById("appUpdateCard");
     const closeHomePrompt = document.getElementById("closeHomePrompt");
     const dismissHomePromptToday = document.getElementById("dismissHomePromptToday");
     const disableHomePrompt = document.getElementById("disableHomePrompt");
@@ -8514,8 +8695,24 @@
       "貼り付けた曲を読み込む": "Import Pasted Songs",
       "マイ曲リストに保存": "Save to My Song List",
       "マイ曲リストを全削除": "Delete All Songs",
-      "ホーム画面に追加できます": "Add to Home Screen",
-      "今日は閉じる": "Close for Today",
+	      "ホーム画面に追加できます": "Add to Home Screen",
+	      "お使いのスマホを選ぶと、必要な手順だけ表示します。": "Choose your phone to see only the steps you need.",
+	      "ホーム画面に追加": "Add to Home Screen",
+	      "Androidの対応ブラウザでは、追加の確認画面を直接開けます。": "On supported Android browsers, this button opens the install confirmation.",
+	      "Safari推奨": "Safari recommended",
+	      "Chrome推奨": "Chrome recommended",
+	      "共有ボタンを押す": "Tap the Share button",
+	      "「ホーム画面に追加」→「追加」": "Add to Home Screen → Add",
+	      "Chrome・Googleアプリ・Firefoxの場合": "If using Chrome, the Google app, or Firefox",
+	      "共有メニューから「Safariで開く」を選ぶと、店のアイコンで追加しやすくなります。": "Choose Open in Safari from the Share menu to add the shop icon more reliably.",
+	      "右上の「︙」メニューを開く": "Open the upper-right ⋮ menu",
+	      "「ホーム画面に追加」または「アプリをインストール」": "Add to Home Screen or Install app",
+	      "「追加」を押す": "Tap Add",
+	      "Firefoxの場合": "If using Firefox",
+	      "右上の「︙」メニューから「ホーム画面に追加」を選んでください。": "Choose Add to Home Screen from the upper-right ⋮ menu.",
+	      "保存について": "About saved data",
+	      "マイ曲リストや記録は、この端末のブラウザ内に保存されます。": "Your song list and records are saved in this browser on this device.",
+	      "今日は閉じる": "Close for Today",
       "今後は表示しない": "Do Not Show Again",
       "おすすめ曲ガチャ": "Song Recommendation Gacha",
       "ガチャを回す": "Spin Gacha",
@@ -8965,8 +9162,9 @@
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     let savedSetlists = JSON.parse(localStorage.getItem(savedSetlistStorageKey) || "[]");
-    let pendingSongImports = [];
-    let pendingSongRecordId = "";
+	    let pendingSongImports = [];
+	    let pendingSongRecordId = "";
+	    let deferredHomeInstallPrompt = null;
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     if (settings.settingsVersion === undefined) {
       settings.showDrink = true;
@@ -10357,18 +10555,91 @@
       });
     }
 
-    function shouldShowHomePrompt() {
+	    function shouldShowHomePrompt() {
       const state = getHomePromptState();
       if (state.disabled) return false;
       if (state.dismissedDate === todayString()) return false;
-      return true;
-    }
+	      return true;
+	    }
 
-    function openHomePrompt() {
-      if (!shouldShowHomePrompt()) return;
-      homePromptModal.classList.add("show");
-      homePromptModal.setAttribute("aria-hidden", "false");
-      refreshLanguageSoon();
+	    function isIosDevice() {
+	      return /iPad|iPhone|iPod/i.test(navigator.userAgent)
+	        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+	    }
+
+	    function isStandaloneApp() {
+	      return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+	    }
+
+	    function updateHomeInstallButton() {
+	      if (!installHomeAppButton || !homeInstallHelp) return;
+	      const english = currentLanguage === "en";
+	      if (isStandaloneApp()) {
+	        installHomeAppButton.disabled = true;
+	        installHomeAppButton.textContent = english ? "Already added" : "ホーム画面に追加済み";
+	        homeInstallHelp.textContent = english
+	          ? "This app is already open from your home screen."
+	          : "このアプリはホーム画面から開かれています。";
+	        return;
+	      }
+	      installHomeAppButton.disabled = false;
+	      installHomeAppButton.textContent = english ? "Add to Home Screen" : "ホーム画面に追加";
+	      if (deferredHomeInstallPrompt) {
+	        homeInstallHelp.textContent = english
+	          ? "Tap the button to open your browser's install confirmation."
+	          : "ボタンを押すと、ブラウザの追加確認画面が開きます。";
+	      } else if (isIosDevice()) {
+	        homeInstallHelp.textContent = english
+	          ? "On iPhone, the button opens the short Safari instructions below."
+	          : "iPhoneでは、ボタンを押すとSafariの短い手順を表示します。";
+	      } else {
+	        homeInstallHelp.textContent = english
+	          ? "On supported Android browsers, the install confirmation opens directly."
+	          : "Androidの対応ブラウザでは、追加の確認画面を直接開けます。";
+	      }
+	    }
+
+	    function openHomeOsGuide(type) {
+	      if (!homeIphoneGuide || !homeAndroidGuide) return;
+	      homeIphoneGuide.open = type === "iphone";
+	      homeAndroidGuide.open = type === "android";
+	      const target = type === "iphone" ? homeIphoneGuide : homeAndroidGuide;
+	      requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+	    }
+
+	    async function requestHomeInstall() {
+	      if (isStandaloneApp()) {
+	        updateHomeInstallButton();
+	        return;
+	      }
+	      if (deferredHomeInstallPrompt) {
+	        const promptEvent = deferredHomeInstallPrompt;
+	        deferredHomeInstallPrompt = null;
+	        try {
+	          await promptEvent.prompt();
+	          const choice = await promptEvent.userChoice;
+	          homeInstallHelp.textContent = choice && choice.outcome === "accepted"
+	            ? (currentLanguage === "en" ? "Follow the browser confirmation to finish adding the app." : "ブラウザの確認に従って追加を完了してください。")
+	            : (currentLanguage === "en" ? "You can add it later from the browser menu." : "あとでブラウザのメニューから追加することもできます。");
+	          if (!choice || choice.outcome !== "accepted") openHomeOsGuide("android");
+	        } catch (error) {
+	          openHomeOsGuide(isIosDevice() ? "iphone" : "android");
+	        }
+	        return;
+	      }
+	      const type = isIosDevice() ? "iphone" : "android";
+	      openHomeOsGuide(type);
+	      homeInstallHelp.textContent = type === "iphone"
+	        ? (currentLanguage === "en" ? "Use Safari's Share menu to add this app." : "iPhoneはSafariの共有メニューから追加してください。")
+	        : (currentLanguage === "en" ? "Use your browser menu to add this app." : "ブラウザのメニューからホーム画面へ追加してください。");
+	    }
+
+	    function openHomePrompt() {
+	      if (!shouldShowHomePrompt()) return;
+	      homePromptModal.classList.add("show");
+	      homePromptModal.setAttribute("aria-hidden", "false");
+	      updateHomeInstallButton();
+	      refreshLanguageSoon();
     }
 
     function closeHomePromptModal() {
@@ -14285,15 +14556,30 @@
       if (event.target === guideModal) closeGuideModalPanel();
     });
 
-    guideModal.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-guide-target]");
+	    guideModal.addEventListener("click", (event) => {
+	      const button = event.target.closest("[data-guide-target]");
       if (!button) return;
       const target = button.dataset.guideTarget;
       closeGuideModalPanel();
-      showView(target);
-    });
+	      showView(target);
+	    });
 
-    closeHomePrompt.addEventListener("click", () => {
+	    window.addEventListener("beforeinstallprompt", (event) => {
+	      event.preventDefault();
+	      deferredHomeInstallPrompt = event;
+	      updateHomeInstallButton();
+	    });
+
+	    window.addEventListener("appinstalled", () => {
+	      deferredHomeInstallPrompt = null;
+	      saveHomePromptState({ disabled: true, dismissedDate: todayString() });
+	      updateHomeInstallButton();
+	      closeHomePromptModal();
+	    });
+
+	    installHomeAppButton.addEventListener("click", requestHomeInstall);
+
+	    closeHomePrompt.addEventListener("click", () => {
       saveHomePromptState({ ...getHomePromptState(), dismissedDate: todayString() });
       closeHomePromptModal();
     });
