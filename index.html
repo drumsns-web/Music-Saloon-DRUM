@@ -5569,6 +5569,109 @@
         font-size: 11px;
       }
     }
+    /* Optional display modes: each can be returned to the previous appearance in Settings. */
+    html { --user-font-scale: 1; }
+    html[data-font-size="large"] { --user-font-scale: 1.075; }
+    html[data-font-size="xlarge"] { --user-font-scale: 1.15; }
+    body { font-size: calc(16px * var(--user-font-scale)); }
+    html[data-font-size]:not([data-font-size="standard"]) main p,
+    html[data-font-size]:not([data-font-size="standard"]) main li,
+    html[data-font-size]:not([data-font-size="standard"]) main label,
+    html[data-font-size]:not([data-font-size="standard"]) .settings-modal-panel p,
+    html[data-font-size]:not([data-font-size="standard"]) .settings-modal-panel label {
+      font-size: calc(1em * var(--user-font-scale));
+      line-height: 1.65;
+    }
+    html[data-font-size="large"] .btn { font-size: 1.02em; }
+    html[data-font-size="xlarge"] .btn { font-size: 1.06em; }
+    :where(h1, h2, h3, h4, p, li, label, button, .btn, .lead, .saved-setlist-card strong) {
+      word-break: normal;
+      overflow-wrap: break-word;
+      line-break: strict;
+    }
+    .font-size-picker {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .font-size-option { min-height: 48px; }
+    .font-size-option.is-selected {
+      background: var(--orange);
+      color: var(--button-text);
+      border-color: var(--orange);
+      box-shadow: 0 8px 18px rgba(var(--theme-accent-rgb), .24);
+    }
+    .connection-status {
+      position: sticky;
+      top: 0;
+      z-index: 130;
+      padding: 8px 16px;
+      background: #7b341e;
+      color: #fff;
+      text-align: center;
+      font-weight: 800;
+      border-bottom: 2px solid #fff;
+    }
+    .live-mode-panel {
+      width: min(760px, calc(100vw - 24px));
+      max-height: min(92vh, 880px);
+      background: var(--paper);
+    }
+    .live-mode-stage {
+      display: grid;
+      gap: 16px;
+      padding: 20px;
+      border: 2px solid var(--orange);
+      border-radius: 18px;
+      background: linear-gradient(145deg, var(--forest), var(--deep));
+      color: #fff;
+      text-align: center;
+    }
+    .live-mode-progress { font-weight: 800; opacity: .9; }
+    .live-mode-song-title { margin: 0; color: #fff; font-size: clamp(30px, 7vw, 58px); line-height: 1.18; }
+    .live-mode-artist { margin: 0; font-size: clamp(19px, 4vw, 30px); }
+    .live-mode-key {
+      justify-self: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: var(--orange);
+      color: var(--button-text);
+      font-size: clamp(18px, 4vw, 26px);
+      font-weight: 900;
+    }
+    .live-mode-controls { display: grid; grid-template-columns: 1fr 1.4fr 1fr; gap: 8px; }
+    .live-mode-controls .btn { min-width: 0; white-space: normal; }
+    .live-mode-order {
+      display: grid;
+      gap: 6px;
+      max-height: 210px;
+      overflow: auto;
+      margin-top: 14px;
+    }
+    .live-mode-order button {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--ink);
+      text-align: left;
+    }
+    .live-mode-order button.is-current { border-color: var(--orange); box-shadow: inset 4px 0 var(--orange); }
+    .live-mode-order button.is-complete { opacity: .62; text-decoration: line-through; }
+    .live-mode-order small { color: var(--muted); }
+    @media (max-width: 560px) {
+      .font-size-picker { grid-template-columns: 1fr; }
+      .live-mode-panel { padding: 16px; }
+      .live-mode-stage { padding: 16px 10px; }
+      .live-mode-controls { grid-template-columns: 1fr 1fr; }
+      .live-mode-controls .live-complete-button { grid-column: 1 / -1; grid-row: 1; }
+    }
   </style>
 </head>
 <body>
@@ -5589,6 +5692,10 @@
     </div>
   </header>
 
+  <div class="connection-status" id="connectionStatus" role="status" aria-live="polite" hidden>
+    オフライン中です。メニューと端末内の曲リストは使えますが、共有ランキングなどの通信機能は利用できません。
+  </div>
+
   <nav class="floating-page-nav" id="floatingPageNav" aria-label="ページショートカット" hidden>
     <div class="floating-page-nav-buttons" id="floatingPageNavButtons"></div>
     <button class="floating-nav-collapse-button" id="floatingNavCollapseButton" type="button" aria-label="フローティングバーを小さく収納" title="フローティングバーを小さく収納">−</button>
@@ -5605,20 +5712,24 @@
         <details class="app-update-card" id="appUpdateCard">
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.01</span></span>
-              <h2 id="appUpdateTitle">曲の登録と一覧表示を使いやすくしました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.03</span></span>
+              <h2 id="appUpdateTitle">LIVE表示・オフライン・文字サイズを追加しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>曲リストの一括登録、写真からの曲名・歌手名入力、通常表示と簡易一覧の切り替えを追加しました。</p>
+            <p>マイセットリストのLIVE・練習モード、オフライン表示、文字サイズ3段階を追加しました。すべて設定から元へ戻せます。</p>
             <div class="app-update-latest-actions">
-              <a class="btn primary" href="#song-register">曲を登録してみる</a>
-              <a class="btn ghost" href="#customers">簡易一覧を見てみる</a>
+              <a class="btn primary" data-setlist-entry href="#saved-setlists">LIVE・練習モードを使う</a>
+              <button class="btn ghost" type="button" data-update-settings-target="settings-main-features">設定を確認する</button>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-03">2026.08.03</time>
+                  <div><strong>LIVE表示・オフライン・文字サイズを追加</strong><p>セットリストを1曲ずつ大きく表示するモード、通信が切れた時の案内、3段階の文字サイズを追加しました。各機能は設定で戻せます。</p><div class="control-row"><a class="btn ghost app-update-history-action" data-setlist-entry href="#saved-setlists">LIVE・練習モードを使う →</a><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-main-features">設定を開く →</button></div></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-01">2026.08.01</time>
                   <div><strong>曲の登録方法と一覧表示を改善</strong><p>曲リストの一括登録、カメラロールからの写真入力、曲名・歌手名の個別読み取り、通常表示と簡易一覧の切り替えを追加しました。</p><div class="control-row"><a class="btn ghost app-update-history-action" href="#song-register">曲を登録してみる →</a><a class="btn ghost app-update-history-action" href="#customers">簡易一覧を見てみる →</a></div></div>
@@ -6772,6 +6883,16 @@
               マイセットリスト機能を表示する
             </label>
             <p class="small">オフにしても、すでに保存したマイセットリストは削除されません。</p>
+            <label class="check-row">
+              <input id="settingLiveMode" type="checkbox" checked>
+              マイセットリストでLIVE・練習モードを使う
+            </label>
+            <p class="small">曲順を変えずに、今の曲・次の曲・進み具合を大きく表示します。</p>
+            <label class="check-row">
+              <input id="settingOfflineMode" type="checkbox" checked>
+              オフラインでもメニューと端末内データを開けるようにする
+            </label>
+            <p class="small">一度オンラインで開いた後に利用できます。共有ランキングなど通信が必要な機能は対象外です。</p>
             <div class="additional-list-settings" id="additionalListSettings">
               <label class="check-row">
                 <input id="settingAdditionalList" type="checkbox">
@@ -6783,6 +6904,17 @@
               </label>
               <p class="small">有効にすると、曲の登録・検索・歌った記録をリストごとに切り替えられます。</p>
             </div>
+          </article>
+          <article class="card settings-target" id="settings-font-size">
+            <span class="tag blue">Text Size</span>
+            <h3>文字サイズ</h3>
+            <p class="small">画面を見ながら3段階で切り替えられます。長い文言は意味のまとまりを優先して折り返します。</p>
+            <div class="font-size-picker" id="fontSizePicker" role="radiogroup" aria-label="文字サイズ">
+              <button class="btn ghost font-size-option" type="button" data-font-size="standard">標準</button>
+              <button class="btn ghost font-size-option" type="button" data-font-size="large">大きめ</button>
+              <button class="btn ghost font-size-option" type="button" data-font-size="xlarge">特大</button>
+            </div>
+            <p class="small" id="fontSizeStatus" aria-live="polite">現在：標準</p>
           </article>
             </div>
           </details>
@@ -7391,6 +7523,31 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="liveModeModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="liveModeTitle">
+    <div class="drink-modal-panel live-mode-panel">
+      <div class="section-head">
+        <div>
+          <span class="tag orange">LIVE / Rehearsal</span>
+          <h2 id="liveModeTitle">LIVE・練習モード</h2>
+          <p class="lead" id="liveModeSetlistTitle">マイセットリスト</p>
+        </div>
+        <button class="btn ghost" id="closeLiveMode" type="button">閉じる</button>
+      </div>
+      <div class="live-mode-stage">
+        <div class="live-mode-progress" id="liveModeProgress">1 / 1</div>
+        <h3 class="live-mode-song-title" id="liveModeSongTitle">曲名</h3>
+        <p class="live-mode-artist" id="liveModeArtist">歌手名</p>
+        <div class="live-mode-key" id="liveModeKey">キー未設定</div>
+      </div>
+      <div class="live-mode-controls">
+        <button class="btn ghost" id="liveModePrevious" type="button">← 前の曲</button>
+        <button class="btn primary live-complete-button" id="liveModeComplete" type="button">演奏済みにする</button>
+        <button class="btn ghost" id="liveModeNext" type="button">次の曲 →</button>
+      </div>
+      <div class="live-mode-order" id="liveModeOrder" aria-label="曲順"></div>
+    </div>
+  </div>
+
   <div class="drink-modal" id="songRecordConfirmModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="songRecordConfirmTitle">
     <div class="drink-modal-panel song-record-confirm-panel">
       <div class="section-head">
@@ -7854,6 +8011,11 @@
     const settingHistoryMemo = document.getElementById("settingHistoryMemo");
     const settingPlayableParts = document.getElementById("settingPlayableParts");
     const settingSavedSetlists = document.getElementById("settingSavedSetlists");
+    const settingLiveMode = document.getElementById("settingLiveMode");
+    const settingOfflineMode = document.getElementById("settingOfflineMode");
+    const fontSizePicker = document.getElementById("fontSizePicker");
+    const fontSizeStatus = document.getElementById("fontSizeStatus");
+    const connectionStatus = document.getElementById("connectionStatus");
     const settingWeatherRadar = document.getElementById("settingWeatherRadar");
     const settingTaxiSupport = document.getElementById("settingTaxiSupport");
     const settingEkodaRoute = document.getElementById("settingEkodaRoute");
@@ -7911,6 +8073,17 @@
     const quickSetlistOptions = document.getElementById("quickSetlistOptions");
     const createSetlistWithSong = document.getElementById("createSetlistWithSong");
     const quickSetlistStatus = document.getElementById("quickSetlistStatus");
+    const liveModeModal = document.getElementById("liveModeModal");
+    const liveModeSetlistTitle = document.getElementById("liveModeSetlistTitle");
+    const liveModeProgress = document.getElementById("liveModeProgress");
+    const liveModeSongTitle = document.getElementById("liveModeSongTitle");
+    const liveModeArtist = document.getElementById("liveModeArtist");
+    const liveModeKey = document.getElementById("liveModeKey");
+    const liveModePrevious = document.getElementById("liveModePrevious");
+    const liveModeComplete = document.getElementById("liveModeComplete");
+    const liveModeNext = document.getElementById("liveModeNext");
+    const liveModeOrder = document.getElementById("liveModeOrder");
+    const closeLiveMode = document.getElementById("closeLiveMode");
     const songRecordConfirmModal = document.getElementById("songRecordConfirmModal");
     const songRecordConfirmSong = document.getElementById("songRecordConfirmSong");
     const closeSongRecordConfirm = document.getElementById("closeSongRecordConfirm");
@@ -8206,6 +8379,19 @@
     let isApplyingLanguage = false;
 
     const exactTranslations = {
+      "LIVE・練習モード": "LIVE / Rehearsal Mode",
+      "マイセットリストでLIVE・練習モードを使う": "Use LIVE / Rehearsal Mode with My Setlists",
+      "演奏済みにする": "Mark Complete",
+      "演奏済みを取り消す": "Undo Complete",
+      "← 前の曲": "← Previous",
+      "次の曲 →": "Next →",
+      "文字サイズ": "Text Size",
+      "標準": "Standard",
+      "大きめ": "Large",
+      "特大": "Extra Large",
+      "現在": "Current",
+      "オフラインでもメニューと端末内データを開けるようにする": "Allow menus and on-device data to open offline",
+      "オフライン中です。メニューと端末内の曲リストは使えますが、共有ランキングなどの通信機能は利用できません。": "You are offline. Menus and on-device song lists remain available, but shared rankings and other online features are unavailable.",
       "お知らせ": "Info",
       "DRUMガイド": "DRUM Guide",
       "DRUMガイドを見る": "View DRUM Guide",
@@ -9366,6 +9552,9 @@
     if (settings.showDrinkTotal === undefined) settings.showDrinkTotal = true;
     if (settings.showPlayableParts === undefined) settings.showPlayableParts = false;
     if (settings.showSavedSetlists === undefined) settings.showSavedSetlists = true;
+    if (settings.showLiveMode === undefined) settings.showLiveMode = true;
+    if (settings.enableOfflineMode === undefined) settings.enableOfflineMode = true;
+    if (!["standard", "large", "xlarge"].includes(settings.fontSize)) settings.fontSize = "standard";
     if (typeof settings.capabilityDisplayName !== "string") settings.capabilityDisplayName = "";
     if (settings.enableAdditionalList === undefined) settings.enableAdditionalList = false;
     if (!settings.additionalListName) settings.additionalListName = "パートナー";
@@ -9444,6 +9633,9 @@
     let genreTags = JSON.parse(localStorage.getItem(tagStorageKey) || "null") || [...defaultGenreTags];
     let editingSongId = null;
     let editingSavedSetlistId = null;
+    let activeLiveSetlistId = "";
+    let activeLiveSongIndex = 0;
+    let liveCompletedIndexes = new Set();
     let transferringSongId = null;
     let quickSetlistSongId = null;
     let savedSetlistDraftSongIds = [];
@@ -10125,6 +10317,7 @@
             <div class="saved-setlist-body">
               ${rows ? `<ol class="saved-setlist-songs">${rows}</ol>` : `<p class="setlist-empty">${escapeText(uiText("曲が入っていません。"))}</p>`}
               <div class="setlist-card-actions">
+                ${settings.showLiveMode && setlist.items.length ? `<button class="btn primary" type="button" data-setlist-live="${escapeText(setlist.id)}">▶ ${escapeText(uiText("LIVE・練習モード"))}</button>` : ""}
                 <button class="btn primary" type="button" data-setlist-edit="${escapeText(setlist.id)}">${escapeText(uiText("編集"))}</button>
                 <button class="btn ghost" type="button" data-setlist-copy="${escapeText(setlist.id)}">${escapeText(uiText("曲順をコピー"))}</button>
                 <button class="btn ghost" type="button" data-setlist-duplicate="${escapeText(setlist.id)}">${escapeText(uiText("複製"))}</button>
@@ -10135,6 +10328,84 @@
         `;
       }).join("");
       refreshLanguageSoon();
+    }
+
+    function closeLiveModePanel() {
+      liveModeModal.classList.remove("show");
+      liveModeModal.setAttribute("aria-hidden", "true");
+      activeLiveSetlistId = "";
+      activeLiveSongIndex = 0;
+      liveCompletedIndexes = new Set();
+    }
+
+    function renderLiveMode() {
+      const setlist = savedSetlists.find((item) => item.id === activeLiveSetlistId);
+      if (!setlist || !setlist.items.length || !settings.showLiveMode) {
+        closeLiveModePanel();
+        return;
+      }
+      activeLiveSongIndex = Math.max(0, Math.min(activeLiveSongIndex, setlist.items.length - 1));
+      const item = resolvedSetlistItem(setlist.items[activeLiveSongIndex]);
+      liveModeSetlistTitle.textContent = setlist.title;
+      liveModeProgress.textContent = `${activeLiveSongIndex + 1} / ${setlist.items.length}`;
+      liveModeSongTitle.textContent = item.title;
+      liveModeArtist.textContent = item.artist || uiText("歌手名未設定");
+      liveModeKey.textContent = item.key ? uiKey(item.key) : uiText("キー未設定");
+      liveModePrevious.disabled = activeLiveSongIndex === 0;
+      liveModeNext.disabled = activeLiveSongIndex === setlist.items.length - 1;
+      liveModeComplete.textContent = liveCompletedIndexes.has(activeLiveSongIndex)
+        ? uiText("演奏済みを取り消す")
+        : uiText("演奏済みにする");
+      liveModeOrder.innerHTML = setlist.items.map((storedItem, index) => {
+        const song = resolvedSetlistItem(storedItem);
+        return `<button type="button" data-live-song-index="${index}" class="${index === activeLiveSongIndex ? "is-current" : ""} ${liveCompletedIndexes.has(index) ? "is-complete" : ""}"><strong>${index + 1}</strong><span><strong>${escapeText(song.title)}</strong><small>${escapeText(song.artist || uiText("歌手名未設定"))}</small></span><span>${liveCompletedIndexes.has(index) ? "✓" : ""}</span></button>`;
+      }).join("");
+    }
+
+    function openLiveModePanel(setlistId) {
+      const setlist = savedSetlists.find((item) => item.id === setlistId);
+      if (!settings.showLiveMode || !setlist || !setlist.items.length) return;
+      activeLiveSetlistId = setlistId;
+      activeLiveSongIndex = 0;
+      liveCompletedIndexes = new Set();
+      renderLiveMode();
+      liveModeModal.classList.add("show");
+      liveModeModal.setAttribute("aria-hidden", "false");
+    }
+
+    function applyFontSizeSetting() {
+      document.documentElement.dataset.fontSize = settings.fontSize;
+      fontSizePicker.querySelectorAll("[data-font-size]").forEach((button) => {
+        const selected = button.dataset.fontSize === settings.fontSize;
+        button.classList.toggle("is-selected", selected);
+        button.setAttribute("aria-checked", String(selected));
+      });
+      const labels = { standard: "標準", large: "大きめ", xlarge: "特大" };
+      fontSizeStatus.textContent = `${uiText("現在")}：${uiText(labels[settings.fontSize])}`;
+    }
+
+    function updateConnectionStatus() {
+      const offline = !navigator.onLine;
+      connectionStatus.hidden = !offline;
+      if (offline) connectionStatus.textContent = uiText("オフライン中です。メニューと端末内の曲リストは使えますが、共有ランキングなどの通信機能は利用できません。");
+    }
+
+    async function applyOfflineSetting() {
+      updateConnectionStatus();
+      if (!("serviceWorker" in navigator)) return;
+      const secureContext = location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname);
+      if (settings.enableOfflineMode && secureContext) {
+        try { await navigator.serviceWorker.register("./service-worker.js"); } catch (error) { console.warn("Offline setup failed", error); }
+        return;
+      }
+      if (!settings.enableOfflineMode) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.filter((item) => item.scope.includes(location.pathname.replace(/[^/]*$/, ""))).map((item) => item.unregister()));
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.filter((key) => key.startsWith("music-saloon-drum-")).map((key) => caches.delete(key)));
+        }
+      }
     }
 
     function startSavedSetlistEdit(id) {
@@ -11313,6 +11584,9 @@
       settingSongCount.checked = settings.showSongCount;
       settingPlayableParts.checked = Boolean(settings.showPlayableParts);
       settingSavedSetlists.checked = Boolean(settings.showSavedSetlists);
+      settingLiveMode.checked = Boolean(settings.showLiveMode);
+      settingOfflineMode.checked = Boolean(settings.enableOfflineMode);
+      applyFontSizeSetting();
       document.querySelectorAll("[data-setlist-entry]").forEach((element) => {
         element.classList.toggle("feature-hidden", !settings.showSavedSetlists);
       });
@@ -11360,6 +11634,7 @@
       renderSongProfileSwitcher();
       renderCommuteSupport();
       renderCapabilityLocalList();
+      if (!settings.showLiveMode && liveModeModal.classList.contains("show")) closeLiveModePanel();
     }
 
     let lastTrainReminderTimer = null;
@@ -14332,6 +14607,11 @@
     });
 
     savedSetlistList.addEventListener("click", async (event) => {
+      const liveButton = event.target.closest("[data-setlist-live]");
+      if (liveButton) {
+        openLiveModePanel(liveButton.dataset.setlistLive);
+        return;
+      }
       const itemButton = event.target.closest("[data-setlist-item-index]");
       if (itemButton) {
         const setlistId = itemButton.dataset.setlistMoveUp || itemButton.dataset.setlistMoveDown || itemButton.dataset.setlistRemoveSong;
@@ -14417,6 +14697,53 @@
       renderSongs();
       if (!settings.showSavedSetlists && location.hash === "#saved-setlists") showView("customers");
     });
+
+    settingLiveMode.addEventListener("change", () => {
+      settings.showLiveMode = settingLiveMode.checked;
+      saveSettings();
+      applySettings();
+      renderSavedSetlists();
+    });
+
+    settingOfflineMode.addEventListener("change", async () => {
+      settings.enableOfflineMode = settingOfflineMode.checked;
+      saveSettings();
+      await applyOfflineSetting();
+    });
+
+    fontSizePicker.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-font-size]");
+      if (!button) return;
+      settings.fontSize = button.dataset.fontSize;
+      saveSettings();
+      applyFontSizeSetting();
+    });
+
+    closeLiveMode.addEventListener("click", closeLiveModePanel);
+    liveModeModal.addEventListener("click", (event) => {
+      if (event.target === liveModeModal) closeLiveModePanel();
+    });
+    liveModePrevious.addEventListener("click", () => {
+      activeLiveSongIndex -= 1;
+      renderLiveMode();
+    });
+    liveModeNext.addEventListener("click", () => {
+      activeLiveSongIndex += 1;
+      renderLiveMode();
+    });
+    liveModeComplete.addEventListener("click", () => {
+      if (liveCompletedIndexes.has(activeLiveSongIndex)) liveCompletedIndexes.delete(activeLiveSongIndex);
+      else liveCompletedIndexes.add(activeLiveSongIndex);
+      renderLiveMode();
+    });
+    liveModeOrder.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-live-song-index]");
+      if (!button) return;
+      activeLiveSongIndex = Number(button.dataset.liveSongIndex);
+      renderLiveMode();
+    });
+    window.addEventListener("online", updateConnectionStatus);
+    window.addEventListener("offline", updateConnectionStatus);
 
     settingMemo.addEventListener("change", () => {
       settings.showMemo = settingMemo.checked;
@@ -15060,6 +15387,7 @@
     renderDailyShopMessage();
     initAppUpdateCard();
     applySettings();
+    applyOfflineSetting();
     renderStaffProfiles();
     updateKeyAdjustLabel();
     renderHistoryBackupStatus();
