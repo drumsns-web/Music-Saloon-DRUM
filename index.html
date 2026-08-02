@@ -261,6 +261,29 @@
       display: inline-flex !important;
     }
 
+    .top-language-toggle {
+      display: none !important;
+      min-width: 42px;
+      min-height: 32px !important;
+      padding: 5px 9px !important;
+      border-color: rgba(255, 255, 255, .24) !important;
+      background: rgba(255, 255, 255, .06) !important;
+      color: rgba(255, 255, 255, .86) !important;
+      font-size: 12px !important;
+      letter-spacing: .03em;
+      box-shadow: none !important;
+    }
+
+    body.is-top-view .top-language-toggle {
+      display: inline-flex !important;
+    }
+
+    .top-language-toggle:hover,
+    .top-language-toggle:focus-visible {
+      border-color: rgba(255, 192, 122, .62) !important;
+      background: rgba(240, 138, 53, .16) !important;
+    }
+
     .guide-nav-button {
       width: 42px;
       min-width: 42px;
@@ -5435,6 +5458,7 @@
       </a>
       <div class="nav-links">
         <a class="home-nav-button" href="#top" aria-label="トップへ戻る" title="トップへ戻る">⌂</a>
+        <button class="top-language-toggle" id="topLanguageToggle" type="button" aria-label="英語表示に切り替え" title="表示言語を切り替え">EN</button>
         <button class="guide-nav-button js-open-guide-modal" type="button" aria-label="DRUMガイドを開く" title="DRUMガイドを開く">☰</button>
       </div>
     </nav>
@@ -7783,6 +7807,7 @@
     const newsGallery = document.getElementById("newsGallery");
     const newsEmpty = document.getElementById("newsEmpty");
     const languageToggle = document.getElementById("languageToggle");
+    const topLanguageToggle = document.getElementById("topLanguageToggle");
     const openGuideModalHero = document.getElementById("openGuideModalHero");
     const guideModal = document.getElementById("guideModal");
     const closeGuideModal = document.getElementById("closeGuideModal");
@@ -10121,9 +10146,22 @@
     }
 
     function updateLanguageButton() {
-      if (!languageToggle) return;
-      languageToggle.textContent = currentLanguage === "en" ? "Japanese" : "English";
-      languageToggle.setAttribute("aria-label", currentLanguage === "en" ? "Switch to Japanese" : "英語表示に切り替え");
+      if (languageToggle) {
+        languageToggle.textContent = currentLanguage === "en" ? "日本語" : "English";
+        languageToggle.setAttribute("aria-label", currentLanguage === "en" ? "日本語表示に切り替え" : "英語表示に切り替え");
+      }
+      if (topLanguageToggle) {
+        topLanguageToggle.textContent = currentLanguage === "en" ? "日本語" : "EN";
+        topLanguageToggle.setAttribute("aria-label", currentLanguage === "en" ? "日本語表示に切り替え" : "英語表示に切り替え");
+        topLanguageToggle.setAttribute("title", currentLanguage === "en" ? "Switch to Japanese" : "表示言語を切り替え");
+      }
+    }
+
+    function toggleDisplayLanguage() {
+      currentLanguage = currentLanguage === "en" ? "ja" : "en";
+      localStorage.setItem(languageStorageKey, currentLanguage);
+      rerenderLocalizedContent();
+      applyLanguage();
     }
 
     function applyLanguage() {
@@ -10139,7 +10177,7 @@
           const parent = node.parentElement;
           if (!parent) return NodeFilter.FILTER_REJECT;
           if (["SCRIPT", "STYLE", "TEXTAREA"].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
-          if (parent.closest("#languageToggle, #songDisplayStatus, #songPhotoCropHelp, #songPhotoResultLabel, #applySongPhotoTextButton")) return NodeFilter.FILTER_REJECT;
+          if (parent.closest("#languageToggle, #topLanguageToggle, #songDisplayStatus, #songPhotoCropHelp, #songPhotoResultLabel, #applySongPhotoTextButton")) return NodeFilter.FILTER_REJECT;
           if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
           return NodeFilter.FILTER_ACCEPT;
         }
@@ -14653,12 +14691,8 @@
       }
     });
 
-    languageToggle.addEventListener("click", () => {
-      currentLanguage = currentLanguage === "en" ? "ja" : "en";
-      localStorage.setItem(languageStorageKey, currentLanguage);
-      rerenderLocalizedContent();
-      applyLanguage();
-    });
+    languageToggle.addEventListener("click", toggleDisplayLanguage);
+    topLanguageToggle.addEventListener("click", toggleDisplayLanguage);
 
     const languageObserver = new MutationObserver(() => {
       refreshLanguageSoon();
