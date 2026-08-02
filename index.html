@@ -505,6 +505,47 @@
       box-shadow: 0 14px 36px rgba(0, 0, 0, .22);
     }
 
+    .commute-panel > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 42px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .commute-panel > summary::-webkit-details-marker { display: none; }
+
+    .commute-panel-toggle-text {
+      display: grid;
+      gap: 2px;
+    }
+
+    .commute-panel-toggle-text small {
+      color: rgba(255, 253, 248, .76);
+      font-weight: 700;
+    }
+
+    .commute-panel-chevron {
+      display: inline-flex;
+      width: 32px;
+      height: 32px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .1);
+      transition: transform .18s ease;
+    }
+
+    .commute-panel[open] .commute-panel-chevron { transform: rotate(180deg); }
+
+    .commute-panel-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .16);
+    }
+
     .commute-panel.hidden {
       display: none;
     }
@@ -793,6 +834,14 @@
 
     body.floating-nav-visible main > section.active-view {
       padding-top: var(--floating-nav-space, 66px);
+    }
+
+    body.floating-nav-visible:not(.is-top-view) main > section.active-view {
+      padding-top: calc(var(--floating-nav-space, 66px) + 18px);
+    }
+
+    body.floating-nav-visible.floating-nav-collapsed:not(.is-top-view) main > section.active-view {
+      padding-top: calc(var(--floating-nav-space, 58px) + 10px);
     }
 
     main > section {
@@ -2104,6 +2153,22 @@
       min-height: 38px;
       padding: 7px 12px;
       font-size: 13px;
+    }
+
+    .backup-last-status {
+      margin: 8px 0 10px !important;
+      padding: 9px 11px;
+      border-radius: 7px;
+      background: rgba(20, 63, 44, .08);
+      color: #2f493c !important;
+      font-size: 13px;
+      font-weight: 900 !important;
+    }
+
+    .backup-last-status.is-warning {
+      border-left: 4px solid var(--orange);
+      background: rgba(240, 138, 53, .12);
+      color: #6b3517 !important;
     }
 
     .song-backup-grid {
@@ -4827,6 +4892,63 @@
       justify-items: end;
     }
 
+    .settings-category-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .settings-category {
+      grid-column: 1 / -1;
+      overflow: hidden;
+      border: 1px solid rgba(240, 138, 53, .3);
+      border-radius: 12px;
+      background: rgba(255, 253, 248, .68);
+    }
+
+    .settings-category > summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 62px;
+      padding: 12px 16px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--forest);
+    }
+
+    .settings-category > summary::-webkit-details-marker { display: none; }
+
+    .settings-category-title {
+      display: grid;
+      gap: 2px;
+    }
+
+    .settings-category-title strong { font-size: 19px; }
+
+    .settings-category-title small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .settings-category-chevron {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(var(--theme-accent-rgb), .16);
+      transition: transform .18s ease;
+    }
+
+    .settings-category[open] .settings-category-chevron { transform: rotate(180deg); }
+
+    .settings-category > .grid {
+      padding: 0 12px 12px;
+    }
+
     .settings-menu-button {
       min-width: 48px !important;
       padding-inline: 13px !important;
@@ -5480,7 +5602,7 @@
           <button class="btn primary js-open-guide-modal" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
-        <details class="app-update-card" id="appUpdateCard" open>
+        <details class="app-update-card" id="appUpdateCard">
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.01</span></span>
@@ -5546,12 +5668,20 @@
             <a data-setlist-entry href="#saved-setlists">マイセットリスト</a>
           </div>
         </div>
-        <section class="commute-panel" aria-labelledby="commuteSupportTitle">
-          <div class="commute-panel-head">
-            <strong id="commuteSupportTitle">帰り道サポート</strong>
-            <button class="btn ghost" id="openCommuteSettings" type="button">目的地を設定</button>
-          </div>
-          <div class="commute-grid">
+        <details class="commute-panel">
+          <summary>
+            <span class="commute-panel-toggle-text">
+              <strong id="commuteSupportTitle">帰り道サポート</strong>
+              <small>天気・タクシー・駅からの経路を確認</small>
+            </span>
+            <span class="commute-panel-chevron" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="commute-panel-body">
+            <div class="commute-panel-head">
+              <span class="small">必要な項目だけ設定で表示できます</span>
+              <button class="btn ghost" id="openCommuteSettings" type="button">目的地を設定</button>
+            </div>
+            <div class="commute-grid">
             <button class="commute-action weather-action" id="weatherButton" type="button">
               <span class="commute-action-icon">☂</span>
               <span>
@@ -5587,9 +5717,10 @@
                 <small>目的地を設定して検索</small>
               </span>
             </button>
+            </div>
+            <p class="commute-status" id="commuteStatus"></p>
           </div>
-          <p class="commute-status" id="commuteStatus"></p>
-        </section>
+        </details>
         <div class="top-shortcuts">
           <div class="top-shortcuts-head">
             <span>よく使う項目</span>
@@ -5636,7 +5767,7 @@
           </article>
           <article class="card">
             <span class="tag green">Song</span>
-            <h3>マイ曲リストを作る</h3>
+            <h3>曲を登録する</h3>
             <p>曲名だけでも登録できます。キー、タグ、メモはあとから編集できます。</p>
             <a class="btn primary" href="#song-register">曲を登録する</a>
           </article>
@@ -6052,8 +6183,8 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#community">みんなのお気に入り</a>
-              <a href="#performance-share">歌える・演奏できる</a>
+              <a href="#community">みんなのお気に入り曲</a>
+              <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
@@ -6073,6 +6204,7 @@
             <p class="privacy-note">マイ曲リストはこの端末のブラウザだけに保存されます。<br>他のお客様に見られたり、お店側へ自動共有されたりすることはありません。<br>ブラウザのデータ削除、機種変更、プライベートブラウズ利用時などに消える場合があります。</p>
             <div class="backup-recommend">
               <p>曲が増えてきたら、念のためバックアップをおすすめします。保存したJSONファイルがあれば、端末のデータが消えた後もここから復元できます。</p>
+              <p class="backup-last-status" id="backupLastStatus">最終バックアップを確認しています。</p>
               <button class="btn ghost" id="openSongBackupButton" type="button">バックアップを開く</button>
             </div>
             <div class="control-row song-primary-actions">
@@ -6125,6 +6257,7 @@
               <div class="backup-action-card">
                 <h4>JSONファイルで保存</h4>
                 <p class="small">機種変更やブラウザデータ削除に備えて、曲リストと記録の復元用ファイルを保存できます。</p>
+                <p class="backup-last-status" id="backupPanelLastStatus">まだバックアップしていません。</p>
                 <button class="btn primary" id="saveJsonFileButton" type="button">JSONファイルを保存</button>
               </div>
               <div class="backup-action-card">
@@ -6564,6 +6697,7 @@
               <button type="button" data-settings-target="settings-theme">カラー</button>
               <button type="button" data-settings-target="settings-shortcuts">トップ表示</button>
               <button type="button" data-settings-target="settings-floating-nav">移動バー</button>
+              <button type="button" data-settings-target="settings-main-features">主な機能</button>
               <button type="button" data-settings-target="settings-song-list">曲リスト・記録</button>
               <button type="button" data-settings-target="settings-tags">タグ・歌う人</button>
               <button type="button" data-settings-target="settings-commute">帰り道</button>
@@ -6571,7 +6705,13 @@
             </div>
           </div>
         </div>
-        <div class="grid">
+        <div class="grid settings-category-list">
+          <details class="settings-category" open>
+            <summary>
+              <span class="settings-category-title"><strong>基本設定</strong><small>色・トップ画面・移動バーを設定</small></span>
+              <span class="settings-category-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="grid">
           <article class="card settings-target theme-settings-card" id="settings-theme">
             <span class="tag orange">Color</span>
             <h3>アプリの基本カラー</h3>
@@ -6624,14 +6764,37 @@
               <p class="top-shortcut-status" id="floatingNavStatus">表示するページを選んでください。</p>
             </div>
           </article>
-          <article class="card settings-target" id="settings-song-list">
-            <span class="tag">Song List</span>
-            <h3>マイ曲リスト設定</h3>
+          <article class="card settings-target" id="settings-main-features">
+            <span class="tag green">Features</span>
+            <h3>主な機能の表示</h3>
             <label class="check-row">
               <input id="settingSavedSetlists" type="checkbox" checked>
               マイセットリスト機能を表示する
             </label>
             <p class="small">オフにしても、すでに保存したマイセットリストは削除されません。</p>
+            <div class="additional-list-settings" id="additionalListSettings">
+              <label class="check-row">
+                <input id="settingAdditionalList" type="checkbox">
+                自分とは別の曲リストも使う
+              </label>
+              <label>
+                追加リストの名前 <span class="optional-label">任意</span>
+                <input id="additionalListName" maxlength="24" placeholder="例：パートナー、夫、同僚、社長">
+              </label>
+              <p class="small">有効にすると、曲の登録・検索・歌った記録をリストごとに切り替えられます。</p>
+            </div>
+          </article>
+            </div>
+          </details>
+          <details class="settings-category">
+            <summary>
+              <span class="settings-category-title"><strong>詳細設定</strong><small>曲リスト・記録・帰り道などを設定</small></span>
+              <span class="settings-category-chevron" aria-hidden="true">⌄</span>
+            </summary>
+            <div class="grid">
+          <article class="card settings-target" id="settings-song-list">
+            <span class="tag">Song List</span>
+            <h3>マイ曲リスト設定</h3>
             <label class="check-row">
               <input id="settingMemo" type="checkbox">
               マイ曲リストにメモ欄を表示する
@@ -6661,17 +6824,6 @@
               <input id="settingHistoryMemo" type="checkbox" checked>
               歌った記録ごとにメモ欄を表示する
             </label>
-            <div class="additional-list-settings" id="additionalListSettings">
-              <label class="check-row">
-                <input id="settingAdditionalList" type="checkbox">
-                自分とは別の曲リストも使う
-              </label>
-              <label>
-                追加リストの名前 <span class="optional-label">任意</span>
-                <input id="additionalListName" maxlength="24" placeholder="例：パートナー、夫、同僚、社長">
-              </label>
-              <p class="small">有効にすると、曲の登録・検索・歌った記録をリストごとに切り替えられます。</p>
-            </div>
             <div class="additional-list-settings" id="songOwnerSettings">
               <label class="check-row">
                 <input id="settingSongOwners" type="checkbox">
@@ -6772,6 +6924,8 @@
             <button class="btn ghost" id="restoreHistoryBackup" type="button">削除した歌った記録を復元</button>
             <p class="small" id="restoreHistoryStatus">復元できる記録はありません。</p>
           </article>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -6797,8 +6951,8 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#community">みんなのお気に入り</a>
-              <a href="#performance-share">歌える・演奏できる</a>
+              <a href="#community">みんなのお気に入り曲</a>
+              <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
@@ -6855,8 +7009,8 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#community">みんなのお気に入り</a>
-              <a href="#performance-share">歌える・演奏できる</a>
+              <a href="#community">みんなのお気に入り曲</a>
+              <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
@@ -6915,8 +7069,8 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a class="active" href="#community" aria-current="page">みんなのお気に入り</a>
-              <a href="#performance-share">歌える・演奏できる</a>
+              <a class="active" href="#community" aria-current="page">みんなのお気に入り曲</a>
+              <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
@@ -6956,8 +7110,8 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#community">みんなのお気に入り</a>
-              <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる</a>
+              <a href="#community">みんなのお気に入り曲</a>
+              <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
@@ -7386,7 +7540,7 @@
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="gacha">
-              <span class="guide-shortcut-icon">🎲</span>
+              <span class="guide-shortcut-icon">◇</span>
               <span><strong>曲ガチャ</strong><span>次に歌う曲に迷った時に</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
@@ -7394,7 +7548,7 @@
         </section>
 
         <section class="guide-category" aria-labelledby="guideCommunitySongs">
-          <h3 class="guide-category-heading" id="guideCommunitySongs"><span>👥</span>みんなの曲</h3>
+          <h3 class="guide-category-heading" id="guideCommunitySongs"><span>◎</span>みんなの曲</h3>
           <div class="guide-shortcut-grid">
             <button class="guide-shortcut" type="button" data-guide-target="community">
               <span class="guide-shortcut-icon">★</span>
@@ -7410,15 +7564,15 @@
         </section>
 
         <section class="guide-category" aria-labelledby="guideShop">
-          <h3 class="guide-category-heading" id="guideShop"><span>🏠</span>お店</h3>
+          <h3 class="guide-category-heading" id="guideShop"><span>⌂</span>お店</h3>
           <div class="guide-shortcut-grid">
             <button class="guide-shortcut" type="button" data-guide-target="info">
-              <span class="guide-shortcut-icon">📢</span>
+              <span class="guide-shortcut-icon">!</span>
               <span><strong>お知らせを見る</strong><span>お店からの案内、LINE、Instagram</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="menu">
-              <span class="guide-shortcut-icon">🍸</span>
+              <span class="guide-shortcut-icon">▱</span>
               <span><strong>メニューを見る</strong><span>飲み放題、ボトル、フードを確認</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
@@ -7428,7 +7582,7 @@
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="about">
-              <span class="guide-shortcut-icon">📍</span>
+              <span class="guide-shortcut-icon">⌖</span>
               <span><strong>店舗情報</strong><span>アクセス、営業時間、連絡先</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
@@ -7454,17 +7608,17 @@
           <h3 class="guide-category-heading" id="guideRecords"><span>✓</span>記録・便利機能</h3>
           <div class="guide-shortcut-grid">
             <button class="guide-shortcut" type="button" data-guide-target="history">
-              <span class="guide-shortcut-icon">🗓</span>
+              <span class="guide-shortcut-icon">□</span>
               <span><strong>歌った記録</strong><span>日付ごとに歌った曲を保存</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="daily">
-              <span class="guide-shortcut-icon">📝</span>
+              <span class="guide-shortcut-icon">✓</span>
               <span><strong>今日の記録</strong><span>セットリスト、ドリンク、メモ</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="drum-gacha">
-              <span class="guide-shortcut-icon">🎁</span>
+              <span class="guide-shortcut-icon">◇</span>
               <span><strong>DRUMガチャ</strong><span>ご来店中の運だめし</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
@@ -7552,6 +7706,7 @@
     const homePromptStorageKey = "music-saloon-drum-home-prompt";
     const appUpdateStorageKey = "music-saloon-drum-app-update";
     const songRecordConfirmStorageKey = "music-saloon-drum-song-record-confirm";
+    const backupStatusStorageKey = "music-saloon-drum-backup-status";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
     const heroImageCount = 7;
@@ -7631,6 +7786,8 @@
     const focusSongFormButton = document.getElementById("focusSongFormButton");
     const songRegister = document.getElementById("songRegister");
     const openSongBackupButton = document.getElementById("openSongBackupButton");
+    const backupLastStatus = document.getElementById("backupLastStatus");
+    const backupPanelLastStatus = document.getElementById("backupPanelLastStatus");
     const songBackupPanel = document.getElementById("songBackupPanel");
     const songTagFilter = document.getElementById("songTagFilter");
     const songTagFilterButton = document.getElementById("songTagFilterButton");
@@ -7897,7 +8054,7 @@
     ];
     const floatingNavOptions = [
       { id: "top", label: "トップ", shortLabel: "トップ", target: "top", icon: "⌂" },
-      { id: "song-register", label: "曲を登録", shortLabel: "曲登録", target: "song-register", icon: "＋" },
+      { id: "song-register", label: "曲を登録する", shortLabel: "曲登録", target: "song-register", icon: "＋" },
       { id: "customers", label: "マイ曲リスト", shortLabel: "曲リスト", target: "customers", icon: "♪" },
       { id: "saved-setlists", label: "マイセットリスト", shortLabel: "セットリスト", target: "saved-setlists", icon: "≡" },
       { id: "menu", label: "メニュー", shortLabel: "メニュー", target: "menu", icon: "drink" },
@@ -8053,8 +8210,14 @@
       "DRUMガイド": "DRUM Guide",
       "DRUMガイドを見る": "View DRUM Guide",
       "設定メニュー": "Settings Menu",
+      "基本設定": "Basic Settings",
+      "色・トップ画面・移動バーを設定": "Set colors, home screen, and navigation bar",
+      "詳細設定": "Advanced Settings",
+      "曲リスト・記録・帰り道などを設定": "Configure song lists, records, travel support, and more",
       "トップ表示": "Home Shortcuts",
       "移動バー": "Navigation Bar",
+      "主な機能": "Main Features",
+      "主な機能の表示": "Main Feature Visibility",
       "フローティングバー設定": "Floating Bar Settings",
       "「今日の一言」の下にフローティングバーを表示する": "Show the floating bar below Today's Note",
       "表示するページは最大8項目まで選べます。入りきらないボタンは、バーを横にスワイプすると表示できます。": "Choose up to eight pages. Swipe horizontally within the bar to view buttons that do not fit.",
@@ -8076,6 +8239,8 @@
       "ルール": "Rules",
       "問い合わせ": "Contact",
       "バックアップ": "Backup",
+      "天気・タクシー・駅からの経路を確認": "Check weather, taxis, and routes from nearby stations",
+      "必要な項目だけ設定で表示できます": "Show only the tools you need in Settings",
       "生：アサヒスーパードライ": "Draft: Asahi Super Dry",
       "瓶：アサヒスーパードライ": "Bottle: Asahi Super Dry",
       "瓶：ハートランド": "Bottle: Heartland",
@@ -9341,6 +9506,7 @@
       renderCapabilityLocalList();
       renderSavedSetlistPicker();
       renderSavedSetlists();
+      renderBackupStatus();
       if (catalogSearchItems.length) renderCatalogSearchResults();
     }
 
@@ -9665,6 +9831,44 @@
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
 
+    function getBackupStatus() {
+      try {
+        return JSON.parse(localStorage.getItem(backupStatusStorageKey) || "{}");
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function renderBackupStatus() {
+      const status = getBackupStatus();
+      const savedAt = status.savedAt ? new Date(status.savedAt) : null;
+      const isValid = savedAt && !Number.isNaN(savedAt.getTime());
+      let message = currentLanguage === "en" ? "No backup has been saved yet." : "まだバックアップしていません。";
+      let isWarning = songs.length > 0;
+
+      if (isValid) {
+        const days = Math.max(0, Math.floor((Date.now() - savedAt.getTime()) / 86400000));
+        const dateLabel = currentLanguage === "en"
+          ? savedAt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" })
+          : savedAt.toLocaleDateString("ja-JP", { year: "numeric", month: "numeric", day: "numeric" });
+        isWarning = days >= 30;
+        message = currentLanguage === "en"
+          ? `Last backup: ${dateLabel}${isWarning ? " (More than 30 days ago)" : ""}`
+          : `最終バックアップ：${dateLabel}${isWarning ? "（30日以上経過しています）" : ""}`;
+      }
+
+      [backupLastStatus, backupPanelLastStatus].forEach((element) => {
+        if (!element) return;
+        element.textContent = message;
+        element.classList.toggle("is-warning", isWarning);
+      });
+    }
+
+    function markBackupSaved() {
+      localStorage.setItem(backupStatusStorageKey, JSON.stringify({ savedAt: new Date().toISOString() }));
+      renderBackupStatus();
+    }
+
     async function saveJsonBackupFile() {
       const jsonText = createSongJsonBackup();
       const filename = jsonBackupFilename();
@@ -9678,14 +9882,15 @@
               files: [file],
               title: "Music Saloon DRUM マイ曲リストバックアップ"
             });
-            return;
+            return true;
           } catch (error) {
-            if (error.name === "AbortError") return;
+            if (error.name === "AbortError") return false;
           }
         }
       }
 
       downloadBlob(blob, filename);
+      return true;
     }
 
     const groupedImportKeyPattern = /(?:原曲(?:キー)?(?:オクターブ下げ)?(?:\s*(?:[+＋\-－]\s*\d+(?:\s*(?:or|または|,|、|／)\s*[+＋\-－]?\s*\d+)*)?)?|原音(?:\s*(?:→)?\s*[+＋\-－]?\s*\d+|\s*±\s*0)?|[▲▼▽△]\s*\d+(?:\s*[〜～~\-]\s*\d+)?(?:音下げ)?|[♭♯]\s*\d+(?:\s*[〜～~\-]\s*\d+)?|[+＋\-－]\s*\d+(?:\s*[〜～~]\s*[+＋\-－]?\s*\d+)?)(?:\s*(?:or|または|,|、|／)\s*(?:原音)?[+＋\-－▲▼]?\s*\d+(?:\s*[〜～~\-]\s*\d+)?)*/gi;
@@ -10218,6 +10423,7 @@
       renderMenuFavorites();
       renderDailyShopMessage();
       renderHistoryBackupStatus();
+      renderBackupStatus();
       renderDailyMemo();
       renderStaffProfiles();
       if (staffSongsModal.classList.contains("show")) renderStaffSongsModal();
@@ -13575,7 +13781,8 @@
 
     saveJsonFileButton.addEventListener("click", async () => {
       songJsonBackupText.value = createSongJsonBackup();
-      await saveJsonBackupFile();
+      const saved = await saveJsonBackupFile();
+      if (saved) markBackupSaved();
     });
 
     restoreJsonButton.addEventListener("click", () => {
@@ -14328,6 +14535,8 @@
 
     openCommuteSettings.addEventListener("click", () => {
       openSettingsPanel();
+      const category = commuteDestination.closest(".settings-category");
+      if (category) category.open = true;
       window.setTimeout(() => commuteDestination.focus(), 120);
     });
 
@@ -14492,11 +14701,16 @@
       closeSettingsQuickMenu();
       if (!target) return;
 
-      const panelTop = settingsModalPanel.getBoundingClientRect().top;
-      const targetTop = target.getBoundingClientRect().top;
-      const headerHeight = settingsModalHeader.getBoundingClientRect().height;
-      const nextTop = settingsModalPanel.scrollTop + targetTop - panelTop - headerHeight - 14;
-      settingsModalPanel.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
+      const category = target.closest(".settings-category");
+      if (category) category.open = true;
+
+      window.requestAnimationFrame(() => {
+        const panelTop = settingsModalPanel.getBoundingClientRect().top;
+        const targetTop = target.getBoundingClientRect().top;
+        const headerHeight = settingsModalHeader.getBoundingClientRect().height;
+        const nextTop = settingsModalPanel.scrollTop + targetTop - panelTop - headerHeight - 14;
+        settingsModalPanel.scrollTo({ top: Math.max(0, nextTop), behavior: "smooth" });
+      });
     });
 
     document.addEventListener("click", (event) => {
@@ -14505,6 +14719,8 @@
       const target = document.getElementById(button.dataset.updateSettingsTarget);
       if (!target) return;
       openSettingsPanel();
+      const category = target.closest(".settings-category");
+      if (category) category.open = true;
       window.requestAnimationFrame(() => {
         const panelTop = settingsModalPanel.getBoundingClientRect().top;
         const targetTop = target.getBoundingClientRect().top;
@@ -14861,6 +15077,7 @@
     renderSavedSetlists();
     renderSongs();
     renderHistory();
+    renderBackupStatus();
     showView(location.hash.replace("#", "") || "top", false);
     applyLanguage();
     updateSongPhotoTargetUi();
