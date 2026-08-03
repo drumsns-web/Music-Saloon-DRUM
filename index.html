@@ -5624,13 +5624,14 @@
       padding: 20px;
       border: 2px solid var(--orange);
       border-radius: 18px;
-      background: linear-gradient(145deg, var(--forest), var(--deep));
+      background: linear-gradient(145deg, rgb(var(--theme-dark-rgb)), rgb(var(--theme-deep-rgb)));
       color: #fff;
       text-align: center;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 12px 28px rgba(0, 0, 0, .18);
     }
-    .live-mode-progress { font-weight: 800; opacity: .9; }
+    .live-mode-progress { color: #fff; font-weight: 800; opacity: 1; }
     .live-mode-song-title { margin: 0; color: #fff; font-size: clamp(30px, 7vw, 58px); line-height: 1.18; }
-    .live-mode-artist { margin: 0; font-size: clamp(19px, 4vw, 30px); }
+    .live-mode-artist { margin: 0; color: #fff; font-size: clamp(19px, 4vw, 30px); }
     .live-mode-key {
       justify-self: center;
       padding: 8px 16px;
@@ -5664,7 +5665,7 @@
     }
     .live-mode-order button.is-current { border-color: var(--orange); box-shadow: inset 4px 0 var(--orange); }
     .live-mode-order button.is-complete { opacity: .62; text-decoration: line-through; }
-    .live-mode-order small { color: var(--muted); }
+    .live-mode-order small { display: block; margin-top: 2px; color: var(--muted); }
     @media (max-width: 560px) {
       .font-size-picker { grid-template-columns: 1fr; }
       .live-mode-panel { padding: 16px; }
@@ -8379,6 +8380,16 @@
     let isApplyingLanguage = false;
 
     const exactTranslations = {
+      "アプリ更新情報": "App Update",
+      "アプリ更新情報　2026.08.03": "App Update  2026.08.03",
+      "LIVE表示・オフライン・文字サイズを追加しました": "Added LIVE View, Offline Access, and Text Sizes",
+      "マイセットリストのLIVE・練習モード、オフライン表示、文字サイズ3段階を追加しました。すべて設定から元へ戻せます。": "Added LIVE / Rehearsal Mode for My Setlists, offline access, and three text sizes. You can restore the previous behavior anytime in Settings.",
+      "LIVE・練習モードを使う": "Try LIVE / Rehearsal Mode",
+      "設定を確認する": "Review Settings",
+      "LIVE表示・オフライン・文字サイズを追加": "Added LIVE View, Offline Access, and Text Sizes",
+      "セットリストを1曲ずつ大きく表示するモード、通信が切れた時の案内、3段階の文字サイズを追加しました。各機能は設定で戻せます。": "Added a one-song-at-a-time setlist view, offline status guidance, and three text sizes. Each feature can be reverted in Settings.",
+      "設定を開く →": "Open Settings →",
+      "LIVE・練習モードを使う →": "Try LIVE / Rehearsal Mode →",
       "LIVE・練習モード": "LIVE / Rehearsal Mode",
       "マイセットリストでLIVE・練習モードを使う": "Use LIVE / Rehearsal Mode with My Setlists",
       "演奏済みにする": "Mark Complete",
