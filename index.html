@@ -3778,6 +3778,18 @@
 
     .setlist-builder .card { margin: 0; }
 
+    .setlist-view-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 14px 0 18px;
+    }
+
+    .setlist-view-actions .btn { min-height: 52px; }
+
+    .setlist-saved-panel { min-width: 0; scroll-margin-top: 150px; }
+    #savedSetlistForm { scroll-margin-top: 150px; }
+
     .setlist-form-actions,
     .setlist-card-actions,
     .setlist-song-actions {
@@ -5456,6 +5468,9 @@
       .favorite-capability-entry .btn { width: 100%; }
       .song-hub-nav { grid-template-columns: 1fr; }
       .setlist-builder { grid-template-columns: 1fr; }
+      .setlist-saved-panel { order: -1; }
+      .setlist-view-actions { position: sticky; top: var(--floating-nav-space, 0); z-index: 20; }
+      .setlist-view-actions .btn { min-height: 48px; padding: 9px 8px; }
       .app-update-body { grid-template-columns: 1fr; }
       .app-update-body .btn { width: 100%; }
       .app-update-history-item { grid-template-columns: 1fr; }
@@ -7090,6 +7105,10 @@
           </div>
         </nav>
         <p class="privacy-note">マイセットリストは、この端末のブラウザだけに保存されます。お店や他のお客様へ自動共有されることはありません。</p>
+        <div class="setlist-view-actions" aria-label="マイセットリスト内の移動">
+          <button class="btn primary" id="viewSavedSetlists" type="button">保存済みを見る</button>
+          <button class="btn ghost" id="createNewSetlist" type="button">＋ 新しく作る</button>
+        </div>
         <div class="setlist-builder">
           <form class="card" id="savedSetlistForm">
             <span class="tag orange">Create</span>
@@ -7108,7 +7127,7 @@
             </div>
             <p class="small" id="savedSetlistStatus" aria-live="polite"></p>
           </form>
-          <div>
+          <div class="setlist-saved-panel" id="savedSetlistPanel">
             <div class="section-head">
               <div>
                 <h3>保存済み</h3>
@@ -8177,6 +8196,9 @@
     const savedSetlistStatus = document.getElementById("savedSetlistStatus");
     const savedSetlistCount = document.getElementById("savedSetlistCount");
     const savedSetlistList = document.getElementById("savedSetlistList");
+    const savedSetlistPanel = document.getElementById("savedSetlistPanel");
+    const viewSavedSetlists = document.getElementById("viewSavedSetlists");
+    const createNewSetlist = document.getElementById("createNewSetlist");
 
     const kanaGroups = [
       { label: "あ", chars: "あいうえお" },
@@ -8390,6 +8412,8 @@
       "セットリストを1曲ずつ大きく表示するモード、通信が切れた時の案内、3段階の文字サイズを追加しました。各機能は設定で戻せます。": "Added a one-song-at-a-time setlist view, offline status guidance, and three text sizes. Each feature can be reverted in Settings.",
       "設定を開く →": "Open Settings →",
       "LIVE・練習モードを使う →": "Try LIVE / Rehearsal Mode →",
+      "保存済みを見る": "View Saved Setlists",
+      "＋ 新しく作る": "+ Create New",
       "LIVE・練習モード": "LIVE / Rehearsal Mode",
       "マイセットリストでLIVE・練習モードを使う": "Use LIVE / Rehearsal Mode with My Setlists",
       "演奏済みにする": "Mark Complete",
@@ -10320,7 +10344,7 @@
           `;
         }).join("");
         return `
-          <details class="saved-setlist-card" ${setlistIndex === 0 ? "open" : ""}>
+          <details class="saved-setlist-card" data-setlist-card="${escapeText(setlist.id)}" ${setlistIndex === 0 ? "open" : ""}>
             <summary>
               <span><strong>${escapeText(setlist.title)}</strong><small>${setlist.items.length}${escapeText(uiText("曲"))} / ${escapeText(uiText("更新"))}: ${escapeText(savedSetlistDate(setlist.updatedAt))}</small></span>
               <span aria-hidden="true">⌄</span>
@@ -14580,6 +14604,16 @@
       resetSavedSetlistForm(uiText("編集を取り消しました。"));
     });
 
+    viewSavedSetlists.addEventListener("click", () => {
+      savedSetlistPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    createNewSetlist.addEventListener("click", () => {
+      resetSavedSetlistForm();
+      savedSetlistForm.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(() => savedSetlistTitle.focus(), 350);
+    });
+
     savedSetlistForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const title = savedSetlistTitle.value.trim();
@@ -14599,13 +14633,15 @@
         return song ? setlistSongSnapshot(song) : previousItems.find((item) => item.songId === songId);
       }).filter(Boolean);
       const now = new Date().toISOString();
+      let savedSetlistId = editingSetlist ? editingSetlist.id : "";
       if (editingSetlist) {
         editingSetlist.title = title;
         editingSetlist.items = items;
         editingSetlist.updatedAt = now;
       } else {
+        savedSetlistId = createId();
         savedSetlists.unshift({
-          id: createId(),
+          id: savedSetlistId,
           title,
           items,
           createdAt: now,
@@ -14615,6 +14651,15 @@
       saveSavedSetlists();
       renderSavedSetlists();
       resetSavedSetlistForm(uiText(editingSetlist ? "マイセットリストを更新しました。" : "マイセットリストを保存しました。"));
+      window.requestAnimationFrame(() => {
+        const savedCard = savedSetlistList.querySelector(`[data-setlist-card="${CSS.escape(savedSetlistId)}"]`);
+        if (savedCard) {
+          savedCard.open = true;
+          savedCard.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          savedSetlistPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
     });
 
     savedSetlistList.addEventListener("click", async (event) => {
