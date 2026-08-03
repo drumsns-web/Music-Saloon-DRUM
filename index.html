@@ -4791,13 +4791,18 @@
     }
 
     .home-os-chevron {
-      font-size: 24px;
-      font-weight: 900;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 3px;
+      border-right: 3px solid currentColor;
+      border-bottom: 3px solid currentColor;
+      transform: rotate(45deg);
       transition: transform .2s ease;
     }
 
-    .home-os-card[open] .home-os-chevron {
-      transform: rotate(90deg);
+    .home-os-card[open] > summary .home-os-chevron {
+      transform: rotate(225deg);
     }
 
     .home-os-body {
@@ -4849,10 +4854,39 @@
 
     .home-browser-note > summary,
     .home-save-note > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
       padding: 9px 11px;
       color: var(--forest);
       font-weight: 900;
       cursor: pointer;
+      list-style: none;
+    }
+
+    .home-browser-note > summary::-webkit-details-marker,
+    .home-save-note > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .home-browser-note > summary::after,
+    .home-save-note > summary::after {
+      content: "";
+      flex: 0 0 auto;
+      width: 8px;
+      height: 8px;
+      margin: -4px 3px 0 8px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg);
+      transition: transform .2s ease;
+    }
+
+    .home-browser-note[open] > summary::after,
+    .home-save-note[open] > summary::after {
+      margin-top: 4px;
+      transform: rotate(225deg);
     }
 
     .home-browser-note p,
@@ -7622,7 +7656,7 @@
         <details class="home-os-card iphone-card" id="homeIphoneGuide">
           <summary>
             <span class="home-os-title"><strong>iPhone（iOS）</strong><small>Safari推奨</small></span>
-            <span class="home-os-chevron" aria-hidden="true">›</span>
+            <span class="home-os-chevron" aria-hidden="true"></span>
           </summary>
           <div class="home-os-body">
             <ol class="home-add-numbered">
@@ -7639,7 +7673,7 @@
         <details class="home-os-card android-card" id="homeAndroidGuide">
           <summary>
             <span class="home-os-title"><strong>Android</strong><small>Chrome推奨</small></span>
-            <span class="home-os-chevron" aria-hidden="true">›</span>
+            <span class="home-os-chevron" aria-hidden="true"></span>
           </summary>
           <div class="home-os-body">
             <ol class="home-add-numbered">
