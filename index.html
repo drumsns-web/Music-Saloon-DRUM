@@ -7831,6 +7831,11 @@
               <span><strong>バックアップ</strong><span>曲リストの保存・復元</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
+            <button class="guide-shortcut" type="button" data-share-app>
+              <span class="guide-shortcut-icon">↗</span>
+              <span><strong>アプリを共有</strong><span>URLをLINEやメールで送る</span></span>
+              <span class="guide-shortcut-arrow">›</span>
+            </button>
           </div>
         </section>
       </div>
@@ -8569,6 +8574,10 @@
       "LIVE練習や本番用に、曲順とタイトルを付けたセットリストを保存できるようになりました。": "Save titled, ordered setlists for live practice and performances.",
       "ホーム画面用アイコンを改善": "Improved the Home Screen Icon",
       "スマホのホーム画面へ追加した時に、Music Saloon DRUMの店舗アイコンが表示されるようにしました。": "The Music Saloon DRUM store icon now appears when added to a phone's Home Screen.",
+      "アプリを共有": "Share This App",
+      "URLをLINEやメールで送る": "Send the link via LINE or email",
+      "アプリのURLをコピーしました。": "App link copied.",
+      "下のURLをコピーしてください。": "Copy the URL below.",
       "曲データ検索を追加": "Added Song Database Search",
       "曲名・歌手名の候補検索、JOYSOUND・DAMでの確認、コード・歌詞検索への移動に対応しました。": "Added title and artist suggestions, JOYSOUND and DAM checks, and chord and lyrics search links.",
       "曲リストを探しやすく改善": "Made Song Lists Easier to Browse",
@@ -11233,6 +11242,37 @@
     function closeGuideModalPanel() {
       guideModal.classList.remove("show");
       guideModal.setAttribute("aria-hidden", "true");
+    }
+
+    async function shareApp() {
+      const url = "https://drumsns-web.github.io/Music-Saloon-DRUM/";
+      const shareData = currentLanguage === "en"
+        ? {
+            title: "Music Saloon DRUM Official App",
+            text: "Here is the official Music Saloon DRUM shop and song app.",
+            url
+          }
+        : {
+            title: "Music Saloon DRUM 公式アプリ",
+            text: "Music Saloon DRUMの店舗・曲管理アプリです。",
+            url
+          };
+
+      if (navigator.share) {
+        try {
+          await navigator.share(shareData);
+          return;
+        } catch (error) {
+          if (error && error.name === "AbortError") return;
+        }
+      }
+
+      try {
+        await navigator.clipboard.writeText(url);
+        showUndo(uiText("アプリのURLをコピーしました。"));
+      } catch (error) {
+        window.prompt(uiText("下のURLをコピーしてください。"), url);
+      }
     }
 
     function drumGachaRateForToday() {
@@ -15221,6 +15261,13 @@
     });
 
 	    guideModal.addEventListener("click", (event) => {
+	      const shareButton = event.target.closest("[data-share-app]");
+	      if (shareButton) {
+	        closeGuideModalPanel();
+	        shareApp();
+	        return;
+	      }
+
 	      const button = event.target.closest("[data-guide-target]");
       if (!button) return;
       const target = button.dataset.guideTarget;
