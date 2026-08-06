@@ -3194,6 +3194,24 @@
       align-items: center;
     }
 
+    .popular-index-toolbar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .popular-index-toolbar-head strong {
+      color: var(--forest);
+      font-size: 13px;
+    }
+
+    .popular-index-request {
+      min-height: 36px !important;
+      padding: 6px 12px !important;
+      white-space: nowrap;
+    }
+
     .popular-index-label {
       min-width: 38px;
       color: var(--forest);
@@ -4478,19 +4496,6 @@
       min-height: 48px;
     }
 
-    .popular-page-actions {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 16px 0;
-    }
-
-    .popular-page-actions .btn {
-      min-height: 52px;
-      justify-content: center;
-      text-align: center;
-    }
-
     #song-request-area,
     #popular-search-area {
       scroll-margin-top: 180px;
@@ -4534,9 +4539,6 @@
     @media (max-width: 640px) {
       .popular-song-search,
       .song-request-form {
-        grid-template-columns: 1fr;
-      }
-      .popular-page-actions {
         grid-template-columns: 1fr;
       }
       .popular-song-row {
@@ -7583,11 +7585,6 @@
             </div>
           </div>
         </nav>
-
-        <div class="shared-ranking-actions popular-page-actions" aria-label="人気曲ページの操作">
-          <a class="btn ghost" href="#popular-search-area">人気曲・歌手から探す</a>
-          <a class="btn primary" href="#song-request-area">見つからない曲をリクエスト</a>
-        </div>
 
         <div class="shared-ranking" id="song-request-area">
           <div class="section-head">
@@ -13290,6 +13287,7 @@
       const kanaLabels = [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", "その他"];
       const latinLabels = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
       popularSongIndexJump.innerHTML = `
+        <div class="popular-index-toolbar-head"><strong>${currentLanguage === "en" ? "Jump by first character" : "文字から歌手を探す"}</strong><a class="btn primary popular-index-request" href="#song-request-area">${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</a></div>
         <div class="popular-index-line"><span class="popular-index-label">${currentLanguage === "en" ? "Kana" : "50音"}</span><div class="popular-index-buttons">${buttonHtml(kanaLabels)}</div></div>
         <div class="popular-index-line"><span class="popular-index-label">A–Z</span><div class="popular-index-buttons">${buttonHtml(latinLabels)}</div></div>
       `;
