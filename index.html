@@ -1652,7 +1652,7 @@
 
     .song-catalog-search {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr);
       gap: 10px;
       margin-top: 16px;
     }
@@ -1674,10 +1674,41 @@
       outline: 3px solid rgba(240, 138, 53, .22);
     }
 
-    .song-catalog-search .btn {
-      min-width: 118px;
-      min-height: 64px;
-      font-size: 18px;
+    .song-catalog-priority-label {
+      margin: 6px 0 0;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .song-catalog-priority-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .song-catalog-priority-actions .btn {
+      min-width: 0;
+      min-height: 54px;
+      font-size: 16px;
+    }
+
+    .musicbrainz-fallback {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(var(--theme-accent-rgb), .32);
+    }
+
+    .musicbrainz-fallback span {
+      color: #4d4238;
+      font-weight: 800;
+    }
+
+    .musicbrainz-fallback .btn {
+      min-height: 48px;
     }
 
     .song-catalog-status {
@@ -2086,6 +2117,11 @@
       }
 
       .song-catalog-search {
+        grid-template-columns: 1fr;
+      }
+
+      .song-catalog-priority-actions,
+      .musicbrainz-fallback {
         grid-template-columns: 1fr;
       }
 
@@ -4446,6 +4482,36 @@
       margin-bottom: 18px;
     }
 
+    .external-song-search-callout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 14px;
+      margin: 18px 0 0;
+      padding: 16px 18px;
+      border: 2px solid var(--orange);
+      border-radius: 12px;
+      background: #fff8eb;
+      color: #2d261e;
+      box-shadow: 0 10px 24px rgba(var(--theme-accent-rgb), .14);
+    }
+
+    .external-song-search-callout strong,
+    .external-song-search-callout span {
+      display: block;
+    }
+
+    .external-song-search-callout strong {
+      color: var(--forest);
+      font-size: 17px;
+    }
+
+    .external-song-search-callout span {
+      margin-top: 4px;
+      font-weight: 700;
+      line-height: 1.65;
+    }
+
     .popular-song-tabs,
     .popular-song-sort {
       display: flex;
@@ -4659,6 +4725,14 @@
     }
 
     @media (max-width: 640px) {
+      .external-song-search-callout {
+        grid-template-columns: 1fr;
+      }
+
+      .external-song-search-callout .btn {
+        width: 100%;
+      }
+
       .popular-song-search,
       .song-request-form {
         grid-template-columns: 1fr;
@@ -6203,21 +6277,21 @@
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.06</span></span>
-              <h2 id="appUpdateTitle">人気曲一覧と曲リクエストを追加しました</h2>
+              <h2 id="appUpdateTitle">曲・歌手データと曲リクエストを追加しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>国内・洋楽の人気曲を一覧からマイ曲リストへ登録でき、見つからない曲は追加リクエストを送れるようになりました。</p>
+            <p>国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。</p>
             <div class="app-update-latest-actions">
-              <a class="btn primary" href="#popular-songs">人気の曲・歌手を見る</a>
+              <a class="btn primary" href="#popular-songs">曲・歌手データを見る</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
                 <article class="app-update-history-item">
                   <time datetime="2026-08-06">2026.08.06</time>
-                  <div><strong>人気曲一覧と曲リクエストを追加</strong><p>国内・洋楽の人気曲一覧、全曲検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">人気の曲・歌手を見る →</a></div>
+                  <div><strong>曲・歌手データと曲リクエストを追加</strong><p>国内曲・洋楽曲と約18,500曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲・歌手データを見る →</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-03">2026.08.03</time>
@@ -6787,7 +6861,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">人気の曲・歌手</a>
+              <a href="#popular-songs">曲・歌手データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -6963,15 +7037,23 @@
             <p class="form-lead">まず下の検索欄へ曲名または歌手名を入力してください。候補からかんたんに登録できます。</p>
             <div class="song-catalog-card">
               <span class="catalog-eyebrow">おすすめ・かんたん登録</span>
-              <h4>① 曲名または歌手名で検索</h4>
-              <p class="catalog-main-help">② 候補を確認　→　③ 登録先のボタンを押すだけです。</p>
+              <h4>① 曲名または歌手名を入力</h4>
+              <p class="catalog-main-help">まずDAM、次にJOYSOUNDの公式検索で確認し、見つからない時だけMusicBrainzの候補検索を使えます。</p>
               <form class="song-catalog-search" id="songCatalogSearchForm">
                 <input id="songCatalogQuery" type="search" placeholder="ここに曲名・歌手名を入力" autocomplete="off" aria-label="曲名または歌手名で曲データを検索">
-                <button class="btn primary" id="songCatalogSearchButton" type="submit">曲を検索</button>
+                <p class="song-catalog-priority-label">② まず公式カラオケで検索</p>
+                <div class="song-catalog-priority-actions">
+                  <button class="btn dam-check" type="button" data-catalog-query-check="dam">DAMで検索 ↗</button>
+                  <button class="btn joysound-check" type="button" data-catalog-query-check="joysound">JOYSOUNDで検索 ↗</button>
+                </div>
+                <div class="musicbrainz-fallback">
+                  <span>③ 公式検索で見つからない場合</span>
+                  <button class="btn ghost" id="songCatalogSearchButton" type="submit">MusicBrainzで候補検索</button>
+                </div>
               </form>
-              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">1文字から検索できます。</p>
+              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">曲名または歌手名を入力して、公式検索からお試しください。</p>
               <div class="song-catalog-results" id="songCatalogResults"></div>
-              <p class="catalog-source-note">候補は一般の音楽データベース（MusicBrainz）です。JOYSOUND・DAMの配信曲データではありません。候補にカバー歌手が表示された時は「JOYSOUNDで確認」「DAMで確認」から公式検索をご利用ください。</p>
+              <p class="catalog-source-note">MusicBrainzは一般の音楽データベースのため、カバー歌手や別バージョンが先に表示される場合があります。カラオケ配信の確認はDAM、次にJOYSOUNDの公式検索を優先してください。</p>
             </div>
             <p class="alternative-register-heading">ほかの登録方法</p>
             <details class="bulk-song-entry secondary-entry">
@@ -7577,7 +7659,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">人気の曲・歌手</a>
+              <a href="#popular-songs">曲・歌手データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7640,7 +7722,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">人気の曲・歌手</a>
+              <a href="#popular-songs">曲・歌手データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7684,9 +7766,9 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <span class="tag orange">Popular Songs</span>
-            <h2>人気の曲・歌手から探す</h2>
-            <p class="lead">人気曲を歌手別・曲名順で見たり、曲名や歌手名から検索してマイ曲リストへ登録できます。</p>
+            <span class="tag orange">Song Catalog</span>
+            <h2>曲・歌手データから探す</h2>
+            <p class="lead">国内曲・洋楽曲や全曲データを、歌手別・曲名順で見たり、検索してマイ曲リストへ登録できます。</p>
           </div>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
@@ -7701,12 +7783,20 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a class="active" href="#popular-songs" aria-current="page">人気の曲・歌手</a>
+              <a class="active" href="#popular-songs" aria-current="page">曲・歌手データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
+
+        <div class="external-song-search-callout">
+          <div>
+            <strong>店内の曲データで見つからない時は、外部検索も使えます</strong>
+            <span>一般の音楽データベースから候補を探し、DAM・JOYSOUNDの公式検索でも確認できます。</span>
+          </div>
+          <button class="btn primary" type="button" data-open-external-song-search>外部検索から曲を登録</button>
+        </div>
 
         <div class="shared-ranking" id="song-request-area">
           <div class="section-head">
@@ -7731,12 +7821,12 @@
         <div class="shared-ranking" id="popular-search-area">
           <div class="popular-song-controls">
             <div>
-              <h3>歌手一覧から選ぶ・全18,462曲から検索</h3>
+              <h3>歌手一覧から選ぶ・約18,500曲から検索</h3>
               <p class="small">歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。</p>
             </div>
             <div class="popular-song-tabs" id="popularSongTabs">
-              <button class="btn is-active" type="button" data-popular-category="jp">国内人気曲</button>
-              <button class="btn ghost" type="button" data-popular-category="western">洋楽人気曲</button>
+              <button class="btn is-active" type="button" data-popular-category="jp">国内曲リスト</button>
+              <button class="btn ghost" type="button" data-popular-category="western">洋楽曲リスト</button>
               <button class="btn ghost" type="button" data-popular-category="catalog">全曲から検索</button>
             </div>
             <form class="popular-song-search" id="popularSongSearchForm">
@@ -7748,7 +7838,7 @@
               <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
             </div>
           </div>
-          <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">人気曲を読み込んでいます。</p>
+          <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">曲データを読み込んでいます。</p>
           <div class="song-index-jump auxiliary-index-jump" id="popularSongIndexJump" aria-label="文字ジャンプ"></div>
           <div id="popularSongList"></div>
         </div>
@@ -7776,7 +7866,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">人気の曲・歌手</a>
+              <a href="#popular-songs">曲・歌手データ</a>
               <a class="active" href="#community" aria-current="page">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7818,7 +7908,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">人気の曲・歌手</a>
+              <a href="#popular-songs">曲・歌手データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる曲</a>
             </div>
@@ -8277,7 +8367,7 @@
           <div class="guide-shortcut-grid">
             <button class="guide-shortcut" type="button" data-guide-target="popular-songs">
               <span class="guide-shortcut-icon">☆</span>
-              <span><strong>人気の曲・歌手</strong><span>人気曲一覧、曲検索、追加リクエスト</span></span>
+              <span><strong>曲・歌手データ</strong><span>国内曲・洋楽曲、全曲検索、追加リクエスト</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="community">
@@ -8808,7 +8898,7 @@
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
       { id: "community", label: "みんなのお気に入り曲", target: "community" },
-      { id: "popular-songs", label: "人気の曲・歌手", target: "popular-songs" },
+      { id: "popular-songs", label: "曲・歌手データ", target: "popular-songs" },
       { id: "performance-share", label: "歌える・演奏できる曲", target: "performance-share" },
       { id: "staff", label: "スタッフ紹介", target: "staff" },
       { id: "history", label: "歌った記録", target: "history" },
@@ -8829,7 +8919,7 @@
       { id: "info", label: "お知らせ", shortLabel: "お知らせ", target: "info", icon: "●" },
       { id: "favorites", label: "よく歌う曲", shortLabel: "よく歌う", target: "favorites", icon: "↻" },
       { id: "community", label: "みんなのお気に入り曲", shortLabel: "みんなの曲", target: "community", icon: "★" },
-      { id: "popular-songs", label: "人気の曲・歌手", shortLabel: "人気曲", target: "popular-songs", icon: "☆" },
+      { id: "popular-songs", label: "曲・歌手データ", shortLabel: "曲データ", target: "popular-songs", icon: "☆" },
       { id: "performance-share", label: "歌える・演奏できる曲", shortLabel: "歌・演奏", target: "performance-share", icon: "♬" },
       { id: "staff", label: "スタッフ紹介", shortLabel: "スタッフ", target: "staff", icon: "♩" },
       { id: "history", label: "歌った記録", shortLabel: "歌った記録", target: "history", icon: "◷" },
@@ -8977,12 +9067,12 @@
     const exactTranslations = {
       "アプリ更新情報": "App Update",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
-      "人気曲一覧と曲リクエストを追加しました": "Added Popular Songs and Song Requests",
-      "国内・洋楽の人気曲を一覧からマイ曲リストへ登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Browse popular Japanese and international songs, add them to My Song List, or request a missing song.",
-      "人気の曲・歌手を見る": "View Popular Songs & Artists",
-      "人気曲一覧と曲リクエストを追加": "Added Popular Songs and Song Requests",
-      "国内・洋楽の人気曲一覧、全曲検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added popular Japanese and international song lists, full catalog search, My Song List registration, and requests for missing songs.",
-      "人気の曲・歌手を見る →": "View Popular Songs & Artists →",
+      "曲・歌手データと曲リクエストを追加しました": "Added the Song & Artist Catalog and Song Requests",
+      "国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or about 18,500 catalog songs, and request a missing song.",
+      "曲・歌手データを見る": "View Song & Artist Catalog",
+      "曲・歌手データと曲リクエストを追加": "Added the Song & Artist Catalog and Song Requests",
+      "国内曲・洋楽曲と約18,500曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added Japanese and international song lists, search across about 18,500 songs, My Song List registration, and requests for missing songs.",
+      "曲・歌手データを見る →": "View Song & Artist Catalog →",
       "アプリ更新情報　2026.08.03": "App Update  2026.08.03",
       "LIVE表示・オフライン・文字サイズを追加しました": "Added LIVE View, Offline Access, and Text Sizes",
       "マイセットリストのLIVE・練習モード、オフライン表示、文字サイズ3段階を追加しました。すべて設定から元へ戻せます。": "Added LIVE / Rehearsal Mode for My Setlists, offline access, and three text sizes. You can restore the previous behavior anytime in Settings.",
@@ -9182,14 +9272,21 @@
       "歌詞": "Lyrics",
       "曲データから検索して登録": "Search the Song Database",
       "おすすめ・かんたん登録": "Recommended · Quick Add",
-      "① 曲名または歌手名で検索": "1. Search by Song or Artist",
-      "② 候補を確認　→　③ 登録先のボタンを押すだけです。": "2. Check a suggestion → 3. Choose where to add it.",
+      "① 曲名または歌手名を入力": "1. Enter a Song or Artist",
+      "まずDAM、次にJOYSOUNDの公式検索で確認し、見つからない時だけMusicBrainzの候補検索を使えます。": "Check DAM first, then JOYSOUND. Use MusicBrainz suggestions only when the song is not found.",
+      "② まず公式カラオケで検索": "2. Search Official Karaoke Catalogs First",
+      "JOYSOUNDで検索 ↗": "Search JOYSOUND ↗",
+      "DAMで検索 ↗": "Search DAM ↗",
+      "③ 公式検索で見つからない場合": "3. If It Is Not Found",
+      "MusicBrainzで候補検索": "Search MusicBrainz Suggestions",
+      "曲名または歌手名を入力して、公式検索からお試しください。": "Enter a song or artist, then try the official searches first.",
+      "曲名または歌手名を入力してください。": "Enter a song title or artist.",
       "ここに曲名・歌手名を入力": "Enter a song title or artist",
       "曲を検索": "Search Songs",
       "ほかの登録方法": "Other Ways to Add",
       "📷 写真から曲名を読み取る": "📷 Read a Song from a Photo",
       "✍️ 手入力・キー・タグなどを詳しく登録": "✍️ Manual Entry, Key, Tags and More",
-      "候補は一般の音楽データベース（MusicBrainz）です。JOYSOUND・DAMの配信曲データではありません。候補にカバー歌手が表示された時は「JOYSOUNDで確認」「DAMで確認」から公式検索をご利用ください。": "Suggestions come from the general MusicBrainz database, not the JOYSOUND or DAM karaoke catalogs. If a cover artist appears, use the official JOYSOUND or DAM search buttons.",
+      "MusicBrainzは一般の音楽データベースのため、カバー歌手や別バージョンが先に表示される場合があります。カラオケ配信の確認はDAM、次にJOYSOUNDの公式検索を優先してください。": "MusicBrainz is a general music database, so covers or alternate versions may appear first. Check DAM first, then JOYSOUND, for karaoke availability.",
       "公式カラオケで配信確認": "Check Official Karaoke Catalogs",
       "この候補を登録": "Add This Suggestion",
       "JOYSOUNDで確認": "Check JOYSOUND",
@@ -9939,17 +10036,19 @@
       "今日歌った曲として記録する": "Save as Sung Today",
       "歌い終わった時に押します": "Press after you finish singing",
       "歌い終わった時に押す（今日の日付・回数を記録）": "Press after singing (logs today's date and count)",
-      "人気の曲・歌手": "Popular Songs & Artists",
-      "人気の曲・歌手から探す": "Find Popular Songs & Artists",
-      "人気曲一覧・全曲検索": "Popular Songs & Full Catalog Search",
-      "国内人気曲": "Popular Japanese Songs",
-      "洋楽人気曲": "Popular International Songs",
+      "曲・歌手データ": "Song & Artist Catalog",
+      "曲・歌手データから探す": "Browse the Song & Artist Catalog",
+      "国内曲・洋楽曲や全曲データを、歌手別・曲名順で見たり、検索してマイ曲リストへ登録できます。": "Browse Japanese songs, international songs, or the full catalog by artist or title, then add songs to My Song List.",
+      "店内の曲データで見つからない時は、外部検索も使えます": "Can’t find it in the in-app catalog? Try External Search",
+      "一般の音楽データベースから候補を探し、DAM・JOYSOUNDの公式検索でも確認できます。": "Search a general music database and check the official DAM or JOYSOUND catalogs.",
+      "外部検索から曲を登録": "Add a Song with External Search",
+      "国内曲リスト": "Japanese Song List",
+      "洋楽曲リスト": "International Song List",
       "全曲から検索": "Search Full Catalog",
       "歌手名で見る": "View by Artist",
       "曲名で見る": "View by Song Title",
       "人気順で見る": "View by Popularity",
       "追加してほしい曲をリクエスト": "Request a Song to Add",
-      "人気曲・歌手から探す": "Browse Popular Songs & Artists",
       "見つからない曲をリクエスト": "Request a Missing Song",
       "見つからない曲を追加リクエスト": "Request a Missing Song",
       "曲名と歌手名を入力して送信できます。同じ曲名・歌手名は1件にまとめます。": "Enter the song title and artist. Duplicate requests are combined into one entry.",
@@ -9973,13 +10072,13 @@
       "追加リクエストを送信しました。": "Song request sent.",
       "送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the request. Check your connection and try again.",
       "この曲はすでにマイ曲リストへ登録されています。": "This song is already in My Song List.",
-      "歌手一覧から選ぶ・全18,462曲から検索": "Choose an Artist or Search All 18,462 Songs",
+      "歌手一覧から選ぶ・約18,500曲から検索": "Choose an Artist or Search About 18,500 Songs",
       "歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。": "Tap an artist to expand their songs, or search the uploaded catalog from one character.",
       "歌手一覧（曲は展開）": "Artist List (Expand Songs)",
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
-      "全18,462曲から曲名・歌手名を検索": "Search all 18,462 songs by title or artist"
+      "約18,500曲から曲名・歌手名を検索": "Search about 18,500 songs by title or artist"
     };
 
     const phraseTranslations = [
@@ -13502,12 +13601,12 @@
       if (!popularSongStatus) return;
       const query = popularSongSearch.value.trim();
       const scopeLabels = {
-        jp: currentLanguage === "en" ? "Popular Japanese Songs" : "国内人気曲",
-        western: currentLanguage === "en" ? "Popular International Songs" : "洋楽人気曲",
-        catalog: currentLanguage === "en" ? "Full 18,462-song catalog" : "全18,462曲"
+        jp: currentLanguage === "en" ? "Japanese Song List" : "国内曲リスト",
+        western: currentLanguage === "en" ? "International Song List" : "洋楽曲リスト",
+        catalog: currentLanguage === "en" ? "About 18,500 songs" : "約18,500曲"
       };
       popularSongSearch.placeholder = popularSongCategory === "catalog"
-        ? uiText("全18,462曲から曲名・歌手名を検索")
+        ? uiText("約18,500曲から曲名・歌手名を検索")
         : `${scopeLabels[popularSongCategory]}${currentLanguage === "en" ? ": search title or artist" : "内を曲名・歌手名で検索"}`;
       popularSongTabs.querySelectorAll("[data-popular-category]").forEach((button) => {
         const active = button.dataset.popularCategory === popularSongCategory;
@@ -14758,8 +14857,8 @@
           <p class="song-catalog-result-artist">${escapeText(item.artist || uiText("歌手名未登録"))}</p>
           <span class="song-catalog-action-label">${escapeText(uiText("公式カラオケで配信確認"))}</span>
           <div class="song-catalog-official-checks">
-            <button class="btn joysound-check" type="button" data-catalog-check="joysound" data-catalog-index="${index}">${escapeText(uiText("JOYSOUNDで確認"))} ↗</button>
             <button class="btn dam-check" type="button" data-catalog-check="dam" data-catalog-index="${index}">${escapeText(uiText("DAMで確認"))} ↗</button>
+            <button class="btn joysound-check" type="button" data-catalog-check="joysound" data-catalog-index="${index}">${escapeText(uiText("JOYSOUNDで確認"))} ↗</button>
           </div>
           <span class="song-catalog-action-label">${escapeText(uiText("この候補を登録"))}</span>
           <div class="song-catalog-actions">
@@ -14879,6 +14978,21 @@
     songCatalogSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
       searchSongCatalog();
+    });
+
+    songCatalogSearchForm.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-catalog-query-check]");
+      if (!button) return;
+      const query = songCatalogQuery.value.trim();
+      if (!query) {
+        songCatalogStatus.textContent = uiText("曲名または歌手名を入力してください。");
+        songCatalogQuery.focus();
+        return;
+      }
+      const url = button.dataset.catalogQueryCheck === "joysound"
+        ? `https://www.joysound.com/web/search/song?keyword=${encodeURIComponent(query)}&match=1`
+        : `https://www.clubdam.com/karaokesearch/?keyword=${encodeURIComponent(query)}&type=keyword`;
+      window.open(url, "_blank", "noopener");
     });
 
     songCatalogResults.addEventListener("click", (event) => {
@@ -15358,6 +15472,15 @@
       if (target) window.requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
     });
     document.addEventListener("click", (event) => {
+      const externalSearchButton = event.target.closest("[data-open-external-song-search]");
+      if (externalSearchButton) {
+        showView("song-register");
+        window.setTimeout(() => {
+          const catalogCard = songCatalogQuery && songCatalogQuery.closest(".song-catalog-card");
+          if (catalogCard) catalogCard.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (songCatalogQuery) songCatalogQuery.focus({ preventScroll: true });
+        }, 180);
+      }
       const indexModeButton = event.target.closest("[data-popular-index-mode]");
       if (indexModeButton && indexModeButton.dataset.popularIndexMode !== popularSongSortMode) {
         popularSongSortMode = indexModeButton.dataset.popularIndexMode;
