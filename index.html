@@ -3172,6 +3172,8 @@
     }
 
     #popularSongIndexJump:not([hidden]) {
+      display: grid;
+      gap: 6px;
       position: sticky;
       top: calc(var(--floating-nav-top, 110px) + var(--floating-nav-space, 66px) + 6px);
       z-index: 30;
@@ -3183,6 +3185,30 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, .13);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+    }
+
+    .popular-index-line {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 7px;
+      align-items: center;
+    }
+
+    .popular-index-label {
+      min-width: 38px;
+      color: var(--forest);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .popular-index-buttons {
+      display: flex;
+      gap: 5px;
+      min-width: 0;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: thin;
     }
 
     body:not(.floating-nav-visible) #popularSongIndexJump:not([hidden]) {
@@ -4452,9 +4478,65 @@
       min-height: 48px;
     }
 
+    .popular-page-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .popular-page-actions .btn {
+      min-height: 52px;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #song-request-area,
+    #popular-search-area {
+      scroll-margin-top: 180px;
+    }
+
+    .song-request-history {
+      margin-top: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .song-request-history summary {
+      width: fit-content;
+      cursor: pointer;
+      list-style: none;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      color: var(--forest);
+      padding: 11px 15px;
+      font-weight: 900;
+    }
+
+    .song-request-history summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .song-request-history summary::before {
+      content: "＋ ";
+      color: var(--orange-dark);
+    }
+
+    .song-request-history[open] summary::before {
+      content: "− ";
+    }
+
+    .song-request-history > div {
+      margin-top: 12px;
+    }
+
     @media (max-width: 640px) {
       .popular-song-search,
       .song-request-form {
+        grid-template-columns: 1fr;
+      }
+      .popular-page-actions {
         grid-template-columns: 1fr;
       }
       .popular-song-row {
@@ -7502,7 +7584,32 @@
           </div>
         </nav>
 
-        <div class="shared-ranking">
+        <div class="shared-ranking-actions popular-page-actions" aria-label="人気曲ページの操作">
+          <a class="btn ghost" href="#popular-search-area">人気曲・歌手から探す</a>
+          <a class="btn primary" href="#song-request-area">見つからない曲をリクエスト</a>
+        </div>
+
+        <div class="shared-ranking" id="song-request-area">
+          <div class="section-head">
+            <div>
+              <span class="tag orange">Request</span>
+              <h3>見つからない曲を追加リクエスト</h3>
+              <p class="small">曲名と歌手名を入力して送信できます。同じ曲名・歌手名は1件にまとめます。</p>
+            </div>
+          </div>
+          <form class="song-request-form" id="songRequestForm">
+            <label>曲名<input id="songRequestTitle" maxlength="255" required placeholder="例：いとしのエリー"></label>
+            <label>歌手名<input id="songRequestArtist" maxlength="255" required placeholder="例：サザンオールスターズ"></label>
+            <button class="btn primary" id="submitSongRequest" type="submit">追加をリクエスト</button>
+          </form>
+          <p class="shared-ranking-status" id="songRequestStatus" aria-live="polite"></p>
+          <details class="song-request-history">
+            <summary>これまでの追加リクエストを見る</summary>
+            <div id="songRequestList"></div>
+          </details>
+        </div>
+
+        <div class="shared-ranking" id="popular-search-area">
           <div class="popular-song-controls">
             <div>
               <h3>歌手一覧から選ぶ・全18,462曲から検索</h3>
@@ -7525,23 +7632,6 @@
           <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">人気曲を読み込んでいます。</p>
           <div class="song-index-jump auxiliary-index-jump" id="popularSongIndexJump" aria-label="文字ジャンプ"></div>
           <div id="popularSongList"></div>
-        </div>
-
-        <div class="shared-ranking">
-          <div class="section-head">
-            <div>
-              <h3>追加してほしい曲をリクエスト</h3>
-              <p class="small">曲名と歌手名を入力すると、人気曲とは別の「追加リクエスト」に表示されます。同じ曲名・歌手名は1件にまとめます。</p>
-            </div>
-          </div>
-          <form class="song-request-form" id="songRequestForm">
-            <label>曲名<input id="songRequestTitle" maxlength="255" required placeholder="例：いとしのエリー"></label>
-            <label>歌手名<input id="songRequestArtist" maxlength="255" required placeholder="例：サザンオールスターズ"></label>
-            <button class="btn primary" id="submitSongRequest" type="submit">追加をリクエスト</button>
-          </form>
-          <p class="shared-ranking-status" id="songRequestStatus" aria-live="polite"></p>
-          <h3>新しく追加リクエストされた曲</h3>
-          <div id="songRequestList"></div>
         </div>
       </div>
     </section>
@@ -9740,6 +9830,11 @@
       "曲名で見る": "View by Song Title",
       "人気順で見る": "View by Popularity",
       "追加してほしい曲をリクエスト": "Request a Song to Add",
+      "人気曲・歌手から探す": "Browse Popular Songs & Artists",
+      "見つからない曲をリクエスト": "Request a Missing Song",
+      "見つからない曲を追加リクエスト": "Request a Missing Song",
+      "曲名と歌手名を入力して送信できます。同じ曲名・歌手名は1件にまとめます。": "Enter the song title and artist. Duplicate requests are combined into one entry.",
+      "これまでの追加リクエストを見る": "View Previous Song Requests",
       "追加をリクエスト": "Send Request",
       "新しく追加リクエストされた曲": "Recently Requested Songs",
       "マイ曲リストへ登録": "Add to My Song List",
@@ -13137,6 +13232,7 @@
       return {
         title: String(item && item.title || "").trim(),
         artist: String(item && item.artist || "").trim(),
+        artist_index: String(item && item.artist_index || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
         artist_catalog_count: Number(item && item.artist_catalog_count || 0),
@@ -13158,6 +13254,48 @@
       return "曲データ";
     }
 
+    function popularExactIndexLabels() {
+      return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
+    }
+
+    function popularExactIndexGroup(item, mode = "artist") {
+      const source = String(mode === "title" ? item && item.title || "" : item && item.artist || "").trim();
+      const rawFirst = normalizeKana(source).charAt(0);
+      const rawLatin = rawFirst.toUpperCase();
+      if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
+      let first = mode === "artist" && item && item.artist_index
+        ? normalizeKana(item.artist_index).charAt(0)
+        : rawFirst;
+      const latin = first.toUpperCase();
+      if (/^[A-Z]$/.test(latin)) return latin;
+      const kanaBase = {
+        "が": "か", "ぎ": "き", "ぐ": "く", "げ": "け", "ご": "こ",
+        "ざ": "さ", "じ": "し", "ず": "す", "ぜ": "せ", "ぞ": "そ",
+        "だ": "た", "ぢ": "ち", "づ": "つ", "で": "て", "ど": "と",
+        "ば": "は", "び": "ひ", "ぶ": "ふ", "べ": "へ", "ぼ": "ほ",
+        "ぱ": "は", "ぴ": "ひ", "ぷ": "ふ", "ぺ": "へ", "ぽ": "ほ",
+        "ぁ": "あ", "ぃ": "い", "ぅ": "う", "ぇ": "え", "ぉ": "お",
+        "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ", "ゎ": "わ"
+      };
+      first = kanaBase[first] || first;
+      return popularExactIndexLabels().includes(first) ? first : "その他";
+    }
+
+    function renderPopularExactIndex(items, mode) {
+      if (!popularSongIndexJump) return;
+      const available = new Set((items || []).map((item) => popularExactIndexGroup(item, mode)));
+      const buttonHtml = (labels) => labels.map((label) => `
+          <button type="button" data-aux-index-jump="${escapeText(label)}" data-aux-index-target="popularSongList" ${available.has(label) ? "" : "disabled"}>${escapeText(label)}</button>
+        `).join("");
+      const kanaLabels = [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", "その他"];
+      const latinLabels = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+      popularSongIndexJump.innerHTML = `
+        <div class="popular-index-line"><span class="popular-index-label">${currentLanguage === "en" ? "Kana" : "50音"}</span><div class="popular-index-buttons">${buttonHtml(kanaLabels)}</div></div>
+        <div class="popular-index-line"><span class="popular-index-label">A–Z</span><div class="popular-index-buttons">${buttonHtml(latinLabels)}</div></div>
+      `;
+      popularSongIndexJump.hidden = !items || !items.length;
+    }
+
     function popularSongRowHtml(item, index, source = "popular") {
       const existing = findLocalPopularSong(item);
       const requested = source === "request";
@@ -13166,7 +13304,7 @@
       const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
       return `
-        <article class="popular-song-row" data-list-index-group="${escapeText(songIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
+        <article class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
           <div>
             <strong>${escapeText(item.title || "-")}</strong>
             <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
@@ -13194,7 +13332,7 @@
         });
       }
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
-      renderAuxiliaryIndex(popularSongIndexJump, items, "popularSongList", indexMode);
+      renderPopularExactIndex(items, indexMode);
       if (!items.length) {
         popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
         return;
@@ -13211,7 +13349,7 @@
       });
       if (popularSongSortMode === "artist") {
         popularSongList.innerHTML = `<div class="popular-song-list">${[...groups.entries()].map(([label, rows]) => `
-          <details class="popular-artist-group" data-list-index-group="${escapeText(songIndexGroup(rows[0].item, "artist"))}">
+          <details class="popular-artist-group" data-list-index-group="${escapeText(popularExactIndexGroup(rows[0].item, "artist"))}">
             <summary><span class="popular-artist-name">${escapeText(label)}</span><span class="popular-artist-count">${currentLanguage === "en" ? `${Math.max(rows.length, ...rows.map(({ item }) => item.artist_catalog_count || 0))} songs` : `${Math.max(rows.length, ...rows.map(({ item }) => item.artist_catalog_count || 0))}曲`}</span></summary>
             ${popularSongCategory === "catalog"
               ? `<div class="popular-song-list">${rows.map(({ item, index }) => popularSongRowHtml(item, index)).join("")}</div>`
