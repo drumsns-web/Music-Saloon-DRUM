@@ -7520,7 +7520,6 @@
             <div class="popular-song-sort" id="popularSongSort">
               <button class="btn is-active" type="button" data-popular-sort="artist">歌手一覧（曲は展開）</button>
               <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
-              <button class="btn ghost" type="button" data-popular-sort="rank">掲載順で見る</button>
             </div>
           </div>
           <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">人気曲を読み込んでいます。</p>
@@ -9740,7 +9739,6 @@
       "歌手名で見る": "View by Artist",
       "曲名で見る": "View by Song Title",
       "人気順で見る": "View by Popularity",
-      "掲載順で見る": "View in Listed Order",
       "追加してほしい曲をリクエスト": "Request a Song to Add",
       "追加をリクエスト": "Send Request",
       "新しく追加リクエストされた曲": "Recently Requested Songs",
@@ -10103,6 +10101,8 @@
     let sharedRankingSongs = [];
     let sharedCapabilities = [];
     let popularSongItems = [];
+    let popularArtistSongItems = [];
+    const popularArtistSongCache = new Map();
     let requestedSongItems = [];
     let popularSongCategory = "jp";
     let popularSongSortMode = "artist";
@@ -13139,6 +13139,7 @@
         artist: String(item && item.artist || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
+        artist_catalog_count: Number(item && item.artist_catalog_count || 0),
         request_count: Number(item && item.request_count || 0)
       };
     }
@@ -13211,8 +13212,10 @@
       if (popularSongSortMode === "artist") {
         popularSongList.innerHTML = `<div class="popular-song-list">${[...groups.entries()].map(([label, rows]) => `
           <details class="popular-artist-group" data-list-index-group="${escapeText(songIndexGroup(rows[0].item, "artist"))}">
-            <summary><span class="popular-artist-name">${escapeText(label)}</span><span class="popular-artist-count">${currentLanguage === "en" ? `${rows.length} songs` : `${rows.length}曲`}</span></summary>
-            <div class="popular-song-list">${rows.map(({ item, index }) => popularSongRowHtml(item, index)).join("")}</div>
+            <summary><span class="popular-artist-name">${escapeText(label)}</span><span class="popular-artist-count">${currentLanguage === "en" ? `${Math.max(rows.length, ...rows.map(({ item }) => item.artist_catalog_count || 0))} songs` : `${Math.max(rows.length, ...rows.map(({ item }) => item.artist_catalog_count || 0))}曲`}</span></summary>
+            ${popularSongCategory === "catalog"
+              ? `<div class="popular-song-list">${rows.map(({ item, index }) => popularSongRowHtml(item, index)).join("")}</div>`
+              : `<div class="popular-song-list" data-popular-artist-songs="${escapeText(label)}"><div class="empty">${escapeText(currentLanguage === "en" ? "Open this artist to load every catalog song." : "開くと、この歌手の全曲データを読み込みます。")}</div></div>`}
           </details>
         `).join("")}</div>`;
         return;
@@ -13262,15 +13265,52 @@
         const payload = await response.json();
         if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("popular songs unavailable");
         popularSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
-        popularSongStatus.textContent = currentLanguage === "en"
-          ? `${scopeLabels[popularSongCategory]}: ${popularSongItems.length} songs shown.`
-          : `${scopeLabels[popularSongCategory]}の中から ${popularSongItems.length}曲を表示しています。`;
+        popularSongStatus.textContent = popularSongCategory === "catalog"
+          ? (currentLanguage === "en"
+            ? `${popularSongItems.length} matching songs found in the full catalog.`
+            : `全曲データから${popularSongItems.length}曲見つかりました。`)
+          : (currentLanguage === "en"
+            ? `Open a listed artist to browse all of their songs in the full catalog.`
+            : `掲載歌手を開くと、全曲データにあるその歌手の曲をすべて見られます。`);
         renderPopularSongs();
       } catch (error) {
         console.warn(error);
         popularSongItems = [];
         popularSongStatus.textContent = uiText("曲一覧を取得できませんでした。時間をおいて再度お試しください。");
         renderPopularSongs();
+      }
+    }
+
+    async function loadPopularArtistSongs(details) {
+      const container = details && details.querySelector("[data-popular-artist-songs]");
+      if (!container || container.dataset.loaded === "true" || container.dataset.loading === "true") return;
+      const artist = container.dataset.popularArtistSongs || "";
+      const cacheKey = normalizeKana(artist);
+      container.dataset.loading = "true";
+      container.innerHTML = `<div class="empty">${escapeText(currentLanguage === "en" ? "Loading all songs..." : "全曲データを読み込んでいます。")}</div>`;
+      try {
+        let rows = popularArtistSongCache.get(cacheKey);
+        if (!rows) {
+          const params = new URLSearchParams({ action: "popular_artist_songs", artist });
+          const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("artist songs unavailable");
+          rows = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist).map((item) => {
+            const index = popularArtistSongItems.length;
+            popularArtistSongItems.push(item);
+            return { item, index };
+          });
+          popularArtistSongCache.set(cacheKey, rows);
+        }
+        container.dataset.loaded = "true";
+        container.innerHTML = rows.length
+          ? rows.map(({ item, index }) => popularSongRowHtml(item, index, "artistCatalog")).join("")
+          : `<div class="empty">${escapeText(currentLanguage === "en" ? "No songs found for this artist." : "この歌手の曲が見つかりませんでした。")}</div>`;
+      } catch (error) {
+        console.warn(error);
+        container.innerHTML = `<div class="empty">${escapeText(currentLanguage === "en" ? "Could not load the songs. Please try again." : "曲を取得できませんでした。もう一度開き直してください。")}</div>`;
+      } finally {
+        delete container.dataset.loading;
       }
     }
 
@@ -14388,10 +14428,15 @@
       loadPopularSongs();
     });
     popularSongList.addEventListener("click", (event) => {
-      const button = event.target.closest('[data-popular-add="popular"]');
+      const button = event.target.closest("[data-popular-add]");
       if (!button) return;
-      addPopularSongToMyList(popularSongItems[Number(button.dataset.popularIndex)]);
+      const sourceItems = button.dataset.popularAdd === "artistCatalog" ? popularArtistSongItems : popularSongItems;
+      addPopularSongToMyList(sourceItems[Number(button.dataset.popularIndex)]);
     });
+    popularSongList.addEventListener("toggle", (event) => {
+      const details = event.target.closest(".popular-artist-group");
+      if (details && details.open) loadPopularArtistSongs(details);
+    }, true);
     songRequestList.addEventListener("click", (event) => {
       const button = event.target.closest('[data-popular-add="request"]');
       if (!button) return;
