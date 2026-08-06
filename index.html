@@ -3245,6 +3245,7 @@
       .popular-index-request {
         flex: 1 1 100%;
       }
+
     }
 
     .popular-index-groups {
@@ -3356,6 +3357,20 @@
       #popularSongList {
         position: relative;
         z-index: 0;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .popular-index-menu {
+        position: static;
+      }
+
+      .popular-index-popover,
+      .popular-index-menu:last-child > .popular-index-popover {
+        right: 8px;
+        left: 8px;
+        width: auto;
+        max-width: none;
       }
     }
 
