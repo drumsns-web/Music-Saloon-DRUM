@@ -3171,6 +3171,24 @@
       margin: 12px 0 14px;
     }
 
+    #popularSongIndexJump:not([hidden]) {
+      position: sticky;
+      top: calc(var(--floating-nav-top, 110px) + var(--floating-nav-space, 66px) + 6px);
+      z-index: 30;
+      margin: 10px -8px 14px;
+      padding: 8px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .5);
+      border-radius: 12px;
+      background: rgba(251, 244, 229, .96);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .13);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    body:not(.floating-nav-visible) #popularSongIndexJump:not([hidden]) {
+      top: 12px;
+    }
+
     .compact-list-details {
       min-width: 0;
       width: 100%;
@@ -7502,7 +7520,7 @@
             <div class="popular-song-sort" id="popularSongSort">
               <button class="btn is-active" type="button" data-popular-sort="artist">歌手一覧（曲は展開）</button>
               <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
-              <button class="btn ghost" type="button" data-popular-sort="rank">人気順で見る</button>
+              <button class="btn ghost" type="button" data-popular-sort="rank">掲載順で見る</button>
             </div>
           </div>
           <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">人気曲を読み込んでいます。</p>
@@ -9722,6 +9740,7 @@
       "歌手名で見る": "View by Artist",
       "曲名で見る": "View by Song Title",
       "人気順で見る": "View by Popularity",
+      "掲載順で見る": "View in Listed Order",
       "追加してほしい曲をリクエスト": "Request a Song to Add",
       "追加をリクエスト": "Send Request",
       "新しく追加リクエストされた曲": "Recently Requested Songs",
@@ -9747,7 +9766,8 @@
       "歌手一覧（曲は展開）": "Artist List (Expand Songs)",
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
-      "ChordWikiでコード検索 ↗": "Search ChordWiki ↗"
+      "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
+      "全18,462曲から曲名・歌手名を検索": "Search all 18,462 songs by title or artist"
     };
 
     const phraseTranslations = [
@@ -13132,8 +13152,8 @@
 
     function popularSongBadge(item, requested = false) {
       if (requested) return item.request_count > 1 ? `${item.request_count}件のリクエスト` : "追加リクエスト";
-      if (item.popular_jp_rank) return `国内人気 ${item.popular_jp_rank}位`;
-      if (item.popular_western_rank) return `洋楽人気 ${item.popular_western_rank}位`;
+      if (item.popular_jp_rank) return "国内人気曲";
+      if (item.popular_western_rank) return "洋楽人気曲";
       return "曲データ";
     }
 
@@ -13173,12 +13193,7 @@
         });
       }
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
-      if (popularSongSortMode === "artist") {
-        popularSongIndexJump.innerHTML = "";
-        popularSongIndexJump.hidden = true;
-      } else {
-        renderAuxiliaryIndex(popularSongIndexJump, items, "popularSongList", indexMode);
-      }
+      renderAuxiliaryIndex(popularSongIndexJump, items, "popularSongList", indexMode);
       if (!items.length) {
         popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
         return;
@@ -13213,6 +13228,14 @@
     async function loadPopularSongs() {
       if (!popularSongStatus) return;
       const query = popularSongSearch.value.trim();
+      const scopeLabels = {
+        jp: currentLanguage === "en" ? "Popular Japanese Songs" : "国内人気曲",
+        western: currentLanguage === "en" ? "Popular International Songs" : "洋楽人気曲",
+        catalog: currentLanguage === "en" ? "Full 18,462-song catalog" : "全18,462曲"
+      };
+      popularSongSearch.placeholder = popularSongCategory === "catalog"
+        ? uiText("全18,462曲から曲名・歌手名を検索")
+        : `${scopeLabels[popularSongCategory]}${currentLanguage === "en" ? ": search title or artist" : "内を曲名・歌手名で検索"}`;
       popularSongTabs.querySelectorAll("[data-popular-category]").forEach((button) => {
         const active = button.dataset.popularCategory === popularSongCategory;
         button.classList.toggle("is-active", active);
@@ -13231,7 +13254,7 @@
         renderPopularSongs();
         return;
       }
-      popularSongStatus.textContent = uiText("曲一覧を読み込んでいます。");
+      popularSongStatus.textContent = `${scopeLabels[popularSongCategory]}：${uiText("曲一覧を読み込んでいます。")}`;
       popularSongList.innerHTML = "";
       try {
         const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
@@ -13239,7 +13262,9 @@
         const payload = await response.json();
         if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("popular songs unavailable");
         popularSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
-        popularSongStatus.textContent = currentLanguage === "en" ? `${popularSongItems.length} songs found.` : `${popularSongItems.length}曲を表示しています。`;
+        popularSongStatus.textContent = currentLanguage === "en"
+          ? `${scopeLabels[popularSongCategory]}: ${popularSongItems.length} songs shown.`
+          : `${scopeLabels[popularSongCategory]}の中から ${popularSongItems.length}曲を表示しています。`;
         renderPopularSongs();
       } catch (error) {
         console.warn(error);
@@ -14360,7 +14385,6 @@
     });
     popularSongSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      if (popularSongSearch.value.trim()) popularSongCategory = "catalog";
       loadPopularSongs();
     });
     popularSongList.addEventListener("click", (event) => {
