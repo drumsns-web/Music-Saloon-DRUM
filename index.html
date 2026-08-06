@@ -3191,20 +3191,60 @@
 
     .popular-index-toolbar-head {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
     }
 
-    .popular-index-toolbar-head strong {
+    .popular-index-mode-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .72);
+    }
+
+    .popular-index-mode-switch button {
+      min-height: 32px;
+      padding: 5px 12px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
       color: var(--forest);
+      cursor: pointer;
+      font: inherit;
       font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .popular-index-mode-switch button.is-active {
+      background: var(--orange);
+      color: var(--forest-2);
+      box-shadow: 0 4px 10px rgba(var(--theme-accent-rgb), .2);
     }
 
     .popular-index-request {
       min-height: 36px !important;
       padding: 6px 12px !important;
       white-space: nowrap;
+    }
+
+    @media (max-width: 640px) {
+      .popular-index-mode-switch {
+        flex: 1 1 150px;
+      }
+
+      .popular-index-mode-switch button {
+        flex: 1 1 0;
+      }
+
+      .popular-index-request {
+        flex: 1 1 100%;
+      }
     }
 
     .popular-index-groups {
@@ -13362,7 +13402,13 @@
         return `<details class="popular-index-menu${enabled ? "" : " is-disabled"}"><summary>${escapeText(menu.label)}</summary><div class="popular-index-popover">${buttonHtml(menu.labels)}</div></details>`;
       }).join("");
       popularSongIndexJump.innerHTML = `
-        <div class="popular-index-toolbar-head"><strong>${currentLanguage === "en" ? "Jump by first character" : "文字から歌手を探す"}</strong><a class="btn primary popular-index-request" href="#song-request-area">${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</a></div>
+        <div class="popular-index-toolbar-head">
+          <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
+            <button type="button" class="${mode === "artist" ? "is-active" : ""}" data-popular-index-mode="artist" aria-pressed="${mode === "artist"}">${currentLanguage === "en" ? "Artist" : "歌手"}</button>
+            <button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>
+          </div>
+          <button class="btn primary popular-index-request" type="button" data-open-song-request>${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</button>
+        </div>
         <div class="popular-index-groups">${menuHtml}</div>
       `;
       popularSongIndexJump.hidden = !items || !items.length;
@@ -15297,6 +15343,27 @@
       if (target) window.requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
     });
     document.addEventListener("click", (event) => {
+      const indexModeButton = event.target.closest("[data-popular-index-mode]");
+      if (indexModeButton && indexModeButton.dataset.popularIndexMode !== popularSongSortMode) {
+        popularSongSortMode = indexModeButton.dataset.popularIndexMode;
+        loadPopularSongs();
+      }
+      const requestButton = event.target.closest("[data-open-song-request]");
+      if (requestButton) {
+        showView("popular-songs");
+        window.setTimeout(() => {
+          const requestArea = document.getElementById("song-request-area");
+          if (requestArea) requestArea.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (songRequestTitle) songRequestTitle.focus({ preventScroll: true });
+        }, 120);
+      }
+      const indexSummary = event.target.closest(".popular-index-menu > summary");
+      if (indexSummary) {
+        const currentMenu = indexSummary.parentElement;
+        document.querySelectorAll(".popular-index-menu[open]").forEach((menu) => {
+          if (menu !== currentMenu) menu.removeAttribute("open");
+        });
+      }
       if (!event.target.closest(".popular-index-menu")) {
         document.querySelectorAll(".popular-index-menu[open]").forEach((menu) => menu.removeAttribute("open"));
       }
