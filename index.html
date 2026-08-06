@@ -4273,6 +4273,70 @@
       list-style: none;
     }
 
+    .popular-artist-group {
+      border: 1px solid rgba(var(--theme-accent-rgb), .45);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fffdf9;
+    }
+
+    .popular-artist-group > summary {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 13px 14px;
+      color: var(--forest);
+      cursor: pointer;
+      list-style: none;
+      font-weight: 900;
+    }
+
+    .popular-artist-group > summary::-webkit-details-marker { display: none; }
+
+    .popular-artist-group > summary::before {
+      content: "+";
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--orange);
+      color: var(--forest-2);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .popular-artist-group[open] > summary::before { content: "−"; }
+
+    .popular-artist-group > summary .popular-artist-name {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      font-size: 17px;
+    }
+
+    .popular-artist-group > summary .popular-artist-count {
+      color: var(--muted);
+      white-space: nowrap;
+      font-size: 13px;
+    }
+
+    .popular-artist-group > .popular-song-list {
+      padding: 0 10px 10px;
+    }
+
+    .song-data-source {
+      display: inline-flex;
+      width: fit-content;
+      margin: 2px 0 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(var(--theme-accent-rgb), .15);
+      color: var(--forest);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
     .popular-song-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -4304,6 +4368,34 @@
       color: var(--muted);
       font-size: 13px;
       font-weight: 800;
+    }
+
+    .popular-song-web-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .popular-song-web-actions a {
+      display: inline-flex;
+      min-height: 34px;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--forest);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .popular-song-web-actions a:hover,
+    .popular-song-web-actions a:focus-visible {
+      border-color: var(--orange);
+      background: rgba(var(--theme-accent-rgb), .12);
     }
 
     .popular-song-badge {
@@ -7395,8 +7487,8 @@
         <div class="shared-ranking">
           <div class="popular-song-controls">
             <div>
-              <h3>人気曲一覧・全曲検索</h3>
-              <p class="small">人気曲は一覧で見られます。全曲検索は1文字から曲名・歌手名を探せます。</p>
+              <h3>歌手一覧から選ぶ・全18,462曲から検索</h3>
+              <p class="small">歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。</p>
             </div>
             <div class="popular-song-tabs" id="popularSongTabs">
               <button class="btn is-active" type="button" data-popular-category="jp">国内人気曲</button>
@@ -7408,7 +7500,7 @@
               <button class="btn primary" type="submit">検索する</button>
             </form>
             <div class="popular-song-sort" id="popularSongSort">
-              <button class="btn is-active" type="button" data-popular-sort="artist">歌手名で見る</button>
+              <button class="btn is-active" type="button" data-popular-sort="artist">歌手一覧（曲は展開）</button>
               <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
               <button class="btn ghost" type="button" data-popular-sort="rank">人気順で見る</button>
             </div>
@@ -9649,7 +9741,13 @@
       "この曲はすでにリクエストされています。既存の1件にまとめました。": "This song was already requested, so it remains as one entry.",
       "追加リクエストを送信しました。": "Song request sent.",
       "送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the request. Check your connection and try again.",
-      "この曲はすでにマイ曲リストへ登録されています。": "This song is already in My Song List."
+      "この曲はすでにマイ曲リストへ登録されています。": "This song is already in My Song List.",
+      "歌手一覧から選ぶ・全18,462曲から検索": "Choose an Artist or Search All 18,462 Songs",
+      "歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。": "Tap an artist to expand their songs, or search the uploaded catalog from one character.",
+      "歌手一覧（曲は展開）": "Artist List (Expand Songs)",
+      "YouTubeで検索 ↗": "Search YouTube ↗",
+      "Webで検索 ↗": "Search the Web ↗",
+      "ChordWikiでコード検索 ↗": "Search ChordWiki ↗"
     };
 
     const phraseTranslations = [
@@ -13042,12 +13140,21 @@
     function popularSongRowHtml(item, index, source = "popular") {
       const existing = findLocalPopularSong(item);
       const requested = source === "request";
+      const searchQuery = `${item.artist || ""} ${item.title || ""}`.trim();
+      const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
+      const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+      const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
       return `
         <article class="popular-song-row" data-list-index-group="${escapeText(songIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
           <div>
             <strong>${escapeText(item.title || "-")}</strong>
             <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
             <small class="popular-song-badge">${escapeText(uiText(popularSongBadge(item, requested)))}</small>
+            <div class="popular-song-web-actions">
+              <a href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener">YouTubeで検索 ↗</a>
+              <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
+              <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
+            </div>
           </div>
           <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
         </article>
@@ -13057,8 +13164,21 @@
     function renderPopularSongs() {
       if (!popularSongList || !popularSongStatus) return;
       const items = popularSongItems;
+      if (popularSongSortMode === "artist") {
+        const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
+        items.sort((a, b) => {
+          const aLatin = /^[A-Za-z0-9]/.test(a.artist || "") ? 1 : 0;
+          const bLatin = /^[A-Za-z0-9]/.test(b.artist || "") ? 1 : 0;
+          return aLatin - bLatin || collator.compare(a.artist || "", b.artist || "") || collator.compare(a.title || "", b.title || "");
+        });
+      }
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
-      renderAuxiliaryIndex(popularSongIndexJump, items, "popularSongList", indexMode);
+      if (popularSongSortMode === "artist") {
+        popularSongIndexJump.innerHTML = "";
+        popularSongIndexJump.hidden = true;
+      } else {
+        renderAuxiliaryIndex(popularSongIndexJump, items, "popularSongList", indexMode);
+      }
       if (!items.length) {
         popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
         return;
@@ -13073,6 +13193,15 @@
         if (!groups.has(label)) groups.set(label, []);
         groups.get(label).push({ item, index });
       });
+      if (popularSongSortMode === "artist") {
+        popularSongList.innerHTML = `<div class="popular-song-list">${[...groups.entries()].map(([label, rows]) => `
+          <details class="popular-artist-group" data-list-index-group="${escapeText(songIndexGroup(rows[0].item, "artist"))}">
+            <summary><span class="popular-artist-name">${escapeText(label)}</span><span class="popular-artist-count">${currentLanguage === "en" ? `${rows.length} songs` : `${rows.length}曲`}</span></summary>
+            <div class="popular-song-list">${rows.map(({ item, index }) => popularSongRowHtml(item, index)).join("")}</div>
+          </details>
+        `).join("")}</div>`;
+        return;
+      }
       popularSongList.innerHTML = [...groups.entries()].map(([label, rows]) => `
         <section class="kana-group">
           <div class="kana-head"><span>${escapeText(label)}</span><span>${currentLanguage === "en" ? `${rows.length} songs` : `${rows.length}曲`}</span></div>
