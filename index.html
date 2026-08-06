@@ -11160,7 +11160,10 @@
       if (!("serviceWorker" in navigator)) return;
       const secureContext = location.protocol === "https:" || ["localhost", "127.0.0.1"].includes(location.hostname);
       if (settings.enableOfflineMode && secureContext) {
-        try { await navigator.serviceWorker.register("./service-worker.js"); } catch (error) { console.warn("Offline setup failed", error); }
+        try {
+          const registration = await navigator.serviceWorker.register("./service-worker.js", { updateViaCache: "none" });
+          await registration.update();
+        } catch (error) { console.warn("Offline setup failed", error); }
         return;
       }
       if (!settings.enableOfflineMode) {

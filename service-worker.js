@@ -1,4 +1,4 @@
-const CACHE_NAME = "music-saloon-drum-v20260806-23";
+const CACHE_NAME = "music-saloon-drum-v20260807-24";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -35,7 +35,7 @@ self.addEventListener("fetch", (event) => {
 
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
+      fetch(request, { cache: "no-store" })
         .then((response) => {
           if (response.ok) caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", response.clone()));
           return response;
