@@ -3187,13 +3187,6 @@
       -webkit-backdrop-filter: blur(10px);
     }
 
-    .popular-index-line {
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: 7px;
-      align-items: center;
-    }
-
     .popular-index-toolbar-head {
       display: flex;
       align-items: center;
@@ -3212,21 +3205,89 @@
       white-space: nowrap;
     }
 
-    .popular-index-label {
-      min-width: 38px;
-      color: var(--forest);
-      font-size: 12px;
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .popular-index-buttons {
+    .popular-index-groups {
       display: flex;
+      flex-wrap: wrap;
       gap: 5px;
       min-width: 0;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: thin;
+      padding: 2px 0 4px;
+      overflow: visible;
+    }
+
+    .popular-index-menu {
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .popular-index-menu > summary {
+      min-width: 48px;
+      min-height: 38px;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      list-style: none;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--forest);
+      padding: 6px 10px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .popular-index-menu > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .popular-index-menu > summary::after {
+      content: "⌄";
+      margin-left: 4px;
+      color: var(--orange-dark);
+      font-size: 11px;
+    }
+
+    .popular-index-menu[open] > summary,
+    .popular-index-menu > summary:hover,
+    .popular-index-menu > summary:focus-visible {
+      border-color: var(--orange);
+      background: rgba(var(--theme-accent-rgb), .14);
+    }
+
+    .popular-index-menu.is-disabled {
+      opacity: .38;
+      pointer-events: none;
+    }
+
+    .popular-index-popover {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      z-index: 60;
+      display: none;
+      flex-wrap: wrap;
+      gap: 6px;
+      width: max-content;
+      max-width: min(88vw, 520px);
+      padding: 9px;
+      border: 1px solid var(--orange);
+      border-radius: 12px;
+      background: #fffdf8;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
+    }
+
+    .popular-index-menu[open] > .popular-index-popover {
+      display: flex;
+    }
+
+    .popular-index-menu:last-child > .popular-index-popover {
+      right: 0;
+      left: auto;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      .popular-index-menu:hover > .popular-index-popover {
+        display: flex;
+      }
     }
 
     body:not(.floating-nav-visible) #popularSongIndexJump:not([hidden]) {
@@ -13284,12 +13345,26 @@
       const buttonHtml = (labels) => labels.map((label) => `
           <button type="button" data-aux-index-jump="${escapeText(label)}" data-aux-index-target="popularSongList" ${available.has(label) ? "" : "disabled"}>${escapeText(label)}</button>
         `).join("");
-      const kanaLabels = [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", "その他"];
-      const latinLabels = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+      const indexMenus = [
+        { label: "あ行", labels: [..."あいうえお"] },
+        { label: "か行", labels: [..."かきくけこ"] },
+        { label: "さ行", labels: [..."さしすせそ"] },
+        { label: "た行", labels: [..."たちつてと"] },
+        { label: "な行", labels: [..."なにぬねの"] },
+        { label: "は行", labels: [..."はひふへほ"] },
+        { label: "ま行", labels: [..."まみむめも"] },
+        { label: "や行", labels: [..."やゆよ"] },
+        { label: "ら行", labels: [..."らりるれろ"] },
+        { label: "わ行", labels: ["わ", "を", "ん", "その他"] },
+        { label: "A–Z", labels: [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"] }
+      ];
+      const menuHtml = indexMenus.map((menu) => {
+        const enabled = menu.labels.some((label) => available.has(label));
+        return `<details class="popular-index-menu${enabled ? "" : " is-disabled"}"><summary>${escapeText(menu.label)}</summary><div class="popular-index-popover">${buttonHtml(menu.labels)}</div></details>`;
+      }).join("");
       popularSongIndexJump.innerHTML = `
         <div class="popular-index-toolbar-head"><strong>${currentLanguage === "en" ? "Jump by first character" : "文字から歌手を探す"}</strong><a class="btn primary popular-index-request" href="#song-request-area">${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</a></div>
-        <div class="popular-index-line"><span class="popular-index-label">${currentLanguage === "en" ? "Kana" : "50音"}</span><div class="popular-index-buttons">${buttonHtml(kanaLabels)}</div></div>
-        <div class="popular-index-line"><span class="popular-index-label">A–Z</span><div class="popular-index-buttons">${buttonHtml(latinLabels)}</div></div>
+        <div class="popular-index-groups">${menuHtml}</div>
       `;
       popularSongIndexJump.hidden = !items || !items.length;
     }
@@ -15224,6 +15299,9 @@
       if (target) window.requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "start" }));
     });
     document.addEventListener("click", (event) => {
+      if (!event.target.closest(".popular-index-menu")) {
+        document.querySelectorAll(".popular-index-menu[open]").forEach((menu) => menu.removeAttribute("open"));
+      }
       const button = event.target.closest("[data-aux-index-jump]");
       if (!button || button.disabled) return;
       const container = document.getElementById(button.dataset.auxIndexTarget);
@@ -15233,6 +15311,8 @@
       if (!target) return;
       const details = target.matches("details") ? target : target.querySelector("details");
       if (details) details.open = true;
+      const indexMenu = button.closest(".popular-index-menu");
+      if (indexMenu) indexMenu.removeAttribute("open");
       target.scrollIntoView({ behavior: "smooth", block: "center" });
     });
     duetOnly.addEventListener("change", renderSongs);
