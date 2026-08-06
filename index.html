@@ -4233,6 +4233,128 @@
       white-space: normal;
     }
 
+    .popular-song-controls {
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .popular-song-tabs,
+    .popular-song-sort {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .popular-song-tabs .btn.is-active,
+    .popular-song-sort .btn.is-active {
+      border-color: var(--orange);
+      background: var(--orange);
+      color: var(--forest-2);
+      box-shadow: 0 8px 18px rgba(var(--theme-accent-rgb), .18);
+    }
+
+    .popular-song-search {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .popular-song-search input {
+      min-height: 52px;
+      font-weight: 800;
+    }
+
+    .popular-song-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .popular-song-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf9;
+    }
+
+    .popular-song-copy {
+      min-width: 0;
+    }
+
+    .popular-song-row > div > strong,
+    .popular-song-row > div > span {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .popular-song-row > div > strong {
+      color: var(--forest);
+      font-size: 16px;
+    }
+
+    .popular-song-row > div > span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .popular-song-badge {
+      display: inline-flex !important;
+      width: fit-content;
+      margin-bottom: 4px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(var(--theme-accent-rgb), .14);
+      color: var(--forest) !important;
+      font-size: 11px !important;
+    }
+
+    .popular-song-row .btn {
+      min-height: 40px;
+      padding: 8px 12px;
+      white-space: normal;
+    }
+
+    .song-request-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: end;
+      margin: 14px 0 10px;
+    }
+
+    .song-request-form label {
+      display: grid;
+      gap: 6px;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .song-request-form input {
+      min-height: 48px;
+    }
+
+    @media (max-width: 640px) {
+      .popular-song-search,
+      .song-request-form {
+        grid-template-columns: 1fr;
+      }
+      .popular-song-row {
+        grid-template-columns: 1fr;
+      }
+      .popular-song-row .btn {
+        width: 100%;
+      }
+    }
+
     .playable-parts-field {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -5764,20 +5886,23 @@
         <details class="app-update-card" id="appUpdateCard">
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.03</span></span>
-              <h2 id="appUpdateTitle">LIVE表示・オフライン・文字サイズを追加しました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.06</span></span>
+              <h2 id="appUpdateTitle">人気曲一覧と曲リクエストを追加しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>マイセットリストのLIVE・練習モード、オフライン表示、文字サイズ3段階を追加しました。すべて設定から元へ戻せます。</p>
+            <p>国内・洋楽の人気曲を一覧からマイ曲リストへ登録でき、見つからない曲は追加リクエストを送れるようになりました。</p>
             <div class="app-update-latest-actions">
-              <a class="btn primary" data-setlist-entry href="#saved-setlists">LIVE・練習モードを使う</a>
-              <button class="btn ghost" type="button" data-update-settings-target="settings-main-features">設定を確認する</button>
+              <a class="btn primary" href="#popular-songs">人気の曲・歌手を見る</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-06">2026.08.06</time>
+                  <div><strong>人気曲一覧と曲リクエストを追加</strong><p>国内・洋楽の人気曲一覧、全曲検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">人気の曲・歌手を見る →</a></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-03">2026.08.03</time>
                   <div><strong>LIVE表示・オフライン・文字サイズを追加</strong><p>セットリストを1曲ずつ大きく表示するモード、通信が切れた時の案内、3段階の文字サイズを追加しました。各機能は設定で戻せます。</p><div class="control-row"><a class="btn ghost app-update-history-action" data-setlist-entry href="#saved-setlists">LIVE・練習モードを使う →</a><button class="btn ghost app-update-history-action" type="button" data-update-settings-target="settings-main-features">設定を開く →</button></div></div>
@@ -6346,6 +6471,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
+              <a href="#popular-songs">人気の曲・歌手</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7135,6 +7261,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
+              <a href="#popular-songs">人気の曲・歌手</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7197,6 +7324,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
+              <a href="#popular-songs">人気の曲・歌手</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7236,6 +7364,79 @@
       </div>
     </section>
 
+    <section id="popular-songs" class="dark-section">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="tag orange">Popular Songs</span>
+            <h2>人気の曲・歌手から探す</h2>
+            <p class="lead">人気曲を歌手別・曲名順で見たり、曲名や歌手名から検索してマイ曲リストへ登録できます。</p>
+          </div>
+        </div>
+        <nav class="song-hub-nav" aria-label="曲関連ページ">
+          <div class="song-hub-group">
+            <span class="song-hub-group-title">自分の曲</span>
+            <div class="song-hub-group-links">
+              <a href="#customers">マイ曲リスト</a>
+              <a href="#favorites">よく歌う曲</a>
+              <a data-setlist-entry href="#saved-setlists">マイセットリスト</a>
+            </div>
+          </div>
+          <div class="song-hub-group">
+            <span class="song-hub-group-title">みんなの曲</span>
+            <div class="song-hub-group-links">
+              <a class="active" href="#popular-songs" aria-current="page">人気の曲・歌手</a>
+              <a href="#community">みんなのお気に入り曲</a>
+              <a href="#performance-share">歌える・演奏できる曲</a>
+            </div>
+          </div>
+        </nav>
+
+        <div class="shared-ranking">
+          <div class="popular-song-controls">
+            <div>
+              <h3>人気曲一覧・全曲検索</h3>
+              <p class="small">人気曲は一覧で見られます。全曲検索は1文字から曲名・歌手名を探せます。</p>
+            </div>
+            <div class="popular-song-tabs" id="popularSongTabs">
+              <button class="btn is-active" type="button" data-popular-category="jp">国内人気曲</button>
+              <button class="btn ghost" type="button" data-popular-category="western">洋楽人気曲</button>
+              <button class="btn ghost" type="button" data-popular-category="catalog">全曲から検索</button>
+            </div>
+            <form class="popular-song-search" id="popularSongSearchForm">
+              <input id="popularSongSearch" type="search" placeholder="曲名・歌手名を入力" autocomplete="off">
+              <button class="btn primary" type="submit">検索する</button>
+            </form>
+            <div class="popular-song-sort" id="popularSongSort">
+              <button class="btn is-active" type="button" data-popular-sort="artist">歌手名で見る</button>
+              <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
+              <button class="btn ghost" type="button" data-popular-sort="rank">人気順で見る</button>
+            </div>
+          </div>
+          <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">人気曲を読み込んでいます。</p>
+          <div class="song-index-jump auxiliary-index-jump" id="popularSongIndexJump" aria-label="文字ジャンプ"></div>
+          <div id="popularSongList"></div>
+        </div>
+
+        <div class="shared-ranking">
+          <div class="section-head">
+            <div>
+              <h3>追加してほしい曲をリクエスト</h3>
+              <p class="small">曲名と歌手名を入力すると、人気曲とは別の「追加リクエスト」に表示されます。同じ曲名・歌手名は1件にまとめます。</p>
+            </div>
+          </div>
+          <form class="song-request-form" id="songRequestForm">
+            <label>曲名<input id="songRequestTitle" maxlength="255" required placeholder="例：いとしのエリー"></label>
+            <label>歌手名<input id="songRequestArtist" maxlength="255" required placeholder="例：サザンオールスターズ"></label>
+            <button class="btn primary" id="submitSongRequest" type="submit">追加をリクエスト</button>
+          </form>
+          <p class="shared-ranking-status" id="songRequestStatus" aria-live="polite"></p>
+          <h3>新しく追加リクエストされた曲</h3>
+          <div id="songRequestList"></div>
+        </div>
+      </div>
+    </section>
+
     <section id="community" class="dark-section">
       <div class="wrap">
         <div class="section-head">
@@ -7257,6 +7458,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
+              <a href="#popular-songs">人気の曲・歌手</a>
               <a class="active" href="#community" aria-current="page">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7298,6 +7500,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">みんなの曲</span>
             <div class="song-hub-group-links">
+              <a href="#popular-songs">人気の曲・歌手</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる曲</a>
             </div>
@@ -7754,6 +7957,11 @@
         <section class="guide-category" aria-labelledby="guideCommunitySongs">
           <h3 class="guide-category-heading" id="guideCommunitySongs"><span>◎</span>みんなの曲</h3>
           <div class="guide-shortcut-grid">
+            <button class="guide-shortcut" type="button" data-guide-target="popular-songs">
+              <span class="guide-shortcut-icon">☆</span>
+              <span><strong>人気の曲・歌手</strong><span>人気曲一覧、曲検索、追加リクエスト</span></span>
+              <span class="guide-shortcut-arrow">›</span>
+            </button>
             <button class="guide-shortcut" type="button" data-guide-target="community">
               <span class="guide-shortcut-icon">★</span>
               <span><strong>みんなのお気に入り曲</strong><span>DRUMで人気の曲ランキング</span></span>
@@ -8022,6 +8230,19 @@
     const sharedRankingStatus = document.getElementById("sharedRankingStatus");
     const sharedRankingGroups = document.getElementById("sharedRankingGroups");
     const communityIndexJump = document.getElementById("communityIndexJump");
+    const popularSongTabs = document.getElementById("popularSongTabs");
+    const popularSongSearchForm = document.getElementById("popularSongSearchForm");
+    const popularSongSearch = document.getElementById("popularSongSearch");
+    const popularSongSort = document.getElementById("popularSongSort");
+    const popularSongStatus = document.getElementById("popularSongStatus");
+    const popularSongIndexJump = document.getElementById("popularSongIndexJump");
+    const popularSongList = document.getElementById("popularSongList");
+    const songRequestForm = document.getElementById("songRequestForm");
+    const songRequestTitle = document.getElementById("songRequestTitle");
+    const songRequestArtist = document.getElementById("songRequestArtist");
+    const submitSongRequest = document.getElementById("submitSongRequest");
+    const songRequestStatus = document.getElementById("songRequestStatus");
+    const songRequestList = document.getElementById("songRequestList");
     const duetOnly = document.getElementById("duetOnly");
     const gachaIncludeDuet = document.getElementById("gachaIncludeDuet");
     const songTagOptions = document.getElementById("songTagOptions");
@@ -8269,6 +8490,7 @@
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
       { id: "community", label: "みんなのお気に入り曲", target: "community" },
+      { id: "popular-songs", label: "人気の曲・歌手", target: "popular-songs" },
       { id: "performance-share", label: "歌える・演奏できる曲", target: "performance-share" },
       { id: "staff", label: "スタッフ紹介", target: "staff" },
       { id: "history", label: "歌った記録", target: "history" },
@@ -8289,6 +8511,7 @@
       { id: "info", label: "お知らせ", shortLabel: "お知らせ", target: "info", icon: "●" },
       { id: "favorites", label: "よく歌う曲", shortLabel: "よく歌う", target: "favorites", icon: "↻" },
       { id: "community", label: "みんなのお気に入り曲", shortLabel: "みんなの曲", target: "community", icon: "★" },
+      { id: "popular-songs", label: "人気の曲・歌手", shortLabel: "人気曲", target: "popular-songs", icon: "☆" },
       { id: "performance-share", label: "歌える・演奏できる曲", shortLabel: "歌・演奏", target: "performance-share", icon: "♬" },
       { id: "staff", label: "スタッフ紹介", shortLabel: "スタッフ", target: "staff", icon: "♩" },
       { id: "history", label: "歌った記録", shortLabel: "歌った記録", target: "history", icon: "◷" },
@@ -8435,6 +8658,13 @@
 
     const exactTranslations = {
       "アプリ更新情報": "App Update",
+      "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
+      "人気曲一覧と曲リクエストを追加しました": "Added Popular Songs and Song Requests",
+      "国内・洋楽の人気曲を一覧からマイ曲リストへ登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Browse popular Japanese and international songs, add them to My Song List, or request a missing song.",
+      "人気の曲・歌手を見る": "View Popular Songs & Artists",
+      "人気曲一覧と曲リクエストを追加": "Added Popular Songs and Song Requests",
+      "国内・洋楽の人気曲一覧、全曲検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added popular Japanese and international song lists, full catalog search, My Song List registration, and requests for missing songs.",
+      "人気の曲・歌手を見る →": "View Popular Songs & Artists →",
       "アプリ更新情報　2026.08.03": "App Update  2026.08.03",
       "LIVE表示・オフライン・文字サイズを追加しました": "Added LIVE View, Offline Access, and Text Sizes",
       "マイセットリストのLIVE・練習モード、オフライン表示、文字サイズ3段階を追加しました。すべて設定から元へ戻せます。": "Added LIVE / Rehearsal Mode for My Setlists, offline access, and three text sizes. You can restore the previous behavior anytime in Settings.",
@@ -9390,7 +9620,36 @@
       "次回から確認せずに記録する": "Log without asking next time",
       "今日歌った曲として記録する": "Save as Sung Today",
       "歌い終わった時に押します": "Press after you finish singing",
-      "歌い終わった時に押す（今日の日付・回数を記録）": "Press after singing (logs today's date and count)"
+      "歌い終わった時に押す（今日の日付・回数を記録）": "Press after singing (logs today's date and count)",
+      "人気の曲・歌手": "Popular Songs & Artists",
+      "人気の曲・歌手から探す": "Find Popular Songs & Artists",
+      "人気曲一覧・全曲検索": "Popular Songs & Full Catalog Search",
+      "国内人気曲": "Popular Japanese Songs",
+      "洋楽人気曲": "Popular International Songs",
+      "全曲から検索": "Search Full Catalog",
+      "歌手名で見る": "View by Artist",
+      "曲名で見る": "View by Song Title",
+      "人気順で見る": "View by Popularity",
+      "追加してほしい曲をリクエスト": "Request a Song to Add",
+      "追加をリクエスト": "Send Request",
+      "新しく追加リクエストされた曲": "Recently Requested Songs",
+      "マイ曲リストへ登録": "Add to My Song List",
+      "✓ マイ曲リスト登録済み": "✓ Added to My Song List",
+      "追加リクエスト": "Song Request",
+      "曲データ": "Song Catalog",
+      "曲名または歌手名を入力して検索してください。": "Enter a song title or artist to search.",
+      "条件に合う曲が見つかりませんでした。": "No matching songs were found.",
+      "全曲検索は1文字から利用できます。": "Full catalog search works from one character.",
+      "曲一覧を読み込んでいます。": "Loading songs.",
+      "曲一覧を取得できませんでした。時間をおいて再度お試しください。": "Could not load the song list. Please try again later.",
+      "まだ追加リクエストはありません。": "No song requests yet.",
+      "追加リクエストを取得できませんでした。": "Could not load song requests.",
+      "送信しています。": "Sending.",
+      "この曲はすでに曲一覧にあります。全曲検索からマイ曲リストへ登録できます。": "This song is already in the catalog. Add it from Full Catalog Search.",
+      "この曲はすでにリクエストされています。既存の1件にまとめました。": "This song was already requested, so it remains as one entry.",
+      "追加リクエストを送信しました。": "Song request sent.",
+      "送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the request. Check your connection and try again.",
+      "この曲はすでにマイ曲リストへ登録されています。": "This song is already in My Song List."
     };
 
     const phraseTranslations = [
@@ -9725,6 +9984,10 @@
     const sharedRankingApiUrl = "https://music-saloon-drum.com/api/api.php";
     let sharedRankingSongs = [];
     let sharedCapabilities = [];
+    let popularSongItems = [];
+    let requestedSongItems = [];
+    let popularSongCategory = "jp";
+    let popularSongSortMode = "artist";
     let catalogSearchItems = [];
     let catalogSearchController = null;
     const expandedSongGroups = new Set();
@@ -11452,6 +11715,10 @@
         clearCustomerSubpage();
         if (viewId === "info") renderNewsImages();
         if (viewId === "staff") renderStaffProfiles();
+        if (viewId === "popular-songs") {
+          loadPopularSongs();
+          loadSongRequests();
+        }
         if (shouldUpdateHash) history.pushState(null, "", viewId === "top" ? location.pathname : `#${viewId}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
@@ -12748,6 +13015,197 @@
       });
     }
 
+    function normalizePopularSong(item) {
+      return {
+        title: String(item && item.title || "").trim(),
+        artist: String(item && item.artist || "").trim(),
+        popular_jp_rank: Number(item && item.popular_jp_rank || 0),
+        popular_western_rank: Number(item && item.popular_western_rank || 0),
+        request_count: Number(item && item.request_count || 0)
+      };
+    }
+
+    function findLocalPopularSong(item) {
+      if (!item || !item.title) return null;
+      const title = normalizeKana(item.title);
+      const artist = normalizeKana(item.artist);
+      return activeProfileSongs().find((song) => normalizeKana(song.title) === title && normalizeKana(song.artist) === artist) || null;
+    }
+
+    function popularSongBadge(item, requested = false) {
+      if (requested) return item.request_count > 1 ? `${item.request_count}件のリクエスト` : "追加リクエスト";
+      if (item.popular_jp_rank) return `国内人気 ${item.popular_jp_rank}位`;
+      if (item.popular_western_rank) return `洋楽人気 ${item.popular_western_rank}位`;
+      return "曲データ";
+    }
+
+    function popularSongRowHtml(item, index, source = "popular") {
+      const existing = findLocalPopularSong(item);
+      const requested = source === "request";
+      return `
+        <article class="popular-song-row" data-list-index-group="${escapeText(songIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
+          <div>
+            <strong>${escapeText(item.title || "-")}</strong>
+            <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
+            <small class="popular-song-badge">${escapeText(uiText(popularSongBadge(item, requested)))}</small>
+          </div>
+          <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
+        </article>
+      `;
+    }
+
+    function renderPopularSongs() {
+      if (!popularSongList || !popularSongStatus) return;
+      const items = popularSongItems;
+      const indexMode = popularSongSortMode === "title" ? "title" : "artist";
+      renderAuxiliaryIndex(popularSongIndexJump, items, "popularSongList", indexMode);
+      if (!items.length) {
+        popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
+        return;
+      }
+      if (popularSongSortMode === "rank") {
+        popularSongList.innerHTML = `<div class="popular-song-list">${items.map((item, index) => popularSongRowHtml(item, index)).join("")}</div>`;
+        return;
+      }
+      const groups = new Map();
+      items.forEach((item, index) => {
+        const label = popularSongSortMode === "artist" ? (item.artist || uiText("歌手名未登録")) : songIndexGroup(item, "title");
+        if (!groups.has(label)) groups.set(label, []);
+        groups.get(label).push({ item, index });
+      });
+      popularSongList.innerHTML = [...groups.entries()].map(([label, rows]) => `
+        <section class="kana-group">
+          <div class="kana-head"><span>${escapeText(label)}</span><span>${currentLanguage === "en" ? `${rows.length} songs` : `${rows.length}曲`}</span></div>
+          <div class="popular-song-list">${rows.map(({ item, index }) => popularSongRowHtml(item, index)).join("")}</div>
+        </section>
+      `).join("");
+    }
+
+    async function loadPopularSongs() {
+      if (!popularSongStatus) return;
+      const query = popularSongSearch.value.trim();
+      popularSongTabs.querySelectorAll("[data-popular-category]").forEach((button) => {
+        const active = button.dataset.popularCategory === popularSongCategory;
+        button.classList.toggle("is-active", active);
+        button.classList.toggle("ghost", !active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      popularSongSort.querySelectorAll("[data-popular-sort]").forEach((button) => {
+        const active = button.dataset.popularSort === popularSongSortMode;
+        button.classList.toggle("is-active", active);
+        button.classList.toggle("ghost", !active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      if (popularSongCategory === "catalog" && !query) {
+        popularSongItems = [];
+        popularSongStatus.textContent = uiText("全曲検索は1文字から利用できます。");
+        renderPopularSongs();
+        return;
+      }
+      popularSongStatus.textContent = uiText("曲一覧を読み込んでいます。");
+      popularSongList.innerHTML = "";
+      try {
+        const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
+        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("popular songs unavailable");
+        popularSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
+        popularSongStatus.textContent = currentLanguage === "en" ? `${popularSongItems.length} songs found.` : `${popularSongItems.length}曲を表示しています。`;
+        renderPopularSongs();
+      } catch (error) {
+        console.warn(error);
+        popularSongItems = [];
+        popularSongStatus.textContent = uiText("曲一覧を取得できませんでした。時間をおいて再度お試しください。");
+        renderPopularSongs();
+      }
+    }
+
+    function addPopularSongToMyList(item) {
+      if (!item || !item.title) return;
+      if (findLocalPopularSong(item)) {
+        showUndo(uiText("この曲はすでにマイ曲リストへ登録されています。"));
+        return;
+      }
+      const newSong = {
+        id: createId(), title: item.title, artist: item.artist || "", owner: "", kana: "", key: "", memo: "",
+        duet: false, nextWish: false, profile: activeSongProfile(), tags: [], playableParts: [],
+        capabilityCanSing: false, capabilityShared: false, createdAt: new Date().toISOString()
+      };
+      songs.unshift(newSong);
+      saveSongs();
+      renderSongs();
+      renderPopularSongs();
+      renderSongRequests();
+      showUndo(currentLanguage === "en" ? `Added “${item.title}” to My Song List.` : `✓「${item.title}」をマイ曲リストへ追加しました。`, () => {
+        songs = songs.filter((song) => song.id !== newSong.id);
+        saveSongs();
+        renderSongs();
+        renderPopularSongs();
+        renderSongRequests();
+      });
+    }
+
+    function renderSongRequests() {
+      if (!songRequestList) return;
+      if (!requestedSongItems.length) {
+        songRequestList.innerHTML = `<div class="empty">${escapeText(uiText("まだ追加リクエストはありません。"))}</div>`;
+        return;
+      }
+      songRequestList.innerHTML = `<div class="popular-song-list">${requestedSongItems.map((item, index) => popularSongRowHtml(item, index, "request")).join("")}</div>`;
+    }
+
+    async function loadSongRequests() {
+      if (!songRequestStatus) return;
+      try {
+        const response = await fetch(`${sharedRankingApiUrl}?action=song_requests`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("song requests unavailable");
+        requestedSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
+        renderSongRequests();
+      } catch (error) {
+        console.warn(error);
+        requestedSongItems = [];
+        songRequestList.innerHTML = `<div class="empty">${escapeText(uiText("追加リクエストを取得できませんでした。"))}</div>`;
+      }
+    }
+
+    async function submitSongRequestToServer() {
+      const title = songRequestTitle.value.trim();
+      const artist = songRequestArtist.value.trim();
+      if (!title || !artist) return;
+      submitSongRequest.disabled = true;
+      songRequestStatus.textContent = uiText("送信しています。");
+      try {
+        const response = await fetch(sharedRankingApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "song_request", title, artist, event_id: createId() })
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("song request unavailable");
+        if (payload.status === "already_catalogued") {
+          songRequestStatus.textContent = uiText("この曲はすでに曲一覧にあります。全曲検索からマイ曲リストへ登録できます。");
+          popularSongCategory = "catalog";
+          popularSongSearch.value = title;
+          await loadPopularSongs();
+          popularSongList.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else if (payload.status === "already_requested") {
+          songRequestStatus.textContent = uiText("この曲はすでにリクエストされています。既存の1件にまとめました。");
+          await loadSongRequests();
+        } else {
+          songRequestStatus.textContent = uiText("追加リクエストを送信しました。");
+          songRequestTitle.value = "";
+          songRequestArtist.value = "";
+          await loadSongRequests();
+        }
+      } catch (error) {
+        console.warn(error);
+        songRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
+      } finally {
+        submitSongRequest.disabled = false;
+      }
+    }
+
     async function loadSharedRanking() {
       if (!sharedRankingStatus) return;
       sharedRankingStatus.textContent = uiText("ランキングを読み込んでいます。");
@@ -13757,6 +14215,38 @@
       const button = event.target.closest("[data-ranking-song-toggle]");
       if (!button) return;
       toggleRankingSongInMyList(button.dataset.rankingSongToggle);
+    });
+    popularSongTabs.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-popular-category]");
+      if (!button) return;
+      popularSongCategory = button.dataset.popularCategory;
+      if (popularSongCategory !== "catalog") popularSongSearch.value = "";
+      loadPopularSongs();
+    });
+    popularSongSort.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-popular-sort]");
+      if (!button) return;
+      popularSongSortMode = button.dataset.popularSort;
+      loadPopularSongs();
+    });
+    popularSongSearchForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (popularSongSearch.value.trim()) popularSongCategory = "catalog";
+      loadPopularSongs();
+    });
+    popularSongList.addEventListener("click", (event) => {
+      const button = event.target.closest('[data-popular-add="popular"]');
+      if (!button) return;
+      addPopularSongToMyList(popularSongItems[Number(button.dataset.popularIndex)]);
+    });
+    songRequestList.addEventListener("click", (event) => {
+      const button = event.target.closest('[data-popular-add="request"]');
+      if (!button) return;
+      addPopularSongToMyList(requestedSongItems[Number(button.dataset.popularIndex)]);
+    });
+    songRequestForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitSongRequestToServer();
     });
     capabilityDisplayName.addEventListener("input", () => {
       settings.capabilityDisplayName = capabilityDisplayName.value;
