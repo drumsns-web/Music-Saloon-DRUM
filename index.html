@@ -3176,7 +3176,7 @@
       gap: 6px;
       position: sticky;
       top: calc(var(--floating-nav-top, 110px) + var(--floating-nav-space, 66px) + 6px);
-      z-index: 30;
+      z-index: 1000;
       margin: 10px -8px 14px;
       padding: 8px;
       border: 1px solid rgba(var(--theme-accent-rgb), .5);
@@ -3185,6 +3185,8 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, .13);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      overflow: visible;
+      isolation: isolate;
     }
 
     .popular-index-toolbar-head {
@@ -3217,6 +3219,7 @@
     .popular-index-menu {
       position: relative;
       flex: 0 0 auto;
+      overflow: visible;
     }
 
     .popular-index-menu > summary {
@@ -3262,7 +3265,7 @@
       position: absolute;
       top: calc(100% + 6px);
       left: 0;
-      z-index: 60;
+      z-index: 1001;
       display: none;
       flex-wrap: wrap;
       gap: 6px;
@@ -3273,6 +3276,7 @@
       border-radius: 12px;
       background: #fffdf8;
       box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
+      overflow: visible;
     }
 
     .popular-index-menu[open] > .popular-index-popover {
@@ -3287,6 +3291,31 @@
     @media (hover: hover) and (pointer: fine) {
       .popular-index-menu:hover > .popular-index-popover {
         display: flex;
+      }
+    }
+
+    @media (min-width: 641px) {
+      #popular-search-area,
+      #popularSongIndexJump,
+      .popular-index-groups,
+      .popular-index-menu {
+        overflow: visible !important;
+      }
+
+      .popular-index-popover {
+        flex-wrap: nowrap;
+        max-width: none;
+      }
+
+      .popular-index-menu:last-child > .popular-index-popover {
+        width: 520px;
+        max-width: calc(100vw - 48px);
+        flex-wrap: wrap;
+      }
+
+      #popularSongList {
+        position: relative;
+        z-index: 0;
       }
     }
 
@@ -4448,18 +4477,6 @@
       padding: 0 10px 10px;
     }
 
-    .song-data-source {
-      display: inline-flex;
-      width: fit-content;
-      margin: 2px 0 8px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(var(--theme-accent-rgb), .15);
-      color: var(--forest);
-      font-size: 12px;
-      font-weight: 900;
-    }
-
     .popular-song-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -4519,17 +4536,6 @@
     .popular-song-web-actions a:focus-visible {
       border-color: var(--orange);
       background: rgba(var(--theme-accent-rgb), .12);
-    }
-
-    .popular-song-badge {
-      display: inline-flex !important;
-      width: fit-content;
-      margin-bottom: 4px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: rgba(var(--theme-accent-rgb), .14);
-      color: var(--forest) !important;
-      font-size: 11px !important;
     }
 
     .popular-song-row .btn {
@@ -13305,13 +13311,6 @@
       return activeProfileSongs().find((song) => normalizeKana(song.title) === title && normalizeKana(song.artist) === artist) || null;
     }
 
-    function popularSongBadge(item, requested = false) {
-      if (requested) return item.request_count > 1 ? `${item.request_count}件のリクエスト` : "追加リクエスト";
-      if (item.popular_jp_rank) return "国内人気曲";
-      if (item.popular_western_rank) return "洋楽人気曲";
-      return "曲データ";
-    }
-
     function popularExactIndexLabels() {
       return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
     }
@@ -13381,7 +13380,6 @@
           <div>
             <strong>${escapeText(item.title || "-")}</strong>
             <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
-            <small class="popular-song-badge">${escapeText(uiText(popularSongBadge(item, requested)))}</small>
             <div class="popular-song-web-actions">
               <a href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener">YouTubeで検索 ↗</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
