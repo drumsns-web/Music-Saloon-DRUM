@@ -4737,7 +4737,7 @@
 
     .song-request-form {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       gap: 10px;
       align-items: end;
       margin: 14px 0 10px;
@@ -4752,6 +4752,11 @@
 
     .song-request-form input {
       min-height: 48px;
+    }
+
+    .song-request-form > .btn {
+      grid-column: 1 / -1;
+      width: 100%;
     }
 
     #song-request-area,
@@ -6359,18 +6364,22 @@
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.07</span></span>
-              <h2 id="appUpdateTitle">曲データの追加と訂正依頼に対応しました</h2>
+              <h2 id="appUpdateTitle">曲データを読み仮名で探せるようになりました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>マイ曲リストから曲データを追加でき、曲名・歌手名の間違いは名前付きで店主へ訂正依頼を送れます。</p>
+            <p>約18,500曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。</p>
             <div class="app-update-latest-actions">
               <a class="btn primary" href="#popular-songs">曲データを見る</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-07">2026.08.07</time>
+                  <div><strong>曲データへ読み仮名を追加</strong><p>約18,500曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。</p><a class="btn ghost app-update-history-action" href="#popular-songs">読み仮名で探してみる →</a></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
                   <div><strong>曲データの訂正依頼を追加</strong><p>店主が分かる名前・ニックネームを必須にし、曲名・歌手名の訂正を安全に依頼できるようにしました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲データを見る →</a></div>
@@ -7893,12 +7902,14 @@
             <div>
               <span class="tag orange">Request</span>
               <h3>見つからない曲を追加リクエスト</h3>
-              <p class="small">曲名と歌手名を入力して送信できます。同じ曲名・歌手名は1件にまとめます。</p>
+              <p class="small">曲名・歌手名とそれぞれの読みを入力して送信できます。同じ曲名・歌手名は1件にまとめ、通常の曲データにも反映します。</p>
             </div>
           </div>
           <form class="song-request-form" id="songRequestForm">
             <label>曲名<input id="songRequestTitle" maxlength="255" required placeholder="例：いとしのエリー"></label>
+            <label>曲名の読み<input id="songRequestTitleReading" maxlength="255" required placeholder="例：いとしのえりー"></label>
             <label>歌手名<input id="songRequestArtist" maxlength="255" required placeholder="例：サザンオールスターズ"></label>
+            <label>歌手名の読み<input id="songRequestArtistReading" maxlength="255" required placeholder="例：さざんおーるすたーず"></label>
             <button class="btn primary" id="submitSongRequest" type="submit">追加をリクエスト</button>
           </form>
           <p class="shared-ranking-status" id="songRequestStatus" aria-live="polite"></p>
@@ -8297,6 +8308,10 @@
         <div class="row">
           <label>正しい曲名<input id="songCorrectionTitle" maxlength="255" required></label>
           <label>正しい歌手名<input id="songCorrectionArtist" maxlength="255" required></label>
+        </div>
+        <div class="row">
+          <label>正しい曲名の読み<input id="songCorrectionTitleReading" maxlength="255" required placeholder="ひらがな・カタカナ・アルファベット"></label>
+          <label>正しい歌手名の読み<input id="songCorrectionArtistReading" maxlength="255" required placeholder="ひらがな・カタカナ・アルファベット"></label>
         </div>
         <label>店主があなたと分かる名前・ニックネーム<input id="songCorrectionRequester" maxlength="64" required autocomplete="name" placeholder="例：いつも窓側に座る○○"></label>
         <label>補足（任意）<textarea id="songCorrectionNote" maxlength="500" placeholder="どこが間違っているかなど"></textarea></label>
@@ -8765,7 +8780,9 @@
     const popularSongList = document.getElementById("popularSongList");
     const songRequestForm = document.getElementById("songRequestForm");
     const songRequestTitle = document.getElementById("songRequestTitle");
+    const songRequestTitleReading = document.getElementById("songRequestTitleReading");
     const songRequestArtist = document.getElementById("songRequestArtist");
+    const songRequestArtistReading = document.getElementById("songRequestArtistReading");
     const submitSongRequest = document.getElementById("submitSongRequest");
     const songRequestStatus = document.getElementById("songRequestStatus");
     const songRequestList = document.getElementById("songRequestList");
@@ -8774,7 +8791,9 @@
     const songCorrectionForm = document.getElementById("songCorrectionForm");
     const songCorrectionOriginalLabel = document.getElementById("songCorrectionOriginalLabel");
     const songCorrectionTitle = document.getElementById("songCorrectionTitle");
+    const songCorrectionTitleReading = document.getElementById("songCorrectionTitleReading");
     const songCorrectionArtist = document.getElementById("songCorrectionArtist");
+    const songCorrectionArtistReading = document.getElementById("songCorrectionArtistReading");
     const songCorrectionRequester = document.getElementById("songCorrectionRequester");
     const songCorrectionNote = document.getElementById("songCorrectionNote");
     const submitSongCorrection = document.getElementById("submitSongCorrection");
@@ -9207,6 +9226,12 @@
       "曲データの訂正依頼を追加": "Added Song Catalog Correction Requests",
       "店主が分かる名前・ニックネームを必須にし、曲名・歌手名の訂正を安全に依頼できるようにしました。": "A recognizable name or nickname is required so title and artist corrections can be requested safely.",
       "曲データを見る →": "View Song Catalog →",
+      "曲データを読み仮名で探せるようになりました": "Search the Song Catalog by Reading",
+      "約18,500曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。": "Added title and artist readings to about 18,500 songs for phonetic search and accurate Japanese index order. Readings can also be submitted with additions and corrections.",
+      "曲データへ読み仮名を追加": "Added Readings to the Song Catalog",
+      "約18,500曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。": "Added title and artist readings to about 18,500 songs for phonetic search and Japanese index order. Requested songs now also appear in the regular catalog.",
+      "読み仮名で探してみる →": "Search by Reading →",
+      "曲名・歌手名とそれぞれの読みを入力して送信できます。同じ曲名・歌手名は1件にまとめ、通常の曲データにも反映します。": "Enter the song title, artist, and their readings. Duplicate requests are combined and the song is also reflected in the regular catalog.",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
       "曲・歌手データと曲リクエストを追加しました": "Added the Song & Artist Catalog and Song Requests",
       "国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or about 18,500 catalog songs, and request a missing song.",
@@ -10201,6 +10226,8 @@
       "曲名と歌手名を入力して送信できます。同じ曲名・歌手名は1件にまとめます。": "Enter the song title and artist. Duplicate requests are combined into one entry.",
       "これまでの追加リクエストを見る": "View Previous Song Requests",
       "追加をリクエスト": "Send Request",
+      "曲名の読み": "Song Title Reading",
+      "歌手名の読み": "Artist Name Reading",
       "新しく追加リクエストされた曲": "Recently Requested Songs",
       "マイ曲リストへ登録": "Add to My Song List",
       "✓ マイ曲リスト登録済み": "✓ Added to My Song List",
@@ -10212,6 +10239,9 @@
       "現在登録されている内容": "Currently registered information",
       "正しい曲名": "Correct Song Title",
       "正しい歌手名": "Correct Artist Name",
+      "正しい曲名の読み": "Correct Song Title Reading",
+      "正しい歌手名の読み": "Correct Artist Name Reading",
+      "ひらがな・カタカナ・アルファベット": "Hiragana, katakana, or alphabet",
       "店主があなたと分かる名前・ニックネーム": "Name or nickname the owner can identify",
       "補足（任意）": "Additional details (optional)",
       "どこが間違っているかなど": "Describe what is incorrect",
@@ -10219,6 +10249,7 @@
       "確認して訂正を依頼": "Review and Send Correction",
       "店主があなたと分かる名前・ニックネームを入力してください。": "Enter a name or nickname the owner can identify.",
       "正しい曲名と歌手名を入力してください。": "Enter the correct song title and artist.",
+      "曲名と歌手名の読みを入力してください。": "Enter readings for the song title and artist.",
       "現在の内容と同じです。訂正内容を入力してください。": "Nothing has changed. Enter the corrected information.",
       "訂正依頼を送信しています。": "Sending the correction request.",
       "同じ訂正依頼はすでに送信されています。": "The same correction request has already been sent.",
@@ -13618,7 +13649,9 @@
     function normalizePopularSong(item) {
       return {
         title: String(item && item.title || "").trim(),
+        title_reading: String(item && item.title_reading || "").trim(),
         artist: String(item && item.artist || "").trim(),
+        artist_reading: String(item && item.artist_reading || "").trim(),
         artist_index: String(item && item.artist_index || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
@@ -13639,7 +13672,9 @@
     }
 
     function popularExactIndexGroup(item, mode = "artist") {
-      const source = String(mode === "title" ? item && item.title || "" : item && item.artist || "").trim();
+      const source = String(mode === "title"
+        ? item && (item.title_reading || item.title) || ""
+        : item && (item.artist_reading || item.artist) || "").trim();
       const rawFirst = normalizeKana(source).charAt(0);
       const rawLatin = rawFirst.toUpperCase();
       if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
@@ -13906,15 +13941,17 @@
 
     async function submitSongRequestToServer() {
       const title = songRequestTitle.value.trim();
+      const titleReading = songRequestTitleReading.value.trim();
       const artist = songRequestArtist.value.trim();
-      if (!title || !artist) return;
+      const artistReading = songRequestArtistReading.value.trim();
+      if (!title || !artist || !titleReading || !artistReading) return;
       submitSongRequest.disabled = true;
       songRequestStatus.textContent = uiText("送信しています。");
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "song_request", title, artist, event_id: createId() })
+          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading, artist, artist_reading: artistReading, event_id: createId() })
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song request unavailable");
@@ -13930,8 +13967,11 @@
         } else {
           songRequestStatus.textContent = uiText("追加リクエストを送信しました。");
           songRequestTitle.value = "";
+          songRequestTitleReading.value = "";
           songRequestArtist.value = "";
+          songRequestArtistReading.value = "";
           await loadSongRequests();
+          await loadPopularSongs();
         }
       } catch (error) {
         console.warn(error);
@@ -13950,6 +13990,10 @@
         showUndo(uiText("曲データへ追加するには、先に歌手名を登録してください。"));
         return;
       }
+      const titleReading = window.prompt(currentLanguage === "en" ? "Enter the song title reading." : "曲名の読みを入力してください。", String(item.titleReading || item.title_reading || title)) || "";
+      if (!titleReading.trim()) return;
+      const artistReading = window.prompt(currentLanguage === "en" ? "Enter the artist name reading." : "歌手名の読みを入力してください。", String(item.artistReading || item.artist_reading || artist)) || "";
+      if (!artistReading.trim()) return;
       const message = currentLanguage === "en"
         ? `Add “${title}” by ${artist} to the shared song catalog?\n\nThe song title and artist will be available to all app users. Please check the spelling carefully before sending.`
         : `「${title}」／${artist}\n\nこの曲を、利用者全員が検索できる曲データへ追加しますか？\n送信する内容は曲名と歌手名です。\n\n曲名・歌手名の表記に間違いがないか、送信前にもう一度確認してください。`;
@@ -13959,7 +14003,7 @@
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "song_request", title, artist, event_id: createId() })
+          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading.trim(), artist, artist_reading: artistReading.trim(), event_id: createId() })
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song catalog upload unavailable");
@@ -13971,6 +14015,7 @@
           showUndo(uiText("曲データへ追加しました。"));
         }
         await loadSongRequests();
+        await loadPopularSongs();
       } catch (error) {
         console.warn(error);
         showUndo(uiText("曲データへ追加できませんでした。通信状態を確認して再度お試しください。"));
@@ -13991,7 +14036,9 @@
       correctingSongItem = item;
       songCorrectionOriginalLabel.textContent = `${item.title}／${item.artist}`;
       songCorrectionTitle.value = item.title;
+      songCorrectionTitleReading.value = item.title_reading || item.title;
       songCorrectionArtist.value = item.artist;
+      songCorrectionArtistReading.value = item.artist_reading || item.artist;
       songCorrectionRequester.value = localStorage.getItem(songCorrectionRequesterStorageKey) || "";
       songCorrectionNote.value = "";
       songCorrectionStatus.textContent = "";
@@ -14013,7 +14060,9 @@
     async function submitSongCorrectionRequest() {
       if (!correctingSongItem) return;
       const correctedTitle = songCorrectionTitle.value.trim();
+      const correctedTitleReading = songCorrectionTitleReading.value.trim();
       const correctedArtist = songCorrectionArtist.value.trim();
+      const correctedArtistReading = songCorrectionArtistReading.value.trim();
       const requesterName = songCorrectionRequester.value.trim();
       const requesterNote = songCorrectionNote.value.trim();
       if (!requesterName) {
@@ -14025,8 +14074,14 @@
         songCorrectionStatus.textContent = uiText("正しい曲名と歌手名を入力してください。");
         return;
       }
+      if (!correctedTitleReading || !correctedArtistReading) {
+        songCorrectionStatus.textContent = uiText("曲名と歌手名の読みを入力してください。");
+        return;
+      }
       if (normalizeSongDuplicateText(correctedTitle) === normalizeSongDuplicateText(correctingSongItem.title)
-          && normalizeSongDuplicateText(correctedArtist) === normalizeSongDuplicateText(correctingSongItem.artist)) {
+          && normalizeSongDuplicateText(correctedArtist) === normalizeSongDuplicateText(correctingSongItem.artist)
+          && normalizeSongDuplicateText(correctedTitleReading) === normalizeSongDuplicateText(correctingSongItem.title_reading || correctingSongItem.title)
+          && normalizeSongDuplicateText(correctedArtistReading) === normalizeSongDuplicateText(correctingSongItem.artist_reading || correctingSongItem.artist)) {
         songCorrectionStatus.textContent = uiText("現在の内容と同じです。訂正内容を入力してください。");
         return;
       }
@@ -14043,9 +14098,13 @@
           body: JSON.stringify({
             action: "song_correction_request",
             original_title: correctingSongItem.title,
+            original_title_reading: correctingSongItem.title_reading || correctingSongItem.title,
             original_artist: correctingSongItem.artist,
+            original_artist_reading: correctingSongItem.artist_reading || correctingSongItem.artist,
             corrected_title: correctedTitle,
+            corrected_title_reading: correctedTitleReading,
             corrected_artist: correctedArtist,
+            corrected_artist_reading: correctedArtistReading,
             requester_name: requesterName,
             requester_note: requesterNote,
             event_id: createId()
