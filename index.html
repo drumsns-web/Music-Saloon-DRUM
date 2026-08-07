@@ -1860,6 +1860,19 @@
       border-color: var(--orange);
     }
 
+    #songImportText {
+      min-height: 180px;
+      -webkit-user-select: text;
+      user-select: text;
+      -webkit-touch-callout: default;
+      touch-action: manipulation;
+      caret-color: var(--green);
+    }
+
+    .bulk-paste-actions {
+      margin: 8px 0 10px;
+    }
+
     .song-title-with-links {
       display: flex;
       align-items: center;
@@ -3203,6 +3216,7 @@
     }
 
     .bulk-import-preview-row input { min-width: 0; min-height: 40px; padding: 7px 9px; }
+    .bulk-import-keywords { grid-column: 1 / -2; }
     .bulk-import-remove { min-width: 40px; min-height: 40px; padding: 6px !important; }
     .bulk-import-status { margin: 10px 0 0; font-weight: 800; }
 
@@ -4754,6 +4768,8 @@
       min-height: 48px;
     }
 
+    .song-request-form label:last-of-type { grid-column: 1 / -1; }
+
     .song-request-form > .btn {
       grid-column: 1 / -1;
       width: 100%;
@@ -6144,7 +6160,7 @@
       .bulk-import-preview-row { grid-template-columns: minmax(0, 1fr) auto; }
       .bulk-import-preview-row input:nth-child(2),
       .bulk-import-preview-row input:nth-child(3) { grid-column: 1; }
-      .bulk-import-remove { grid-column: 2; grid-row: 1 / span 3; }
+      .bulk-import-remove { grid-column: 2; grid-row: 1 / span 4; }
 
       table,
       thead,
@@ -6364,18 +6380,22 @@
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.07</span></span>
-              <h2 id="appUpdateTitle">曲データを読み仮名で探せるようになりました</h2>
+              <h2 id="appUpdateTitle">曲の一括追加と通称検索に対応しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>約18,500曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。</p>
+            <p>貼り付けた曲をマイ曲リストと曲データへ一度に登録依頼できます。「ミスチル」「ユーミン」などの通称や登録したキーワードでも検索できます。</p>
             <div class="app-update-latest-actions">
               <a class="btn primary" href="#popular-songs">曲データを見る</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-07">2026.08.07</time>
+                  <div><strong>一括追加依頼と通称検索を追加</strong><p>貼り付けた曲を曲データへまとめて追加依頼でき、歌手の通称や任意の検索キーワードでも探せるようになりました。</p><a class="btn ghost app-update-history-action" href="#song-register">まとめて登録してみる →</a></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
                   <div><strong>曲データへ読み仮名を追加</strong><p>約18,500曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。</p><a class="btn ghost app-update-history-action" href="#popular-songs">読み仮名で探してみる →</a></div>
@@ -7160,6 +7180,10 @@
               <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。</p>
               <label for="songImportText">曲リストを貼り付ける</label>
               <p class="small">「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。</p>
+              <div class="control-row bulk-paste-actions">
+                <button class="btn primary" id="pasteSongImportButton" type="button">クリップボードから貼り付け</button>
+                <span class="small">または、下の入力欄を長押しして「貼り付け」を選べます。</span>
+              </div>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
               <label>
                 貼り付けたキー表記の基準
@@ -7169,6 +7193,10 @@
                 </select>
               </label>
               <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
+              <label class="check-line bulk-catalog-request-option">
+                <input id="requestImportedSongsForCatalog" type="checkbox">
+                <span><strong>マイ曲リストへの登録と同時に、曲データへもまとめて追加依頼する</strong><small>歌手名が入力されている曲だけを送信します。送信前の確認画面が表示されます。</small></span>
+              </label>
               <div class="control-row">
                 <button class="btn ghost" id="previewSongImportButton" type="button">解析して確認する</button>
                 <button class="btn primary" id="importSongsButton" type="button" disabled>確認した曲を登録する</button>
@@ -7910,6 +7938,7 @@
             <label>曲名の読み<input id="songRequestTitleReading" maxlength="255" required placeholder="例：いとしのえりー"></label>
             <label>歌手名<input id="songRequestArtist" maxlength="255" required placeholder="例：サザンオールスターズ"></label>
             <label>歌手名の読み<input id="songRequestArtistReading" maxlength="255" required placeholder="例：さざんおーるすたーず"></label>
+            <label>検索用キーワード（任意）<input id="songRequestKeywords" maxlength="500" placeholder="例：サザン、ミスチル、ユーミン"></label>
             <button class="btn primary" id="submitSongRequest" type="submit">追加をリクエスト</button>
           </form>
           <p class="shared-ranking-status" id="songRequestStatus" aria-live="polite"></p>
@@ -8732,6 +8761,8 @@
     const songImportStatus = document.getElementById("songImportStatus");
     const songImportPreview = document.getElementById("songImportPreview");
     const previewSongImportButton = document.getElementById("previewSongImportButton");
+    const pasteSongImportButton = document.getElementById("pasteSongImportButton");
+    const requestImportedSongsForCatalog = document.getElementById("requestImportedSongsForCatalog");
     const exportJsonButton = document.getElementById("exportJsonButton");
     const copyJsonButton = document.getElementById("copyJsonButton");
     const saveJsonFileButton = document.getElementById("saveJsonFileButton");
@@ -8783,6 +8814,7 @@
     const songRequestTitleReading = document.getElementById("songRequestTitleReading");
     const songRequestArtist = document.getElementById("songRequestArtist");
     const songRequestArtistReading = document.getElementById("songRequestArtistReading");
+    const songRequestKeywords = document.getElementById("songRequestKeywords");
     const submitSongRequest = document.getElementById("submitSongRequest");
     const songRequestStatus = document.getElementById("songRequestStatus");
     const songRequestList = document.getElementById("songRequestList");
@@ -9230,6 +9262,11 @@
       "約18,500曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。": "Added title and artist readings to about 18,500 songs for phonetic search and accurate Japanese index order. Readings can also be submitted with additions and corrections.",
       "曲データへ読み仮名を追加": "Added Readings to the Song Catalog",
       "約18,500曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。": "Added title and artist readings to about 18,500 songs for phonetic search and Japanese index order. Requested songs now also appear in the regular catalog.",
+      "曲の一括追加と通称検索に対応しました": "Added Bulk Catalog Requests and Alias Search",
+      "貼り付けた曲をマイ曲リストと曲データへ一度に登録依頼できます。「ミスチル」「ユーミン」などの通称や登録したキーワードでも検索できます。": "Pasted songs can now be added to My Song List and requested for the shared catalog at once. Search also supports aliases such as Misuchiru and Yuming, plus your own keywords.",
+      "一括追加依頼と通称検索を追加": "Added Bulk Requests and Alias Search",
+      "貼り付けた曲を曲データへまとめて追加依頼でき、歌手の通称や任意の検索キーワードでも探せるようになりました。": "Request multiple pasted songs for the shared catalog and find songs using artist aliases or custom search keywords.",
+      "まとめて登録してみる →": "Try Bulk Registration →",
       "読み仮名で探してみる →": "Search by Reading →",
       "曲名・歌手名とそれぞれの読みを入力して送信できます。同じ曲名・歌手名は1件にまとめ、通常の曲データにも反映します。": "Enter the song title, artist, and their readings. Duplicate requests are combined and the song is also reflected in the regular catalog.",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
@@ -9406,11 +9443,19 @@
       "リストをまとめて一括登録": "Add Multiple Songs from a List",
       "メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。": "Paste a song list from notes or LINE, then review titles, artists, and keys before adding.",
       "曲リストを貼り付ける": "Paste Song List",
+      "クリップボードから貼り付け": "Paste from Clipboard",
+      "または、下の入力欄を長押しして「貼り付け」を選べます。": "Or press and hold the field below, then choose Paste.",
+      "貼り付けました。内容を確認して「解析して確認する」を押してください。": "Pasted. Check the text, then press Parse and Review.",
+      "クリップボードを読み取れませんでした。下の入力欄を長押しして「貼り付け」を選んでください。": "Could not read the clipboard. Press and hold the field below, then choose Paste.",
       "貼り付けたキー表記の基準": "Key Base for Pasted Songs",
       "カラオケ標準キー基準": "Karaoke Standard Key Base",
       "原曲キー基準": "Original Key Base",
       "解析して確認する": "Parse and Review",
       "確認した曲を登録する": "Add Reviewed Songs",
+      "マイ曲リストへの登録と同時に、曲データへもまとめて追加依頼する": "Also request all songs for the shared catalog",
+      "歌手名が入力されている曲だけを送信します。送信前の確認画面が表示されます。": "Only songs with an artist name are sent. A confirmation appears before sending.",
+      "検索用よみ・通称": "Search reading / alias",
+      "検索用よみ・通称（例：ミスチル、ユーミン）": "Search reading / alias (e.g. Misuchiru, Yuming)",
       "読み込める曲がありません。": "No songs could be read.",
       "曲名の区切りとキーを確認してから登録してください。": "Check song boundaries and keys before adding.",
       "「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。": "Lists headed by 【Artist】 are supported. For reliable separation, put each song on a new line or separate the title and key with ／.",
@@ -10228,6 +10273,9 @@
       "追加をリクエスト": "Send Request",
       "曲名の読み": "Song Title Reading",
       "歌手名の読み": "Artist Name Reading",
+      "検索用キーワード（任意）": "Search Keywords (optional)",
+      "例：サザン、ミスチル、ユーミン": "Example: Southern, Misuchiru, Yuming",
+      "検索用キーワードを曲データへ追加しました。": "Search keywords were added to the song catalog.",
       "新しく追加リクエストされた曲": "Recently Requested Songs",
       "マイ曲リストへ登録": "Add to My Song List",
       "✓ マイ曲リスト登録済み": "✓ Added to My Song List",
@@ -10274,7 +10322,8 @@
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
-      "約18,500曲から曲名・歌手名を検索": "Search about 18,500 songs by title or artist"
+      "約18,500曲から曲名・歌手名を検索": "Search about 18,500 songs by title or artist",
+      "約18,500曲から曲名・歌手名・通称を検索": "Search about 18,500 songs by title, artist, or alias"
     };
 
     const phraseTranslations = [
@@ -11146,6 +11195,7 @@
           <input value="${escapeText(item.title)}" data-import-field="title" aria-label="${escapeText(uiText("曲名"))}">
           <input value="${escapeText(item.artist)}" data-import-field="artist" aria-label="${escapeText(uiText("歌手名"))}">
           <input value="${escapeText(item.key || importKeyBaseLabel())}" data-import-field="key" aria-label="${escapeText(uiText("キー"))}">
+          <input class="bulk-import-keywords" value="${escapeText(item.kana || "")}" data-import-field="kana" aria-label="${escapeText(uiText("検索用よみ・通称"))}" placeholder="${escapeText(uiText("検索用よみ・通称（例：ミスチル、ユーミン）"))}">
           <button class="btn ghost bulk-import-remove" type="button" data-remove-import-row="${index}" aria-label="${escapeText(uiText("削除"))}">×</button>
         </div>
       `).join("");
@@ -11153,6 +11203,7 @@
       songImportStatus.textContent = pendingSongImports.length
         ? (currentLanguage === "en" ? `${pendingSongImports.length} songs found. Check and edit them before saving.` : `${pendingSongImports.length}曲を読み取りました。曲名の区切りとキーを確認してから登録してください。`)
         : uiText("読み込める曲がありません。");
+      refreshLanguageSoon();
     }
 
     function saveHistory() {
@@ -13652,6 +13703,7 @@
         title_reading: String(item && item.title_reading || "").trim(),
         artist: String(item && item.artist || "").trim(),
         artist_reading: String(item && item.artist_reading || "").trim(),
+        search_keywords: String(item && item.search_keywords || "").trim(),
         artist_index: String(item && item.artist_index || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
@@ -13804,6 +13856,34 @@
       `).join("");
     }
 
+    let popularArtistAutoCloseFrame = 0;
+    function autoClosePassedPopularArtists() {
+      popularArtistAutoCloseFrame = 0;
+      if (!popularSongList) return;
+      const openGroups = [...popularSongList.querySelectorAll(".popular-artist-group[open]")];
+      if (!openGroups.length) return;
+      const floatingBottom = document.getElementById("floatingPageNav")?.getBoundingClientRect().bottom || 90;
+      const closeLine = Math.max(90, floatingBottom + 12);
+      openGroups.forEach((details) => {
+        const nextArtist = details.nextElementSibling;
+        const passedIntoNextArtist = nextArtist && nextArtist.classList.contains("popular-artist-group")
+          && nextArtist.getBoundingClientRect().top <= closeLine;
+        const passedLastArtist = !nextArtist && details.getBoundingClientRect().bottom <= closeLine;
+        if (!passedIntoNextArtist && !passedLastArtist) return;
+        const anchor = nextArtist || details;
+        const beforeTop = anchor.getBoundingClientRect().top;
+        details.open = false;
+        const afterTop = anchor.getBoundingClientRect().top;
+        const shift = afterTop - beforeTop;
+        if (Math.abs(shift) > 1) window.scrollBy(0, shift);
+      });
+    }
+
+    function schedulePopularArtistAutoClose() {
+      if (popularArtistAutoCloseFrame) return;
+      popularArtistAutoCloseFrame = requestAnimationFrame(autoClosePassedPopularArtists);
+    }
+
     async function loadPopularSongs() {
       if (!popularSongStatus) return;
       const query = popularSongSearch.value.trim();
@@ -13813,8 +13893,8 @@
         catalog: currentLanguage === "en" ? "About 18,500 songs" : "約18,500曲"
       };
       popularSongSearch.placeholder = popularSongCategory === "catalog"
-        ? uiText("約18,500曲から曲名・歌手名を検索")
-        : `${scopeLabels[popularSongCategory]}${currentLanguage === "en" ? ": search title or artist" : "内を曲名・歌手名で検索"}`;
+        ? uiText("約18,500曲から曲名・歌手名・通称を検索")
+        : `${scopeLabels[popularSongCategory]}${currentLanguage === "en" ? ": search title, artist, or alias" : "内を曲名・歌手名・通称で検索"}`;
       popularSongTabs.querySelectorAll("[data-popular-category]").forEach((button) => {
         const active = button.dataset.popularCategory === popularSongCategory;
         button.classList.toggle("is-active", active);
@@ -13944,6 +14024,7 @@
       const titleReading = songRequestTitleReading.value.trim();
       const artist = songRequestArtist.value.trim();
       const artistReading = songRequestArtistReading.value.trim();
+      const searchKeywords = songRequestKeywords.value.trim();
       if (!title || !artist || !titleReading || !artistReading) return;
       submitSongRequest.disabled = true;
       songRequestStatus.textContent = uiText("送信しています。");
@@ -13951,7 +14032,7 @@
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading, artist, artist_reading: artistReading, event_id: createId() })
+          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading, artist, artist_reading: artistReading, search_keywords: searchKeywords, event_id: createId() })
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song request unavailable");
@@ -13964,12 +14045,17 @@
         } else if (payload.status === "already_requested") {
           songRequestStatus.textContent = uiText("この曲はすでにリクエストされています。既存の1件にまとめました。");
           await loadSongRequests();
+        } else if (payload.status === "keywords_updated") {
+          songRequestStatus.textContent = uiText("検索用キーワードを曲データへ追加しました。");
+          songRequestKeywords.value = "";
+          await loadPopularSongs();
         } else {
           songRequestStatus.textContent = uiText("追加リクエストを送信しました。");
           songRequestTitle.value = "";
           songRequestTitleReading.value = "";
           songRequestArtist.value = "";
           songRequestArtistReading.value = "";
+          songRequestKeywords.value = "";
           await loadSongRequests();
           await loadPopularSongs();
         }
@@ -14003,7 +14089,7 @@
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading.trim(), artist, artist_reading: artistReading.trim(), event_id: createId() })
+          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading.trim(), artist, artist_reading: artistReading.trim(), search_keywords: String(item.kana || "").trim(), event_id: createId() })
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song catalog upload unavailable");
@@ -15167,6 +15253,7 @@
       const details = event.target.closest(".popular-artist-group");
       if (details && details.open) loadPopularArtistSongs(details);
     }, true);
+    window.addEventListener("scroll", schedulePopularArtistAutoClose, { passive: true });
     songRequestList.addEventListener("click", (event) => {
       const correctionButton = event.target.closest("[data-song-correction]");
       if (correctionButton) {
@@ -15743,6 +15830,22 @@
       renderSongImportPreview();
     });
 
+    pasteSongImportButton.addEventListener("click", async () => {
+      try {
+        if (!navigator.clipboard || typeof navigator.clipboard.readText !== "function") throw new Error("clipboard unavailable");
+        const pastedText = await navigator.clipboard.readText();
+        if (!pastedText) throw new Error("clipboard empty");
+        const separator = songImportText.value && !songImportText.value.endsWith("\n") ? "\n" : "";
+        songImportText.value += separator + pastedText;
+        songImportText.focus();
+        songImportText.setSelectionRange(songImportText.value.length, songImportText.value.length);
+        songImportStatus.textContent = uiText("貼り付けました。内容を確認して「解析して確認する」を押してください。");
+      } catch (error) {
+        songImportText.focus();
+        songImportStatus.textContent = uiText("クリップボードを読み取れませんでした。下の入力欄を長押しして「貼り付け」を選んでください。");
+      }
+    });
+
     songImportKeyBase.addEventListener("change", () => {
       settings.songImportKeyBase = songImportKeyBase.value;
       saveSettings();
@@ -15770,7 +15873,7 @@
       renderSongImportPreview();
     });
 
-    importSongsButton.addEventListener("click", () => {
+    importSongsButton.addEventListener("click", async () => {
       const imported = pendingSongImports
         .map((item) => ({ ...item, title: String(item.title || "").trim(), artist: String(item.artist || "").trim(), key: String(item.key || "").trim() || importKeyBaseLabel() }))
         .filter((item) => item.title);
@@ -15797,15 +15900,59 @@
           : `すでに登録済み、または貼り付け内で重複している可能性がある曲が${duplicateTitles.length}曲あります。\n${titleList}${moreText}\n\n重複したまま登録しますか？`;
         if (!confirm(duplicateMessage)) return;
       }
-      if (!confirm(currentLanguage === "en" ? `Add ${imported.length} songs to the song list?` : `${imported.length}曲をマイ曲リストに追加しますか？`)) return;
+      const requestCatalog = Boolean(requestImportedSongsForCatalog && requestImportedSongsForCatalog.checked);
+      const requestable = imported.filter((item) => item.artist);
+      const skippedCatalogCount = imported.length - requestable.length;
+      const confirmMessage = currentLanguage === "en"
+        ? `Add ${imported.length} songs to My Song List?${requestCatalog ? `\n\nAlso request ${requestable.length} songs with artist names for the shared song catalog. Please verify every title and artist before sending.${skippedCatalogCount ? `\n${skippedCatalogCount} song(s) without an artist will not be sent.` : ""}` : ""}`
+        : `${imported.length}曲をマイ曲リストに追加しますか？${requestCatalog ? `\n\n同時に、歌手名のある${requestable.length}曲を共有の曲データへまとめて追加依頼します。曲名・歌手名に間違いがないか、送信前にもう一度確認してください。${skippedCatalogCount ? `\n歌手名のない${skippedCatalogCount}曲は曲データへ送信しません。` : ""}` : ""}`;
+      if (!confirm(confirmMessage)) return;
+      importSongsButton.disabled = true;
       songs = [...imported, ...songs];
       saveSongs();
       renderSongs();
+      let resultMessage = currentLanguage === "en" ? "Songs were added." : `${imported.length}曲をマイ曲リストへ登録しました。`;
+      if (requestCatalog && requestable.length) {
+        songImportStatus.textContent = currentLanguage === "en" ? "Adding songs and sending catalog requests…" : "マイ曲リストへ登録し、曲データへの追加依頼を送信しています…";
+        try {
+          const response = await fetch(sharedRankingApiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              action: "song_request_bulk",
+              event_id: createId(),
+              songs: requestable.map((item) => ({
+                title: item.title,
+                title_reading: item.kana || item.title,
+                artist: item.artist,
+                artist_reading: item.artist,
+                search_keywords: item.kana || ""
+              }))
+            })
+          });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok) throw new Error("bulk song request unavailable");
+          const summary = payload.summary || {};
+          const sent = Number(summary.requested || 0) + Number(summary.already_requested || 0) + Number(summary.already_catalogued || 0) + Number(summary.keywords_updated || 0);
+          resultMessage = currentLanguage === "en"
+            ? `${imported.length} songs were added. ${sent} catalog request(s) were processed.`
+            : `${imported.length}曲をマイ曲リストへ登録し、${sent}曲の曲データ追加依頼を処理しました。`;
+          await loadSongRequests();
+          await loadPopularSongs();
+        } catch (error) {
+          console.warn(error);
+          resultMessage = currentLanguage === "en"
+            ? `${imported.length} songs were added locally, but catalog requests could not be sent.`
+            : `${imported.length}曲をマイ曲リストへ登録しましたが、曲データへの追加依頼は送信できませんでした。通信状態を確認して、必要な曲を再度送信してください。`;
+        }
+      }
       songImportText.value = "";
       pendingSongImports = [];
+      if (requestImportedSongsForCatalog) requestImportedSongsForCatalog.checked = false;
       renderSongImportPreview();
-      songImportStatus.textContent = currentLanguage === "en" ? "Songs were added." : `${imported.length}曲をマイ曲リストへ登録しました。`;
+      songImportStatus.textContent = resultMessage;
       songExportText.value = createSongExportText();
+      importSongsButton.disabled = true;
     });
 
     searchBox.addEventListener("input", () => {
