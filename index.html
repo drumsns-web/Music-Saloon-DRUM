@@ -3144,11 +3144,34 @@
       line-height: 1.35;
     }
 
+    .song-catalog-upload-button {
+      border: 2px solid var(--orange) !important;
+      background: rgba(var(--theme-accent-rgb), .14) !important;
+      color: var(--forest) !important;
+      font-weight: 900;
+      box-shadow: 0 3px 0 rgba(var(--theme-accent-rgb), .36), 0 7px 16px rgba(31, 56, 43, .1);
+      white-space: nowrap;
+      transform: translateY(0);
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    .song-catalog-upload-button:hover,
+    .song-catalog-upload-button:focus-visible {
+      background: var(--orange) !important;
+      color: var(--button-text, #102f23) !important;
+      box-shadow: 0 4px 0 rgba(134, 67, 16, .5), 0 9px 20px rgba(31, 56, 43, .16);
+      transform: translateY(-1px);
+    }
+
+    .song-catalog-upload-button:active {
+      box-shadow: 0 1px 0 rgba(134, 67, 16, .45);
+      transform: translateY(2px);
+    }
+
     .simple-song-catalog-button {
       flex: 0 0 auto;
       min-height: 34px;
       padding: 5px 10px;
-      white-space: nowrap;
     }
 
     .simple-song-row:first-child { border-top: 0; }
@@ -14181,7 +14204,7 @@
           <span class="simple-song-title">${highlightText(item.title, query)}</span>
           <span class="simple-song-artist-name">${highlightText(item.artist || uiText("歌手名未登録"), query)}</span>
           <span class="simple-song-key">${highlightText(uiKey(item.key || "カラオケ標準キー"), query)}</span>
-          <button class="btn ghost simple-song-catalog-button" type="button" data-add-song-catalog="${escapeText(item.id)}">${escapeText(uiText("曲データへ追加"))}</button>
+          <button class="btn ghost song-catalog-upload-button simple-song-catalog-button" type="button" data-add-song-catalog="${escapeText(item.id)}"><span aria-hidden="true">↑</span> ${escapeText(uiText("曲データへ追加"))}</button>
         </div>
       `;
     }
@@ -14260,7 +14283,7 @@
               <div class="compact-song-card-actions">
                 ${settings.showSavedSetlists ? `<button class="btn song-quick-action quick-setlist-button" type="button" data-quick-setlist="${escapeText(item.id)}">＋ ${escapeText(uiText("セットリストへ"))}</button>` : ""}
                 ${settings.enableAdditionalList ? `<button class="btn song-quick-action quick-transfer-button" type="button" data-song-transfer="${escapeText(item.id)}">⇄ ${escapeText(uiText("別リストへ"))}</button>` : ""}
-                <button class="btn ghost" type="button" data-add-song-catalog="${escapeText(item.id)}">↑ ${escapeText(uiText("曲データへ追加"))}</button>
+                <button class="btn ghost song-catalog-upload-button" type="button" data-add-song-catalog="${escapeText(item.id)}"><span aria-hidden="true">↑</span> ${escapeText(uiText("曲データへ追加"))}</button>
                 <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
                 <button class="btn primary" type="button" data-record="${escapeText(item.id)}" title="${escapeText(recordButtonHelp)}" aria-label="${escapeText(recordButtonHelp)}">${escapeText(uiText("歌った曲を記録"))}</button>
                 <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
