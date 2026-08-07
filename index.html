@@ -4643,6 +4643,46 @@
       min-width: 0;
     }
 
+    .popular-song-actions {
+      display: grid;
+      gap: 8px;
+      min-width: 150px;
+    }
+
+    .song-correction-button {
+      border-color: #a96c36 !important;
+      background: #fff8ee !important;
+      color: #70401d !important;
+      font-weight: 900;
+    }
+
+    .song-correction-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .song-correction-form .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .song-correction-form label {
+      display: grid;
+      gap: 5px;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .song-correction-warning {
+      padding: 12px 14px;
+      border-left: 5px solid var(--orange);
+      border-radius: 8px;
+      background: #fff4df;
+      color: #402c1e;
+      font-weight: 800;
+    }
+
     .popular-song-row > div > strong,
     .popular-song-row > div > span {
       display: block;
@@ -4770,6 +4810,8 @@
       .popular-song-row {
         grid-template-columns: 1fr;
       }
+      .popular-song-actions { grid-template-columns: 1fr 1fr; }
+      .song-correction-form .row { grid-template-columns: 1fr; }
       .popular-song-row .btn {
         width: 100%;
       }
@@ -6308,18 +6350,22 @@
           <summary>
             <span>
               <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.07</span></span>
-              <h2 id="appUpdateTitle">マイ曲リストから曲データへ追加できるようになりました</h2>
+              <h2 id="appUpdateTitle">曲データの追加と訂正依頼に対応しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>マイ曲リストの各曲から、曲名と歌手名を確認して共有の曲データへ追加できます。</p>
+            <p>マイ曲リストから曲データを追加でき、曲名・歌手名の間違いは名前付きで店主へ訂正依頼を送れます。</p>
             <div class="app-update-latest-actions">
-              <a class="btn primary" href="#customers">マイ曲リストを見る</a>
+              <a class="btn primary" href="#popular-songs">曲データを見る</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-07">2026.08.07</time>
+                  <div><strong>曲データの訂正依頼を追加</strong><p>店主が分かる名前・ニックネームを必須にし、曲名・歌手名の訂正を安全に依頼できるようにしました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲データを見る →</a></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
                   <div><strong>マイ曲リストから曲データへ追加</strong><p>各曲の「曲データへ追加」ボタンから、確認後に曲名と歌手名を共有の曲データへ追加できるようになりました。</p><a class="btn ghost app-update-history-action" href="#customers">マイ曲リストを見る →</a></div>
@@ -8225,6 +8271,33 @@
     </div>
   </div>
 
+  <div class="drink-modal" id="songCorrectionModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="songCorrectionModalTitle">
+    <div class="drink-modal-panel song-transfer-modal-panel">
+      <div class="section-head">
+        <div>
+          <h2 id="songCorrectionModalTitle">曲データの訂正を依頼</h2>
+          <p class="lead">間違っている曲名・歌手名を店主へ知らせます。</p>
+        </div>
+        <button class="btn ghost" id="closeSongCorrectionModal" type="button">閉じる</button>
+      </div>
+      <form class="song-correction-form" id="songCorrectionForm">
+        <div class="song-transfer-summary">
+          <strong id="songCorrectionOriginalLabel">曲名／歌手名</strong>
+          <p>現在登録されている内容</p>
+        </div>
+        <div class="row">
+          <label>正しい曲名<input id="songCorrectionTitle" maxlength="255" required></label>
+          <label>正しい歌手名<input id="songCorrectionArtist" maxlength="255" required></label>
+        </div>
+        <label>店主があなたと分かる名前・ニックネーム<input id="songCorrectionRequester" maxlength="64" required autocomplete="name" placeholder="例：いつも窓側に座る○○"></label>
+        <label>補足（任意）<textarea id="songCorrectionNote" maxlength="500" placeholder="どこが間違っているかなど"></textarea></label>
+        <div class="song-correction-warning">誰からの依頼か店主が確認できない場合、訂正されないことがあります。いたずらや第三者になりすました依頼は送らないでください。</div>
+        <button class="btn primary" id="submitSongCorrection" type="submit">確認して訂正を依頼</button>
+        <p class="song-transfer-status" id="songCorrectionStatus" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+
   <div class="drink-modal" id="liveModeModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="liveModeTitle">
     <div class="drink-modal-panel live-mode-panel">
       <div class="section-head">
@@ -8567,6 +8640,7 @@
     const appUpdateStorageKey = "music-saloon-drum-app-update";
     const songRecordConfirmStorageKey = "music-saloon-drum-song-record-confirm";
     const backupStatusStorageKey = "music-saloon-drum-backup-status";
+    const songCorrectionRequesterStorageKey = "music-saloon-drum-correction-requester";
     const contactEmail = "drum.sns@gmail.com";
     const newsImageCount = 12;
     const heroImageCount = 7;
@@ -8686,6 +8760,16 @@
     const submitSongRequest = document.getElementById("submitSongRequest");
     const songRequestStatus = document.getElementById("songRequestStatus");
     const songRequestList = document.getElementById("songRequestList");
+    const songCorrectionModal = document.getElementById("songCorrectionModal");
+    const closeSongCorrectionModal = document.getElementById("closeSongCorrectionModal");
+    const songCorrectionForm = document.getElementById("songCorrectionForm");
+    const songCorrectionOriginalLabel = document.getElementById("songCorrectionOriginalLabel");
+    const songCorrectionTitle = document.getElementById("songCorrectionTitle");
+    const songCorrectionArtist = document.getElementById("songCorrectionArtist");
+    const songCorrectionRequester = document.getElementById("songCorrectionRequester");
+    const songCorrectionNote = document.getElementById("songCorrectionNote");
+    const submitSongCorrection = document.getElementById("submitSongCorrection");
+    const songCorrectionStatus = document.getElementById("songCorrectionStatus");
     const duetOnly = document.getElementById("duetOnly");
     const gachaIncludeDuet = document.getElementById("gachaIncludeDuet");
     const songTagOptions = document.getElementById("songTagOptions");
@@ -9108,6 +9192,12 @@
       "マイ曲リストから曲データへ追加": "Add Songs from My Song List to the Catalog",
       "各曲の「曲データへ追加」ボタンから、確認後に曲名と歌手名を共有の曲データへ追加できるようになりました。": "Use Add to Song Catalog on any song to confirm and share its title and artist in the catalog.",
       "マイ曲リストを見る →": "View My Song List →",
+      "曲データの追加と訂正依頼に対応しました": "Added Song Catalog Submission and Correction Requests",
+      "マイ曲リストから曲データを追加でき、曲名・歌手名の間違いは名前付きで店主へ訂正依頼を送れます。": "Add songs from My Song List and send a named correction request to the owner when a title or artist is incorrect.",
+      "曲データを見る": "View Song Catalog",
+      "曲データの訂正依頼を追加": "Added Song Catalog Correction Requests",
+      "店主が分かる名前・ニックネームを必須にし、曲名・歌手名の訂正を安全に依頼できるようにしました。": "A recognizable name or nickname is required so title and artist corrections can be requested safely.",
+      "曲データを見る →": "View Song Catalog →",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
       "曲・歌手データと曲リクエストを追加しました": "Added the Song & Artist Catalog and Song Requests",
       "国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or about 18,500 catalog songs, and request a missing song.",
@@ -10107,6 +10197,24 @@
       "✓ マイ曲リスト登録済み": "✓ Added to My Song List",
       "追加リクエスト": "Song Request",
       "曲データ": "Song Catalog",
+      "訂正を依頼": "Request a Correction",
+      "曲データの訂正を依頼": "Request a Song Catalog Correction",
+      "間違っている曲名・歌手名を店主へ知らせます。": "Tell the owner about an incorrect song title or artist.",
+      "現在登録されている内容": "Currently registered information",
+      "正しい曲名": "Correct Song Title",
+      "正しい歌手名": "Correct Artist Name",
+      "店主があなたと分かる名前・ニックネーム": "Name or nickname the owner can identify",
+      "補足（任意）": "Additional details (optional)",
+      "どこが間違っているかなど": "Describe what is incorrect",
+      "誰からの依頼か店主が確認できない場合、訂正されないことがあります。いたずらや第三者になりすました依頼は送らないでください。": "The request may not be processed if the owner cannot identify who sent it. Do not send prank requests or impersonate another person.",
+      "確認して訂正を依頼": "Review and Send Correction",
+      "店主があなたと分かる名前・ニックネームを入力してください。": "Enter a name or nickname the owner can identify.",
+      "正しい曲名と歌手名を入力してください。": "Enter the correct song title and artist.",
+      "現在の内容と同じです。訂正内容を入力してください。": "Nothing has changed. Enter the corrected information.",
+      "訂正依頼を送信しています。": "Sending the correction request.",
+      "同じ訂正依頼はすでに送信されています。": "The same correction request has already been sent.",
+      "訂正依頼を店主へ送信しました。": "The correction request was sent to the owner.",
+      "訂正依頼を送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the correction request. Check your connection and try again.",
       "曲名または歌手名を入力して検索してください。": "Enter a song title or artist to search.",
       "条件に合う曲が見つかりませんでした。": "No matching songs were found.",
       "全曲検索は1文字から利用できます。": "Full catalog search works from one character.",
@@ -10465,6 +10573,7 @@
     let popularArtistSongItems = [];
     const popularArtistSongCache = new Map();
     let requestedSongItems = [];
+    let correctingSongItem = null;
     let popularSongCategory = "jp";
     let popularSongSortMode = "artist";
     let catalogSearchItems = [];
@@ -13597,7 +13706,10 @@
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
             </div>
           </div>
-          <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
+          <div class="popular-song-actions">
+            <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
+            <button class="btn ghost song-correction-button" type="button" data-song-correction="${escapeText(source)}" data-popular-index="${index}">${escapeText(uiText("訂正を依頼"))}</button>
+          </div>
         </article>
       `;
     }
@@ -13830,8 +13942,8 @@
         return;
       }
       const message = currentLanguage === "en"
-        ? `Add “${title}” by ${artist} to the shared song catalog?\n\nThe song title and artist will be available to all app users.`
-        : `「${title}」／${artist}\n\nこの曲を、利用者全員が検索できる曲データへ追加しますか？\n送信する内容は曲名と歌手名です。`;
+        ? `Add “${title}” by ${artist} to the shared song catalog?\n\nThe song title and artist will be available to all app users. Please check the spelling carefully before sending.`
+        : `「${title}」／${artist}\n\nこの曲を、利用者全員が検索できる曲データへ追加しますか？\n送信する内容は曲名と歌手名です。\n\n曲名・歌手名の表記に間違いがないか、送信前にもう一度確認してください。`;
       if (!window.confirm(message)) return;
       if (button) button.disabled = true;
       try {
@@ -13855,6 +13967,89 @@
         showUndo(uiText("曲データへ追加できませんでした。通信状態を確認して再度お試しください。"));
       } finally {
         if (button) button.disabled = false;
+      }
+    }
+
+    function songCorrectionSourceItem(source, index) {
+      const items = source === "request"
+        ? requestedSongItems
+        : (source === "artistCatalog" ? popularArtistSongItems : popularSongItems);
+      return items[Number(index)] || null;
+    }
+
+    function openSongCorrectionPanel(item) {
+      if (!item || !item.title || !item.artist) return;
+      correctingSongItem = item;
+      songCorrectionOriginalLabel.textContent = `${item.title}／${item.artist}`;
+      songCorrectionTitle.value = item.title;
+      songCorrectionArtist.value = item.artist;
+      songCorrectionRequester.value = localStorage.getItem(songCorrectionRequesterStorageKey) || "";
+      songCorrectionNote.value = "";
+      songCorrectionStatus.textContent = "";
+      songCorrectionModal.classList.add("show");
+      songCorrectionModal.setAttribute("aria-hidden", "false");
+      window.setTimeout(() => songCorrectionTitle.focus(), 50);
+      refreshLanguageSoon();
+    }
+
+    function closeSongCorrectionPanel() {
+      songCorrectionModal.classList.remove("show");
+      songCorrectionModal.setAttribute("aria-hidden", "true");
+      correctingSongItem = null;
+      songCorrectionStatus.textContent = "";
+    }
+
+    async function submitSongCorrectionRequest() {
+      if (!correctingSongItem) return;
+      const correctedTitle = songCorrectionTitle.value.trim();
+      const correctedArtist = songCorrectionArtist.value.trim();
+      const requesterName = songCorrectionRequester.value.trim();
+      const requesterNote = songCorrectionNote.value.trim();
+      if (!requesterName) {
+        songCorrectionStatus.textContent = uiText("店主があなたと分かる名前・ニックネームを入力してください。");
+        songCorrectionRequester.focus();
+        return;
+      }
+      if (!correctedTitle || !correctedArtist) {
+        songCorrectionStatus.textContent = uiText("正しい曲名と歌手名を入力してください。");
+        return;
+      }
+      if (normalizeSongDuplicateText(correctedTitle) === normalizeSongDuplicateText(correctingSongItem.title)
+          && normalizeSongDuplicateText(correctedArtist) === normalizeSongDuplicateText(correctingSongItem.artist)) {
+        songCorrectionStatus.textContent = uiText("現在の内容と同じです。訂正内容を入力してください。");
+        return;
+      }
+      const confirmation = currentLanguage === "en"
+        ? `Send this correction request as “${requesterName}”?\n\nRequests may not be processed if the owner cannot identify who sent them.`
+        : `「${requesterName}」さんからの訂正依頼として送信しますか？\n\n店主が誰からの依頼か確認できない場合、訂正されないことがあります。`;
+      if (!window.confirm(confirmation)) return;
+      submitSongCorrection.disabled = true;
+      songCorrectionStatus.textContent = uiText("訂正依頼を送信しています。");
+      try {
+        const response = await fetch(sharedRankingApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "song_correction_request",
+            original_title: correctingSongItem.title,
+            original_artist: correctingSongItem.artist,
+            corrected_title: correctedTitle,
+            corrected_artist: correctedArtist,
+            requester_name: requesterName,
+            requester_note: requesterNote,
+            event_id: createId()
+          })
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("song correction unavailable");
+        localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
+        closeSongCorrectionPanel();
+        showUndo(uiText(payload.status === "already_requested" ? "同じ訂正依頼はすでに送信されています。" : "訂正依頼を店主へ送信しました。"));
+      } catch (error) {
+        console.warn(error);
+        songCorrectionStatus.textContent = uiText("訂正依頼を送信できませんでした。通信状態を確認して再度お試しください。");
+      } finally {
+        submitSongCorrection.disabled = false;
       }
     }
 
@@ -14888,6 +15083,11 @@
       loadPopularSongs();
     });
     popularSongList.addEventListener("click", (event) => {
+      const correctionButton = event.target.closest("[data-song-correction]");
+      if (correctionButton) {
+        openSongCorrectionPanel(songCorrectionSourceItem(correctionButton.dataset.songCorrection, correctionButton.dataset.popularIndex));
+        return;
+      }
       const button = event.target.closest("[data-popular-add]");
       if (!button) return;
       const sourceItems = button.dataset.popularAdd === "artistCatalog" ? popularArtistSongItems : popularSongItems;
@@ -14898,6 +15098,11 @@
       if (details && details.open) loadPopularArtistSongs(details);
     }, true);
     songRequestList.addEventListener("click", (event) => {
+      const correctionButton = event.target.closest("[data-song-correction]");
+      if (correctionButton) {
+        openSongCorrectionPanel(songCorrectionSourceItem(correctionButton.dataset.songCorrection, correctionButton.dataset.popularIndex));
+        return;
+      }
       const button = event.target.closest('[data-popular-add="request"]');
       if (!button) return;
       addPopularSongToMyList(requestedSongItems[Number(button.dataset.popularIndex)]);
@@ -14905,6 +15110,14 @@
     songRequestForm.addEventListener("submit", (event) => {
       event.preventDefault();
       submitSongRequestToServer();
+    });
+    songCorrectionForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitSongCorrectionRequest();
+    });
+    closeSongCorrectionModal.addEventListener("click", closeSongCorrectionPanel);
+    songCorrectionModal.addEventListener("click", (event) => {
+      if (event.target === songCorrectionModal) closeSongCorrectionPanel();
     });
     capabilityDisplayName.addEventListener("input", () => {
       settings.capabilityDisplayName = capabilityDisplayName.value;
