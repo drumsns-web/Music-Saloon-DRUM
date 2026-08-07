@@ -5132,6 +5132,15 @@
       background: rgba(11, 43, 30, .68);
     }
 
+    #songCorrectionModal {
+      z-index: 2100;
+    }
+
+    body.song-correction-modal-open #popularSongIndexJump {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
     .drink-modal.show {
       display: flex;
     }
@@ -13988,6 +13997,7 @@
       songCorrectionStatus.textContent = "";
       songCorrectionModal.classList.add("show");
       songCorrectionModal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("song-correction-modal-open");
       window.setTimeout(() => songCorrectionTitle.focus(), 50);
       refreshLanguageSoon();
     }
@@ -13995,6 +14005,7 @@
     function closeSongCorrectionPanel() {
       songCorrectionModal.classList.remove("show");
       songCorrectionModal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("song-correction-modal-open");
       correctingSongItem = null;
       songCorrectionStatus.textContent = "";
     }
