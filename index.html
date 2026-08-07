@@ -3135,13 +3135,20 @@
 
     .simple-song-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(110px, .65fr) auto;
+      grid-template-columns: minmax(0, 1fr) minmax(110px, .65fr) auto auto;
       gap: 10px;
       align-items: center;
       padding: 5px 10px;
       border-top: 1px solid var(--line);
       color: #21372d;
       line-height: 1.35;
+    }
+
+    .simple-song-catalog-button {
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 5px 10px;
+      white-space: nowrap;
     }
 
     .simple-song-row:first-child { border-top: 0; }
@@ -6053,7 +6060,8 @@
         grid-column: 1;
         font-size: .8rem;
       }
-      .simple-song-key { grid-column: 2; grid-row: 1 / span 2; }
+      .simple-song-key { grid-column: 2; grid-row: 1; }
+      .simple-song-catalog-button { grid-column: 2; grid-row: 2; }
       .bulk-import-preview-row { grid-template-columns: minmax(0, 1fr) auto; }
       .bulk-import-preview-row input:nth-child(2),
       .bulk-import-preview-row input:nth-child(3) { grid-column: 1; }
@@ -6276,19 +6284,23 @@
         <details class="app-update-card" id="appUpdateCard">
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.06</span></span>
-              <h2 id="appUpdateTitle">曲・歌手データと曲リクエストを追加しました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.07</span></span>
+              <h2 id="appUpdateTitle">マイ曲リストから曲データへ追加できるようになりました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。</p>
+            <p>マイ曲リストの各曲から、曲名と歌手名を確認して共有の曲データへ追加できます。</p>
             <div class="app-update-latest-actions">
-              <a class="btn primary" href="#popular-songs">曲・歌手データを見る</a>
+              <a class="btn primary" href="#customers">マイ曲リストを見る</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
               <div class="app-update-history-list">
+                <article class="app-update-history-item">
+                  <time datetime="2026-08-07">2026.08.07</time>
+                  <div><strong>マイ曲リストから曲データへ追加</strong><p>各曲の「曲データへ追加」ボタンから、確認後に曲名と歌手名を共有の曲データへ追加できるようになりました。</p><a class="btn ghost app-update-history-action" href="#customers">マイ曲リストを見る →</a></div>
+                </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-06">2026.08.06</time>
                   <div><strong>曲・歌手データと曲リクエストを追加</strong><p>国内曲・洋楽曲と約18,500曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲・歌手データを見る →</a></div>
@@ -9066,6 +9078,13 @@
 
     const exactTranslations = {
       "アプリ更新情報": "App Update",
+      "アプリ更新情報　2026.08.07": "App Update  2026.08.07",
+      "マイ曲リストから曲データへ追加できるようになりました": "Add My Songs to the Shared Song Catalog",
+      "マイ曲リストの各曲から、曲名と歌手名を確認して共有の曲データへ追加できます。": "Confirm the title and artist, then add any song in My Song List to the shared song catalog.",
+      "マイ曲リストを見る": "View My Song List",
+      "マイ曲リストから曲データへ追加": "Add Songs from My Song List to the Catalog",
+      "各曲の「曲データへ追加」ボタンから、確認後に曲名と歌手名を共有の曲データへ追加できるようになりました。": "Use Add to Song Catalog on any song to confirm and share its title and artist in the catalog.",
+      "マイ曲リストを見る →": "View My Song List →",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
       "曲・歌手データと曲リクエストを追加しました": "Added the Song & Artist Catalog and Song Requests",
       "国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or about 18,500 catalog songs, and request a missing song.",
@@ -9171,6 +9190,12 @@
       "別リストへ": "Other List",
       "セットへ": "Setlist",
       "セットリストへ": "Add to Setlist",
+      "曲データへ追加": "Add to Song Catalog",
+      "曲データへ追加するには、先に歌手名を登録してください。": "Add the artist name before adding this song to the catalog.",
+      "この曲はすでに曲データに登録されています。": "This song is already in the song catalog.",
+      "この曲はすでに曲データへ追加されています。": "This song has already been added to the song catalog.",
+      "曲データへ追加しました。": "Added to the song catalog.",
+      "曲データへ追加できませんでした。通信状態を確認して再度お試しください。": "Could not add the song to the catalog. Check your connection and try again.",
       "別の曲リストへ": "Move or Copy to Another List",
       "コピーまたは移動を選んでください。": "Choose whether to copy or move this song.",
       "コピーすると両方のリストに残ります。移動すると現在のリストからは削除されます。": "Copy keeps the song in both lists. Move removes it from the current list.",
@@ -13772,6 +13797,44 @@
       }
     }
 
+    async function addMySongToCatalog(id, button = null) {
+      const item = songs.find((song) => song.id === id);
+      if (!item) return;
+      const title = String(item.title || "").trim();
+      const artist = String(item.artist || "").trim();
+      if (!artist) {
+        showUndo(uiText("曲データへ追加するには、先に歌手名を登録してください。"));
+        return;
+      }
+      const message = currentLanguage === "en"
+        ? `Add “${title}” by ${artist} to the shared song catalog?\n\nThe song title and artist will be available to all app users.`
+        : `「${title}」／${artist}\n\nこの曲を、利用者全員が検索できる曲データへ追加しますか？\n送信する内容は曲名と歌手名です。`;
+      if (!window.confirm(message)) return;
+      if (button) button.disabled = true;
+      try {
+        const response = await fetch(sharedRankingApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "song_request", title, artist, event_id: createId() })
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("song catalog upload unavailable");
+        if (payload.status === "already_catalogued") {
+          showUndo(uiText("この曲はすでに曲データに登録されています。"));
+        } else if (payload.status === "already_requested") {
+          showUndo(uiText("この曲はすでに曲データへ追加されています。"));
+        } else {
+          showUndo(uiText("曲データへ追加しました。"));
+        }
+        await loadSongRequests();
+      } catch (error) {
+        console.warn(error);
+        showUndo(uiText("曲データへ追加できませんでした。通信状態を確認して再度お試しください。"));
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
+
     async function loadSharedRanking() {
       if (!sharedRankingStatus) return;
       sharedRankingStatus.textContent = uiText("ランキングを読み込んでいます。");
@@ -14118,6 +14181,7 @@
           <span class="simple-song-title">${highlightText(item.title, query)}</span>
           <span class="simple-song-artist-name">${highlightText(item.artist || uiText("歌手名未登録"), query)}</span>
           <span class="simple-song-key">${highlightText(uiKey(item.key || "カラオケ標準キー"), query)}</span>
+          <button class="btn ghost simple-song-catalog-button" type="button" data-add-song-catalog="${escapeText(item.id)}">${escapeText(uiText("曲データへ追加"))}</button>
         </div>
       `;
     }
@@ -14196,6 +14260,7 @@
               <div class="compact-song-card-actions">
                 ${settings.showSavedSetlists ? `<button class="btn song-quick-action quick-setlist-button" type="button" data-quick-setlist="${escapeText(item.id)}">＋ ${escapeText(uiText("セットリストへ"))}</button>` : ""}
                 ${settings.enableAdditionalList ? `<button class="btn song-quick-action quick-transfer-button" type="button" data-song-transfer="${escapeText(item.id)}">⇄ ${escapeText(uiText("別リストへ"))}</button>` : ""}
+                <button class="btn ghost" type="button" data-add-song-catalog="${escapeText(item.id)}">↑ ${escapeText(uiText("曲データへ追加"))}</button>
                 <button class="btn ghost" type="button" data-next="${escapeText(item.id)}">${escapeText(uiText(item.nextWish ? "次回解除" : "次回"))}</button>
                 <button class="btn primary" type="button" data-record="${escapeText(item.id)}" title="${escapeText(recordButtonHelp)}" aria-label="${escapeText(recordButtonHelp)}">${escapeText(uiText("歌った曲を記録"))}</button>
                 <button class="btn ghost" type="button" data-edit="${escapeText(item.id)}">${escapeText(uiText("編集"))}</button>
@@ -15140,6 +15205,11 @@
         openSongReference(lyricButton.dataset.songLyrics, "lyrics");
         return;
       }
+      const catalogButton = event.target.closest("[data-add-song-catalog]");
+      if (catalogButton) {
+        addMySongToCatalog(catalogButton.dataset.addSongCatalog, catalogButton);
+        return;
+      }
       const groupButton = event.target.closest("[data-song-group-toggle]");
       if (groupButton) {
         const key = groupButton.dataset.songGroupToggle;
@@ -15194,6 +15264,12 @@
       if (!row || event.target.closest("button, a, input, select, textarea")) return;
       const rowDetailButton = row.querySelector("[data-song-detail]");
       if (rowDetailButton) rowDetailButton.click();
+    });
+
+    simpleSongList.addEventListener("click", (event) => {
+      const catalogButton = event.target.closest("[data-add-song-catalog]");
+      if (!catalogButton) return;
+      addMySongToCatalog(catalogButton.dataset.addSongCatalog, catalogButton);
     });
 
     enableSwipeDelete(list, "[data-song-id]", "songId", deleteSong);
