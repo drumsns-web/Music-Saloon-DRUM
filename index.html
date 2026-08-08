@@ -14195,6 +14195,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function popularExactIndexGroup(item, mode = "artist") {
+      const visibleName = String(mode === "title"
+        ? item && item.title || ""
+        : item && item.artist || "").trim();
+      const visibleFirst = visibleName.normalize("NFKC").charAt(0).toUpperCase();
+      if (/^[A-Z]$/.test(visibleFirst)) return visibleFirst;
       const source = String(mode === "title"
         ? item && (item.title_reading || item.title) || ""
         : item && (item.artist_reading || item.artist) || "").trim();
@@ -14287,9 +14292,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (popularSongSortMode === "artist") {
         const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
         items.sort((a, b) => {
-          const aLatin = /^[A-Za-z0-9]/.test(a.artist || "") ? 1 : 0;
-          const bLatin = /^[A-Za-z0-9]/.test(b.artist || "") ? 1 : 0;
-          return aLatin - bLatin || collator.compare(a.artist || "", b.artist || "") || collator.compare(a.title || "", b.title || "");
+          const aName = String(a.artist || "").normalize("NFKC");
+          const bName = String(b.artist || "").normalize("NFKC");
+          const aLatin = /^[A-Za-z0-9]/.test(aName) ? 1 : 0;
+          const bLatin = /^[A-Za-z0-9]/.test(bName) ? 1 : 0;
+          return aLatin - bLatin || collator.compare(aName, bName) || collator.compare(a.title || "", b.title || "");
         });
       }
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
