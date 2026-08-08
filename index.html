@@ -13986,13 +13986,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function normalizePopularSong(item) {
+      const artist = String(item && item.artist || "").trim();
+      const isEqualLove = /^[=＝]LOVE$/i.test(artist.normalize("NFKC"));
       return {
         title: String(item && item.title || "").trim(),
         title_reading: String(item && item.title_reading || "").trim(),
-        artist: String(item && item.artist || "").trim(),
-        artist_reading: String(item && item.artist_reading || "").trim(),
-        search_keywords: String(item && item.search_keywords || "").trim(),
-        artist_index: String(item && item.artist_index || "").trim(),
+        artist,
+        artist_reading: isEqualLove ? "いこーるらぶ" : String(item && item.artist_reading || "").trim(),
+        search_keywords: `${String(item && item.search_keywords || "").trim()}${isEqualLove ? " イコールラブ いこーるらぶ" : ""}`.trim(),
+        artist_index: isEqualLove ? "い" : String(item && item.artist_index || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
         artist_catalog_count: Number(item && item.artist_catalog_count || 0),
