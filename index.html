@@ -1877,7 +1877,7 @@
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 12px;
+      margin: 12px 0 16px;
     }
 
     .bulk-register-destination {
@@ -1888,6 +1888,44 @@
       border: 1px solid var(--line);
       border-radius: 10px;
       background: #fffdf8;
+    }
+
+    .bulk-register-destination.is-my-list {
+      border: 2px solid rgba(20, 63, 44, .42);
+      background: rgba(236, 247, 239, .96);
+    }
+
+    .bulk-register-destination.is-catalog {
+      border: 3px solid var(--orange);
+      background: rgba(255, 239, 214, .98);
+      box-shadow: 0 10px 24px rgba(240, 138, 53, .16);
+    }
+
+    .bulk-destination-badge {
+      width: fit-content;
+      display: inline-flex;
+      margin-bottom: 6px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      color: #fff;
+      background: var(--forest);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .bulk-register-destination.is-catalog .bulk-destination-badge {
+      color: var(--button-text);
+      background: var(--orange);
+    }
+
+    .bulk-destination-warning {
+      margin: 10px 0 0;
+      border-left: 4px solid var(--orange);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink);
+      background: #fff;
+      font-weight: 900;
     }
 
     .bulk-register-destination strong,
@@ -7201,6 +7239,17 @@
             <details class="bulk-song-entry secondary-entry">
               <summary>📋 リストをまとめて一括登録（マイ曲／曲データ）</summary>
               <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。</p>
+              <p class="bulk-destination-warning">登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。</p>
+              <div class="bulk-register-destinations">
+                <div class="bulk-register-destination is-my-list">
+                  <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
+                  <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
+                </div>
+                <div class="bulk-register-destination is-catalog">
+                  <div><span class="bulk-destination-badge">共有・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>マイ曲リストには保存せず、歌手名がある曲を共有の曲データへ送信します。</small></div>
+                  <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
+                </div>
+              </div>
               <label for="songImportText">曲リストを貼り付ける</label>
               <p class="small">「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。</p>
               <div class="control-row bulk-paste-actions">
@@ -7218,16 +7267,6 @@
               <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
               <div class="control-row">
                 <button class="btn ghost" id="previewSongImportButton" type="button">解析して確認する</button>
-              </div>
-              <div class="bulk-register-destinations">
-                <div class="bulk-register-destination">
-                  <div><strong>マイ曲リストへ一括登録</strong><small>この端末の自分用曲リストへ保存します。</small></div>
-                  <button class="btn primary" id="importSongsButton" type="button" disabled>マイ曲リストへ登録</button>
-                </div>
-                <div class="bulk-register-destination">
-                  <div><strong>曲データへ一括追加依頼</strong><small>マイ曲リストには保存せず、歌手名がある曲を共有の曲データへ送信します。</small></div>
-                  <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>曲データへ追加依頼</button>
-                </div>
               </div>
               <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
               <div class="bulk-import-preview" id="songImportPreview"></div>
@@ -9475,6 +9514,12 @@
       "まとめて貼り付け・一括登録": "Paste and Add Multiple Songs",
       "📋 リストをまとめて一括登録": "📋 Add Multiple Songs from a List",
       "📋 リストをまとめて一括登録（マイ曲／曲データ）": "📋 Add Multiple Songs (My List / Catalog)",
+      "登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。": "There are two separate destinations. Songs are added only to the destination whose button you press.",
+      "端末内・自分用": "On This Device / Personal",
+      "共有・全利用者向け": "Shared / All Users",
+      "このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。": "Save to your personal song list on this phone or computer. Nothing is sent to the shared catalog.",
+      "この端末のマイ曲リストへ登録": "Add to My Song List on This Device",
+      "共有の曲データへ追加依頼": "Request Addition to the Shared Catalog",
       "リストをまとめて一括登録": "Add Multiple Songs from a List",
       "メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。": "Paste a song list from notes or LINE, then review titles, artists, and keys before adding.",
       "曲リストを貼り付ける": "Paste Song List",
@@ -15952,15 +15997,19 @@
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("bulk song request unavailable");
         const summary = payload.summary || {};
-        const processed = Number(summary.requested || 0) + Number(summary.already_requested || 0) + Number(summary.already_catalogued || 0) + Number(summary.keywords_updated || 0);
+        const requestedCount = Number(summary.requested || 0);
+        const alreadyRequestedCount = Number(summary.already_requested || 0);
+        const alreadyCataloguedCount = Number(summary.already_catalogued || 0);
+        const keywordsUpdatedCount = Number(summary.keywords_updated || 0);
+        const processed = requestedCount + alreadyRequestedCount + alreadyCataloguedCount + keywordsUpdatedCount;
         pendingSongImports = [
           ...songsWithArtist.slice(300),
           ...imported.filter((item) => !item.artist)
         ];
         renderSongImportPreview();
         songImportStatus.textContent = currentLanguage === "en"
-          ? `${processed} catalog request(s) were processed. Nothing was added to My Song List.${pendingSongImports.length ? ` ${pendingSongImports.length} unsent song(s) remain in the review list.` : ""}`
-          : `${processed}曲の曲データ追加依頼を処理しました。マイ曲リストには登録していません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`;
+          ? `Shared catalog result: ${processed} processed (new requests ${requestedCount}, already requested ${alreadyRequestedCount}, already in catalog ${alreadyCataloguedCount}, search keywords updated ${keywordsUpdatedCount}). Nothing was added to My Song List.${pendingSongImports.length ? ` ${pendingSongImports.length} unsent song(s) remain in the review list.` : ""}`
+          : `【共有の曲データへの送信結果】${processed}曲を処理しました。新規追加依頼 ${requestedCount}曲／依頼済み ${alreadyRequestedCount}曲／すでに曲データに登録済み ${alreadyCataloguedCount}曲／検索語を更新 ${keywordsUpdatedCount}曲。マイ曲リストには登録していません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`;
         await loadSongRequests();
         await loadPopularSongs();
       } catch (error) {
