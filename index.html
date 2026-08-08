@@ -7326,7 +7326,7 @@
                   <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
                 </div>
                 <div class="bulk-register-destination is-catalog" id="bulkCatalogDestination">
-                  <div><span class="bulk-destination-badge">共有・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>マイ曲リストには保存せず、歌手名がある曲を共有の曲データへ送信します。</small></div>
+                  <div><span class="bulk-destination-badge">管理者の確認後・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>1曲ずつ確認待ちになり、店主が承認した曲だけ共有の曲データへ追加されます。</small><label>店主があなたと分かる名前・ニックネーム<input id="bulkSongRequestRequester" maxlength="64" autocomplete="name" placeholder="例：いつも窓側に座る○○"></label></div>
                   <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
                 </div>
               </div>
@@ -8099,6 +8099,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <p class="single-request-heading">1曲だけリクエストする場合</p>
           <form class="song-request-form" id="songRequestForm">
+            <label>店主があなたと分かる名前・ニックネーム<input id="songRequestRequester" maxlength="64" required autocomplete="name" placeholder="例：いつも窓側に座る○○"></label>
             <label>曲名<input id="songRequestTitle" maxlength="255" required placeholder="例：いとしのエリー"></label>
             <label>曲名の読み<input id="songRequestTitleReading" maxlength="255" required placeholder="例：いとしのえりー"></label>
             <label>歌手名<input id="songRequestArtist" maxlength="255" required placeholder="例：サザンオールスターズ"></label>
@@ -8108,7 +8109,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </form>
           <p class="shared-ranking-status" id="songRequestStatus" aria-live="polite"></p>
           <details class="song-request-history">
-            <summary>これまでの追加リクエストを見る</summary>
+            <summary>確認待ちの追加リクエストを見る</summary>
+            <p class="small">店主が曲名・歌手名を確認し、承認した曲だけ通常の曲データへ反映されます。</p>
             <div id="songRequestList"></div>
           </details>
         </div>
@@ -8928,6 +8930,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const previewSongImportButton = document.getElementById("previewSongImportButton");
     const pasteSongImportButton = document.getElementById("pasteSongImportButton");
     const requestBulkCatalogButton = document.getElementById("requestBulkCatalogButton");
+    const bulkSongRequestRequester = document.getElementById("bulkSongRequestRequester");
     const exportJsonButton = document.getElementById("exportJsonButton");
     const copyJsonButton = document.getElementById("copyJsonButton");
     const saveJsonFileButton = document.getElementById("saveJsonFileButton");
@@ -8975,6 +8978,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const popularSongIndexJump = document.getElementById("popularSongIndexJump");
     const popularSongList = document.getElementById("popularSongList");
     const songRequestForm = document.getElementById("songRequestForm");
+    const songRequestRequester = document.getElementById("songRequestRequester");
     const songRequestTitle = document.getElementById("songRequestTitle");
     const songRequestTitleReading = document.getElementById("songRequestTitleReading");
     const songRequestArtist = document.getElementById("songRequestArtist");
@@ -8983,6 +8987,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const submitSongRequest = document.getElementById("submitSongRequest");
     const songRequestStatus = document.getElementById("songRequestStatus");
     const songRequestList = document.getElementById("songRequestList");
+    try {
+      const savedSongRequester = localStorage.getItem(songCorrectionRequesterStorageKey) || "";
+      if (songRequestRequester) songRequestRequester.value = savedSongRequester;
+      if (bulkSongRequestRequester) bulkSongRequestRequester.value = savedSongRequester;
+    } catch (error) {}
     const songCorrectionModal = document.getElementById("songCorrectionModal");
     const closeSongCorrectionModal = document.getElementById("closeSongCorrectionModal");
     const songCorrectionForm = document.getElementById("songCorrectionForm");
@@ -10489,6 +10498,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "正しい歌手名の読み": "Correct Artist Name Reading",
       "ひらがな・カタカナ・アルファベット": "Hiragana, katakana, or alphabet",
       "店主があなたと分かる名前・ニックネーム": "Name or nickname the owner can identify",
+      "管理者の確認後・全利用者向け": "For All Users After Owner Approval",
+      "1曲ずつ確認待ちになり、店主が承認した曲だけ共有の曲データへ追加されます。": "Each song waits for review, and only owner-approved songs are added to the shared catalog.",
+      "確認待ちの追加リクエストを見る": "View Requests Awaiting Approval",
+      "店主が曲名・歌手名を確認し、承認した曲だけ通常の曲データへ反映されます。": "The owner reviews titles and artists; only approved songs appear in the regular catalog.",
       "補足（任意）": "Additional details (optional)",
       "どこが間違っているかなど": "Describe what is incorrect",
       "誰からの依頼か店主が確認できない場合、訂正されないことがあります。いたずらや第三者になりすました依頼は送らないでください。": "The request may not be processed if the owner cannot identify who sent it. Do not send prank requests or impersonate another person.",
@@ -14219,11 +14232,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     async function submitSongRequestToServer() {
+      const requesterName = songRequestRequester.value.trim();
       const title = songRequestTitle.value.trim();
       const titleReading = songRequestTitleReading.value.trim();
       const artist = songRequestArtist.value.trim();
       const artistReading = songRequestArtistReading.value.trim();
       const searchKeywords = songRequestKeywords.value.trim();
+      if (!requesterName) {
+        songRequestStatus.textContent = uiText("店主があなたと分かる名前・ニックネームを入力してください。");
+        songRequestRequester.focus();
+        return;
+      }
       if (!title || !artist || !titleReading || !artistReading) return;
       submitSongRequest.disabled = true;
       songRequestStatus.textContent = uiText("送信しています。");
@@ -14231,7 +14250,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading, artist, artist_reading: artistReading, search_keywords: searchKeywords, event_id: createId() })
+          body: JSON.stringify({ action: "song_request", requester_name: requesterName, title, title_reading: titleReading, artist, artist_reading: artistReading, search_keywords: searchKeywords, event_id: createId() })
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song request unavailable");
@@ -14249,7 +14268,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           songRequestKeywords.value = "";
           await loadPopularSongs();
         } else {
-          songRequestStatus.textContent = uiText("追加リクエストを送信しました。");
+          localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
+          songRequestStatus.textContent = currentLanguage === "en" ? "The request was sent and is awaiting owner approval." : "追加リクエストを送信しました。店主の確認待ちです。";
           songRequestTitle.value = "";
           songRequestTitleReading.value = "";
           songRequestArtist.value = "";
@@ -14279,6 +14299,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (!titleReading.trim()) return;
       const artistReading = window.prompt(currentLanguage === "en" ? "Enter the artist name reading." : "歌手名の読みを入力してください。", String(item.artistReading || item.artist_reading || artist)) || "";
       if (!artistReading.trim()) return;
+      const requesterName = window.prompt(currentLanguage === "en" ? "Enter a name or nickname the owner can recognize." : "店主があなたと分かる名前・ニックネームを入力してください。", localStorage.getItem(songCorrectionRequesterStorageKey) || "") || "";
+      if (!requesterName.trim()) return;
       const message = currentLanguage === "en"
         ? `Add “${title}” by ${artist} to the shared song catalog?\n\nThe song title and artist will be available to all app users. Please check the spelling carefully before sending.`
         : `「${title}」／${artist}\n\nこの曲を、利用者全員が検索できる曲データへ追加しますか？\n送信する内容は曲名と歌手名です。\n\n曲名・歌手名の表記に間違いがないか、送信前にもう一度確認してください。`;
@@ -14288,16 +14310,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "song_request", title, title_reading: titleReading.trim(), artist, artist_reading: artistReading.trim(), search_keywords: String(item.kana || "").trim(), event_id: createId() })
+          body: JSON.stringify({ action: "song_request", requester_name: requesterName.trim(), title, title_reading: titleReading.trim(), artist, artist_reading: artistReading.trim(), search_keywords: String(item.kana || "").trim(), event_id: createId() })
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song catalog upload unavailable");
         if (payload.status === "already_catalogued") {
           showUndo(uiText("この曲はすでに曲データに登録されています。"));
         } else if (payload.status === "already_requested") {
-          showUndo(uiText("この曲はすでに曲データへ追加されています。"));
+          showUndo(currentLanguage === "en" ? "This song is already awaiting approval." : "この曲はすでに確認待ちとして依頼されています。");
         } else {
-          showUndo(uiText("曲データへ追加しました。"));
+          localStorage.setItem(songCorrectionRequesterStorageKey, requesterName.trim());
+          showUndo(currentLanguage === "en" ? "Sent for owner approval." : "店主の確認待ちとして送信しました。");
         }
         await loadSongRequests();
         await loadPopularSongs();
@@ -16073,6 +16096,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     });
 
     requestBulkCatalogButton.addEventListener("click", async () => {
+      const requesterName = bulkSongRequestRequester.value.trim();
+      if (!requesterName) {
+        songImportStatus.textContent = currentLanguage === "en" ? "Enter a name or nickname the owner can recognize." : "店主があなたと分かる名前・ニックネームを入力してください。";
+        bulkSongRequestRequester.focus();
+        return;
+      }
       const imported = pendingSongImports
         .map((item) => ({ ...item, title: String(item.title || "").trim(), artist: String(item.artist || "").trim() }))
         .filter((item) => item.title);
@@ -16097,6 +16126,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           body: JSON.stringify({
             action: "song_request_bulk",
             event_id: createId(),
+            requester_name: requesterName,
             songs: requestable.map((item) => ({
               title: item.title,
               title_reading: item.kana || item.title,
@@ -16108,6 +16138,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("bulk song request unavailable");
+        localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
         const summary = payload.summary || {};
         const requestedCount = Number(summary.requested || 0);
         const alreadyRequestedCount = Number(summary.already_requested || 0);
@@ -16121,7 +16152,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         renderSongImportPreview();
         songImportStatus.textContent = currentLanguage === "en"
           ? `Shared catalog result: ${processed} processed (new requests ${requestedCount}, already requested ${alreadyRequestedCount}, already in catalog ${alreadyCataloguedCount}, search keywords updated ${keywordsUpdatedCount}). Nothing was added to My Song List.${pendingSongImports.length ? ` ${pendingSongImports.length} unsent song(s) remain in the review list.` : ""}`
-          : `【共有の曲データへの送信結果】${processed}曲を処理しました。新規追加依頼 ${requestedCount}曲／依頼済み ${alreadyRequestedCount}曲／すでに曲データに登録済み ${alreadyCataloguedCount}曲／検索語を更新 ${keywordsUpdatedCount}曲。マイ曲リストには登録していません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`;
+          : `【共有の曲データへの送信結果】${processed}曲を処理しました。確認待ちの新規依頼 ${requestedCount}曲／すでに確認待ち ${alreadyRequestedCount}曲／曲データに登録済み ${alreadyCataloguedCount}曲／検索語の追加依頼 ${keywordsUpdatedCount}曲。承認前の曲は通常の曲データへ表示されません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`;
         await loadSongRequests();
         await loadPopularSongs();
       } catch (error) {
