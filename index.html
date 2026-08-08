@@ -4604,6 +4604,47 @@
       margin-bottom: 18px;
     }
 
+    .popular-load-status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .popular-load-status-row .shared-ranking-status {
+      flex: 1 1 260px;
+      margin: 0;
+    }
+
+    .song-catalog-device-card {
+      margin: 0 0 18px;
+      padding: 16px 18px;
+      border: 2px solid var(--orange);
+      border-radius: 12px;
+      background: var(--surface-soft);
+      color: var(--text-main);
+    }
+
+    .song-catalog-device-card h4 {
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .song-catalog-device-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .song-catalog-device-status {
+      display: block;
+      margin-top: 10px;
+      font-weight: 800;
+    }
+
     .external-song-search-callout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
@@ -8135,7 +8176,22 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
             </div>
           </div>
-          <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">曲データを読み込んでいます。</p>
+          <div class="popular-load-status-row">
+            <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">曲データを読み込んでいます。</p>
+            <button class="btn primary" id="refreshPopularSongs" type="button">↻ 曲データを再読み込み</button>
+          </div>
+          <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
+            <h4 id="songCatalogDeviceTitle">曲データをこの端末に保存</h4>
+            <p class="small">任意機能です。約18,500曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
+            <p class="small"><strong>容量の目安：</strong>ダウンロード時の通信量は約1～4MB、端末へ保存した後は約6～10MBです。通信圧縮の有無やブラウザ・端末によって多少前後します。</p>
+            <p class="small">新しく承認されたリクエスト曲を取り込む時は「最新版を取得して上書き」を押してください。端末の空き容量不足やブラウザのデータ削除により消える場合があります。</p>
+            <div class="song-catalog-device-actions">
+              <button class="btn primary" id="downloadSongCatalog" type="button">全曲データをダウンロードして保存</button>
+              <button class="btn ghost" id="updateSavedSongCatalog" type="button" disabled>最新版を取得して上書き</button>
+              <button class="btn ghost" id="deleteSavedSongCatalog" type="button" disabled>端末保存を削除</button>
+            </div>
+            <span class="song-catalog-device-status" id="deviceSongCatalogStatus" aria-live="polite">端末への保存状況を確認しています。</span>
+          </aside>
           <div class="song-index-jump auxiliary-index-jump" id="popularSongIndexJump" aria-label="文字ジャンプ"></div>
           <div id="popularSongList"></div>
         </div>
@@ -8975,6 +9031,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const popularSongSearch = document.getElementById("popularSongSearch");
     const popularSongSort = document.getElementById("popularSongSort");
     const popularSongStatus = document.getElementById("popularSongStatus");
+    const refreshPopularSongs = document.getElementById("refreshPopularSongs");
+    const downloadSongCatalog = document.getElementById("downloadSongCatalog");
+    const updateSavedSongCatalog = document.getElementById("updateSavedSongCatalog");
+    const deleteSavedSongCatalog = document.getElementById("deleteSavedSongCatalog");
+    const deviceSongCatalogStatus = document.getElementById("deviceSongCatalogStatus");
     const popularSongIndexJump = document.getElementById("popularSongIndexJump");
     const popularSongList = document.getElementById("popularSongList");
     const songRequestForm = document.getElementById("songRequestForm");
@@ -9418,6 +9479,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let isApplyingLanguage = false;
 
     const exactTranslations = {
+      "曲データをこの端末に保存": "Save Song Data on This Device",
+      "任意機能です。約18,500曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。": "Optional. Save about 18,500 songs for faster catalog searches and display without waiting for the server. This is separate from My Song List.",
+      "容量の目安：": "Estimated size:",
+      "ダウンロード時の通信量は約1～4MB、端末へ保存した後は約6～10MBです。通信圧縮の有無やブラウザ・端末によって多少前後します。": "About 1–4 MB to download and about 6–10 MB after saving on this device. The actual size varies depending on compression, browser, and device.",
+      "新しく承認されたリクエスト曲を取り込む時は「最新版を取得して上書き」を押してください。端末の空き容量不足やブラウザのデータ削除により消える場合があります。": "To include newly approved requests, select Get Latest Version and Replace. Saved data may be removed if storage is low or browser data is cleared.",
+      "全曲データをダウンロードして保存": "Download and Save All Song Data",
+      "最新版を取得して上書き": "Get Latest Version and Replace",
+      "端末保存を削除": "Delete Saved Data",
+      "この端末にはまだ保存していません。曲データはサーバーから読み込みます。": "Not saved on this device. Song data will be loaded from the server.",
+      "端末への保存状況を確認しています。": "Checking saved song data on this device.",
       "アプリ更新情報": "App Update",
       "アプリ更新情報　2026.08.08": "App Update  2026.08.08",
       "曲データ専用の一括追加に対応しました": "Added Catalog-Only Bulk Requests",
@@ -10519,6 +10590,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "全曲検索は1文字から利用できます。": "Full catalog search works from one character.",
       "曲一覧を読み込んでいます。": "Loading songs.",
       "曲一覧を取得できませんでした。時間をおいて再度お試しください。": "Could not load the song list. Please try again later.",
+      "↻ 曲データを再読み込み": "↻ Reload Song Catalog",
       "まだ追加リクエストはありません。": "No song requests yet.",
       "追加リクエストを取得できませんでした。": "Could not load song requests.",
       "送信しています。": "Sending.",
@@ -10872,6 +10944,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let popularSongItems = [];
     let popularArtistSongItems = [];
     const popularArtistSongCache = new Map();
+    let deviceSongCatalog = [];
+    let deviceSongCatalogMeta = null;
+    let deviceSongCatalogLoadPromise = null;
     let requestedSongItems = [];
     let correctingSongItem = null;
     let popularSongCategory = "jp";
@@ -11936,6 +12011,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       renderFloatingNav();
       renderSavedSetlistPicker();
       renderSavedSetlists();
+      updateDeviceSongCatalogStatus();
       updateDrumGachaRateLabel();
     }
 
@@ -13924,6 +14000,189 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       };
     }
 
+    const songCatalogDbName = "music-saloon-drum-song-catalog";
+    const songCatalogStoreName = "catalog";
+    const songCatalogRecordId = "full-catalog";
+
+    function openSongCatalogDatabase() {
+      return new Promise((resolve, reject) => {
+        if (!("indexedDB" in window)) {
+          reject(new Error("IndexedDB unavailable"));
+          return;
+        }
+        const request = indexedDB.open(songCatalogDbName, 1);
+        request.onupgradeneeded = () => {
+          const database = request.result;
+          if (!database.objectStoreNames.contains(songCatalogStoreName)) {
+            database.createObjectStore(songCatalogStoreName, { keyPath: "id" });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error("Could not open song catalog storage"));
+      });
+    }
+
+    function songCatalogDbRequest(mode, callback) {
+      return openSongCatalogDatabase().then((database) => new Promise((resolve, reject) => {
+        const transaction = database.transaction(songCatalogStoreName, mode);
+        const store = transaction.objectStore(songCatalogStoreName);
+        let request;
+        try {
+          request = callback(store);
+        } catch (error) {
+          database.close();
+          reject(error);
+          return;
+        }
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error("Song catalog storage request failed"));
+        transaction.oncomplete = () => database.close();
+        transaction.onerror = () => database.close();
+        transaction.onabort = () => database.close();
+      }));
+    }
+
+    function formatSongCatalogSavedAt(value) {
+      if (!value) return "";
+      try {
+        return new Intl.DateTimeFormat(currentLanguage === "en" ? "en" : "ja-JP", {
+          year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit"
+        }).format(new Date(value));
+      } catch (error) {
+        return String(value);
+      }
+    }
+
+    function updateDeviceSongCatalogStatus() {
+      const hasSavedCatalog = deviceSongCatalog.length > 0 && deviceSongCatalogMeta;
+      downloadSongCatalog.disabled = Boolean(hasSavedCatalog);
+      updateSavedSongCatalog.disabled = !hasSavedCatalog;
+      deleteSavedSongCatalog.disabled = !hasSavedCatalog;
+      if (!hasSavedCatalog) {
+        deviceSongCatalogStatus.textContent = currentLanguage === "en"
+          ? "Not saved on this device. Song data will be loaded from the server."
+          : "この端末にはまだ保存していません。曲データはサーバーから読み込みます。";
+        return;
+      }
+      const savedAt = formatSongCatalogSavedAt(deviceSongCatalogMeta.savedAt);
+      deviceSongCatalogStatus.textContent = currentLanguage === "en"
+        ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs / Updated ${savedAt}`
+        : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲／最終更新 ${savedAt}`;
+    }
+
+    async function loadDeviceSongCatalogFromStorage() {
+      if (deviceSongCatalogLoadPromise) return deviceSongCatalogLoadPromise;
+      deviceSongCatalogLoadPromise = (async () => {
+        try {
+          const record = await songCatalogDbRequest("readonly", (store) => store.get(songCatalogRecordId));
+          if (!record || !record.payload) {
+            deviceSongCatalog = [];
+            deviceSongCatalogMeta = null;
+          } else {
+            const json = record.payload instanceof Blob ? await record.payload.text() : String(record.payload || "");
+            const payload = JSON.parse(json);
+            deviceSongCatalog = Array.isArray(payload.songs)
+              ? payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist)
+              : [];
+            deviceSongCatalogMeta = deviceSongCatalog.length ? {
+              savedAt: record.savedAt || payload.generated_at || "",
+              version: record.version || payload.version || "",
+              count: deviceSongCatalog.length
+            } : null;
+          }
+        } catch (error) {
+          console.warn(error);
+          deviceSongCatalog = [];
+          deviceSongCatalogMeta = null;
+        }
+        updateDeviceSongCatalogStatus();
+        return deviceSongCatalog;
+      })();
+      return deviceSongCatalogLoadPromise;
+    }
+
+    async function saveDownloadedSongCatalog(payload) {
+      const songsToSave = Array.isArray(payload && payload.songs)
+        ? payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist)
+        : [];
+      if (!songsToSave.length) throw new Error("Downloaded catalog is empty");
+      const savedAt = new Date().toISOString();
+      const storedPayload = {
+        version: String(payload.version || ""),
+        generated_at: String(payload.generated_at || savedAt),
+        songs: songsToSave
+      };
+      const blob = new Blob([JSON.stringify(storedPayload)], { type: "application/json" });
+      await songCatalogDbRequest("readwrite", (store) => store.put({
+        id: songCatalogRecordId,
+        payload: blob,
+        savedAt,
+        version: storedPayload.version,
+        count: songsToSave.length
+      }));
+      deviceSongCatalog = songsToSave;
+      deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length };
+      deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
+      popularArtistSongCache.clear();
+      popularArtistSongItems = [];
+      if (navigator.storage && typeof navigator.storage.persist === "function") {
+        navigator.storage.persist().catch(() => false);
+      }
+      updateDeviceSongCatalogStatus();
+    }
+
+    async function downloadLatestSongCatalog() {
+      downloadSongCatalog.disabled = true;
+      updateSavedSongCatalog.disabled = true;
+      deviceSongCatalogStatus.textContent = currentLanguage === "en"
+        ? "Downloading and saving all song data…"
+        : "全曲データをダウンロードして端末へ保存しています…";
+      try {
+        const params = new URLSearchParams({ action: "song_catalog_download", refresh: String(Date.now()) });
+        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("Song catalog download failed");
+        await saveDownloadedSongCatalog(payload);
+        deviceSongCatalogStatus.textContent = currentLanguage === "en"
+          ? `Saved ${deviceSongCatalog.length.toLocaleString()} songs on this device.`
+          : `最新版の${deviceSongCatalog.length.toLocaleString()}曲をこの端末へ保存しました。`;
+        await loadPopularSongs();
+      } catch (error) {
+        console.warn(error);
+        updateDeviceSongCatalogStatus();
+        deviceSongCatalogStatus.textContent = currentLanguage === "en"
+          ? "Could not save the song data. Check your connection and free storage, then try again."
+          : "曲データを保存できませんでした。通信状態と端末の空き容量を確認して、もう一度お試しください。";
+      }
+    }
+
+    function filterSavedSongCatalog(query, category, sortMode, limit = 1200) {
+      const queryKey = normalizeKana(query);
+      const artistCounts = new Map();
+      deviceSongCatalog.forEach((item) => {
+        const key = normalizeKana(item.artist);
+        if (key) artistCounts.set(key, (artistCounts.get(key) || 0) + 1);
+      });
+      const matches = deviceSongCatalog.filter((item) => {
+        if (category === "jp" && item.popular_jp_rank < 1 && item.request_count < 1) return false;
+        if (category === "western" && item.popular_western_rank < 1) return false;
+        if (category === "catalog" && !queryKey) return false;
+        if (queryKey) {
+          const haystack = normalizeKana(`${item.title}${item.artist}${item.title_reading}${item.artist_reading}${item.search_keywords}`);
+          if (!haystack.includes(queryKey)) return false;
+        }
+        return true;
+      }).map((item) => ({ ...item, artist_catalog_count: artistCounts.get(normalizeKana(item.artist)) || 0 }));
+      const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
+      matches.sort((left, right) => {
+        const leftPrimary = sortMode === "title" ? (left.title_reading || left.title) : (left.artist_reading || left.artist);
+        const rightPrimary = sortMode === "title" ? (right.title_reading || right.title) : (right.artist_reading || right.artist);
+        const primary = collator.compare(leftPrimary, rightPrimary);
+        return primary || collator.compare(left.title_reading || left.title, right.title_reading || right.title);
+      });
+      return matches.slice(0, limit);
+    }
+
     function findLocalPopularSong(item) {
       if (!item || !item.title) return null;
       const title = normalizeKana(item.title);
@@ -14096,8 +14355,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       popularArtistAutoCloseFrame = requestAnimationFrame(autoClosePassedPopularArtists);
     }
 
-    async function loadPopularSongs() {
+    async function loadPopularSongs(forceRefresh = false) {
       if (!popularSongStatus) return;
+      await loadDeviceSongCatalogFromStorage();
       const query = popularSongSearch.value.trim();
       const scopeLabels = {
         jp: currentLanguage === "en" ? "Japanese Song List" : "国内曲リスト",
@@ -14127,25 +14387,40 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
       popularSongStatus.textContent = `${scopeLabels[popularSongCategory]}：${uiText("曲一覧を読み込んでいます。")}`;
       popularSongList.innerHTML = "";
+      if (refreshPopularSongs) {
+        refreshPopularSongs.disabled = true;
+        refreshPopularSongs.textContent = currentLanguage === "en" ? "↻ Reloading…" : "↻ 再読み込み中…";
+      }
       try {
-        const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
-        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
-        const payload = await response.json();
-        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("popular songs unavailable");
-        popularSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
+        const usingSavedCatalog = deviceSongCatalog.length > 0;
+        if (usingSavedCatalog) {
+          popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, 1200);
+        } else {
+          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
+          if (forceRefresh) params.set("refresh", String(Date.now()));
+          const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("popular songs unavailable");
+          popularSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
+        }
         popularSongStatus.textContent = popularSongCategory === "catalog"
           ? (currentLanguage === "en"
-            ? `${popularSongItems.length} matching songs found in the full catalog.`
-            : `全曲データから${popularSongItems.length}曲見つかりました。`)
+            ? `${popularSongItems.length} matching songs found in the full catalog.${usingSavedCatalog ? " (Saved on this device)" : ""}`
+            : `全曲データから${popularSongItems.length}曲見つかりました。${usingSavedCatalog ? "（端末保存データを使用）" : ""}`)
           : (currentLanguage === "en"
-            ? `Open a listed artist to browse all of their songs in the full catalog.`
-            : `掲載歌手を開くと、全曲データにあるその歌手の曲をすべて見られます。`);
+            ? `Open a listed artist to browse all of their songs in the full catalog.${usingSavedCatalog ? " Saved data on this device is being used." : ""}`
+            : `掲載歌手を開くと、全曲データにあるその歌手の曲をすべて見られます。${usingSavedCatalog ? "端末保存データを使用中です。" : ""}`);
         renderPopularSongs();
       } catch (error) {
         console.warn(error);
         popularSongItems = [];
         popularSongStatus.textContent = uiText("曲一覧を取得できませんでした。時間をおいて再度お試しください。");
         renderPopularSongs();
+      } finally {
+        if (refreshPopularSongs) {
+          refreshPopularSongs.disabled = false;
+          refreshPopularSongs.textContent = currentLanguage === "en" ? "↻ Reload Song Catalog" : "↻ 曲データを再読み込み";
+        }
       }
     }
 
@@ -14159,11 +14434,18 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       try {
         let rows = popularArtistSongCache.get(cacheKey);
         if (!rows) {
-          const params = new URLSearchParams({ action: "popular_artist_songs", artist });
-          const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
-          const payload = await response.json();
-          if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("artist songs unavailable");
-          rows = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist).map((item) => {
+          await loadDeviceSongCatalogFromStorage();
+          let artistSongs;
+          if (deviceSongCatalog.length) {
+            artistSongs = deviceSongCatalog.filter((item) => normalizeKana(item.artist) === cacheKey);
+          } else {
+            const params = new URLSearchParams({ action: "popular_artist_songs", artist });
+            const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+            const payload = await response.json();
+            if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("artist songs unavailable");
+            artistSongs = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
+          }
+          rows = artistSongs.map((item) => {
             const index = popularArtistSongItems.length;
             popularArtistSongItems.push(item);
             return { item, index };
@@ -15459,6 +15741,34 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     popularSongSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
       loadPopularSongs();
+    });
+    refreshPopularSongs.addEventListener("click", () => {
+      popularArtistSongCache.clear();
+      popularArtistSongItems = [];
+      loadPopularSongs(true);
+    });
+    downloadSongCatalog.addEventListener("click", downloadLatestSongCatalog);
+    updateSavedSongCatalog.addEventListener("click", downloadLatestSongCatalog);
+    deleteSavedSongCatalog.addEventListener("click", async () => {
+      const confirmed = confirm(currentLanguage === "en"
+        ? "Delete the song catalog saved on this device? My Song List will not be deleted."
+        : "この端末に保存した曲データを削除しますか？マイ曲リストは削除されません。");
+      if (!confirmed) return;
+      try {
+        await songCatalogDbRequest("readwrite", (store) => store.delete(songCatalogRecordId));
+        deviceSongCatalog = [];
+        deviceSongCatalogMeta = null;
+        deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
+        popularArtistSongCache.clear();
+        popularArtistSongItems = [];
+        updateDeviceSongCatalogStatus();
+        await loadPopularSongs(true);
+      } catch (error) {
+        console.warn(error);
+        deviceSongCatalogStatus.textContent = currentLanguage === "en"
+          ? "Could not delete the saved song data. Please try again."
+          : "端末保存した曲データを削除できませんでした。もう一度お試しください。";
+      }
     });
     popularSongList.addEventListener("click", (event) => {
       const correctionButton = event.target.closest("[data-song-correction]");
@@ -17454,6 +17764,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     renderSongs();
     renderHistory();
     renderBackupStatus();
+    loadDeviceSongCatalogFromStorage();
     showView(location.hash.replace("#", "") || "top", false);
     applyLanguage();
     updateSongPhotoTargetUi();
