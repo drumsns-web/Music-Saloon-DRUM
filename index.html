@@ -1928,6 +1928,24 @@
       font-weight: 900;
     }
 
+    .bulk-catalog-mode-note {
+      display: none;
+      margin: 10px 0 14px;
+      border: 2px solid var(--orange);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--ink);
+      background: #fff3df;
+      font-weight: 900;
+    }
+
+    .bulk-song-entry.catalog-request-mode .bulk-catalog-mode-note { display: block; }
+    .bulk-song-entry.catalog-request-mode .bulk-destination-warning,
+    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-my-list,
+    .bulk-song-entry.catalog-request-mode .bulk-key-settings,
+    .bulk-song-entry.catalog-request-mode .bulk-import-key { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-register-destinations { grid-template-columns: 1fr; }
+
     .bulk-register-destination strong,
     .bulk-register-destination small { display: block; }
 
@@ -4835,6 +4853,67 @@
       width: 100%;
     }
 
+    .bulk-request-entry {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin: 14px 0 18px;
+      border: 3px solid var(--orange);
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(255, 239, 214, .98);
+      box-shadow: 0 10px 24px rgba(240, 138, 53, .14);
+    }
+
+    .bulk-request-entry strong,
+    .bulk-request-entry span { display: block; }
+
+    .bulk-request-entry span {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .single-request-heading {
+      margin: 18px 0 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
+    .bulk-format-guide {
+      margin: 12px 0;
+      border: 1px solid rgba(20, 63, 44, .2);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--ink);
+      background: #fffdf8;
+    }
+
+    .bulk-format-guide strong { display: block; margin-bottom: 6px; color: var(--forest); }
+
+    .bulk-format-guide pre {
+      margin: 7px 0 10px;
+      border-left: 4px solid var(--orange);
+      border-radius: 6px;
+      padding: 9px 11px;
+      overflow-x: auto;
+      color: #241d17;
+      background: #fff5e6;
+      font: 800 13px/1.65 "BIZ UDPGothic", "Yu Gothic", Meiryo, sans-serif;
+      white-space: pre-wrap;
+    }
+
+    .bulk-format-guide p { margin: 5px 0; }
+
+    @media (max-width: 680px) {
+      .bulk-request-entry { align-items: stretch; flex-direction: column; }
+      .bulk-request-entry .btn { width: 100%; }
+    }
+
     #song-request-area,
     #popular-search-area {
       scroll-margin-top: 180px;
@@ -7236,19 +7315,31 @@
               <p class="catalog-source-note">MusicBrainzは一般の音楽データベースのため、カバー歌手や別バージョンが先に表示される場合があります。カラオケ配信の確認はDAM、次にJOYSOUNDの公式検索を優先してください。</p>
             </div>
             <p class="alternative-register-heading">ほかの登録方法</p>
-            <details class="bulk-song-entry secondary-entry">
+            <details class="bulk-song-entry secondary-entry" id="bulkSongEntry">
               <summary>📋 リストをまとめて一括登録（マイ曲／曲データ）</summary>
               <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。</p>
+              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn ghost" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録も表示</button></div></div>
               <p class="bulk-destination-warning">登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。</p>
               <div class="bulk-register-destinations">
                 <div class="bulk-register-destination is-my-list">
                   <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
                   <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
                 </div>
-                <div class="bulk-register-destination is-catalog">
+                <div class="bulk-register-destination is-catalog" id="bulkCatalogDestination">
                   <div><span class="bulk-destination-badge">共有・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>マイ曲リストには保存せず、歌手名がある曲を共有の曲データへ送信します。</small></div>
                   <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
                 </div>
+              </div>
+              <div class="bulk-format-guide">
+                <strong>一括入力の書き方</strong>
+                <p>おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。</p>
+                <pre>【サザンオールスターズ】
+いとしのエリー
+TSUNAMI／▼2</pre>
+                <p>1行ずつ書く場合：<strong>曲名／歌手名／キー</strong>の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。</p>
+                <pre>いとしのエリー／サザンオールスターズ
+TSUNAMI／サザンオールスターズ／▼2</pre>
+                <p class="small">「歌手名／曲名」の順ではありません。貼り付け後に「解析して確認する」を押し、曲名と歌手名の欄を必ず確認してください。</p>
               </div>
               <label for="songImportText">曲リストを貼り付ける</label>
               <p class="small">「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。</p>
@@ -7257,14 +7348,16 @@
                 <span class="small">または、下の入力欄を長押しして「貼り付け」を選べます。</span>
               </div>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
-              <label>
-                貼り付けたキー表記の基準
-                <select id="songImportKeyBase">
-                  <option value="karaoke">カラオケ標準キー基準</option>
-                  <option value="original">原曲キー基準</option>
-                </select>
-              </label>
-              <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
+              <div class="bulk-key-settings">
+                <label>
+                  貼り付けたキー表記の基準
+                  <select id="songImportKeyBase">
+                    <option value="karaoke">カラオケ標準キー基準</option>
+                    <option value="original">原曲キー基準</option>
+                  </select>
+                </label>
+                <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
+              </div>
               <div class="control-row">
                 <button class="btn ghost" id="previewSongImportButton" type="button">解析して確認する</button>
               </div>
@@ -7996,10 +8089,15 @@
           <div class="section-head">
             <div>
               <span class="tag orange">Request</span>
-              <h3>見つからない曲を追加リクエスト</h3>
-              <p class="small">曲名・歌手名とそれぞれの読みを入力して送信できます。同じ曲名・歌手名は1件にまとめ、通常の曲データにも反映します。</p>
+              <h3>曲を追加リクエスト</h3>
+              <p class="small">1曲ずつでも、複数曲をまとめてもリクエストできます。</p>
             </div>
           </div>
+          <div class="bulk-request-entry">
+            <div><strong>複数曲をまとめてリクエスト</strong><span>「【歌手名】」の下へ曲名を1曲ずつ書くか、「曲名／歌手名」の順で貼り付けます。</span></div>
+            <button class="btn primary" type="button" data-open-bulk-catalog-request>一括リクエストを開く</button>
+          </div>
+          <p class="single-request-heading">1曲だけリクエストする場合</p>
           <form class="song-request-form" id="songRequestForm">
             <label>曲名<input id="songRequestTitle" maxlength="255" required placeholder="例：いとしのエリー"></label>
             <label>曲名の読み<input id="songRequestTitleReading" maxlength="255" required placeholder="例：いとしのえりー"></label>
@@ -10354,6 +10452,20 @@
       "追加してほしい曲をリクエスト": "Request a Song to Add",
       "見つからない曲をリクエスト": "Request a Missing Song",
       "見つからない曲を追加リクエスト": "Request a Missing Song",
+      "曲を追加リクエスト": "Request Songs to Add",
+      "1曲ずつでも、複数曲をまとめてもリクエストできます。": "Request one song or multiple songs at once.",
+      "複数曲をまとめてリクエスト": "Request Multiple Songs at Once",
+      "メモやLINEの曲一覧を貼り付け、確認してから曲データへ送信します。": "Paste a song list from notes or LINE, review it, then send it to the shared catalog.",
+      "「【歌手名】」の下へ曲名を1曲ずつ書くか、「曲名／歌手名」の順で貼り付けます。": "Write one song per line under 【Artist】, or paste each line in Song / Artist order.",
+      "一括リクエストを開く": "Open Bulk Request",
+      "1曲だけリクエストする場合": "To Request One Song",
+      "一括入力の書き方": "Bulk Input Format",
+      "現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。": "This screen sends bulk requests to the shared catalog. Only the song title and artist are sent; no key is required.",
+      "マイ曲リストへの登録も表示": "Also Show My Song List Registration",
+      "おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。": "Recommended: write 【Artist】 first, then put each song title on a new line below it.",
+      "1行ずつ書く場合：": "For one song per line:",
+      "の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。": "in this order. The key is optional. Both ／ and / separators are supported.",
+      "「歌手名／曲名」の順ではありません。貼り付け後に「解析して確認する」を押し、曲名と歌手名の欄を必ず確認してください。": "Do not use Artist / Song order. After pasting, press Parse and Review and always check the title and artist fields.",
       "曲名と歌手名を入力して送信できます。同じ曲名・歌手名は1件にまとめます。": "Enter the song title and artist. Duplicate requests are combined into one entry.",
       "これまでの追加リクエストを見る": "View Previous Song Requests",
       "追加をリクエスト": "Send Request",
@@ -11264,7 +11376,7 @@
         .map((line) => {
           const parts = line.includes("\t")
             ? line.split("\t")
-            : line.split(/\s*[／|｜]\s*/);
+            : line.split(/\s*[／\/|｜]\s*/);
           if (parts.length === 1) return importedSong(parts[0]);
           const title = (parts[0] || "").trim();
           const artist = (parts[1] || "").trim();
@@ -11280,7 +11392,7 @@
         <div class="bulk-import-preview-row" data-import-preview-row="${index}">
           <input value="${escapeText(item.title)}" data-import-field="title" aria-label="${escapeText(uiText("曲名"))}">
           <input value="${escapeText(item.artist)}" data-import-field="artist" aria-label="${escapeText(uiText("歌手名"))}">
-          <input value="${escapeText(item.key || importKeyBaseLabel())}" data-import-field="key" aria-label="${escapeText(uiText("キー"))}">
+          <input class="bulk-import-key" value="${escapeText(item.key || importKeyBaseLabel())}" data-import-field="key" aria-label="${escapeText(uiText("キー"))}">
           <input class="bulk-import-keywords" value="${escapeText(item.kana || "")}" data-import-field="kana" aria-label="${escapeText(uiText("検索用よみ・通称"))}" placeholder="${escapeText(uiText("検索用よみ・通称（例：ミスチル、ユーミン）"))}">
           <button class="btn ghost bulk-import-remove" type="button" data-remove-import-row="${index}" aria-label="${escapeText(uiText("削除"))}">×</button>
         </div>
@@ -16136,6 +16248,32 @@
           if (requestArea) requestArea.scrollIntoView({ behavior: "smooth", block: "start" });
           if (songRequestTitle) songRequestTitle.focus({ preventScroll: true });
         }, 120);
+      }
+      const bulkCatalogRequestButton = event.target.closest("[data-open-bulk-catalog-request]");
+      if (bulkCatalogRequestButton) {
+        showView("song-register");
+        window.setTimeout(() => {
+          const bulkEntry = document.getElementById("bulkSongEntry");
+          const catalogDestination = document.getElementById("bulkCatalogDestination");
+          if (bulkEntry) {
+            bulkEntry.classList.add("catalog-request-mode");
+            bulkEntry.open = true;
+          }
+          window.requestAnimationFrame(() => {
+            if (catalogDestination) catalogDestination.scrollIntoView({ behavior: "smooth", block: "center" });
+            if (songImportText) songImportText.focus({ preventScroll: true });
+          });
+        }, 140);
+      }
+      const showAllBulkDestinations = event.target.closest("[data-show-all-bulk-destinations]");
+      if (showAllBulkDestinations) {
+        const bulkEntry = document.getElementById("bulkSongEntry");
+        if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
+      }
+      const bulkEntrySummary = event.target.closest("#bulkSongEntry > summary");
+      if (bulkEntrySummary) {
+        const bulkEntry = document.getElementById("bulkSongEntry");
+        if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
       }
       const indexSummary = event.target.closest(".popular-index-menu > summary");
       if (indexSummary) {
