@@ -4659,6 +4659,30 @@
       box-shadow: 0 10px 24px rgba(var(--theme-accent-rgb), .14);
     }
 
+    .catalog-karaoke-note {
+      display: grid;
+      gap: 5px;
+      margin: 18px 0;
+      padding: 15px 18px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--orange);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(var(--theme-accent-rgb), .1);
+      line-height: 1.65;
+    }
+
+    .catalog-karaoke-note strong {
+      color: var(--forest);
+      font-size: 17px;
+    }
+
+    .catalog-karaoke-note span {
+      color: var(--ink);
+      font-weight: 700;
+    }
+
     .external-song-search-callout strong,
     .external-song-search-callout span {
       display: block;
@@ -8099,6 +8123,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <p class="lead">国内曲・洋楽曲や全曲データを、歌手別・曲名順で見たり、検索してマイ曲リストへ登録できます。</p>
           </div>
         </div>
+
+        <p class="catalog-karaoke-note">
+          <strong>カラオケ配信について</strong>
+          <span>この曲データには、DAM・JOYSOUNDなどのカラオケに入っていない曲が含まれる場合があります。配信状況は各社の公式検索でご確認ください。</span>
+        </p>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
             <span class="song-hub-group-title">自分の曲</span>
@@ -10520,6 +10549,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "曲・歌手データ": "Song & Artist Catalog",
       "曲・歌手データから探す": "Browse the Song & Artist Catalog",
       "国内曲・洋楽曲や全曲データを、歌手別・曲名順で見たり、検索してマイ曲リストへ登録できます。": "Browse Japanese songs, international songs, or the full catalog by artist or title, then add songs to My Song List.",
+      "カラオケ配信について": "About Karaoke Availability",
+      "この曲データには、DAM・JOYSOUNDなどのカラオケに入っていない曲が含まれる場合があります。配信状況は各社の公式検索でご確認ください。": "Some songs in this catalog may not be available on DAM, JOYSOUND, or other karaoke services. Please check each provider's official search for availability.",
       "店内の曲データで見つからない時は、外部検索も使えます": "Can’t find it in the in-app catalog? Try External Search",
       "一般の音楽データベースから候補を探し、DAM・JOYSOUNDの公式検索でも確認できます。": "Search a general music database and check the official DAM or JOYSOUND catalogs.",
       "外部検索から曲を登録": "Add a Song with External Search",
