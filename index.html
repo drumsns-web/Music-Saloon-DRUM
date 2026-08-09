@@ -15786,10 +15786,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       event.preventDefault();
       loadPopularSongs();
     });
-    refreshPopularSongs.addEventListener("click", () => {
+    refreshPopularSongs.addEventListener("click", async () => {
       popularArtistSongCache.clear();
       popularArtistSongItems = [];
-      loadPopularSongs(true);
+      await loadDeviceSongCatalogFromStorage();
+      if (deviceSongCatalog.length) {
+        await downloadLatestSongCatalog();
+      } else {
+        await loadPopularSongs(true);
+      }
     });
     downloadSongCatalog.addEventListener("click", downloadLatestSongCatalog);
     updateSavedSongCatalog.addEventListener("click", downloadLatestSongCatalog);
