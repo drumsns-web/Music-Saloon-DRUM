@@ -14328,8 +14328,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           const aIndex = popularExactIndexGroup(a, "artist");
           const bIndex = popularExactIndexGroup(b, "artist");
           const sectionOrder = (index) => /^[A-Z]$/.test(index) ? 1 : index === "その他" ? 2 : 0;
-          const aName = String(a.artist_reading || a.artist || "").normalize("NFKC");
-          const bName = String(b.artist_reading || b.artist || "").normalize("NFKC");
+          const aName = String(/^[A-Z]$/.test(aIndex) ? (a.artist || "") : (a.artist_reading || a.artist || "")).normalize("NFKC");
+          const bName = String(/^[A-Z]$/.test(bIndex) ? (b.artist || "") : (b.artist_reading || b.artist || "")).normalize("NFKC");
           return sectionOrder(aIndex) - sectionOrder(bIndex)
             || collator.compare(aName, bName)
             || collator.compare(a.artist || "", b.artist || "")
