@@ -5325,7 +5325,7 @@
     .drink-modal {
       position: fixed;
       inset: 0;
-      z-index: 50;
+      z-index: 2200;
       display: none;
       align-items: center;
       justify-content: center;
@@ -5334,7 +5334,7 @@
     }
 
     #songCorrectionModal {
-      z-index: 2100;
+      z-index: 2300;
     }
 
     body.song-correction-modal-open #popularSongIndexJump {
@@ -14294,11 +14294,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (popularSongSortMode === "artist") {
         const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
         items.sort((a, b) => {
-          const aName = String(a.artist || "").normalize("NFKC");
-          const bName = String(b.artist || "").normalize("NFKC");
-          const aLatin = /^[A-Za-z0-9]/.test(aName) ? 1 : 0;
-          const bLatin = /^[A-Za-z0-9]/.test(bName) ? 1 : 0;
-          return aLatin - bLatin || collator.compare(aName, bName) || collator.compare(a.title || "", b.title || "");
+          const aIndex = popularExactIndexGroup(a, "artist");
+          const bIndex = popularExactIndexGroup(b, "artist");
+          const sectionOrder = (index) => /^[A-Z]$/.test(index) ? 1 : index === "その他" ? 2 : 0;
+          const aName = String(a.artist_reading || a.artist || "").normalize("NFKC");
+          const bName = String(b.artist_reading || b.artist || "").normalize("NFKC");
+          return sectionOrder(aIndex) - sectionOrder(bIndex)
+            || collator.compare(aName, bName)
+            || collator.compare(a.artist || "", b.artist || "")
+            || collator.compare(a.title_reading || a.title || "", b.title_reading || b.title || "");
         });
       }
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
