@@ -4664,23 +4664,23 @@
       gap: 5px;
       margin: 18px 0;
       padding: 15px 18px;
-      color: var(--ink);
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-left: 5px solid var(--orange);
+      color: #4c1d0f;
+      background: #fff0dc;
+      border: 3px solid #d94b2b;
+      border-left-width: 9px;
       border-radius: 14px;
       box-shadow: 0 8px 20px rgba(var(--theme-accent-rgb), .1);
       line-height: 1.65;
     }
 
     .catalog-karaoke-note strong {
-      color: var(--forest);
-      font-size: 17px;
+      color: #a32814;
+      font-size: 19px;
     }
 
     .catalog-karaoke-note span {
-      color: var(--ink);
-      font-weight: 700;
+      color: #4c1d0f;
+      font-weight: 800;
     }
 
     .external-song-search-callout strong,
@@ -6603,7 +6603,7 @@
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
-                  <div><strong>曲データへ読み仮名を追加</strong><p>約18,500曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。</p><a class="btn ghost app-update-history-action" href="#popular-songs">読み仮名で探してみる →</a></div>
+                  <div><strong>曲データへ読み仮名を追加</strong><p data-song-catalog-copy="reading-history">24,968曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。</p><a class="btn ghost app-update-history-action" href="#popular-songs">読み仮名で探してみる →</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
@@ -6615,7 +6615,7 @@
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-06">2026.08.06</time>
-                  <div><strong>曲・歌手データと曲リクエストを追加</strong><p>国内曲・洋楽曲と約18,500曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲・歌手データを見る →</a></div>
+                  <div><strong>曲・歌手データと曲リクエストを追加</strong><p data-song-catalog-copy="catalog-history">国内曲・洋楽曲と24,968曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲・歌手データを見る →</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-03">2026.08.03</time>
@@ -8125,8 +8125,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         </div>
 
         <p class="catalog-karaoke-note">
-          <strong>カラオケ配信について</strong>
-          <span>この曲データには、DAM・JOYSOUNDなどのカラオケに入っていない曲が含まれる場合があります。配信状況は各社の公式検索でご確認ください。</span>
+          <strong>⚠ 重要：カラオケ未配信曲を含みます</strong>
+          <span>この曲データは楽曲資料であり、すべてがカラオケ配信曲とは限りません。DAM・JOYSOUNDなどのカラオケに入っていない曲も含まれます。歌う前に各社の公式検索で配信状況をご確認ください。</span>
         </p>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
@@ -8188,7 +8188,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         <div class="shared-ranking" id="popular-search-area">
           <div class="popular-song-controls">
             <div>
-              <h3>歌手一覧から選ぶ・約18,500曲から検索</h3>
+              <h3 data-song-catalog-copy="search-heading">歌手一覧から選ぶ・24,968曲から検索</h3>
               <p class="small">歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。</p>
             </div>
             <div class="popular-song-tabs" id="popularSongTabs">
@@ -8211,7 +8211,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
             <h4 id="songCatalogDeviceTitle">曲データをこの端末に保存</h4>
-            <p class="small">任意機能です。約18,500曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
+            <p class="small" data-song-catalog-copy="device-save">任意機能です。24,968曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
             <p class="small"><strong>容量の目安：</strong>ダウンロード時の通信量は約1～4MB、端末へ保存した後は約6～10MBです。通信圧縮の有無やブラウザ・端末によって多少前後します。</p>
             <p class="small">新しく承認されたリクエスト曲を取り込む時は「最新版を取得して上書き」を押してください。端末の空き容量不足やブラウザのデータ削除により消える場合があります。</p>
             <div class="song-catalog-device-actions">
@@ -9506,10 +9506,66 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const attrOriginals = new WeakMap();
     let currentLanguage = localStorage.getItem(languageStorageKey) || "ja";
     let isApplyingLanguage = false;
+    const initialSongCatalogTotal = 24968;
+    let songCatalogTotal = initialSongCatalogTotal;
+    let songCatalogTotalLoaded = false;
+
+    function songCatalogCountLabel(total = songCatalogTotal) {
+      const count = Math.max(1, Number(total) || initialSongCatalogTotal);
+      return currentLanguage === "en"
+        ? `${count.toLocaleString("en-US")} songs`
+        : `${count.toLocaleString("ja-JP")}曲`;
+    }
+
+    function updateSongCatalogTotal(total) {
+      const parsed = Number(total);
+      if (Number.isFinite(parsed) && parsed > 0) songCatalogTotal = Math.floor(parsed);
+      const label = songCatalogCountLabel();
+      const copies = currentLanguage === "en" ? {
+        "reading-history": `${label} now include title and artist readings, supporting kana search and Japanese syllabary order. Approved requests are also added to the regular catalog.`,
+        "catalog-history": `Added Japanese and international song lists, search across ${label}, saving to My Song List, and requests for missing songs.`,
+        "search-heading": `Choose an Artist or Search ${label}`,
+        "device-save": `Optional. Save ${label} on this device for faster catalog searches and display without waiting for the server. This is separate from My Song List.`
+      } : {
+        "reading-history": `${label}の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。`,
+        "catalog-history": `国内曲・洋楽曲と${label}の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。`,
+        "search-heading": `歌手一覧から選ぶ・${label}から検索`,
+        "device-save": `任意機能です。${label}を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。`
+      };
+      document.querySelectorAll("[data-song-catalog-copy]").forEach((element) => {
+        const copy = copies[element.dataset.songCatalogCopy];
+        if (copy) element.textContent = copy;
+      });
+      const catalogSearchInput = document.getElementById("popularSongSearch");
+      const activeCatalogTab = document.querySelector('[data-popular-category="catalog"].is-active');
+      if (catalogSearchInput && activeCatalogTab) {
+        catalogSearchInput.placeholder = currentLanguage === "en"
+          ? `Search ${label} by title, artist, or alias`
+          : `${label}から曲名・歌手名・通称を検索`;
+      }
+    }
+
+    async function refreshSongCatalogTotal(forceRefresh = false) {
+      if (songCatalogTotalLoaded && !forceRefresh) return songCatalogTotal;
+      try {
+        const params = new URLSearchParams({ action: "song_catalog_count" });
+        if (forceRefresh) params.set("refresh", String(Date.now()));
+        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("song catalog count unavailable");
+        updateSongCatalogTotal(payload.count);
+        songCatalogTotalLoaded = true;
+      } catch (error) {
+        console.warn(error);
+      }
+      return songCatalogTotal;
+    }
 
     const exactTranslations = {
       "曲データをこの端末に保存": "Save Song Data on This Device",
-      "任意機能です。約18,500曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。": "Optional. Save about 18,500 songs for faster catalog searches and display without waiting for the server. This is separate from My Song List.",
+      "任意機能です。24,968曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。": "Optional. Save 24,968 songs for faster catalog searches and display without waiting for the server. This is separate from My Song List.",
+      "⚠ 重要：カラオケ未配信曲を含みます": "⚠ Important: Includes songs not available on karaoke",
+      "この曲データは楽曲資料であり、すべてがカラオケ配信曲とは限りません。DAM・JOYSOUNDなどのカラオケに入っていない曲も含まれます。歌う前に各社の公式検索で配信状況をご確認ください。": "This catalog is a music reference and not every song is available on karaoke. It includes songs not offered by DAM, JOYSOUND, or other karaoke services. Please check each provider's official search before singing.",
       "容量の目安：": "Estimated size:",
       "ダウンロード時の通信量は約1～4MB、端末へ保存した後は約6～10MBです。通信圧縮の有無やブラウザ・端末によって多少前後します。": "About 1–4 MB to download and about 6–10 MB after saving on this device. The actual size varies depending on compression, browser, and device.",
       "新しく承認されたリクエスト曲を取り込む時は「最新版を取得して上書き」を押してください。端末の空き容量不足やブラウザのデータ削除により消える場合があります。": "To include newly approved requests, select Get Latest Version and Replace. Saved data may be removed if storage is low or browser data is cleared.",
@@ -9539,9 +9595,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "店主が分かる名前・ニックネームを必須にし、曲名・歌手名の訂正を安全に依頼できるようにしました。": "A recognizable name or nickname is required so title and artist corrections can be requested safely.",
       "曲データを見る →": "View Song Catalog →",
       "曲データを読み仮名で探せるようになりました": "Search the Song Catalog by Reading",
-      "約18,500曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。": "Added title and artist readings to about 18,500 songs for phonetic search and accurate Japanese index order. Readings can also be submitted with additions and corrections.",
+      "24,968曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。": "Added title and artist readings to 24,968 songs for phonetic search and accurate Japanese index order. Readings can also be submitted with additions and corrections.",
       "曲データへ読み仮名を追加": "Added Readings to the Song Catalog",
-      "約18,500曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。": "Added title and artist readings to about 18,500 songs for phonetic search and Japanese index order. Requested songs now also appear in the regular catalog.",
+      "24,968曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。": "Added title and artist readings to 24,968 songs for phonetic search and Japanese index order. Requested songs now also appear in the regular catalog.",
       "曲の一括追加と通称検索に対応しました": "Added Bulk Catalog Requests and Alias Search",
       "貼り付けた曲をマイ曲リストと曲データへ一度に登録依頼できます。「ミスチル」「ユーミン」などの通称や登録したキーワードでも検索できます。": "Pasted songs can now be added to My Song List and requested for the shared catalog at once. Search also supports aliases such as Misuchiru and Yuming, plus your own keywords.",
       "一括追加依頼と通称検索を追加": "Added Bulk Requests and Alias Search",
@@ -9551,10 +9607,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "曲名・歌手名とそれぞれの読みを入力して送信できます。同じ曲名・歌手名は1件にまとめ、通常の曲データにも反映します。": "Enter the song title, artist, and their readings. Duplicate requests are combined and the song is also reflected in the regular catalog.",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
       "曲・歌手データと曲リクエストを追加しました": "Added the Song & Artist Catalog and Song Requests",
-      "国内曲・洋楽曲と約18,500曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or about 18,500 catalog songs, and request a missing song.",
+      "国内曲・洋楽曲と24,968曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or 24,968 catalog songs, and request a missing song.",
       "曲・歌手データを見る": "View Song & Artist Catalog",
       "曲・歌手データと曲リクエストを追加": "Added the Song & Artist Catalog and Song Requests",
-      "国内曲・洋楽曲と約18,500曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added Japanese and international song lists, search across about 18,500 songs, My Song List registration, and requests for missing songs.",
+      "国内曲・洋楽曲と24,968曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added Japanese and international song lists, search across 24,968 songs, My Song List registration, and requests for missing songs.",
       "曲・歌手データを見る →": "View Song & Artist Catalog →",
       "アプリ更新情報　2026.08.03": "App Update  2026.08.03",
       "LIVE表示・オフライン・文字サイズを追加しました": "Added LIVE View, Offline Access, and Text Sizes",
@@ -10630,14 +10686,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "追加リクエストを送信しました。": "Song request sent.",
       "送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the request. Check your connection and try again.",
       "この曲はすでにマイ曲リストへ登録されています。": "This song is already in My Song List.",
-      "歌手一覧から選ぶ・約18,500曲から検索": "Choose an Artist or Search About 18,500 Songs",
+      "歌手一覧から選ぶ・24,968曲から検索": "Choose an Artist or Search 24,968 Songs",
       "歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。": "Tap an artist to expand their songs, or search the uploaded catalog from one character.",
       "歌手一覧（曲は展開）": "Artist List (Expand Songs)",
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
-      "約18,500曲から曲名・歌手名を検索": "Search about 18,500 songs by title or artist",
-      "約18,500曲から曲名・歌手名・通称を検索": "Search about 18,500 songs by title, artist, or alias"
+      "24,968曲から曲名・歌手名を検索": "Search 24,968 songs by title or artist",
+      "24,968曲から曲名・歌手名・通称を検索": "Search 24,968 songs by title, artist, or alias"
     };
 
     const phraseTranslations = [
@@ -12016,6 +12072,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       });
 
       updateLanguageButton();
+      updateSongCatalogTotal();
       isApplyingLanguage = false;
     }
 
@@ -14129,6 +14186,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           deviceSongCatalogMeta = null;
         }
         updateDeviceSongCatalogStatus();
+        if (deviceSongCatalog.length) updateSongCatalogTotal(deviceSongCatalog.length);
         return deviceSongCatalog;
       })();
       return deviceSongCatalogLoadPromise;
@@ -14162,6 +14220,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         navigator.storage.persist().catch(() => false);
       }
       updateDeviceSongCatalogStatus();
+      updateSongCatalogTotal(deviceSongCatalog.length);
     }
 
     async function downloadLatestSongCatalog() {
@@ -14402,14 +14461,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     async function loadPopularSongs(forceRefresh = false) {
       if (!popularSongStatus) return;
       await loadDeviceSongCatalogFromStorage();
+      await refreshSongCatalogTotal(forceRefresh);
       const query = popularSongSearch.value.trim();
       const scopeLabels = {
         jp: currentLanguage === "en" ? "Japanese Song List" : "国内曲リスト",
         western: currentLanguage === "en" ? "International Song List" : "洋楽曲リスト",
-        catalog: currentLanguage === "en" ? "About 18,500 songs" : "約18,500曲"
+        catalog: songCatalogCountLabel()
       };
       popularSongSearch.placeholder = popularSongCategory === "catalog"
-        ? uiText("約18,500曲から曲名・歌手名・通称を検索")
+        ? (currentLanguage === "en" ? `Search ${songCatalogCountLabel()} by title, artist, or alias` : `${songCatalogCountLabel()}から曲名・歌手名・通称を検索`)
         : `${scopeLabels[popularSongCategory]}${currentLanguage === "en" ? ": search title, artist, or alias" : "内を曲名・歌手名・通称で検索"}`;
       popularSongTabs.querySelectorAll("[data-popular-category]").forEach((button) => {
         const active = button.dataset.popularCategory === popularSongCategory;
@@ -14438,6 +14498,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       try {
         const usingSavedCatalog = deviceSongCatalog.length > 0;
         if (usingSavedCatalog) {
+          updateSongCatalogTotal(deviceSongCatalog.length);
           popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, 1200);
         } else {
           const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
@@ -14445,6 +14506,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
           const payload = await response.json();
           if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("popular songs unavailable");
+          updateSongCatalogTotal(payload.count || payload.catalog_count || payload.total);
           popularSongItems = payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist);
         }
         popularSongStatus.textContent = popularSongCategory === "catalog"
