@@ -2244,6 +2244,38 @@
       font-weight: 800;
     }
 
+    .song-data-register-callout {
+      display: grid;
+      gap: 10px;
+      margin: 0 0 18px;
+      padding: 18px;
+      border: 2px solid var(--orange);
+      border-radius: 18px;
+      background: linear-gradient(135deg, #fff8eb, #ffead0);
+      box-shadow: 0 12px 28px rgba(240, 138, 53, .15);
+    }
+
+    .song-data-register-callout h4,
+    .song-data-register-callout p { margin: 0; }
+    .song-data-register-callout .btn { width: 100%; }
+
+    .song-request-collapsible > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--forest);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .song-request-collapsible > summary::-webkit-details-marker { display: none; }
+    .song-request-collapsible > summary::after { content: "＋ 開く"; color: var(--orange-deep); font-size: 14px; }
+    .song-request-collapsible[open] > summary::after { content: "－ 閉じる"; }
+    .song-request-collapsible-body { padding-top: 18px; }
+
     .song-form-card .btn.primary {
       width: 100%;
       min-height: 52px;
@@ -3783,7 +3815,9 @@
     }
 
     body.song-editing #songRegister > .form-lead,
+    body.song-editing #songRegister > .song-data-register-callout,
     body.song-editing #songRegister > .song-catalog-card,
+    body.song-editing #songRegister > .catalog-register-heading,
     body.song-editing #songRegister > .alternative-register-heading,
     body.song-editing #songRegister > .bulk-song-entry,
     body.song-editing #songRegister > .photo-song-card {
@@ -4884,6 +4918,24 @@
     .popular-song-web-actions a:focus-visible {
       border-color: var(--orange);
       background: rgba(var(--theme-accent-rgb), .12);
+    }
+
+    .popular-song-web-actions a.is-youtube {
+      border-color: rgba(255, 0, 51, .34);
+    }
+
+    .popular-song-youtube-mark {
+      display: inline-grid;
+      width: 22px;
+      height: 16px;
+      margin-right: 6px;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 5px;
+      background: #ff0033;
+      color: #fff;
+      font-size: 9px;
+      line-height: 1;
     }
 
     .popular-song-row .btn {
@@ -6603,7 +6655,7 @@
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
-                  <div><strong>曲データへ読み仮名を追加</strong><p data-song-catalog-copy="reading-history">24,968曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。</p><a class="btn ghost app-update-history-action" href="#popular-songs">読み仮名で探してみる →</a></div>
+                  <div><strong>曲データへ読み仮名を追加</strong><p data-song-catalog-copy="reading-history">27,907曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。</p><a class="btn ghost app-update-history-action" href="#popular-songs">読み仮名で探してみる →</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-07">2026.08.07</time>
@@ -6615,7 +6667,7 @@
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-06">2026.08.06</time>
-                  <div><strong>曲・歌手データと曲リクエストを追加</strong><p data-song-catalog-copy="catalog-history">国内曲・洋楽曲と24,968曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲・歌手データを見る →</a></div>
+                  <div><strong>曲・歌手データと曲リクエストを追加</strong><p data-song-catalog-copy="catalog-history">国内曲・洋楽曲と27,907曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。</p><a class="btn ghost app-update-history-action" href="#popular-songs">曲・歌手データを見る →</a></div>
                 </article>
                 <article class="app-update-history-item">
                   <time datetime="2026-08-03">2026.08.03</time>
@@ -7358,9 +7410,16 @@
 
           <div class="card song-form-card" id="songRegister">
             <h3 id="songFormTitle">曲を登録する</h3>
-            <p class="form-lead">まず下の検索欄へ曲名または歌手名を入力してください。候補からかんたんに登録できます。</p>
-            <div class="song-catalog-card">
+            <p class="form-lead">曲データから選ぶか、外部検索を使ってマイ曲リストへ登録できます。</p>
+            <div class="song-data-register-callout">
               <span class="catalog-eyebrow">おすすめ・かんたん登録</span>
+              <h4>曲データリストから選んで登録</h4>
+              <p>曲名・歌手名から探して、そのままマイ曲リストへ追加できます。</p>
+              <button class="btn primary" type="button" data-open-song-data-register>曲データから探す</button>
+            </div>
+            <p class="alternative-register-heading catalog-register-heading">検索サイトから登録する場合</p>
+            <div class="song-catalog-card">
+              <span class="catalog-eyebrow">外部検索から登録</span>
               <h4>① 曲名または歌手名を入力</h4>
               <p class="catalog-main-help">まずDAM、次にJOYSOUNDの公式検索で確認し、見つからない時だけMusicBrainzの候補検索を使えます。</p>
               <form class="song-catalog-search" id="songCatalogSearchForm">
@@ -8155,7 +8214,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <button class="btn primary" type="button" data-open-external-song-search>外部検索から曲を登録</button>
         </div>
 
-        <div class="shared-ranking" id="song-request-area">
+        <details class="shared-ranking song-request-collapsible" id="song-request-area">
+          <summary>見つからない曲を追加リクエスト</summary>
+          <div class="song-request-collapsible-body">
           <div class="section-head">
             <div>
               <span class="tag orange">Request</span>
@@ -8183,12 +8244,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <p class="small">店主が曲名・歌手名を確認し、承認した曲だけ通常の曲データへ反映されます。</p>
             <div id="songRequestList"></div>
           </details>
-        </div>
+          </div>
+        </details>
 
         <div class="shared-ranking" id="popular-search-area">
           <div class="popular-song-controls">
             <div>
-              <h3 data-song-catalog-copy="search-heading">歌手一覧から選ぶ・24,968曲から検索</h3>
+              <h3 data-song-catalog-copy="search-heading">歌手一覧から選ぶ・27,907曲から検索</h3>
               <p class="small">歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。</p>
             </div>
             <div class="popular-song-tabs" id="popularSongTabs">
@@ -8211,7 +8273,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
             <h4 id="songCatalogDeviceTitle">曲データをこの端末に保存</h4>
-            <p class="small" data-song-catalog-copy="device-save">任意機能です。24,968曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
+            <p class="small" data-song-catalog-copy="device-save">任意機能です。27,907曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
             <p class="small"><strong>容量の目安：</strong>ダウンロード時の通信量は約1～4MB、端末へ保存した後は約6～10MBです。通信圧縮の有無やブラウザ・端末によって多少前後します。</p>
             <p class="small">新しく承認されたリクエスト曲を取り込む時は「最新版を取得して上書き」を押してください。端末の空き容量不足やブラウザのデータ削除により消える場合があります。</p>
             <div class="song-catalog-device-actions">
@@ -9506,7 +9568,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const attrOriginals = new WeakMap();
     let currentLanguage = localStorage.getItem(languageStorageKey) || "ja";
     let isApplyingLanguage = false;
-    const initialSongCatalogTotal = 24968;
+    const initialSongCatalogTotal = 27907;
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
 
@@ -9563,7 +9625,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
 
     const exactTranslations = {
       "曲データをこの端末に保存": "Save Song Data on This Device",
-      "任意機能です。24,968曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。": "Optional. Save 24,968 songs for faster catalog searches and display without waiting for the server. This is separate from My Song List.",
+      "任意機能です。27,907曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。": "Optional. Save 27,907 songs for faster catalog searches and display without waiting for the server. This is separate from My Song List.",
       "⚠ 重要：カラオケ未配信曲を含みます": "⚠ Important: Includes songs not available on karaoke",
       "この曲データは楽曲資料であり、すべてがカラオケ配信曲とは限りません。DAM・JOYSOUNDなどのカラオケに入っていない曲も含まれます。歌う前に各社の公式検索で配信状況をご確認ください。": "This catalog is a music reference and not every song is available on karaoke. It includes songs not offered by DAM, JOYSOUND, or other karaoke services. Please check each provider's official search before singing.",
       "容量の目安：": "Estimated size:",
@@ -9595,9 +9657,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "店主が分かる名前・ニックネームを必須にし、曲名・歌手名の訂正を安全に依頼できるようにしました。": "A recognizable name or nickname is required so title and artist corrections can be requested safely.",
       "曲データを見る →": "View Song Catalog →",
       "曲データを読み仮名で探せるようになりました": "Search the Song Catalog by Reading",
-      "24,968曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。": "Added title and artist readings to 24,968 songs for phonetic search and accurate Japanese index order. Readings can also be submitted with additions and corrections.",
+      "27,907曲に曲名・歌手名の読みを追加し、読み仮名検索と正しい50音順に対応しました。追加・訂正依頼でも読みを登録できます。": "Added title and artist readings to 27,907 songs for phonetic search and accurate Japanese index order. Readings can also be submitted with additions and corrections.",
       "曲データへ読み仮名を追加": "Added Readings to the Song Catalog",
-      "24,968曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。": "Added title and artist readings to 24,968 songs for phonetic search and Japanese index order. Requested songs now also appear in the regular catalog.",
+      "27,907曲の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。": "Added title and artist readings to 27,907 songs for phonetic search and Japanese index order. Requested songs now also appear in the regular catalog.",
       "曲の一括追加と通称検索に対応しました": "Added Bulk Catalog Requests and Alias Search",
       "貼り付けた曲をマイ曲リストと曲データへ一度に登録依頼できます。「ミスチル」「ユーミン」などの通称や登録したキーワードでも検索できます。": "Pasted songs can now be added to My Song List and requested for the shared catalog at once. Search also supports aliases such as Misuchiru and Yuming, plus your own keywords.",
       "一括追加依頼と通称検索を追加": "Added Bulk Requests and Alias Search",
@@ -9607,10 +9669,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "曲名・歌手名とそれぞれの読みを入力して送信できます。同じ曲名・歌手名は1件にまとめ、通常の曲データにも反映します。": "Enter the song title, artist, and their readings. Duplicate requests are combined and the song is also reflected in the regular catalog.",
       "アプリ更新情報　2026.08.06": "App Update  2026.08.06",
       "曲・歌手データと曲リクエストを追加しました": "Added the Song & Artist Catalog and Song Requests",
-      "国内曲・洋楽曲と24,968曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or 24,968 catalog songs, and request a missing song.",
+      "国内曲・洋楽曲と27,907曲のデータを検索・登録でき、見つからない曲は追加リクエストを送れるようになりました。": "Search and add Japanese songs, international songs, or 27,907 catalog songs, and request a missing song.",
       "曲・歌手データを見る": "View Song & Artist Catalog",
       "曲・歌手データと曲リクエストを追加": "Added the Song & Artist Catalog and Song Requests",
-      "国内曲・洋楽曲と24,968曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added Japanese and international song lists, search across 24,968 songs, My Song List registration, and requests for missing songs.",
+      "国内曲・洋楽曲と27,907曲の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。": "Added Japanese and international song lists, search across 27,907 songs, My Song List registration, and requests for missing songs.",
       "曲・歌手データを見る →": "View Song & Artist Catalog →",
       "アプリ更新情報　2026.08.03": "App Update  2026.08.03",
       "LIVE表示・オフライン・文字サイズを追加しました": "Added LIVE View, Offline Access, and Text Sizes",
@@ -10686,14 +10748,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "追加リクエストを送信しました。": "Song request sent.",
       "送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the request. Check your connection and try again.",
       "この曲はすでにマイ曲リストへ登録されています。": "This song is already in My Song List.",
-      "歌手一覧から選ぶ・24,968曲から検索": "Choose an Artist or Search 24,968 Songs",
+      "歌手一覧から選ぶ・27,907曲から検索": "Choose an Artist or Search 27,907 Songs",
       "歌手名を押すと曲が開きます。検索欄では、アップロードした曲リストから1文字で探せます。": "Tap an artist to expand their songs, or search the uploaded catalog from one character.",
       "歌手一覧（曲は展開）": "Artist List (Expand Songs)",
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
-      "24,968曲から曲名・歌手名を検索": "Search 24,968 songs by title or artist",
-      "24,968曲から曲名・歌手名・通称を検索": "Search 24,968 songs by title, artist, or alias"
+      "27,907曲から曲名・歌手名を検索": "Search 27,907 songs by title or artist",
+      "27,907曲から曲名・歌手名・通称を検索": "Search 27,907 songs by title, artist, or alias"
     };
 
     const phraseTranslations = [
@@ -13750,8 +13812,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       refreshLanguageSoon();
     }
 
-    function openQuickSetlistPanel(id) {
-      if (!settings.showSavedSetlists) return;
+    function openQuickSetlistPanel(id, force = false) {
+      if (!settings.showSavedSetlists && !force) return;
       const item = songs.find((song) => song.id === id);
       if (!item) return;
       if (!savedSetlists.length) {
@@ -14283,7 +14345,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function popularExactIndexLabels() {
-      return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
+      return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", "0–9", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
     }
 
     function popularExactIndexGroup(item, mode = "artist") {
@@ -14291,12 +14353,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? item && item.title || ""
         : item && item.artist || "").trim();
       const visibleFirst = visibleName.normalize("NFKC").charAt(0).toUpperCase();
+      if (/^[0-9]$/.test(visibleFirst)) return "0–9";
       if (/^[A-Z]$/.test(visibleFirst)) return visibleFirst;
       const source = String(mode === "title"
         ? item && (item.title_reading || item.title) || ""
         : item && (item.artist_reading || item.artist) || "").trim();
       const rawFirst = normalizeKana(source).charAt(0);
       const rawLatin = rawFirst.toUpperCase();
+      if (/^[0-9]$/.test(rawFirst)) return "0–9";
       if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
       let first = mode === "artist" && item && item.artist_index
         ? normalizeKana(item.artist_index).charAt(0)
@@ -14333,6 +14397,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         { label: "や行", labels: [..."やゆよ"] },
         { label: "ら行", labels: [..."らりるれろ"] },
         { label: "わ行", labels: ["わ", "を", "ん", "その他"] },
+        { label: "0–9", labels: ["0–9"] },
         { label: "A–Z", labels: [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"] }
       ];
       const menuHtml = indexMenus.map((menu) => {
@@ -14365,13 +14430,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <strong>${escapeText(item.title || "-")}</strong>
             <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
             <div class="popular-song-web-actions">
-              <a href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener">YouTubeで検索 ↗</a>
+              <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
             </div>
           </div>
           <div class="popular-song-actions">
             <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
+            <button class="btn ghost" type="button" data-popular-setlist="${escapeText(source)}" data-popular-index="${index}">セットリストへ追加</button>
             <button class="btn ghost song-correction-button" type="button" data-song-correction="${escapeText(source)}" data-popular-index="${index}">${escapeText(uiText("訂正を依頼"))}</button>
           </div>
         </article>
@@ -14431,26 +14497,35 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     let popularArtistAutoCloseFrame = 0;
+    function popularArtistFloatingTargetTop() {
+      const floatingBottom = document.getElementById("floatingPageNav")?.getBoundingClientRect().bottom || 90;
+      return Math.max(90, Math.ceil(floatingBottom) + 10);
+    }
+
+    function placePopularArtistBelowFloatingBar(details) {
+      if (!details?.isConnected) return;
+      const targetTop = popularArtistFloatingTargetTop();
+      const currentTop = details.getBoundingClientRect().top;
+      const scrollDelta = currentTop - targetTop;
+      if (Math.abs(scrollDelta) > 1) window.scrollBy({ top: scrollDelta, left: 0, behavior: "auto" });
+    }
+
     function autoClosePassedPopularArtists() {
       popularArtistAutoCloseFrame = 0;
       if (!popularSongList) return;
       const openGroups = [...popularSongList.querySelectorAll(".popular-artist-group[open]")];
       if (!openGroups.length) return;
-      const floatingBottom = document.getElementById("floatingPageNav")?.getBoundingClientRect().bottom || 90;
-      const closeLine = Math.max(90, floatingBottom + 12);
-      openGroups.forEach((details) => {
+      const closeLine = popularArtistFloatingTargetTop();
+      for (const details of openGroups) {
         const nextArtist = details.nextElementSibling;
         const passedIntoNextArtist = nextArtist && nextArtist.classList.contains("popular-artist-group")
           && nextArtist.getBoundingClientRect().top <= closeLine;
         const passedLastArtist = !nextArtist && details.getBoundingClientRect().bottom <= closeLine;
-        if (!passedIntoNextArtist && !passedLastArtist) return;
-        const anchor = nextArtist || details;
-        const beforeTop = anchor.getBoundingClientRect().top;
+        if (!passedIntoNextArtist && !passedLastArtist) continue;
         details.open = false;
-        const afterTop = anchor.getBoundingClientRect().top;
-        const shift = afterTop - beforeTop;
-        if (Math.abs(shift) > 1) window.scrollBy(0, shift);
-      });
+        placePopularArtistBelowFloatingBar(details);
+        break;
+      }
     }
 
     function schedulePopularArtistAutoClose() {
@@ -14570,11 +14645,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
     }
 
-    function addPopularSongToMyList(item) {
+    function ensurePopularSongInMyList(item, notify = true) {
       if (!item || !item.title) return;
-      if (findLocalPopularSong(item)) {
-        showUndo(uiText("この曲はすでにマイ曲リストへ登録されています。"));
-        return;
+      const existing = findLocalPopularSong(item);
+      if (existing) {
+        if (notify) showUndo(uiText("この曲はすでにマイ曲リストへ登録されています。"));
+        return existing;
       }
       const newSong = {
         id: createId(), title: item.title, artist: item.artist || "", owner: "", kana: "", key: "", memo: "",
@@ -14586,13 +14662,24 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       renderSongs();
       renderPopularSongs();
       renderSongRequests();
-      showUndo(currentLanguage === "en" ? `Added “${item.title}” to My Song List.` : `✓「${item.title}」をマイ曲リストへ追加しました。`, () => {
+      if (notify) showUndo(currentLanguage === "en" ? `Added “${item.title}” to My Song List.` : `✓「${item.title}」をマイ曲リストへ追加しました。`, () => {
         songs = songs.filter((song) => song.id !== newSong.id);
         saveSongs();
         renderSongs();
         renderPopularSongs();
         renderSongRequests();
       });
+      return newSong;
+    }
+
+    function addPopularSongToMyList(item) {
+      return ensurePopularSongInMyList(item, true);
+    }
+
+    function addPopularSongToSetlist(item) {
+      const song = ensurePopularSongInMyList(item, false);
+      if (!song) return;
+      openQuickSetlistPanel(song.id, true);
     }
 
     function renderSongRequests() {
@@ -15882,6 +15969,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
     });
     popularSongList.addEventListener("click", (event) => {
+      const setlistButton = event.target.closest("[data-popular-setlist]");
+      if (setlistButton) {
+        const sourceItems = setlistButton.dataset.popularSetlist === "artistCatalog" ? popularArtistSongItems : popularSongItems;
+        addPopularSongToSetlist(sourceItems[Number(setlistButton.dataset.popularIndex)]);
+        return;
+      }
       const correctionButton = event.target.closest("[data-song-correction]");
       if (correctionButton) {
         openSongCorrectionPanel(songCorrectionSourceItem(correctionButton.dataset.songCorrection, correctionButton.dataset.popularIndex));
@@ -15894,10 +15987,23 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     });
     popularSongList.addEventListener("toggle", (event) => {
       const details = event.target.closest(".popular-artist-group");
-      if (details && details.open) loadPopularArtistSongs(details);
+      if (!details || !details.open) return;
+      const beforeTop = details.getBoundingClientRect().top;
+      popularSongList.querySelectorAll(".popular-artist-group[open]").forEach((otherDetails) => {
+        if (otherDetails !== details) otherDetails.open = false;
+      });
+      const afterTop = details.getBoundingClientRect().top;
+      const shift = afterTop - beforeTop;
+      if (Math.abs(shift) > 1) window.scrollBy({ top: shift, left: 0, behavior: "auto" });
+      loadPopularArtistSongs(details);
     }, true);
     window.addEventListener("scroll", schedulePopularArtistAutoClose, { passive: true });
     songRequestList.addEventListener("click", (event) => {
+      const setlistButton = event.target.closest('[data-popular-setlist="request"]');
+      if (setlistButton) {
+        addPopularSongToSetlist(requestedSongItems[Number(setlistButton.dataset.popularIndex)]);
+        return;
+      }
       const correctionButton = event.target.closest("[data-song-correction]");
       if (correctionButton) {
         openSongCorrectionPanel(songCorrectionSourceItem(correctionButton.dataset.songCorrection, correctionButton.dataset.popularIndex));
@@ -16687,6 +16793,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           if (songCatalogQuery) songCatalogQuery.focus({ preventScroll: true });
         }, 180);
       }
+      const songDataRegisterButton = event.target.closest("[data-open-song-data-register]");
+      if (songDataRegisterButton) {
+        showView("popular-songs");
+        window.setTimeout(() => {
+          const searchArea = document.getElementById("popular-search-area");
+          if (searchArea) searchArea.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (popularSongSearch) popularSongSearch.focus({ preventScroll: true });
+        }, 150);
+      }
       const indexModeButton = event.target.closest("[data-popular-index-mode]");
       if (indexModeButton && indexModeButton.dataset.popularIndexMode !== popularSongSortMode) {
         popularSongSortMode = indexModeButton.dataset.popularIndexMode;
@@ -16697,6 +16812,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         showView("popular-songs");
         window.setTimeout(() => {
           const requestArea = document.getElementById("song-request-area");
+          if (requestArea instanceof HTMLDetailsElement) requestArea.open = true;
           if (requestArea) requestArea.scrollIntoView({ behavior: "smooth", block: "start" });
           if (songRequestTitle) songRequestTitle.focus({ preventScroll: true });
         }, 120);
