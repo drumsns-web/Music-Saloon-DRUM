@@ -9716,7 +9716,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           ? `Search ${label} by title, artist, or alias`
           : `${label}から曲名・歌手名・通称を検索`;
       }
-      updateSongCatalogCapacityEstimate(songCatalogTotal, deviceSongCatalogMeta && deviceSongCatalogMeta.bytes);
+      const savedBytesForCurrentCatalog = deviceSongCatalogMeta
+        && Number(deviceSongCatalogMeta.count) === songCatalogTotal
+        ? deviceSongCatalogMeta.bytes
+        : 0;
+      updateSongCatalogCapacityEstimate(songCatalogTotal, savedBytesForCurrentCatalog);
+      if (typeof updateDeviceSongCatalogStatus === "function") updateDeviceSongCatalogStatus();
     }
 
     async function refreshSongCatalogTotal(forceRefresh = false) {
@@ -14346,10 +14351,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const savedMegabytes = deviceSongCatalogMeta.bytes
         ? ` / ${Math.max(1, Math.round(deviceSongCatalogMeta.bytes / 1000000))} MB`
         : "";
+      const updateAvailable = songCatalogTotal > deviceSongCatalog.length;
+      const updateNote = updateAvailable
+        ? (currentLanguage === "en"
+          ? ` / Latest catalog: ${songCatalogTotal.toLocaleString()} songs. Please update the saved copy.`
+          : `／最新版は${songCatalogTotal.toLocaleString()}曲です。「最新版を取得して上書き」で更新できます。`)
+        : "";
       deviceSongCatalogStatus.textContent = currentLanguage === "en"
-        ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs${savedMegabytes} / Updated ${savedAt}`
-        : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}`;
-      updateSongCatalogCapacityEstimate(deviceSongCatalog.length, deviceSongCatalogMeta.bytes);
+        ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs${savedMegabytes} / Updated ${savedAt}${updateNote}`
+        : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}${updateNote}`;
+      const savedBytesForCurrentCatalog = deviceSongCatalog.length === songCatalogTotal ? deviceSongCatalogMeta.bytes : 0;
+      updateSongCatalogCapacityEstimate(songCatalogTotal, savedBytesForCurrentCatalog);
     }
 
     async function loadDeviceSongCatalogFromStorage() {
@@ -14380,7 +14392,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           deviceSongCatalogMeta = null;
         }
         updateDeviceSongCatalogStatus();
-        if (deviceSongCatalog.length) updateSongCatalogTotal(deviceSongCatalog.length);
         return deviceSongCatalog;
       })();
       return deviceSongCatalogLoadPromise;
@@ -14706,7 +14717,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       try {
         const usingSavedCatalog = deviceSongCatalog.length > 0;
         if (usingSavedCatalog) {
-          updateSongCatalogTotal(deviceSongCatalog.length);
           popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, 1200);
         } else {
           const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
