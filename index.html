@@ -10881,6 +10881,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
+      "歌詞を検索 ↗": "Search Lyrics ↗",
       "27,907曲から曲名・歌手名を検索": "Search 27,907 songs by title or artist",
       "27,907曲から曲名・歌手名・通称を検索": "Search 27,907 songs by title, artist, or alias"
     };
@@ -14454,7 +14455,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
     }
 
-    function filterSavedSongCatalog(query, category, sortMode, limit = 1200) {
+    function filterSavedSongCatalog(query, category, sortMode, limit = 5000) {
       const queryKey = normalizeKana(query);
       const artistCounts = new Map();
       deviceSongCatalog.forEach((item) => {
@@ -14568,6 +14569,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
       const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
+      const lyricsUrl = `https://www.google.com/search?q=${encodeURIComponent(`${searchQuery} 歌詞`)}`;
       return `
         <article class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
           <div>
@@ -14577,6 +14579,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
+              <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
             </div>
           </div>
           <div class="popular-song-actions">
@@ -14716,10 +14719,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
       try {
         const usingSavedCatalog = deviceSongCatalog.length > 0;
+        const resultLimit = popularSongCategory === "catalog" ? 1200 : 5000;
         if (usingSavedCatalog) {
-          popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, 1200);
+          popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, resultLimit);
         } else {
-          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: "1200" });
+          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: String(resultLimit) });
           if (forceRefresh) params.set("refresh", String(Date.now()));
           const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
           const payload = await response.json();
