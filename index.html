@@ -693,6 +693,43 @@
       font-weight: 900;
     }
 
+    .top-song-catalog-feature {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      margin: 0 0 18px;
+      padding: 18px;
+      border: 2px solid var(--orange);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(255, 253, 248, .96), rgba(var(--theme-accent-rgb), .22));
+      color: var(--ink);
+      box-shadow: 0 12px 28px rgba(20, 63, 44, .16);
+    }
+
+    .top-song-catalog-feature[hidden] { display: none !important; }
+
+    .top-song-catalog-feature strong,
+    .top-song-catalog-feature span { display: block; }
+
+    .top-song-catalog-feature strong {
+      color: var(--forest);
+      font-size: clamp(20px, 4vw, 28px);
+      line-height: 1.25;
+    }
+
+    .top-song-catalog-feature span {
+      margin-top: 5px;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 620px) {
+      .top-song-catalog-feature { grid-template-columns: 1fr; }
+      .top-song-catalog-feature .btn { width: 100%; }
+    }
+
     .floating-nav-settings.is-disabled {
       opacity: .5;
     }
@@ -4666,6 +4703,27 @@
       font-size: 20px;
     }
 
+    .song-catalog-capacity-guide {
+      display: grid;
+      gap: 5px;
+      margin: 12px 0 8px;
+      padding: 12px 14px;
+      border: 1px solid rgba(var(--theme-accent-rgb), .46);
+      border-radius: 10px;
+      background: rgba(var(--theme-accent-rgb), .13);
+      line-height: 1.55;
+    }
+
+    .song-catalog-capacity-guide strong {
+      color: var(--forest);
+      font-size: 17px;
+    }
+
+    .song-catalog-capacity-guide span {
+      font-size: 14px;
+      font-weight: 750;
+    }
+
     .song-catalog-device-actions {
       display: flex;
       flex-wrap: wrap;
@@ -6713,6 +6771,13 @@
             </details>
           </div>
         </details>
+        <aside class="top-song-catalog-feature" id="topSongCatalogFeature" aria-labelledby="topSongCatalogFeatureTitle">
+          <div>
+            <strong id="topSongCatalogFeatureTitle" data-song-catalog-copy="top-feature-title">35,533曲から、歌いたい曲をすぐ検索</strong>
+            <span data-song-catalog-copy="top-feature-description">邦楽・洋楽の曲名や歌手名から探して、マイ曲リストやセットリストへ追加できます。</span>
+          </div>
+          <a class="btn primary" href="#popular-songs">曲データを検索する</a>
+        </aside>
         <div class="today-action-panel">
           <strong>まず何をしますか？ <span class="small">初めての方は「曲を登録する」から始められます</span></strong>
           <div class="today-action-grid">
@@ -7840,6 +7905,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <span class="tag orange">Home</span>
             <h3>トップボタン表示設定</h3>
             <p class="small">トップ画面に置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。</p>
+            <label class="check-row">
+              <input id="settingTopSongCatalogFeature" type="checkbox" checked>
+              トップ画面に「曲データ検索」を大きく固定表示する
+            </label>
+            <p class="small">初期設定では表示されます。非表示にしても、設定からいつでも戻せます。</p>
             <div class="top-shortcut-settings" id="topShortcutSettings"></div>
             <div class="top-shortcut-preview">
               <strong>現在トップ画面に表示中</strong>
@@ -8228,6 +8298,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <div><strong>複数曲をまとめてリクエスト</strong><span>「【歌手名】」の下へ曲名を1曲ずつ書くか、「曲名／歌手名」の順で貼り付けます。</span></div>
             <button class="btn primary" type="button" data-open-bulk-catalog-request>一括リクエストを開く</button>
           </div>
+          <div class="bulk-request-entry">
+            <div><strong>曲名を決めずに自由コメントでリクエスト</strong><span>「このアーティストの曲を増やしてほしい」など、曲名や読み方を入力せずに送れます。</span></div>
+          </div>
+          <form class="song-request-form" id="songGeneralRequestForm">
+            <label>店主があなたと分かる名前・ニックネーム<input id="songGeneralRequestRequester" maxlength="64" required autocomplete="name" placeholder="例：いつも窓側に座る○○"></label>
+            <label>自由リクエスト<textarea id="songGeneralRequestComment" maxlength="500" required rows="4" placeholder="例：ABBAの有名な曲をもう少し増やしてほしい"></textarea></label>
+            <button class="btn primary" id="submitSongGeneralRequest" type="submit">自由リクエストを送る</button>
+          </form>
+          <p class="shared-ranking-status" id="songGeneralRequestStatus" aria-live="polite"></p>
           <p class="single-request-heading">1曲だけリクエストする場合</p>
           <form class="song-request-form" id="songRequestForm">
             <label>店主があなたと分かる名前・ニックネーム<input id="songRequestRequester" maxlength="64" required autocomplete="name" placeholder="例：いつも窓側に座る○○"></label>
@@ -8273,8 +8352,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
             <h4 id="songCatalogDeviceTitle">曲データをこの端末に保存</h4>
-            <p class="small" data-song-catalog-copy="device-save">任意機能です。27,907曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
-            <p class="small"><strong>容量の目安：</strong>ダウンロード時の通信量は約1～4MB、端末へ保存した後は約6～10MBです。通信圧縮の有無やブラウザ・端末によって多少前後します。</p>
+            <p class="small" data-song-catalog-copy="device-save">任意機能です。35,533曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
+            <div class="song-catalog-capacity-guide" id="songCatalogStorageEstimate">
+              <strong>保存容量の目安：全35,533曲で約15MB</strong>
+              <span>スマホ写真（1枚約4MB）なら約4枚分、Yahoo! JAPANトップページ（画像込み約2MBと仮定）なら約7ページ分です。1GBの空き容量の約1.5%です。</span>
+            </div>
+            <p class="small">通信圧縮が使われる場合、ダウンロード通信量は約2～4MBが目安です。端末上ではブラウザの管理情報も含め約15～20MBになる場合があります。写真やWebページの容量は画質・広告・端末によって変わるため、比較値はおおよその目安です。</p>
             <p class="small">新しく承認されたリクエスト曲を取り込む時は「最新版を取得して上書き」を押してください。端末の空き容量不足やブラウザのデータ削除により消える場合があります。</p>
             <div class="song-catalog-device-actions">
               <button class="btn primary" id="downloadSongCatalog" type="button">全曲データをダウンロードして保存</button>
@@ -9139,10 +9222,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const submitSongRequest = document.getElementById("submitSongRequest");
     const songRequestStatus = document.getElementById("songRequestStatus");
     const songRequestList = document.getElementById("songRequestList");
+    const songGeneralRequestForm = document.getElementById("songGeneralRequestForm");
+    const songGeneralRequestRequester = document.getElementById("songGeneralRequestRequester");
+    const songGeneralRequestComment = document.getElementById("songGeneralRequestComment");
+    const submitSongGeneralRequest = document.getElementById("submitSongGeneralRequest");
+    const songGeneralRequestStatus = document.getElementById("songGeneralRequestStatus");
     try {
       const savedSongRequester = localStorage.getItem(songCorrectionRequesterStorageKey) || "";
       if (songRequestRequester) songRequestRequester.value = savedSongRequester;
       if (bulkSongRequestRequester) bulkSongRequestRequester.value = savedSongRequester;
+      if (songGeneralRequestRequester) songGeneralRequestRequester.value = savedSongRequester;
     } catch (error) {}
     const songCorrectionModal = document.getElementById("songCorrectionModal");
     const closeSongCorrectionModal = document.getElementById("closeSongCorrectionModal");
@@ -9280,6 +9369,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const topShortcutSettings = document.getElementById("topShortcutSettings");
     const topShortcutPreview = document.getElementById("topShortcutPreview");
     const topShortcutStatus = document.getElementById("topShortcutStatus");
+    const topSongCatalogFeature = document.getElementById("topSongCatalogFeature");
+    const settingTopSongCatalogFeature = document.getElementById("settingTopSongCatalogFeature");
     const settingFloatingNav = document.getElementById("settingFloatingNav");
     const floatingNavSettings = document.getElementById("floatingNavSettings");
     const floatingNavPreview = document.getElementById("floatingNavPreview");
@@ -9568,7 +9659,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const attrOriginals = new WeakMap();
     let currentLanguage = localStorage.getItem(languageStorageKey) || "ja";
     let isApplyingLanguage = false;
-    const initialSongCatalogTotal = 27907;
+    const initialSongCatalogTotal = 35533;
+    const songCatalogEstimatedBytesPerSong = 405;
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
 
@@ -9579,6 +9671,21 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         : `${count.toLocaleString("ja-JP")}曲`;
     }
 
+    function updateSongCatalogCapacityEstimate(total = songCatalogTotal, actualBytes = 0) {
+      const container = document.getElementById("songCatalogStorageEstimate");
+      if (!container) return;
+      const count = Math.max(1, Number(total) || initialSongCatalogTotal);
+      const bytes = Math.max(0, Number(actualBytes) || 0) || count * songCatalogEstimatedBytesPerSong;
+      const megabytes = Math.max(1, Math.round(bytes / 1000000));
+      const photoCount = Math.max(1, Math.round(megabytes / 4));
+      const yahooPageCount = Math.max(1, Math.round(megabytes / 2));
+      const gigabytePercent = Math.max(0.1, Math.round((megabytes / 1000) * 1000) / 10);
+      const formattedCount = count.toLocaleString(currentLanguage === "en" ? "en-US" : "ja-JP");
+      container.innerHTML = currentLanguage === "en"
+        ? `<strong>Storage estimate: about ${megabytes} MB for all ${formattedCount} songs</strong><span>That is roughly ${photoCount} smartphone photos at 4 MB each, ${yahooPageCount} Yahoo! JAPAN home-page loads at an assumed 2 MB each, or ${gigabytePercent}% of 1 GB of free space.</span>`
+        : `<strong>保存容量の目安：全${formattedCount}曲で約${megabytes}MB</strong><span>スマホ写真（1枚約4MB）なら約${photoCount}枚分、Yahoo! JAPANトップページ（画像込み約2MBと仮定）なら約${yahooPageCount}ページ分です。1GBの空き容量の約${gigabytePercent}%です。</span>`;
+    }
+
     function updateSongCatalogTotal(total) {
       const parsed = Number(total);
       if (Number.isFinite(parsed) && parsed > 0) songCatalogTotal = Math.floor(parsed);
@@ -9587,12 +9694,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         "reading-history": `${label} now include title and artist readings, supporting kana search and Japanese syllabary order. Approved requests are also added to the regular catalog.`,
         "catalog-history": `Added Japanese and international song lists, search across ${label}, saving to My Song List, and requests for missing songs.`,
         "search-heading": `Choose an Artist or Search ${label}`,
-        "device-save": `Optional. Save ${label} on this device for faster catalog searches and display without waiting for the server. This is separate from My Song List.`
+        "device-save": `Optional. Save ${label} on this device for faster catalog searches and display without waiting for the server. This is separate from My Song List.`,
+        "top-feature-title": `Search ${label} for the song you want`,
+        "top-feature-description": "Search Japanese and international songs by title or artist, then add them to My Song List or a setlist."
       } : {
         "reading-history": `${label}の曲名・歌手名へ読みを追加し、読み仮名検索と50音順に対応しました。追加リクエスト曲も通常の曲データへ反映します。`,
         "catalog-history": `国内曲・洋楽曲と${label}の検索、マイ曲リストへの登録、見つからない曲の追加リクエストに対応しました。`,
         "search-heading": `歌手一覧から選ぶ・${label}から検索`,
-        "device-save": `任意機能です。${label}を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。`
+        "device-save": `任意機能です。${label}を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。`,
+        "top-feature-title": `${label}から、歌いたい曲をすぐ検索`,
+        "top-feature-description": "邦楽・洋楽の曲名や歌手名から探して、マイ曲リストやセットリストへ追加できます。"
       };
       document.querySelectorAll("[data-song-catalog-copy]").forEach((element) => {
         const copy = copies[element.dataset.songCatalogCopy];
@@ -9605,6 +9716,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           ? `Search ${label} by title, artist, or alias`
           : `${label}から曲名・歌手名・通称を検索`;
       }
+      updateSongCatalogCapacityEstimate(songCatalogTotal, deviceSongCatalogMeta && deviceSongCatalogMeta.bytes);
     }
 
     async function refreshSongCatalogTotal(forceRefresh = false) {
@@ -10016,6 +10128,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "トップ表示設定": "Home Button Settings",
       "上部ボタン表示設定": "Top Button Settings",
       "トップボタン表示設定": "Home Button Settings",
+      "トップ画面に「曲データ検索」を大きく固定表示する": "Show the large Song Catalog search feature on the home screen",
+      "初期設定では表示されます。非表示にしても、設定からいつでも戻せます。": "Shown by default. If hidden, you can restore it anytime in Settings.",
+      "曲データを検索する": "Search Song Catalog",
       "トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。": "Choose which buttons appear on the home screen. Showing only what you often use helps you get there quickly.",
       "上部ナビに置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。": "Choose which items appear in the top navigation. Showing only the pages you often use helps you get there quickly.",
       "トップ画面に置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。": "Choose which items appear on the home screen. Showing only the pages you often use helps you get there quickly.",
@@ -10687,6 +10802,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "メモやLINEの曲一覧を貼り付け、確認してから曲データへ送信します。": "Paste a song list from notes or LINE, review it, then send it to the shared catalog.",
       "「【歌手名】」の下へ曲名を1曲ずつ書くか、「曲名／歌手名」の順で貼り付けます。": "Write one song per line under 【Artist】, or paste each line in Song / Artist order.",
       "一括リクエストを開く": "Open Bulk Request",
+      "曲名を決めずに自由コメントでリクエスト": "Send a Free-Form Request Without Choosing a Song",
+      "「このアーティストの曲を増やしてほしい」など、曲名や読み方を入力せずに送れます。": "Send requests such as “Please add more songs by this artist” without entering a title or readings.",
+      "自由リクエスト": "Free-Form Request",
+      "例：ABBAの有名な曲をもう少し増やしてほしい": "Example: Please add more well-known ABBA songs",
+      "自由リクエストを送る": "Send Free-Form Request",
+      "自由リクエストを入力してください。": "Enter your free-form request.",
+      "自由リクエストを送信しました。": "Your free-form request was sent.",
       "1曲だけリクエストする場合": "To Request One Song",
       "一括入力の書き方": "Bulk Input Format",
       "現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。": "This screen sends bulk requests to the shared catalog. Only the song title and artist are sent; no key is required.",
@@ -10998,6 +11120,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     if (settings.enableSongOwners === undefined) settings.enableSongOwners = false;
     if (!Array.isArray(settings.songOwners)) settings.songOwners = [];
     if (!Array.isArray(settings.topShortcuts)) settings.topShortcuts = [...defaultTopShortcutIds];
+    if (settings.showTopSongCatalogFeature === undefined) settings.showTopSongCatalogFeature = true;
     if (settings.showFloatingNav === undefined) settings.showFloatingNav = true;
     if (settings.floatingNavCollapsed === undefined) settings.floatingNavCollapsed = false;
     if (!Array.isArray(settings.floatingNavItems)) settings.floatingNavItems = [...defaultFloatingNavIds];
@@ -13075,6 +13198,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       settingSavedSetlists.checked = Boolean(settings.showSavedSetlists);
       settingLiveMode.checked = Boolean(settings.showLiveMode);
       settingOfflineMode.checked = Boolean(settings.enableOfflineMode);
+      settingTopSongCatalogFeature.checked = Boolean(settings.showTopSongCatalogFeature);
+      topSongCatalogFeature.hidden = !settings.showTopSongCatalogFeature;
       applyFontSizeSetting();
       document.querySelectorAll("[data-setlist-entry]").forEach((element) => {
         element.classList.toggle("feature-hidden", !settings.showSavedSetlists);
@@ -14214,12 +14339,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         deviceSongCatalogStatus.textContent = currentLanguage === "en"
           ? "Not saved on this device. Song data will be loaded from the server."
           : "この端末にはまだ保存していません。曲データはサーバーから読み込みます。";
+        updateSongCatalogCapacityEstimate(songCatalogTotal);
         return;
       }
       const savedAt = formatSongCatalogSavedAt(deviceSongCatalogMeta.savedAt);
+      const savedMegabytes = deviceSongCatalogMeta.bytes
+        ? ` / ${Math.max(1, Math.round(deviceSongCatalogMeta.bytes / 1000000))} MB`
+        : "";
       deviceSongCatalogStatus.textContent = currentLanguage === "en"
-        ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs / Updated ${savedAt}`
-        : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲／最終更新 ${savedAt}`;
+        ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs${savedMegabytes} / Updated ${savedAt}`
+        : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}`;
+      updateSongCatalogCapacityEstimate(deviceSongCatalog.length, deviceSongCatalogMeta.bytes);
     }
 
     async function loadDeviceSongCatalogFromStorage() {
@@ -14232,6 +14362,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             deviceSongCatalogMeta = null;
           } else {
             const json = record.payload instanceof Blob ? await record.payload.text() : String(record.payload || "");
+            const storedBytes = record.payload instanceof Blob ? record.payload.size : new Blob([json]).size;
             const payload = JSON.parse(json);
             deviceSongCatalog = Array.isArray(payload.songs)
               ? payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist)
@@ -14239,7 +14370,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             deviceSongCatalogMeta = deviceSongCatalog.length ? {
               savedAt: record.savedAt || payload.generated_at || "",
               version: record.version || payload.version || "",
-              count: deviceSongCatalog.length
+              count: deviceSongCatalog.length,
+              bytes: Number(record.bytes) || storedBytes
             } : null;
           }
         } catch (error) {
@@ -14271,10 +14403,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         payload: blob,
         savedAt,
         version: storedPayload.version,
-        count: songsToSave.length
+        count: songsToSave.length,
+        bytes: blob.size
       }));
       deviceSongCatalog = songsToSave;
-      deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length };
+      deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
       deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
       popularArtistSongCache.clear();
       popularArtistSongItems = [];
@@ -14758,6 +14891,42 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         songRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
       } finally {
         submitSongRequest.disabled = false;
+      }
+    }
+
+    async function submitSongGeneralRequestToServer() {
+      const requesterName = songGeneralRequestRequester.value.trim();
+      const comment = songGeneralRequestComment.value.trim();
+      if (!requesterName) {
+        songGeneralRequestStatus.textContent = uiText("店主があなたと分かる名前・ニックネームを入力してください。");
+        songGeneralRequestRequester.focus();
+        return;
+      }
+      if (!comment) {
+        songGeneralRequestStatus.textContent = uiText("自由リクエストを入力してください。");
+        songGeneralRequestComment.focus();
+        return;
+      }
+      submitSongGeneralRequest.disabled = true;
+      songGeneralRequestStatus.textContent = uiText("送信しています。");
+      try {
+        const response = await fetch(sharedRankingApiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "song_general_request", requester_name: requesterName, comment, event_id: createId() })
+        });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("general song request unavailable");
+        localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
+        if (songRequestRequester) songRequestRequester.value = requesterName;
+        if (bulkSongRequestRequester) bulkSongRequestRequester.value = requesterName;
+        songGeneralRequestComment.value = "";
+        songGeneralRequestStatus.textContent = uiText("自由リクエストを送信しました。");
+      } catch (error) {
+        console.warn(error);
+        songGeneralRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
+      } finally {
+        submitSongGeneralRequest.disabled = false;
       }
     }
 
@@ -16016,6 +16185,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     songRequestForm.addEventListener("submit", (event) => {
       event.preventDefault();
       submitSongRequestToServer();
+    });
+    songGeneralRequestForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitSongGeneralRequestToServer();
     });
     songCorrectionForm.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -17643,6 +17816,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     });
 
     topShortcutSettings.addEventListener("change", handleTopShortcutChange);
+    settingTopSongCatalogFeature.addEventListener("change", () => {
+      settings.showTopSongCatalogFeature = settingTopSongCatalogFeature.checked;
+      saveSettings();
+      applySettings();
+      topShortcutStatus.textContent = uiText("トップ画面に反映しました。");
+      refreshLanguageSoon();
+    });
     settingFloatingNav.addEventListener("change", () => {
       settings.showFloatingNav = settingFloatingNav.checked;
       saveSettings();
