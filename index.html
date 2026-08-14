@@ -14490,7 +14490,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function popularExactIndexLabels() {
-      return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", "0–9", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
+      return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", ..."0123456789", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
     }
 
     function popularExactIndexGroup(item, mode = "artist") {
@@ -14498,14 +14498,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? item && item.title || ""
         : item && item.artist || "").trim();
       const visibleFirst = visibleName.normalize("NFKC").charAt(0).toUpperCase();
-      if (/^[0-9]$/.test(visibleFirst)) return "0–9";
+      if (/^[0-9]$/.test(visibleFirst)) return visibleFirst;
       if (/^[A-Z]$/.test(visibleFirst)) return visibleFirst;
       const source = String(mode === "title"
         ? item && (item.title_reading || item.title) || ""
         : item && (item.artist_reading || item.artist) || "").trim();
       const rawFirst = normalizeKana(source).charAt(0);
       const rawLatin = rawFirst.toUpperCase();
-      if (/^[0-9]$/.test(rawFirst)) return "0–9";
+      if (/^[0-9]$/.test(rawFirst)) return rawFirst;
       if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
       let first = mode === "artist" && item && item.artist_index
         ? normalizeKana(item.artist_index).charAt(0)
@@ -14542,7 +14542,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         { label: "や行", labels: [..."やゆよ"] },
         { label: "ら行", labels: [..."らりるれろ"] },
         { label: "わ行", labels: ["わ", "を", "ん", "その他"] },
-        { label: "0–9", labels: ["0–9"] },
+        { label: "0–9", labels: [..."0123456789"] },
         { label: "A–Z", labels: [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"] }
       ];
       const menuHtml = indexMenus.map((menu) => {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "music-saloon-drum-v20260814-76";
+const CACHE_NAME = "music-saloon-drum-v20260814-77";
 const APP_SHELL = [
   "./",
   "./index.html",
