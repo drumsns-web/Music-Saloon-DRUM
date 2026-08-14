@@ -4810,11 +4810,41 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       gap: 10px;
+      margin: 16px 0;
+      padding: 14px;
+      border: 3px solid var(--orange);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(var(--theme-accent-rgb), .2), rgba(255, 255, 255, .96));
+      box-shadow: 0 10px 24px rgba(var(--theme-accent-rgb), .2);
+    }
+
+    .popular-song-search-label {
+      grid-column: 1 / -1;
+      display: block;
+      color: var(--forest);
+      font-size: 19px;
+      font-weight: 950;
+      line-height: 1.35;
     }
 
     .popular-song-search input {
-      min-height: 52px;
+      min-height: 56px;
+      border: 2px solid var(--forest);
+      background: #fff;
+      font-size: 16px;
       font-weight: 800;
+    }
+
+    .popular-song-search input:focus {
+      border-color: var(--orange-dark);
+      outline: 3px solid rgba(var(--theme-accent-rgb), .28);
+      outline-offset: 2px;
+    }
+
+    .popular-song-search .btn {
+      min-width: 120px;
+      font-size: 16px;
+      font-weight: 950;
     }
 
     .popular-song-list {
@@ -6773,10 +6803,10 @@
         </details>
         <aside class="top-song-catalog-feature" id="topSongCatalogFeature" aria-labelledby="topSongCatalogFeatureTitle">
           <div>
-            <strong id="topSongCatalogFeatureTitle" data-song-catalog-copy="top-feature-title">35,505曲から、歌いたい曲をすぐ検索</strong>
+            <strong id="topSongCatalogFeatureTitle" data-song-catalog-copy="top-feature-title">35,680曲から、歌いたい曲をすぐ検索</strong>
             <span data-song-catalog-copy="top-feature-description">邦楽・洋楽の曲名や歌手名から探して、マイ曲リストやセットリストへ追加できます。</span>
           </div>
-          <a class="btn primary" href="#popular-songs">曲データを検索する</a>
+          <a class="btn primary" href="#popular-songs" data-open-song-data-register>曲データを検索する</a>
         </aside>
         <div class="today-action-panel">
           <strong>まず何をしますか？ <span class="small">初めての方は「曲を登録する」から始められます</span></strong>
@@ -8337,10 +8367,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <button class="btn ghost" type="button" data-popular-category="western">洋楽曲リスト</button>
               <button class="btn ghost" type="button" data-popular-category="catalog">全曲から検索</button>
             </div>
-            <form class="popular-song-search" id="popularSongSearchForm">
-              <input id="popularSongSearch" type="search" placeholder="曲名・歌手名を入力" autocomplete="off">
-              <button class="btn primary" type="submit">検索する</button>
-            </form>
             <div class="popular-song-sort" id="popularSongSort">
               <button class="btn is-active" type="button" data-popular-sort="artist">歌手一覧（曲は展開）</button>
               <button class="btn ghost" type="button" data-popular-sort="title">曲名で見る</button>
@@ -8352,9 +8378,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
             <h4 id="songCatalogDeviceTitle">曲データをこの端末に保存</h4>
-            <p class="small" data-song-catalog-copy="device-save">任意機能です。35,505曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
+            <p class="small" data-song-catalog-copy="device-save">任意機能です。35,680曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
             <div class="song-catalog-capacity-guide" id="songCatalogStorageEstimate">
-              <strong>保存容量の目安：全35,505曲で約15MB</strong>
+              <strong>保存容量の目安：全35,680曲で約15MB</strong>
               <span>スマホ写真（1枚約4MB）なら約4枚分、Yahoo! JAPANトップページ（画像込み約2MBと仮定）なら約7ページ分です。1GBの空き容量の約1.5%です。</span>
             </div>
             <p class="small">通信圧縮が使われる場合、ダウンロード通信量は約2～4MBが目安です。端末上ではブラウザの管理情報も含め約15～20MBになる場合があります。写真やWebページの容量は画質・広告・端末によって変わるため、比較値はおおよその目安です。</p>
@@ -8366,6 +8392,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             </div>
             <span class="song-catalog-device-status" id="deviceSongCatalogStatus" aria-live="polite">端末への保存状況を確認しています。</span>
           </aside>
+          <form class="popular-song-search" id="popularSongSearchForm" role="search">
+            <label class="popular-song-search-label" for="popularSongSearch">🔎 曲名・歌手名を検索</label>
+            <input id="popularSongSearch" type="search" placeholder="曲名・歌手名を入力してください" autocomplete="off">
+            <button class="btn primary" type="submit">検索する</button>
+          </form>
           <div class="song-index-jump auxiliary-index-jump" id="popularSongIndexJump" aria-label="文字ジャンプ"></div>
           <div id="popularSongList"></div>
         </div>
@@ -9659,7 +9690,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const attrOriginals = new WeakMap();
     let currentLanguage = localStorage.getItem(languageStorageKey) || "ja";
     let isApplyingLanguage = false;
-    const initialSongCatalogTotal = 35505;
+    const initialSongCatalogTotal = 35680;
     const songCatalogEstimatedBytesPerSong = 405;
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
@@ -10136,6 +10167,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "トップ画面に「曲データ検索」を大きく固定表示する": "Show the large Song Catalog search feature on the home screen",
       "初期設定では表示されます。非表示にしても、設定からいつでも戻せます。": "Shown by default. If hidden, you can restore it anytime in Settings.",
       "曲データを検索する": "Search Song Catalog",
+      "🔎 曲名・歌手名を検索": "🔎 Search by Song Title or Artist",
+      "曲名・歌手名を入力してください": "Enter a song title or artist",
+      "検索する": "Search",
       "トップに置きたい項目を選べます。よく使うものだけ表示すると、すぐ目的のページへ移動できます。": "Choose which buttons appear on the home screen. Showing only what you often use helps you get there quickly.",
       "上部ナビに置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。": "Choose which items appear in the top navigation. Showing only the pages you often use helps you get there quickly.",
       "トップ画面に置きたい項目を選べます。よく使うページだけ表示すると、すぐ目的のページへ移動できます。": "Choose which items appear on the home screen. Showing only the pages you often use helps you get there quickly.",
@@ -12333,6 +12367,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         .replace(/[ァ-ン]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 96));
     }
 
+    function normalizeCatalogSearchText(value) {
+      return normalizeKana(String(value || "").normalize("NFKC"))
+        .replace(/[\s\u3000\p{P}\p{S}]+/gu, "");
+    }
+
     function normalizeSongDuplicateText(value) {
       return normalizeKana(String(value || "").normalize("NFKC"))
         .replace(/[\s\u3000]+/g, "")
@@ -14456,7 +14495,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function filterSavedSongCatalog(query, category, sortMode, limit = 5000) {
-      const queryKey = normalizeKana(query);
+      const queryKey = normalizeCatalogSearchText(query);
       const artistCounts = new Map();
       deviceSongCatalog.forEach((item) => {
         const key = normalizeKana(item.artist);
@@ -14467,7 +14506,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         if (category === "western" && item.popular_western_rank < 1) return false;
         if (category === "catalog" && !queryKey) return false;
         if (queryKey) {
-          const haystack = normalizeKana(`${item.title}${item.artist}${item.title_reading}${item.artist_reading}${item.search_keywords}`);
+          const haystack = normalizeCatalogSearchText(`${item.title}${item.artist}${item.title_reading}${item.artist_reading}${item.search_keywords}`);
           if (!haystack.includes(queryKey)) return false;
         }
         return true;
@@ -14596,13 +14635,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const items = popularSongItems;
       if (popularSongSortMode === "artist") {
         const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
+        const indexLabels = popularExactIndexLabels();
         items.sort((a, b) => {
           const aIndex = popularExactIndexGroup(a, "artist");
           const bIndex = popularExactIndexGroup(b, "artist");
-          const sectionOrder = (index) => /^[A-Z]$/.test(index) ? 1 : index === "その他" ? 2 : 0;
           const aName = String(/^[A-Z]$/.test(aIndex) ? (a.artist || "") : (a.artist_reading || a.artist || "")).normalize("NFKC");
           const bName = String(/^[A-Z]$/.test(bIndex) ? (b.artist || "") : (b.artist_reading || b.artist || "")).normalize("NFKC");
-          return sectionOrder(aIndex) - sectionOrder(bIndex)
+          return indexLabels.indexOf(aIndex) - indexLabels.indexOf(bIndex)
             || collator.compare(aName, bName)
             || collator.compare(a.artist || "", b.artist || "")
             || collator.compare(a.title_reading || a.title || "", b.title_reading || b.title || "");
@@ -16984,8 +17023,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (songDataRegisterButton) {
         showView("popular-songs");
         window.setTimeout(() => {
-          const searchArea = document.getElementById("popular-search-area");
-          if (searchArea) searchArea.scrollIntoView({ behavior: "smooth", block: "start" });
+          if (popularSongSearchForm) popularSongSearchForm.scrollIntoView({ behavior: "smooth", block: "center" });
           if (popularSongSearch) popularSongSearch.focus({ preventScroll: true });
         }, 150);
       }
