@@ -3460,6 +3460,58 @@
       white-space: nowrap;
     }
 
+    .popular-index-free-search {
+      display: grid;
+      grid-template-columns: auto minmax(120px, 1fr) auto;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .popular-index-search-scope {
+      display: inline-grid;
+      place-items: center;
+      min-height: 38px;
+      padding: 5px 10px;
+      border-radius: 9px;
+      background: var(--forest);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .popular-index-free-search input {
+      width: 100%;
+      min-width: 0;
+      min-height: 40px;
+      padding: 7px 11px;
+      border: 2px solid var(--forest);
+      border-radius: 9px;
+      background: #fff;
+      color: var(--forest-2);
+      font: inherit;
+      font-weight: 800;
+    }
+
+    .popular-index-free-search input:focus {
+      outline: 3px solid rgba(var(--theme-accent-rgb), .28);
+      border-color: var(--orange-dark);
+    }
+
+    .popular-index-free-search button {
+      min-height: 40px;
+      padding: 7px 14px;
+      border: 1px solid var(--orange-dark);
+      border-radius: 9px;
+      background: var(--orange);
+      color: var(--forest-2);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
     @media (max-width: 640px) {
       .popular-index-mode-switch {
         flex: 1 1 150px;
@@ -3471,6 +3523,18 @@
 
       .popular-index-request {
         flex: 1 1 100%;
+      }
+
+      .popular-index-free-search {
+        grid-template-columns: auto minmax(80px, 1fr) auto;
+      }
+
+      .popular-index-search-scope {
+        padding-inline: 7px;
+      }
+
+      .popular-index-free-search button {
+        padding-inline: 10px;
       }
 
     }
@@ -14735,6 +14799,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const enabled = menu.labels.some((label) => available.has(label));
         return `<details class="popular-index-menu${enabled ? "" : " is-disabled"}"><summary>${escapeText(menu.label)}</summary><div class="popular-index-popover">${buttonHtml(menu.labels)}</div></details>`;
       }).join("");
+      const scopeLabel = ({
+        all: currentLanguage === "en" ? "All" : "すべて",
+        artist: currentLanguage === "en" ? "Artist" : "歌手名",
+        title: currentLanguage === "en" ? "Song" : "曲名",
+        keyword: currentLanguage === "en" ? "Keyword" : "キーワード"
+      }[popularSongSearchScopeMode]) || (currentLanguage === "en" ? "All" : "すべて");
+      const floatingSearchValue = popularSongSearch ? popularSongSearch.value : "";
       popularSongIndexJump.innerHTML = `
         <div class="popular-index-toolbar-head">
           <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
@@ -14743,9 +14814,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <button class="btn primary popular-index-request" type="button" data-open-song-request>${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</button>
         </div>
+        <form class="popular-index-free-search" data-popular-index-search role="search">
+          <span class="popular-index-search-scope">${escapeText(scopeLabel)}</span>
+          <input type="search" data-popular-index-search-input value="${escapeText(floatingSearchValue)}" aria-label="${currentLanguage === "en" ? "Search songs" : "曲名・歌手名をフリーワード検索"}" placeholder="${currentLanguage === "en" ? "Enter a search term" : "ここからフリーワード検索"}" autocomplete="off">
+          <button type="submit">${currentLanguage === "en" ? "Search" : "検索"}</button>
+        </form>
         <div class="popular-index-groups">${menuHtml}</div>
       `;
-      popularSongIndexJump.hidden = !items || !items.length;
+      popularSongIndexJump.hidden = false;
     }
 
     function popularSongRowHtml(item, index, source = "popular") {
@@ -16326,6 +16402,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     });
     popularSongSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
+      loadPopularSongs();
+    });
+    popularSongIndexJump.addEventListener("submit", (event) => {
+      const form = event.target.closest("[data-popular-index-search]");
+      if (!form) return;
+      event.preventDefault();
+      const input = form.querySelector("[data-popular-index-search-input]");
+      popularSongSearch.value = input ? input.value : "";
       loadPopularSongs();
     });
     refreshPopularSongs.addEventListener("click", async () => {
