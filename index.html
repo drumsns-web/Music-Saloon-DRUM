@@ -14370,18 +14370,30 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const transaction = database.transaction(songCatalogStoreName, mode);
         const store = transaction.objectStore(songCatalogStoreName);
         let request;
+        let requestResult;
+        let settled = false;
+        const fail = (error) => {
+          if (settled) return;
+          settled = true;
+          database.close();
+          reject(error || new Error("Song catalog storage transaction failed"));
+        };
         try {
           request = callback(store);
         } catch (error) {
-          database.close();
-          reject(error);
+          fail(error);
           return;
         }
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error || new Error("Song catalog storage request failed"));
-        transaction.oncomplete = () => database.close();
-        transaction.onerror = () => database.close();
-        transaction.onabort = () => database.close();
+        request.onsuccess = () => { requestResult = request.result; };
+        request.onerror = () => fail(request.error || new Error("Song catalog storage request failed"));
+        transaction.oncomplete = () => {
+          if (settled) return;
+          settled = true;
+          database.close();
+          resolve(requestResult);
+        };
+        transaction.onerror = () => fail(transaction.error || request.error);
+        transaction.onabort = () => fail(transaction.error || request.error || new Error("Song catalog storage transaction was aborted"));
       }));
     }
 
@@ -14468,6 +14480,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist)
         : [];
       if (!songsToSave.length) throw new Error("Downloaded catalog is empty");
+      const expectedCount = Math.max(0, Number(payload && payload.count) || 0);
+      if (expectedCount && songsToSave.length !== expectedCount) {
+        const incompleteError = new Error(`Incomplete song catalog: ${songsToSave.length}/${expectedCount}`);
+        incompleteError.code = "CATALOG_INCOMPLETE";
+        throw incompleteError;
+      }
       const savedAt = new Date().toISOString();
       const storedPayload = {
         version: String(payload.version || ""),
@@ -14475,6 +14493,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         songs: songsToSave
       };
       const blob = new Blob([JSON.stringify(storedPayload)], { type: "application/json" });
+      if (navigator.storage && typeof navigator.storage.estimate === "function") {
+        const estimate = await navigator.storage.estimate().catch(() => null);
+        const availableBytes = estimate && Number(estimate.quota) - Number(estimate.usage);
+        if (Number.isFinite(availableBytes) && availableBytes > 0 && availableBytes < blob.size * 1.25) {
+          const quotaError = new Error("Not enough browser storage for the full song catalog");
+          quotaError.name = "QuotaExceededError";
+          throw quotaError;
+        }
+      }
       await songCatalogDbRequest("readwrite", (store) => store.put({
         id: songCatalogRecordId,
         payload: blob,
@@ -14483,6 +14510,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         count: songsToSave.length,
         bytes: blob.size
       }));
+      const verifiedRecord = await songCatalogDbRequest("readonly", (store) => store.get(songCatalogRecordId));
+      if (!verifiedRecord || Number(verifiedRecord.count) !== songsToSave.length || Number(verifiedRecord.bytes) !== blob.size) {
+        const verificationError = new Error("Saved song catalog verification failed");
+        verificationError.code = "CATALOG_VERIFY_FAILED";
+        throw verificationError;
+      }
       deviceSongCatalog = songsToSave;
       deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
       deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
@@ -14495,6 +14528,37 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       updateSongCatalogTotal(deviceSongCatalog.length);
     }
 
+    async function fetchSongCatalogChunk(offset, limit) {
+      let lastError;
+      for (let attempt = 0; attempt < 3; attempt += 1) {
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), 45000);
+        try {
+          const params = new URLSearchParams({
+            action: "song_catalog_download",
+            offset: String(offset),
+            limit: String(limit),
+            refresh: String(Date.now())
+          });
+          const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, {
+            cache: "no-store",
+            signal: controller.signal
+          });
+          const payload = await response.json();
+          if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) {
+            throw new Error("Song catalog chunk download failed");
+          }
+          return payload;
+        } catch (error) {
+          lastError = error;
+          if (attempt < 2) await new Promise((resolve) => window.setTimeout(resolve, 700 * (attempt + 1)));
+        } finally {
+          window.clearTimeout(timeoutId);
+        }
+      }
+      throw lastError || new Error("Song catalog chunk download failed");
+    }
+
     async function downloadLatestSongCatalog() {
       downloadSongCatalog.disabled = true;
       updateSavedSongCatalog.disabled = true;
@@ -14502,11 +14566,46 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? "Downloading and saving all song data…"
         : "全曲データをダウンロードして端末へ保存しています…";
       try {
-        const params = new URLSearchParams({ action: "song_catalog_download", refresh: String(Date.now()) });
-        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
-        const payload = await response.json();
-        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("Song catalog download failed");
-        await saveDownloadedSongCatalog(payload);
+        const chunkSize = 1500;
+        const downloadedSongs = [];
+        let offset = 0;
+        let expectedCount = 0;
+        let expectedVersion = "";
+        let generatedAt = "";
+        while (true) {
+          const payload = await fetchSongCatalogChunk(offset, chunkSize);
+          const payloadCount = Math.max(0, Number(payload.count) || 0);
+          const payloadVersion = String(payload.version || "");
+          if (!expectedCount) {
+            expectedCount = payloadCount || payload.songs.length;
+            expectedVersion = payloadVersion;
+            generatedAt = String(payload.generated_at || "");
+          } else if (payloadCount !== expectedCount || (expectedVersion && payloadVersion && payloadVersion !== expectedVersion)) {
+            const changedError = new Error("Song catalog changed during download");
+            changedError.code = "CATALOG_CHANGED";
+            throw changedError;
+          }
+          downloadedSongs.push(...payload.songs);
+          const progressCount = Math.min(downloadedSongs.length, expectedCount);
+          deviceSongCatalogStatus.textContent = currentLanguage === "en"
+            ? `Downloading song data… ${progressCount.toLocaleString()} / ${expectedCount.toLocaleString()}`
+            : `全曲データを取得中… ${progressCount.toLocaleString()}／${expectedCount.toLocaleString()}曲`;
+          const isLegacyResponse = typeof payload.complete !== "boolean";
+          if (isLegacyResponse || payload.complete) break;
+          const nextOffset = Number(payload.next_offset);
+          if (!Number.isFinite(nextOffset) || nextOffset <= offset) {
+            const incompleteError = new Error("Invalid next offset in song catalog download");
+            incompleteError.code = "CATALOG_INCOMPLETE";
+            throw incompleteError;
+          }
+          offset = nextOffset;
+        }
+        await saveDownloadedSongCatalog({
+          version: expectedVersion,
+          generated_at: generatedAt,
+          count: expectedCount,
+          songs: downloadedSongs
+        });
         deviceSongCatalogStatus.textContent = currentLanguage === "en"
           ? `Saved ${deviceSongCatalog.length.toLocaleString()} songs on this device.`
           : `最新版の${deviceSongCatalog.length.toLocaleString()}曲をこの端末へ保存しました。`;
@@ -14514,9 +14613,23 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       } catch (error) {
         console.warn(error);
         updateDeviceSongCatalogStatus();
-        deviceSongCatalogStatus.textContent = currentLanguage === "en"
-          ? "Could not save the song data. Check your connection and free storage, then try again."
-          : "曲データを保存できませんでした。通信状態と端末の空き容量を確認して、もう一度お試しください。";
+        if (error && error.name === "QuotaExceededError") {
+          deviceSongCatalogStatus.textContent = currentLanguage === "en"
+            ? "Not enough browser storage. Free at least 25 MB or delete old browser data, then try again."
+            : "ブラウザの保存容量が不足しています。25MB以上の空きを確保するか、古いブラウザデータを整理して再度お試しください。";
+        } else if (error && error.code === "CATALOG_CHANGED") {
+          deviceSongCatalogStatus.textContent = currentLanguage === "en"
+            ? "The song catalog was updated during the download. Please try once more."
+            : "ダウンロード中に曲データが更新されました。もう一度押すと最新版を取得できます。";
+        } else if (error && (error.code === "CATALOG_INCOMPLETE" || error.code === "CATALOG_VERIFY_FAILED")) {
+          deviceSongCatalogStatus.textContent = currentLanguage === "en"
+            ? "The full catalog could not be verified, so incomplete data was not activated. Please try again."
+            : "全曲分を確認できなかったため、不完全なデータは使用していません。もう一度お試しください。";
+        } else {
+          deviceSongCatalogStatus.textContent = currentLanguage === "en"
+            ? "The download was interrupted. Check your connection and try again; each section is retried automatically."
+            : "ダウンロードが途中で止まりました。通信状態を確認して再度お試しください。分割データは自動で再試行します。";
+        }
       }
     }
 
@@ -14579,9 +14692,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const rawLatin = rawFirst.toUpperCase();
       if (/^[0-9]$/.test(rawFirst)) return rawFirst;
       if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
-      let first = mode === "artist" && item && item.artist_index
+      const storedIndexFirst = mode === "artist" && item && item.artist_index
         ? normalizeKana(item.artist_index).charAt(0)
-        : rawFirst;
+        : "";
+      let first = /^[ぁ-ん]$/.test(rawFirst) ? rawFirst : (storedIndexFirst || rawFirst);
       const latin = first.toUpperCase();
       if (/^[A-Z]$/.test(latin)) return latin;
       const kanaBase = {
