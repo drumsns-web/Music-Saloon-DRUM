@@ -9778,6 +9778,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const songCatalogEstimatedBytesPerSong = 405;
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
+    let songCatalogVersion = "";
 
     function songCatalogCountLabel(total = songCatalogTotal) {
       const count = Math.max(1, Number(total) || initialSongCatalogTotal);
@@ -9848,6 +9849,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song catalog count unavailable");
         updateSongCatalogTotal(payload.count);
+        songCatalogVersion = String(payload.version || "");
         songCatalogTotalLoaded = true;
       } catch (error) {
         console.warn(error);
@@ -14411,6 +14413,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const songCatalogDbName = "music-saloon-drum-song-catalog";
     const songCatalogStoreName = "catalog";
     const songCatalogRecordId = "full-catalog";
+    const songCatalogStorageSchema = 2;
 
     function openSongCatalogDatabase() {
       return new Promise((resolve, reject) => {
@@ -14489,7 +14492,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const savedMegabytes = deviceSongCatalogMeta.bytes
         ? ` / ${Math.max(1, Math.round(deviceSongCatalogMeta.bytes / 1000000))} MB`
         : "";
-      const updateAvailable = songCatalogTotalLoaded && songCatalogTotal !== deviceSongCatalog.length;
+      const savedSchemaIsCurrent = Number(deviceSongCatalogMeta.schema || 0) >= songCatalogStorageSchema;
+      const savedVersionIsCurrent = !songCatalogVersion || String(deviceSongCatalogMeta.version || "") === songCatalogVersion;
+      const updateAvailable = !savedSchemaIsCurrent || (songCatalogTotalLoaded && (songCatalogTotal !== deviceSongCatalog.length || !savedVersionIsCurrent));
       const updateNote = updateAvailable
         ? (currentLanguage === "en"
           ? ` / Latest catalog: ${songCatalogTotal.toLocaleString()} songs. Please update the saved copy.`
@@ -14498,7 +14503,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       deviceSongCatalogStatus.textContent = currentLanguage === "en"
         ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs${savedMegabytes} / Updated ${savedAt}${updateNote}`
         : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}${updateNote}`;
-      const savedBytesForCurrentCatalog = deviceSongCatalog.length === songCatalogTotal ? deviceSongCatalogMeta.bytes : 0;
+      const savedBytesForCurrentCatalog = !updateAvailable && deviceSongCatalog.length === songCatalogTotal ? deviceSongCatalogMeta.bytes : 0;
       updateSongCatalogCapacityEstimate(songCatalogTotal, savedBytesForCurrentCatalog);
     }
 
@@ -14520,6 +14525,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             deviceSongCatalogMeta = deviceSongCatalog.length ? {
               savedAt: record.savedAt || payload.generated_at || "",
               version: record.version || payload.version || "",
+              schema: Number(record.schema || payload.schema || 0),
               count: deviceSongCatalog.length,
               bytes: Number(record.bytes) || storedBytes
             } : null;
@@ -14537,7 +14543,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
 
     function canUseSavedSongCatalog() {
       if (!deviceSongCatalog.length) return false;
-      return !songCatalogTotalLoaded || deviceSongCatalog.length === songCatalogTotal;
+      if (!deviceSongCatalogMeta || Number(deviceSongCatalogMeta.schema || 0) < songCatalogStorageSchema) return false;
+      if (!songCatalogTotalLoaded) return true;
+      if (deviceSongCatalog.length !== songCatalogTotal) return false;
+      return !songCatalogVersion || String(deviceSongCatalogMeta.version || "") === songCatalogVersion;
     }
 
     async function saveDownloadedSongCatalog(payload) {
@@ -14553,6 +14562,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
       const savedAt = new Date().toISOString();
       const storedPayload = {
+        schema: songCatalogStorageSchema,
         version: String(payload.version || ""),
         generated_at: String(payload.generated_at || savedAt),
         songs: songsToSave
@@ -14571,6 +14581,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         id: songCatalogRecordId,
         payload: blob,
         savedAt,
+        schema: songCatalogStorageSchema,
         version: storedPayload.version,
         count: songsToSave.length,
         bytes: blob.size
@@ -14582,7 +14593,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         throw verificationError;
       }
       deviceSongCatalog = songsToSave;
-      deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
+      deviceSongCatalogMeta = { savedAt, schema: songCatalogStorageSchema, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
       deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
       popularArtistSongCache.clear();
       popularArtistSongItems = [];
