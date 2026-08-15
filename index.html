@@ -14399,6 +14399,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         artist,
         artist_reading: isEqualLove ? "いこーるらぶ" : String(item && item.artist_reading || "").trim(),
         search_keywords: `${String(item && item.search_keywords || "").trim()}${isEqualLove ? " イコールラブ いこーるらぶ" : ""}`.trim(),
+        artist_search_keywords: `${String(item && item.artist_search_keywords || "").trim()}${isEqualLove ? " イコールラブ いこーるらぶ" : ""}`.trim(),
         artist_index: isEqualLove ? "い" : String(item && item.artist_index || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
@@ -14710,12 +14711,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         if (category === "catalog" && !queryKey) return false;
         if (queryKey) {
           const searchableText = searchScope === "artist"
-            ? `${item.artist}${item.artist_reading}`
+            ? `${item.artist}${item.artist_reading}${item.artist_search_keywords}`
             : (searchScope === "title"
               ? `${item.title}${item.title_reading}`
               : (searchScope === "keyword"
                 ? `${item.search_keywords}`
-                : `${item.title}${item.artist}${item.title_reading}${item.artist_reading}${item.search_keywords}`));
+                : `${item.title}${item.artist}${item.title_reading}${item.artist_reading}${item.search_keywords}${item.artist_search_keywords}`));
           const haystack = normalizeCatalogSearchText(searchableText);
           if (!haystack.includes(queryKey)) return false;
         }
