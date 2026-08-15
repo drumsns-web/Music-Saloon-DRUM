@@ -14963,6 +14963,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       });
     }
 
+    function runPopularSongSearch(forceRefresh = false) {
+      if (popularSongSearch.value.trim()) popularSongCategory = "catalog";
+      return loadPopularSongs(forceRefresh);
+    }
+
     async function loadPopularSongs(forceRefresh = false) {
       if (!popularSongStatus) return;
       await loadDeviceSongCatalogFromStorage();
@@ -16410,11 +16415,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (!button) return;
       popularSongSearchScopeMode = button.dataset.popularSearchScope;
       updatePopularSongSearchScopeButtons();
-      loadPopularSongs();
+      runPopularSongSearch();
     });
     popularSongSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      loadPopularSongs();
+      runPopularSongSearch();
     });
     popularSongIndexJump.addEventListener("submit", (event) => {
       const form = event.target.closest("[data-popular-index-search]");
@@ -16422,7 +16427,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       event.preventDefault();
       const input = form.querySelector("[data-popular-index-search-input]");
       popularSongSearch.value = input ? input.value : "";
-      loadPopularSongs();
+      runPopularSongSearch();
     });
     refreshPopularSongs.addEventListener("click", async () => {
       popularArtistSongCache.clear();
