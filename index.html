@@ -7627,22 +7627,26 @@
                 </div>
               </div>
               <div class="bulk-format-guide">
-                <strong>一括入力の書き方</strong>
-                <p>おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。</p>
+                <strong>① まずここに書き方の例のとおり貼り付けます</strong>
+                <p>最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。</p>
                 <pre>【サザンオールスターズ】
 いとしのエリー
 TSUNAMI／▼2</pre>
-                <p>1行ずつ書く場合：<strong>曲名／歌手名／キー</strong>の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。</p>
-                <pre>いとしのエリー／サザンオールスターズ
+                <p class="small">下の入力欄が空なら「この例を試す」を押すと、上の例文がそのまま入力欄にコピーされます。実際の曲リストに書き換えて使ってください。</p>
+                <details class="bulk-format-alt">
+                  <summary>1曲ずつ改行しない・別の書き方をしたい場合</summary>
+                  <p><strong>曲名／歌手名／キー</strong>の順で1行にまとめて書く方法もあります（キーは省略可）。全角の「／」と半角の「/」どちらも使えます。</p>
+                  <pre>いとしのエリー／サザンオールスターズ
 TSUNAMI／サザンオールスターズ／▼2</pre>
-                <p class="small">「歌手名／曲名」の順ではありません。貼り付け後に「解析して確認する」を押し、曲名と歌手名の欄を必ず確認してください。</p>
+                  <p class="small">「歌手名／曲名」の順ではないので注意してください。</p>
+                </details>
               </div>
-              <label for="songImportText">曲リストを貼り付ける</label>
-              <p class="small">「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。</p>
+              <label for="songImportText">② 実際に曲リストを貼り付ける入力欄はここです</label>
               <div class="control-row bulk-paste-actions">
                 <button class="btn primary" id="pasteSongImportButton" type="button">クリップボードから貼り付け</button>
-                <span class="small">または、下の入力欄を長押しして「貼り付け」を選べます。</span>
+                <button class="btn ghost" id="fillSongImportExampleButton" type="button">この例を試す</button>
               </div>
+              <p class="small">スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。</p>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
               <div class="bulk-key-settings">
                 <label>
@@ -7655,7 +7659,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                 <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
               </div>
               <div class="control-row">
-                <button class="btn ghost" id="previewSongImportButton" type="button">解析して確認する</button>
+                <button class="btn ghost" id="previewSongImportButton" type="button">③ 解析して確認する</button>
               </div>
               <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
               <div class="bulk-import-preview" id="songImportPreview"></div>
@@ -9273,6 +9277,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const songImportPreview = document.getElementById("songImportPreview");
     const previewSongImportButton = document.getElementById("previewSongImportButton");
     const pasteSongImportButton = document.getElementById("pasteSongImportButton");
+    const fillSongImportExampleButton = document.getElementById("fillSongImportExampleButton");
     const requestBulkCatalogButton = document.getElementById("requestBulkCatalogButton");
     const bulkSongRequestRequester = document.getElementById("bulkSongRequestRequester");
     const exportJsonButton = document.getElementById("exportJsonButton");
@@ -10936,6 +10941,19 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "自由リクエストを送信しました。": "Your free-form request was sent.",
       "1曲だけリクエストする場合": "To Request One Song",
       "一括入力の書き方": "Bulk Input Format",
+      "① まずここに書き方の例のとおり貼り付けます": "① Paste your list here, following the example",
+      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。": "Just write 【Artist】 on the first line, then one song title per line below it.",
+      "下の入力欄が空なら「この例を試す」を押すと、上の例文がそのまま入力欄にコピーされます。実際の曲リストに書き換えて使ってください。": "If the box below is empty, press \"Try this example\" to copy the sample text in. Replace it with your own song list.",
+      "1曲ずつ改行しない・別の書き方をしたい場合": "Prefer a different format (not one song per line)?",
+      "曲名／歌手名／キー": "Song / Artist / Key",
+      "の順で1行にまとめて書く方法もあります（キーは省略可）。全角の「／」と半角の「/」どちらも使えます。": "can also be written on one line, in that order (key optional). Both ／ and / separators are supported.",
+      "「歌手名／曲名」の順ではないので注意してください。": "Note: this is not Artist / Song order.",
+      "② 実際に曲リストを貼り付ける入力欄はここです": "② Paste your song list in this box",
+      "この例を試す": "Try this example",
+      "スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。": "On a phone, you can also long-press the box below and choose Paste.",
+      "③ 解析して確認する": "③ Parse and Review",
+      "入力欄にすでに内容があります。例文で上書きしますか？": "The box already has content. Overwrite it with the example?",
+      "例文を入力欄に入れました。実際の曲リストに書き換えてから「解析して確認する」を押してください。": "The example has been added. Replace it with your own list, then press Parse and Review.",
       "現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。": "This screen sends bulk requests to the shared catalog. Only the song title and artist are sent; no key is required.",
       "マイ曲リストへの登録も表示": "Also Show My Song List Registration",
       "おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。": "Recommended: write 【Artist】 first, then put each song title on a new line below it.",
@@ -17076,6 +17094,18 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       pendingSongImports = parseSongImportText(songImportText.value);
       renderSongImportPreview();
     });
+
+    if (fillSongImportExampleButton) {
+      fillSongImportExampleButton.addEventListener("click", () => {
+        const exampleText = "【サザンオールスターズ】\nいとしのエリー\nTSUNAMI／▼2";
+        if (songImportText.value.trim()) {
+          if (!confirm(uiText("入力欄にすでに内容があります。例文で上書きしますか？"))) return;
+        }
+        songImportText.value = exampleText;
+        songImportText.focus();
+        songImportStatus.textContent = uiText("例文を入力欄に入れました。実際の曲リストに書き換えてから「解析して確認する」を押してください。");
+      });
+    }
 
     pasteSongImportButton.addEventListener("click", async () => {
       try {
