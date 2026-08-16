@@ -1912,61 +1912,38 @@
 
     .bulk-register-destinations {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
       gap: 10px;
       margin: 12px 0 16px;
     }
 
-    .bulk-mode-picker {
-      margin: 10px 0 16px;
-      padding: 12px;
-      border: 2px solid var(--forest);
-      border-radius: 10px;
-      background: #fffdf8;
-    }
+    .bulk-register-destination.is-catalog { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-catalog { display: grid; }
+    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-my-list { display: none; }
 
-    .bulk-mode-picker-options {
+    .bulk-other-purpose-links {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin: 10px 0 6px;
+      margin: 10px 0 16px;
     }
-
-    .bulk-mode-option {
+    .bulk-other-purpose-link {
       display: grid;
       align-content: start;
       gap: 6px;
-      text-align: left;
-      padding: 12px;
-      border-radius: 10px;
-      background: #fff;
-      cursor: pointer;
-    }
-
-    .bulk-mode-option.is-my-list { border: 2px solid rgba(20, 63, 44, .42); background: rgba(236, 247, 239, .96); }
-    .bulk-mode-option.is-catalog { border: 3px solid var(--orange); background: rgba(255, 239, 214, .98); }
-    .bulk-mode-option strong, .bulk-mode-option small { display: block; }
-    .bulk-mode-option[aria-pressed="true"] { outline: 3px solid var(--forest); outline-offset: 2px; }
-
-    .bulk-mode-unselected-warning { display: block; margin: 8px 0 0; color: var(--orange); font-weight: 900; }
-    #bulkSongEntry[data-bulk-mode] .bulk-mode-unselected-warning { display: none; }
-    #bulkSongEntry:not([data-bulk-mode]) .bulk-register-destinations { display: none; }
-    #bulkSongEntry[data-bulk-mode] .bulk-register-destinations { grid-template-columns: 1fr; }
-    #bulkSongEntry[data-bulk-mode="my-list"] .bulk-register-destination.is-catalog { display: none; }
-    #bulkSongEntry[data-bulk-mode="catalog"] .bulk-register-destination.is-my-list { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-mode-picker { display: none; }
-
-    .bulk-mode-only { display: none; }
-    #bulkSongEntry[data-bulk-mode="my-list"] .bulk-mode-only-my-list { display: block; }
-    #bulkSongEntry[data-bulk-mode="catalog"] .bulk-mode-only-catalog { display: block; }
-    #bulkSongEntry:not([data-bulk-mode]) .bulk-mode-only-none { display: block; }
-    .bulk-catalog-freeform {
-      margin: 10px 0;
       padding: 10px 12px;
-      border: 2px dashed var(--orange);
+      border: 1px dashed var(--line);
       border-radius: 10px;
-      background: #fff3df;
+      background: #fffdf8;
     }
+    .bulk-other-purpose-link .btn { width: 100%; }
+    .bulk-song-entry.catalog-request-mode .bulk-other-purpose-link:first-child { display: none; }
+
+    .bulk-format-example-catalog, .bulk-format-note-catalog { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-format-example-mylist,
+    .bulk-song-entry.catalog-request-mode .bulk-format-note-mylist { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-format-example-catalog,
+    .bulk-song-entry.catalog-request-mode .bulk-format-note-catalog { display: block; }
 
     .bulk-register-destination {
       display: grid;
@@ -2028,16 +2005,14 @@
     }
 
     .bulk-song-entry.catalog-request-mode .bulk-catalog-mode-note { display: block; }
-    .bulk-song-entry.catalog-request-mode .bulk-destination-warning,
-    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-my-list,
     .bulk-song-entry.catalog-request-mode .bulk-key-settings,
     .bulk-song-entry.catalog-request-mode .bulk-import-key { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-register-destinations { grid-template-columns: 1fr; }
 
     .bulk-register-destination strong,
     .bulk-register-destination small { display: block; }
 
     .bulk-register-destination .btn { width: 100%; }
+
 
     .song-title-with-links {
       display: flex;
@@ -7663,36 +7638,29 @@
             </div>
             <p class="alternative-register-heading">ほかの登録方法</p>
             <details class="bulk-song-entry secondary-entry" id="bulkSongEntry">
-              <summary>📋 リストをまとめて一括登録（マイ曲／曲データ）</summary>
-              <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。</p>
-              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn ghost" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録も表示</button></div></div>
-              <div class="bulk-mode-picker" id="bulkModePicker">
-                <strong>① どちらに登録しますか？　まずここを選んでください</strong>
-                <div class="bulk-mode-picker-options">
-                  <button class="btn bulk-mode-option is-my-list" type="button" id="bulkModeSelectMyList" data-bulk-mode-select="my-list" aria-pressed="false">
-                    <span class="bulk-destination-badge">端末内・自分用</span>
-                    <strong>この端末のマイ曲リストへ保存</strong>
-                    <small>このスマホ・パソコンだけに保存します。お店の曲データへは送信されません。</small>
-                  </button>
-                  <button class="btn bulk-mode-option is-catalog" type="button" id="bulkModeSelectCatalog" data-bulk-mode-select="catalog" aria-pressed="false">
-                    <span class="bulk-destination-badge">店主の確認後・全利用者向け</span>
-                    <strong>店の共有データへ追加を依頼</strong>
-                    <small>店主が1曲ずつ確認し、承認した曲だけ全員が使える曲データに追加されます。</small>
-                  </button>
+              <summary>📋 リストをまとめてマイ曲リストへ登録</summary>
+              <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。この欄はこの端末の「マイ曲リスト」専用です。曲データへの送信はしません。</p>
+              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn ghost" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録に戻す</button></div></div>
+              <div class="bulk-other-purpose-links">
+                <div class="bulk-other-purpose-link">
+                  <p class="small">曲データへの追加を依頼したい場合は</p>
+                  <button class="btn ghost" type="button" data-open-bulk-catalog-request>曲データへの追加依頼に切り替える</button>
                 </div>
-                <p class="small bulk-mode-picker-hint" id="bulkModePickerHint">選ぶと、以降の説明と送信ボタンが選んだ登録先だけの表示に変わります。</p>
+                <div class="bulk-other-purpose-link">
+                  <p class="small">曲名を決めず、要望だけ伝えたい場合は</p>
+                  <button class="btn ghost" type="button" data-open-song-request>自由リクエスト欄を開く</button>
+                </div>
               </div>
               <div class="bulk-format-guide">
-                <strong>② まずここに書き方の例のとおり貼り付けます</strong>
-                <p class="bulk-mode-only bulk-mode-only-my-list">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。</p>
-                <pre class="bulk-mode-only bulk-mode-only-my-list">【サザンオールスターズ】
+                <strong>① まずここに書き方の例のとおり貼り付けます</strong>
+                <p class="bulk-format-note-mylist">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。</p>
+                <pre class="bulk-format-example-mylist">【サザンオールスターズ】
 いとしのエリー
 TSUNAMI／▼2</pre>
-                <p class="bulk-mode-only bulk-mode-only-catalog">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では<strong>キーの入力は不要</strong>です。曲名と歌手名だけで大丈夫です。</p>
-                <pre class="bulk-mode-only bulk-mode-only-catalog">【サザンオールスターズ】
+                <p class="bulk-format-note-catalog">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では<strong>キーの入力は不要</strong>です。曲名と歌手名だけで大丈夫です。</p>
+                <pre class="bulk-format-example-catalog">【サザンオールスターズ】
 いとしのエリー
 TSUNAMI</pre>
-                <p class="small bulk-mode-only bulk-mode-only-none">①でまだ登録先を選んでいません。選ぶと書き方の例が切り替わります。</p>
                 <p class="small">下の入力欄が空なら「この例を試す」を押すと、上の例文がそのまま入力欄にコピーされます。実際の曲リストに書き換えて使ってください。</p>
                 <details class="bulk-format-alt">
                   <summary>1曲ずつ改行しない・別の書き方をしたい場合</summary>
@@ -7702,14 +7670,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                   <p class="small">「歌手名／曲名」の順ではないので注意してください。</p>
                 </details>
               </div>
-              <label for="songImportText">③ 実際に曲リストを貼り付ける入力欄はここです</label>
+              <label for="songImportText">② 実際に曲リストを貼り付ける入力欄はここです</label>
               <div class="control-row bulk-paste-actions">
                 <button class="btn primary" id="pasteSongImportButton" type="button">クリップボードから貼り付け</button>
                 <button class="btn ghost" id="fillSongImportExampleButton" type="button">この例を試す</button>
               </div>
               <p class="small">スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。</p>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
-              <div class="bulk-key-settings bulk-mode-only bulk-mode-only-my-list">
+              <div class="bulk-key-settings">
                 <label>
                   貼り付けたキー表記の基準
                   <select id="songImportKeyBase">
@@ -7719,17 +7687,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                 </label>
                 <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
               </div>
-              <div class="bulk-catalog-freeform bulk-mode-only bulk-mode-only-catalog" id="bulkCatalogFreeform">
-                <p class="small">曲名を決めず「このアーティストの曲を増やしてほしい」のようなご要望だけ伝えたい場合は、曲名・歌手名を貼り付ける代わりにこちらをお使いください。</p>
-                <button class="btn ghost" type="button" data-open-song-request>自由リクエストを書く欄を開く</button>
-              </div>
               <div class="control-row">
-                <button class="btn ghost" id="previewSongImportButton" type="button">④ 解析して確認する</button>
+                <button class="btn ghost" id="previewSongImportButton" type="button">③ 解析して確認する</button>
               </div>
               <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
               <div class="bulk-import-preview" id="songImportPreview"></div>
-              <p class="bulk-destination-warning">⑤ 内容を確認できたら、①で選んだ登録先のボタンで送信します。</p>
-              <p class="small bulk-mode-unselected-warning" id="bulkModeUnselectedWarning">↑ まだ登録先が選ばれていません。①のボタンをどちらか押してください。</p>
+              <p class="bulk-destination-warning">④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。</p>
               <div class="bulk-register-destinations">
                 <div class="bulk-register-destination is-my-list">
                   <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
@@ -9355,12 +9318,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const previewSongImportButton = document.getElementById("previewSongImportButton");
     const pasteSongImportButton = document.getElementById("pasteSongImportButton");
     const fillSongImportExampleButton = document.getElementById("fillSongImportExampleButton");
-    const bulkModeSelectMyList = document.getElementById("bulkModeSelectMyList");
-    const bulkModeSelectCatalog = document.getElementById("bulkModeSelectCatalog");
-    function setBulkModeButtonState(mode) {
-      if (bulkModeSelectMyList) bulkModeSelectMyList.setAttribute("aria-pressed", mode === "my-list" ? "true" : "false");
-      if (bulkModeSelectCatalog) bulkModeSelectCatalog.setAttribute("aria-pressed", mode === "catalog" ? "true" : "false");
-    }
     const requestBulkCatalogButton = document.getElementById("requestBulkCatalogButton");
     const bulkSongRequestRequester = document.getElementById("bulkSongRequestRequester");
     const exportJsonButton = document.getElementById("exportJsonButton");
@@ -11058,6 +11015,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "例文を入力欄に入れました。実際の曲リストに書き換えてから「解析して確認する」を押してください。": "The example has been added. Replace it with your own list, then press Parse and Review.",
       "現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。": "This screen sends bulk requests to the shared catalog. Only the song title and artist are sent; no key is required.",
       "マイ曲リストへの登録も表示": "Also Show My Song List Registration",
+      "マイ曲リストへの登録に戻す": "Switch back to My Song List",
+      "曲データへの追加を依頼したい場合は": "If you'd like to request an addition to the shared catalog",
+      "曲データへの追加依頼に切り替える": "Switch to catalog request mode",
+      "曲名を決めず、要望だけ伝えたい場合は": "If you just want to send a request without naming a song",
+      "自由リクエスト欄を開く": "Open the free-form request box",
+      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。": "Just write 【Artist】 on the first line, then one song title per line below it. You can include a key (like ▼2) too.",
+      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では": "Just write 【Artist】 on the first line, then one song title per line below it. For catalog requests, ",
+      "キーの入力は不要": "no key is needed",
+      "です。曲名と歌手名だけで大丈夫です。": " — just the song title and artist are enough.",
+      "④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。": "④ Once you've checked the content, press the button below to save it to My Song List.",
       "おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。": "Recommended: write 【Artist】 first, then put each song title on a new line below it.",
       "1行ずつ書く場合：": "For one song per line:",
       "の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。": "in this order. The key is optional. Both ／ and / separators are supported.",
@@ -17197,9 +17164,22 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       renderSongImportPreview();
     });
 
+    const bulkImportPlaceholderMyList = "例：\n【サザンオールスターズ】\nTSUNAMI／▼1〜2\nあじさいのうた／▼2\nいとしのエリー";
+    const bulkImportPlaceholderCatalog = "例：\n【サザンオールスターズ】\nTSUNAMI\nあじさいのうた\nいとしのエリー";
+    function isBulkCatalogMode() {
+      const bulkEntry = document.getElementById("bulkSongEntry");
+      return !!(bulkEntry && bulkEntry.classList.contains("catalog-request-mode"));
+    }
+    function updateBulkImportPlaceholder() {
+      if (!songImportText) return;
+      songImportText.placeholder = isBulkCatalogMode() ? bulkImportPlaceholderCatalog : bulkImportPlaceholderMyList;
+    }
+
     if (fillSongImportExampleButton) {
       fillSongImportExampleButton.addEventListener("click", () => {
-        const exampleText = "【サザンオールスターズ】\nいとしのエリー\nTSUNAMI／▼2";
+        const exampleText = isBulkCatalogMode()
+          ? "【サザンオールスターズ】\nいとしのエリー\nTSUNAMI"
+          : "【サザンオールスターズ】\nいとしのエリー\nTSUNAMI／▼2";
         if (songImportText.value.trim()) {
           if (!confirm(uiText("入力欄にすでに内容があります。例文で上書きしますか？"))) return;
         }
@@ -17456,10 +17436,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           const catalogDestination = document.getElementById("bulkCatalogDestination");
           if (bulkEntry) {
             bulkEntry.classList.add("catalog-request-mode");
-            bulkEntry.dataset.bulkMode = "catalog";
             bulkEntry.open = true;
           }
-          setBulkModeButtonState("catalog");
+          updateBulkImportPlaceholder();
           window.requestAnimationFrame(() => {
             if (catalogDestination) catalogDestination.scrollIntoView({ behavior: "smooth", block: "center" });
             if (songImportText) songImportText.focus({ preventScroll: true });
@@ -17469,30 +17448,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const showAllBulkDestinations = event.target.closest("[data-show-all-bulk-destinations]");
       if (showAllBulkDestinations) {
         const bulkEntry = document.getElementById("bulkSongEntry");
-        if (bulkEntry) {
-          bulkEntry.classList.remove("catalog-request-mode");
-          delete bulkEntry.dataset.bulkMode;
-        }
-        setBulkModeButtonState(null);
+        if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
+        updateBulkImportPlaceholder();
       }
       const bulkEntrySummary = event.target.closest("#bulkSongEntry > summary");
       if (bulkEntrySummary) {
         const bulkEntry = document.getElementById("bulkSongEntry");
-        if (bulkEntry) {
-          bulkEntry.classList.remove("catalog-request-mode");
-          delete bulkEntry.dataset.bulkMode;
-        }
-        setBulkModeButtonState(null);
-      }
-      const bulkModeSelectButton = event.target.closest("[data-bulk-mode-select]");
-      if (bulkModeSelectButton) {
-        const bulkEntry = document.getElementById("bulkSongEntry");
-        const chosenMode = bulkModeSelectButton.dataset.bulkModeSelect;
-        if (bulkEntry) bulkEntry.dataset.bulkMode = chosenMode;
-        setBulkModeButtonState(chosenMode);
-        window.requestAnimationFrame(() => {
-          if (songImportText) songImportText.focus({ preventScroll: true });
-        });
+        if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
+        updateBulkImportPlaceholder();
       }
       const indexSummary = event.target.closest(".popular-index-menu > summary");
       if (indexSummary) {
