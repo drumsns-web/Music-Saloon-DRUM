@@ -1993,6 +1993,10 @@
       font-weight: 900;
     }
 
+    .bulk-destination-warning-catalog { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-destination-warning-mylist { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-destination-warning-catalog { display: block; }
+
     .bulk-catalog-mode-note {
       display: none;
       margin: 10px 0 14px;
@@ -7692,7 +7696,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               </div>
               <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
               <div class="bulk-import-preview" id="songImportPreview"></div>
-              <p class="bulk-destination-warning">④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。</p>
+              <p class="bulk-destination-warning bulk-destination-warning-mylist">④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。</p>
+              <p class="bulk-destination-warning bulk-destination-warning-catalog">④ 内容を確認できたら、下のボタンで店の共有データへ追加を依頼します。（店主が承認するまでは追加されません）</p>
               <div class="bulk-register-destinations">
                 <div class="bulk-register-destination is-my-list">
                   <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
@@ -11025,6 +11030,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "キーの入力は不要": "no key is needed",
       "です。曲名と歌手名だけで大丈夫です。": " — just the song title and artist are enough.",
       "④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。": "④ Once you've checked the content, press the button below to save it to My Song List.",
+      "④ 内容を確認できたら、下のボタンで店の共有データへ追加を依頼します。（店主が承認するまでは追加されません）": "④ Once you've checked the content, press the button below to request adding it to the shared catalog. (It won't be added until the owner approves it.)",
       "おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。": "Recommended: write 【Artist】 first, then put each song title on a new line below it.",
       "1行ずつ書く場合：": "For one song per line:",
       "の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。": "in this order. The key is optional. Both ／ and / separators are supported.",
