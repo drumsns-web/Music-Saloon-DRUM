@@ -3515,6 +3515,14 @@
       white-space: nowrap;
     }
 
+    .popular-index-close-artist {
+      min-height: 36px !important;
+      padding: 6px 12px !important;
+      white-space: nowrap;
+      color: var(--red, #b5422a) !important;
+      border-color: rgba(181, 66, 42, .35) !important;
+    }
+
     .popular-index-free-search {
       display: grid;
       grid-template-columns: auto minmax(120px, 1fr) auto;
@@ -14955,12 +14963,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         keyword: currentLanguage === "en" ? "Keyword" : "キーワード"
       }[popularSongSearchScopeMode]) || (currentLanguage === "en" ? "All" : "すべて");
       const floatingSearchValue = popularSongSearch ? popularSongSearch.value : "";
+      const openArtistGroup = popularSongList ? popularSongList.querySelector(".popular-artist-group[open]") : null;
       popularSongIndexJump.innerHTML = `
         <div class="popular-index-toolbar-head">
           <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
             <button type="button" class="${mode === "artist" ? "is-active" : ""}" data-popular-index-mode="artist" aria-pressed="${mode === "artist"}">${currentLanguage === "en" ? "Artist" : "歌手"}</button>
             <button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>
           </div>
+          <button class="btn ghost popular-index-close-artist" type="button" data-popular-index-close-artist ${openArtistGroup ? "" : "hidden"}>${currentLanguage === "en" ? "✕ Close song list" : "✕ 開いている歌手の曲一覧を閉じる"}</button>
           <button class="btn primary popular-index-request" type="button" data-open-song-request>${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</button>
         </div>
         <form class="popular-index-free-search" data-popular-index-search role="search">
@@ -15068,6 +15078,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (Math.abs(scrollDelta) > 1) window.scrollBy({ top: scrollDelta, left: 0, behavior: "auto" });
     }
 
+    function updatePopularIndexCloseButton() {
+      const closeButton = popularSongIndexJump ? popularSongIndexJump.querySelector("[data-popular-index-close-artist]") : null;
+      if (!closeButton) return;
+      const hasOpen = !!(popularSongList && popularSongList.querySelector(".popular-artist-group[open]"));
+      closeButton.hidden = !hasOpen;
+    }
+
     function autoClosePassedPopularArtists() {
       popularArtistAutoCloseFrame = 0;
       if (!popularSongList) return;
@@ -15081,6 +15098,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const passedLastArtist = !nextArtist && details.getBoundingClientRect().bottom <= closeLine;
         if (!passedIntoNextArtist && !passedLastArtist) continue;
         details.open = false;
+        updatePopularIndexCloseButton();
         placePopularArtistBelowFloatingBar(details);
         break;
       }
@@ -16640,7 +16658,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     });
     popularSongList.addEventListener("toggle", (event) => {
       const details = event.target.closest(".popular-artist-group");
-      if (!details || !details.open) return;
+      if (!details) return;
+      if (!details.open) {
+        updatePopularIndexCloseButton();
+        return;
+      }
       const beforeTop = details.getBoundingClientRect().top;
       popularSongList.querySelectorAll(".popular-artist-group[open]").forEach((otherDetails) => {
         if (otherDetails !== details) otherDetails.open = false;
@@ -16648,6 +16670,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const afterTop = details.getBoundingClientRect().top;
       const shift = afterTop - beforeTop;
       if (Math.abs(shift) > 1) window.scrollBy({ top: shift, left: 0, behavior: "auto" });
+      updatePopularIndexCloseButton();
       loadPopularArtistSongs(details);
     }, true);
     window.addEventListener("scroll", schedulePopularArtistAutoClose, { passive: true });
@@ -17513,6 +17536,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         popularSongSortMode = indexModeButton.dataset.popularIndexMode;
         if (popularSongSearchScopeMode === previousSortMode) popularSongSearchScopeMode = popularSongSortMode;
         loadPopularSongs();
+      }
+      const closeArtistButton = event.target.closest("[data-popular-index-close-artist]");
+      if (closeArtistButton && popularSongList) {
+        const openGroup = popularSongList.querySelector(".popular-artist-group[open]");
+        if (openGroup) {
+          openGroup.open = false;
+          updatePopularIndexCloseButton();
+        }
       }
       const requestButton = event.target.closest("[data-open-song-request]");
       if (requestButton) {
