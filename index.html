@@ -17401,6 +17401,26 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       songImportStatus.textContent = resultMessage;
       songExportText.value = createSongExportText();
       importSongsButton.disabled = true;
+
+      const catalogCandidates = imported.filter((item) => item.artist);
+      if (catalogCandidates.length) {
+        const followUpMessage = currentLanguage === "en"
+          ? `Also request adding these ${catalogCandidates.length} song(s) to the shared song catalog now?\n\nThis sends the song title and artist only — no key.`
+          : `続けて、今登録した${catalogCandidates.length}曲を曲データへも一括で追加依頼しますか？\n\n送信するのは曲名と歌手名だけです（キーは送りません）。`;
+        if (confirm(followUpMessage)) {
+          const bulkEntry = document.getElementById("bulkSongEntry");
+          if (bulkEntry) bulkEntry.classList.add("catalog-request-mode");
+          updateBulkImportPlaceholder();
+          songImportText.value = catalogCandidates.map((item) => `${item.title}／${item.artist}`).join("\n");
+          pendingSongImports = catalogCandidates.map((item) => importedSong(item.title, item.artist, "", item.kana));
+          renderSongImportPreview();
+          window.requestAnimationFrame(() => {
+            const catalogDestination = document.getElementById("bulkCatalogDestination");
+            if (catalogDestination) catalogDestination.scrollIntoView({ behavior: "smooth", block: "center" });
+            if (bulkSongRequestRequester) bulkSongRequestRequester.focus({ preventScroll: true });
+          });
+        }
+      }
     });
 
     searchBox.addEventListener("input", () => {
