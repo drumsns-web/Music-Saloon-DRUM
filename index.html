@@ -1956,6 +1956,18 @@
     #bulkSongEntry[data-bulk-mode="catalog"] .bulk-register-destination.is-my-list { display: none; }
     .bulk-song-entry.catalog-request-mode .bulk-mode-picker { display: none; }
 
+    .bulk-mode-only { display: none; }
+    #bulkSongEntry[data-bulk-mode="my-list"] .bulk-mode-only-my-list { display: block; }
+    #bulkSongEntry[data-bulk-mode="catalog"] .bulk-mode-only-catalog { display: block; }
+    #bulkSongEntry:not([data-bulk-mode]) .bulk-mode-only-none { display: block; }
+    .bulk-catalog-freeform {
+      margin: 10px 0;
+      padding: 10px 12px;
+      border: 2px dashed var(--orange);
+      border-radius: 10px;
+      background: #fff3df;
+    }
+
     .bulk-register-destination {
       display: grid;
       align-content: space-between;
@@ -7672,10 +7684,15 @@
               </div>
               <div class="bulk-format-guide">
                 <strong>② まずここに書き方の例のとおり貼り付けます</strong>
-                <p>最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。</p>
-                <pre>【サザンオールスターズ】
+                <p class="bulk-mode-only bulk-mode-only-my-list">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。</p>
+                <pre class="bulk-mode-only bulk-mode-only-my-list">【サザンオールスターズ】
 いとしのエリー
 TSUNAMI／▼2</pre>
+                <p class="bulk-mode-only bulk-mode-only-catalog">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では<strong>キーの入力は不要</strong>です。曲名と歌手名だけで大丈夫です。</p>
+                <pre class="bulk-mode-only bulk-mode-only-catalog">【サザンオールスターズ】
+いとしのエリー
+TSUNAMI</pre>
+                <p class="small bulk-mode-only bulk-mode-only-none">①でまだ登録先を選んでいません。選ぶと書き方の例が切り替わります。</p>
                 <p class="small">下の入力欄が空なら「この例を試す」を押すと、上の例文がそのまま入力欄にコピーされます。実際の曲リストに書き換えて使ってください。</p>
                 <details class="bulk-format-alt">
                   <summary>1曲ずつ改行しない・別の書き方をしたい場合</summary>
@@ -7692,7 +7709,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               </div>
               <p class="small">スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。</p>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
-              <div class="bulk-key-settings">
+              <div class="bulk-key-settings bulk-mode-only bulk-mode-only-my-list">
                 <label>
                   貼り付けたキー表記の基準
                   <select id="songImportKeyBase">
@@ -7701,6 +7718,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                   </select>
                 </label>
                 <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
+              </div>
+              <div class="bulk-catalog-freeform bulk-mode-only bulk-mode-only-catalog" id="bulkCatalogFreeform">
+                <p class="small">曲名を決めず「このアーティストの曲を増やしてほしい」のようなご要望だけ伝えたい場合は、曲名・歌手名を貼り付ける代わりにこちらをお使いください。</p>
+                <button class="btn ghost" type="button" data-open-song-request>自由リクエストを書く欄を開く</button>
               </div>
               <div class="control-row">
                 <button class="btn ghost" id="previewSongImportButton" type="button">④ 解析して確認する</button>
@@ -10152,6 +10173,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "④ 解析して確認する": "④ Parse and Review",
       "⑤ 内容を確認できたら、①で選んだ登録先のボタンで送信します。": "⑤ Once you've checked the content, press the send button for the destination you chose in ①.",
       "↑ まだ登録先が選ばれていません。①のボタンをどちらか押してください。": "↑ No destination chosen yet. Press one of the buttons in ① above.",
+      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。": "Just write 【Artist】 on the first line, then one song title per line below it. You can include a key (like ▼2) too.",
+      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では": "Just write 【Artist】 on the first line, then one song title per line below it. For catalog requests, ",
+      "キーの入力は不要": "no key is needed",
+      "です。曲名と歌手名だけで大丈夫です。": " — just the song title and artist are enough.",
+      "①でまだ登録先を選んでいません。選ぶと書き方の例が切り替わります。": "You haven't chosen a destination in ① yet. The example below will change once you do.",
+      "曲名を決めず「このアーティストの曲を増やしてほしい」のようなご要望だけ伝えたい場合は、曲名・歌手名を貼り付ける代わりにこちらをお使いください。": "If you just want to send a request like \"please add more songs by this artist\" without naming a specific song, use this instead of pasting a song list.",
+      "自由リクエストを書く欄を開く": "Open the free-form request box",
       "④ 内容を確認できたら、送るデータを選んで送信します。下の2つは別の機能で、押した方だけに登録されます。": "④ Once you've checked the content, choose where to send it. These are two separate actions, and only the one you press will be registered.",
       "端末内・自分用": "On This Device / Personal",
       "共有・全利用者向け": "Shared / All Users",
