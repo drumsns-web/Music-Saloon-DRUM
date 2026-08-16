@@ -3518,10 +3518,25 @@
     .popular-index-close-artist {
       min-height: 36px !important;
       padding: 6px 12px !important;
-      white-space: nowrap;
+      white-space: normal;
+      text-align: center;
       color: var(--red, #b5422a) !important;
       border-color: rgba(181, 66, 42, .35) !important;
     }
+
+    .popular-index-close-artist[hidden] { display: none !important; }
+
+    .popular-index-collapse-toggle {
+      min-height: 36px !important;
+      padding: 6px 12px !important;
+      white-space: nowrap;
+    }
+
+    .popular-index-collapsible {
+      display: grid;
+      gap: 6px;
+    }
+    .popular-index-collapsible[hidden] { display: none !important; }
 
     .popular-index-free-search {
       display: grid;
@@ -5048,15 +5063,47 @@
     }
 
     .popular-song-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 14px;
+      display: block;
+      padding: 0;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fffdf9;
+      overflow: hidden;
     }
+
+    .popular-song-row > summary {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .popular-song-row > summary::-webkit-details-marker { display: none; }
+    .popular-song-row > summary::marker { content: ""; }
+
+    .popular-song-summary-toggle {
+      flex: 0 0 auto;
+      display: inline-grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--forest);
+      font-weight: 900;
+      transition: transform .15s ease, background .15s ease;
+    }
+
+    .popular-song-row[open] > summary .popular-song-summary-toggle {
+      transform: rotate(180deg);
+      background: rgba(var(--theme-accent-rgb), .14);
+    }
+
+    .popular-song-body { padding: 0 14px 14px; }
 
     .popular-song-copy {
       min-width: 0;
@@ -5102,18 +5149,22 @@
       font-weight: 800;
     }
 
-    .popular-song-row > div > strong,
-    .popular-song-row > div > span {
+    .popular-song-summary-text {
+      min-width: 0;
+    }
+
+    .popular-song-summary-text > strong,
+    .popular-song-summary-text > span {
       display: block;
       overflow-wrap: anywhere;
     }
 
-    .popular-song-row > div > strong {
+    .popular-song-summary-text > strong {
       color: var(--forest);
       font-size: 16px;
     }
 
-    .popular-song-row > div > span {
+    .popular-song-summary-text > span {
       margin-top: 3px;
       color: var(--muted);
       font-size: 13px;
@@ -11492,6 +11543,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let correctingSongItem = null;
     let popularSongCategory = "jp";
     let popularSongCategoryBeforeSearch = null;
+    let popularIndexCollapsed = false;
+    try { popularIndexCollapsed = localStorage.getItem("msdPopularIndexCollapsed") === "1"; } catch (error) { popularIndexCollapsed = false; }
     let popularSongSortMode = "artist";
     let popularSongSearchScopeMode = "artist";
     let catalogSearchItems = [];
@@ -14964,21 +15017,27 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }[popularSongSearchScopeMode]) || (currentLanguage === "en" ? "All" : "すべて");
       const floatingSearchValue = popularSongSearch ? popularSongSearch.value : "";
       const openArtistGroup = popularSongList ? popularSongList.querySelector(".popular-artist-group[open]") : null;
+      const collapseLabel = popularIndexCollapsed
+        ? (currentLanguage === "en" ? "▾ Show search / index" : "▾ 検索・索引を開く")
+        : (currentLanguage === "en" ? "▴ Collapse" : "▴ 検索・索引を折りたたむ");
       popularSongIndexJump.innerHTML = `
         <div class="popular-index-toolbar-head">
           <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
             <button type="button" class="${mode === "artist" ? "is-active" : ""}" data-popular-index-mode="artist" aria-pressed="${mode === "artist"}">${currentLanguage === "en" ? "Artist" : "歌手"}</button>
             <button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>
           </div>
+          <button class="btn ghost popular-index-collapse-toggle" type="button" data-popular-index-collapse-toggle aria-expanded="${popularIndexCollapsed ? "false" : "true"}">${collapseLabel}</button>
           <button class="btn ghost popular-index-close-artist" type="button" data-popular-index-close-artist ${openArtistGroup ? "" : "hidden"}>${currentLanguage === "en" ? "✕ Close song list" : "✕ 開いている歌手の曲一覧を閉じる"}</button>
           <button class="btn primary popular-index-request" type="button" data-open-song-request>${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</button>
         </div>
-        <form class="popular-index-free-search" data-popular-index-search role="search">
-          <span class="popular-index-search-scope">${escapeText(scopeLabel)}</span>
-          <input type="search" data-popular-index-search-input value="${escapeText(floatingSearchValue)}" aria-label="${currentLanguage === "en" ? "Search songs" : "曲名・歌手名をフリーワード検索"}" placeholder="${currentLanguage === "en" ? "Enter a search term" : "ここからフリーワード検索"}" autocomplete="off">
-          <button type="submit">${currentLanguage === "en" ? "Search" : "検索"}</button>
-        </form>
-        <div class="popular-index-groups">${menuHtml}</div>
+        <div class="popular-index-collapsible" ${popularIndexCollapsed ? "hidden" : ""}>
+          <form class="popular-index-free-search" data-popular-index-search role="search">
+            <span class="popular-index-search-scope">${escapeText(scopeLabel)}</span>
+            <input type="search" data-popular-index-search-input value="${escapeText(floatingSearchValue)}" aria-label="${currentLanguage === "en" ? "Search songs" : "曲名・歌手名をフリーワード検索"}" placeholder="${currentLanguage === "en" ? "Enter a search term" : "ここからフリーワード検索"}" autocomplete="off">
+            <button type="submit">${currentLanguage === "en" ? "Search" : "検索"}</button>
+          </form>
+          <div class="popular-index-groups">${menuHtml}</div>
+        </div>
       `;
       popularSongIndexJump.hidden = false;
     }
@@ -14992,23 +15051,28 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
       const lyricsUrl = `https://www.google.com/search?q=${encodeURIComponent(`${searchQuery} 歌詞`)}`;
       return `
-        <article class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
-          <div>
-            <strong>${escapeText(item.title || "-")}</strong>
-            <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
+        <details class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
+          <summary>
+            <span class="popular-song-summary-text">
+              <strong>${escapeText(item.title || "-")}</strong>
+              <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
+            </span>
+            <span class="popular-song-summary-toggle" aria-hidden="true">▾</span>
+          </summary>
+          <div class="popular-song-body">
             <div class="popular-song-web-actions">
               <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
               <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
             </div>
+            <div class="popular-song-actions">
+              <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
+              <button class="btn ghost" type="button" data-popular-setlist="${escapeText(source)}" data-popular-index="${index}">セットリストへ追加</button>
+              <button class="btn ghost song-correction-button" type="button" data-song-correction="${escapeText(source)}" data-popular-index="${index}">${escapeText(uiText("訂正を依頼"))}</button>
+            </div>
           </div>
-          <div class="popular-song-actions">
-            <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
-            <button class="btn ghost" type="button" data-popular-setlist="${escapeText(source)}" data-popular-index="${index}">セットリストへ追加</button>
-            <button class="btn ghost song-correction-button" type="button" data-song-correction="${escapeText(source)}" data-popular-index="${index}">${escapeText(uiText("訂正を依頼"))}</button>
-          </div>
-        </article>
+        </details>
       `;
     }
 
@@ -16657,8 +16721,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       addPopularSongToMyList(sourceItems[Number(button.dataset.popularIndex)]);
     });
     popularSongList.addEventListener("toggle", (event) => {
-      const details = event.target.closest(".popular-artist-group");
-      if (!details) return;
+      const details = event.target;
+      if (!details.classList || !details.classList.contains("popular-artist-group")) return;
       if (!details.open) {
         updatePopularIndexCloseButton();
         return;
@@ -17544,6 +17608,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           openGroup.open = false;
           updatePopularIndexCloseButton();
         }
+      }
+      const collapseToggleButton = event.target.closest("[data-popular-index-collapse-toggle]");
+      if (collapseToggleButton) {
+        popularIndexCollapsed = !popularIndexCollapsed;
+        try { localStorage.setItem("msdPopularIndexCollapsed", popularIndexCollapsed ? "1" : "0"); } catch (error) { /* ignore */ }
+        const collapsibleBody = popularSongIndexJump.querySelector(".popular-index-collapsible");
+        if (collapsibleBody) collapsibleBody.hidden = popularIndexCollapsed;
+        collapseToggleButton.setAttribute("aria-expanded", String(!popularIndexCollapsed));
+        collapseToggleButton.textContent = popularIndexCollapsed
+          ? (currentLanguage === "en" ? "▾ Show search / index" : "▾ 検索・索引を開く")
+          : (currentLanguage === "en" ? "▴ Collapse" : "▴ 検索・索引を折りたたむ");
       }
       const requestButton = event.target.closest("[data-open-song-request]");
       if (requestButton) {
