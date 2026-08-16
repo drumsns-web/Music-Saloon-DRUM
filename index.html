@@ -1932,12 +1932,31 @@
       align-content: start;
       gap: 6px;
       padding: 10px 12px;
-      border: 1px dashed var(--line);
+      border: 1px solid var(--line);
       border-radius: 10px;
       background: #fffdf8;
     }
-    .bulk-other-purpose-link .btn { width: 100%; }
+    .bulk-other-purpose-link .btn {
+      width: 100%;
+      font-weight: 900;
+    }
+    .bulk-other-purpose-link .btn.secondary {
+      border: 2px solid var(--forest);
+      box-shadow: 0 8px 18px rgba(20, 63, 44, .16);
+    }
+    .bulk-other-purpose-link .btn.secondary:hover { background: rgba(236, 247, 239, .96); }
     .bulk-song-entry.catalog-request-mode .bulk-other-purpose-link:first-child { display: none; }
+
+    .input-error-flash {
+      outline: 3px solid #d64545 !important;
+      background: #fff0f0 !important;
+      animation: bulk-input-error-shake .3s;
+    }
+    @keyframes bulk-input-error-shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      75% { transform: translateX(4px); }
+    }
 
     .bulk-format-example-catalog, .bulk-format-note-catalog { display: none; }
     .bulk-song-entry.catalog-request-mode .bulk-format-example-mylist,
@@ -7644,15 +7663,15 @@
             <details class="bulk-song-entry secondary-entry" id="bulkSongEntry">
               <summary>📋 リストをまとめてマイ曲リストへ登録</summary>
               <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。この欄はこの端末の「マイ曲リスト」専用です。曲データへの送信はしません。</p>
-              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn ghost" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録に戻す</button></div></div>
+              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn secondary" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録に戻す →</button></div></div>
               <div class="bulk-other-purpose-links">
                 <div class="bulk-other-purpose-link">
                   <p class="small">曲データへの追加を依頼したい場合は</p>
-                  <button class="btn ghost" type="button" data-open-bulk-catalog-request>曲データへの追加依頼に切り替える</button>
+                  <button class="btn secondary" type="button" data-open-bulk-catalog-request>曲データへの追加依頼に切り替える →</button>
                 </div>
                 <div class="bulk-other-purpose-link">
                   <p class="small">曲名を決めず、要望だけ伝えたい場合は</p>
-                  <button class="btn ghost" type="button" data-open-song-request>自由リクエスト欄を開く</button>
+                  <button class="btn secondary" type="button" data-open-song-request>自由リクエスト欄を開く →</button>
                 </div>
               </div>
               <div class="bulk-format-guide">
@@ -7677,7 +7696,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <label for="songImportText">② 実際に曲リストを貼り付ける入力欄はここです</label>
               <div class="control-row bulk-paste-actions">
                 <button class="btn primary" id="pasteSongImportButton" type="button">クリップボードから貼り付け</button>
-                <button class="btn ghost" id="fillSongImportExampleButton" type="button">この例を試す</button>
+                <button class="btn secondary" id="fillSongImportExampleButton" type="button">この例を試す</button>
               </div>
               <p class="small">スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。</p>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
@@ -11020,11 +11039,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "例文を入力欄に入れました。実際の曲リストに書き換えてから「解析して確認する」を押してください。": "The example has been added. Replace it with your own list, then press Parse and Review.",
       "現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。": "This screen sends bulk requests to the shared catalog. Only the song title and artist are sent; no key is required.",
       "マイ曲リストへの登録も表示": "Also Show My Song List Registration",
-      "マイ曲リストへの登録に戻す": "Switch back to My Song List",
+      "マイ曲リストへの登録に戻す →": "Switch back to My Song List →",
       "曲データへの追加を依頼したい場合は": "If you'd like to request an addition to the shared catalog",
-      "曲データへの追加依頼に切り替える": "Switch to catalog request mode",
+      "曲データへの追加依頼に切り替える →": "Switch to catalog request mode →",
       "曲名を決めず、要望だけ伝えたい場合は": "If you just want to send a request without naming a song",
-      "自由リクエスト欄を開く": "Open the free-form request box",
+      "自由リクエスト欄を開く →": "Open the free-form request box →",
       "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。": "Just write 【Artist】 on the first line, then one song title per line below it. You can include a key (like ▼2) too.",
       "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では": "Just write 【Artist】 on the first line, then one song title per line below it. For catalog requests, ",
       "キーの入力は不要": "no key is needed",
@@ -17241,8 +17260,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     requestBulkCatalogButton.addEventListener("click", async () => {
       const requesterName = bulkSongRequestRequester.value.trim();
       if (!requesterName) {
-        songImportStatus.textContent = currentLanguage === "en" ? "Enter a name or nickname the owner can recognize." : "店主があなたと分かる名前・ニックネームを入力してください。";
+        const message = currentLanguage === "en" ? "Enter a name or nickname the owner can recognize." : "店主があなたと分かる名前・ニックネームを入力してください。";
+        alert(message);
+        songImportStatus.textContent = message;
         bulkSongRequestRequester.focus();
+        bulkSongRequestRequester.classList.add("input-error-flash");
+        window.setTimeout(() => bulkSongRequestRequester.classList.remove("input-error-flash"), 1600);
         return;
       }
       const imported = pendingSongImports
