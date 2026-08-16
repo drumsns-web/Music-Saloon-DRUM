@@ -1917,6 +1917,45 @@
       margin: 12px 0 16px;
     }
 
+    .bulk-mode-picker {
+      margin: 10px 0 16px;
+      padding: 12px;
+      border: 2px solid var(--forest);
+      border-radius: 10px;
+      background: #fffdf8;
+    }
+
+    .bulk-mode-picker-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 10px 0 6px;
+    }
+
+    .bulk-mode-option {
+      display: grid;
+      align-content: start;
+      gap: 6px;
+      text-align: left;
+      padding: 12px;
+      border-radius: 10px;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .bulk-mode-option.is-my-list { border: 2px solid rgba(20, 63, 44, .42); background: rgba(236, 247, 239, .96); }
+    .bulk-mode-option.is-catalog { border: 3px solid var(--orange); background: rgba(255, 239, 214, .98); }
+    .bulk-mode-option strong, .bulk-mode-option small { display: block; }
+    .bulk-mode-option[aria-pressed="true"] { outline: 3px solid var(--forest); outline-offset: 2px; }
+
+    .bulk-mode-unselected-warning { display: block; margin: 8px 0 0; color: var(--orange); font-weight: 900; }
+    #bulkSongEntry[data-bulk-mode] .bulk-mode-unselected-warning { display: none; }
+    #bulkSongEntry:not([data-bulk-mode]) .bulk-register-destinations { display: none; }
+    #bulkSongEntry[data-bulk-mode] .bulk-register-destinations { grid-template-columns: 1fr; }
+    #bulkSongEntry[data-bulk-mode="my-list"] .bulk-register-destination.is-catalog { display: none; }
+    #bulkSongEntry[data-bulk-mode="catalog"] .bulk-register-destination.is-my-list { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-mode-picker { display: none; }
+
     .bulk-register-destination {
       display: grid;
       align-content: space-between;
@@ -7615,19 +7654,24 @@
               <summary>📋 リストをまとめて一括登録（マイ曲／曲データ）</summary>
               <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。</p>
               <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn ghost" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録も表示</button></div></div>
-              <p class="bulk-destination-warning">登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。</p>
-              <div class="bulk-register-destinations">
-                <div class="bulk-register-destination is-my-list">
-                  <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
-                  <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
+              <div class="bulk-mode-picker" id="bulkModePicker">
+                <strong>① どちらに登録しますか？　まずここを選んでください</strong>
+                <div class="bulk-mode-picker-options">
+                  <button class="btn bulk-mode-option is-my-list" type="button" id="bulkModeSelectMyList" data-bulk-mode-select="my-list" aria-pressed="false">
+                    <span class="bulk-destination-badge">端末内・自分用</span>
+                    <strong>この端末のマイ曲リストへ保存</strong>
+                    <small>このスマホ・パソコンだけに保存します。お店の曲データへは送信されません。</small>
+                  </button>
+                  <button class="btn bulk-mode-option is-catalog" type="button" id="bulkModeSelectCatalog" data-bulk-mode-select="catalog" aria-pressed="false">
+                    <span class="bulk-destination-badge">店主の確認後・全利用者向け</span>
+                    <strong>店の共有データへ追加を依頼</strong>
+                    <small>店主が1曲ずつ確認し、承認した曲だけ全員が使える曲データに追加されます。</small>
+                  </button>
                 </div>
-                <div class="bulk-register-destination is-catalog" id="bulkCatalogDestination">
-                  <div><span class="bulk-destination-badge">管理者の確認後・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>1曲ずつ確認待ちになり、店主が承認した曲だけ共有の曲データへ追加されます。</small><label>店主があなたと分かる名前・ニックネーム<input id="bulkSongRequestRequester" maxlength="64" autocomplete="name" placeholder="例：いつも窓側に座る○○"></label></div>
-                  <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
-                </div>
+                <p class="small bulk-mode-picker-hint" id="bulkModePickerHint">選ぶと、以降の説明と送信ボタンが選んだ登録先だけの表示に変わります。</p>
               </div>
               <div class="bulk-format-guide">
-                <strong>① まずここに書き方の例のとおり貼り付けます</strong>
+                <strong>② まずここに書き方の例のとおり貼り付けます</strong>
                 <p>最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。</p>
                 <pre>【サザンオールスターズ】
 いとしのエリー
@@ -7641,7 +7685,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                   <p class="small">「歌手名／曲名」の順ではないので注意してください。</p>
                 </details>
               </div>
-              <label for="songImportText">② 実際に曲リストを貼り付ける入力欄はここです</label>
+              <label for="songImportText">③ 実際に曲リストを貼り付ける入力欄はここです</label>
               <div class="control-row bulk-paste-actions">
                 <button class="btn primary" id="pasteSongImportButton" type="button">クリップボードから貼り付け</button>
                 <button class="btn ghost" id="fillSongImportExampleButton" type="button">この例を試す</button>
@@ -7659,10 +7703,22 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                 <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
               </div>
               <div class="control-row">
-                <button class="btn ghost" id="previewSongImportButton" type="button">③ 解析して確認する</button>
+                <button class="btn ghost" id="previewSongImportButton" type="button">④ 解析して確認する</button>
               </div>
               <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
               <div class="bulk-import-preview" id="songImportPreview"></div>
+              <p class="bulk-destination-warning">⑤ 内容を確認できたら、①で選んだ登録先のボタンで送信します。</p>
+              <p class="small bulk-mode-unselected-warning" id="bulkModeUnselectedWarning">↑ まだ登録先が選ばれていません。①のボタンをどちらか押してください。</p>
+              <div class="bulk-register-destinations">
+                <div class="bulk-register-destination is-my-list">
+                  <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
+                  <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
+                </div>
+                <div class="bulk-register-destination is-catalog" id="bulkCatalogDestination">
+                  <div><span class="bulk-destination-badge">管理者の確認後・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>1曲ずつ確認待ちになり、店主が承認した曲だけ共有の曲データへ追加されます。</small><label>店主があなたと分かる名前・ニックネーム<input id="bulkSongRequestRequester" maxlength="64" autocomplete="name" placeholder="例：いつも窓側に座る○○"></label></div>
+                  <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
+                </div>
+              </div>
             </details>
             <details class="photo-song-card secondary-entry">
               <summary>📷 写真から曲名・歌手名を入力</summary>
@@ -9278,6 +9334,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const previewSongImportButton = document.getElementById("previewSongImportButton");
     const pasteSongImportButton = document.getElementById("pasteSongImportButton");
     const fillSongImportExampleButton = document.getElementById("fillSongImportExampleButton");
+    const bulkModeSelectMyList = document.getElementById("bulkModeSelectMyList");
+    const bulkModeSelectCatalog = document.getElementById("bulkModeSelectCatalog");
+    function setBulkModeButtonState(mode) {
+      if (bulkModeSelectMyList) bulkModeSelectMyList.setAttribute("aria-pressed", mode === "my-list" ? "true" : "false");
+      if (bulkModeSelectCatalog) bulkModeSelectCatalog.setAttribute("aria-pressed", mode === "catalog" ? "true" : "false");
+    }
     const requestBulkCatalogButton = document.getElementById("requestBulkCatalogButton");
     const bulkSongRequestRequester = document.getElementById("bulkSongRequestRequester");
     const exportJsonButton = document.getElementById("exportJsonButton");
@@ -10079,6 +10141,18 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "📋 リストをまとめて一括登録": "📋 Add Multiple Songs from a List",
       "📋 リストをまとめて一括登録（マイ曲／曲データ）": "📋 Add Multiple Songs (My List / Catalog)",
       "登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。": "There are two separate destinations. Songs are added only to the destination whose button you press.",
+      "① どちらに登録しますか？　まずここを選んでください": "① Where should this go? Choose one first",
+      "この端末のマイ曲リストへ保存": "Save to My Song List on this device",
+      "このスマホ・パソコンだけに保存します。お店の曲データへは送信されません。": "Saved only on this phone/computer. Nothing is sent to the shared song catalog.",
+      "店の共有データへ追加を依頼": "Request addition to the shared catalog",
+      "店主が1曲ずつ確認し、承認した曲だけ全員が使える曲データに追加されます。": "The owner reviews each song, and only approved ones are added to the catalog everyone can use.",
+      "選ぶと、以降の説明と送信ボタンが選んだ登録先だけの表示に変わります。": "Once you choose, the guide and send button below will match only that destination.",
+      "② まずここに書き方の例のとおり貼り付けます": "② Paste your list here, following the example",
+      "③ 実際に曲リストを貼り付ける入力欄はここです": "③ Paste your song list in this box",
+      "④ 解析して確認する": "④ Parse and Review",
+      "⑤ 内容を確認できたら、①で選んだ登録先のボタンで送信します。": "⑤ Once you've checked the content, press the send button for the destination you chose in ①.",
+      "↑ まだ登録先が選ばれていません。①のボタンをどちらか押してください。": "↑ No destination chosen yet. Press one of the buttons in ① above.",
+      "④ 内容を確認できたら、送るデータを選んで送信します。下の2つは別の機能で、押した方だけに登録されます。": "④ Once you've checked the content, choose where to send it. These are two separate actions, and only the one you press will be registered.",
       "端末内・自分用": "On This Device / Personal",
       "共有・全利用者向け": "Shared / All Users",
       "このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。": "Save to your personal song list on this phone or computer. Nothing is sent to the shared catalog.",
@@ -17354,8 +17428,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           const catalogDestination = document.getElementById("bulkCatalogDestination");
           if (bulkEntry) {
             bulkEntry.classList.add("catalog-request-mode");
+            bulkEntry.dataset.bulkMode = "catalog";
             bulkEntry.open = true;
           }
+          setBulkModeButtonState("catalog");
           window.requestAnimationFrame(() => {
             if (catalogDestination) catalogDestination.scrollIntoView({ behavior: "smooth", block: "center" });
             if (songImportText) songImportText.focus({ preventScroll: true });
@@ -17365,12 +17441,30 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const showAllBulkDestinations = event.target.closest("[data-show-all-bulk-destinations]");
       if (showAllBulkDestinations) {
         const bulkEntry = document.getElementById("bulkSongEntry");
-        if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
+        if (bulkEntry) {
+          bulkEntry.classList.remove("catalog-request-mode");
+          delete bulkEntry.dataset.bulkMode;
+        }
+        setBulkModeButtonState(null);
       }
       const bulkEntrySummary = event.target.closest("#bulkSongEntry > summary");
       if (bulkEntrySummary) {
         const bulkEntry = document.getElementById("bulkSongEntry");
-        if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
+        if (bulkEntry) {
+          bulkEntry.classList.remove("catalog-request-mode");
+          delete bulkEntry.dataset.bulkMode;
+        }
+        setBulkModeButtonState(null);
+      }
+      const bulkModeSelectButton = event.target.closest("[data-bulk-mode-select]");
+      if (bulkModeSelectButton) {
+        const bulkEntry = document.getElementById("bulkSongEntry");
+        const chosenMode = bulkModeSelectButton.dataset.bulkModeSelect;
+        if (bulkEntry) bulkEntry.dataset.bulkMode = chosenMode;
+        setBulkModeButtonState(chosenMode);
+        window.requestAnimationFrame(() => {
+          if (songImportText) songImportText.focus({ preventScroll: true });
+        });
       }
       const indexSummary = event.target.closest(".popular-index-menu > summary");
       if (indexSummary) {
