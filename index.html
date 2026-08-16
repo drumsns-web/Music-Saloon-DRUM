@@ -11460,6 +11460,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let requestedSongItems = [];
     let correctingSongItem = null;
     let popularSongCategory = "jp";
+    let popularSongCategoryBeforeSearch = null;
     let popularSongSortMode = "artist";
     let popularSongSearchScopeMode = "artist";
     let catalogSearchItems = [];
@@ -15076,7 +15077,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function runPopularSongSearch(forceRefresh = false) {
-      if (popularSongSearch.value.trim()) popularSongCategory = "catalog";
+      if (popularSongSearch.value.trim()) {
+        if (popularSongCategory !== "catalog") popularSongCategoryBeforeSearch = popularSongCategory;
+        popularSongCategory = "catalog";
+      } else if (popularSongCategoryBeforeSearch) {
+        popularSongCategory = popularSongCategoryBeforeSearch;
+        popularSongCategoryBeforeSearch = null;
+      }
       return loadPopularSongs(forceRefresh);
     }
 
@@ -16511,6 +16518,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const button = event.target.closest("[data-popular-category]");
       if (!button) return;
       popularSongCategory = button.dataset.popularCategory;
+      popularSongCategoryBeforeSearch = null;
       if (popularSongCategory !== "catalog") popularSongSearch.value = "";
       loadPopularSongs();
     });
@@ -16533,6 +16541,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       event.preventDefault();
       runPopularSongSearch();
     });
+    popularSongSearch.addEventListener("input", () => {
+      if (!popularSongSearch.value.trim()) runPopularSongSearch();
+    });
+    popularSongSearch.addEventListener("search", () => {
+      if (!popularSongSearch.value.trim()) runPopularSongSearch();
+    });
     popularSongIndexJump.addEventListener("submit", (event) => {
       const form = event.target.closest("[data-popular-index-search]");
       if (!form) return;
@@ -16540,6 +16554,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const input = form.querySelector("[data-popular-index-search-input]");
       popularSongSearch.value = input ? input.value : "";
       runPopularSongSearch();
+    });
+    popularSongIndexJump.addEventListener("input", (event) => {
+      const input = event.target.closest("[data-popular-index-search-input]");
+      if (!input) return;
+      if (!input.value.trim()) {
+        popularSongSearch.value = "";
+        runPopularSongSearch();
+      }
     });
     refreshPopularSongs.addEventListener("click", async () => {
       popularArtistSongCache.clear();
