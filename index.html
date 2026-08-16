@@ -11462,6 +11462,22 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let popularArtistSongItems = [];
     const popularArtistSongCache = new Map();
     let deviceSongCatalog = [];
+    let deviceSongCatalogArtistIndex = null;
+    function getDeviceSongCatalogArtistIndex() {
+      if (deviceSongCatalogArtistIndex) return deviceSongCatalogArtistIndex;
+      const index = new Map();
+      deviceSongCatalog.forEach((item) => {
+        const key = normalizeKana(item.artist);
+        let bucket = index.get(key);
+        if (!bucket) {
+          bucket = [];
+          index.set(key, bucket);
+        }
+        bucket.push(item);
+      });
+      deviceSongCatalogArtistIndex = index;
+      return index;
+    }
     let deviceSongCatalogMeta = null;
     let deviceSongCatalogLoadPromise = null;
     let requestedSongItems = [];
@@ -14715,6 +14731,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       deviceSongCatalog = songsToSave;
       deviceSongCatalogMeta = { savedAt, schema: songCatalogStorageSchema, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
       deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
+      deviceSongCatalogArtistIndex = null;
       popularArtistSongCache.clear();
       popularArtistSongItems = [];
       if (navigator.storage && typeof navigator.storage.persist === "function") {
@@ -15185,7 +15202,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           await loadDeviceSongCatalogFromStorage();
           let artistSongs;
           if (canUseSavedSongCatalog()) {
-            artistSongs = deviceSongCatalog.filter((item) => normalizeKana(item.artist) === cacheKey);
+            artistSongs = getDeviceSongCatalogArtistIndex().get(cacheKey) || [];
           } else {
             const params = new URLSearchParams({ action: "popular_artist_songs", artist });
             const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
@@ -16592,6 +16609,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         deviceSongCatalog = [];
         deviceSongCatalogMeta = null;
         deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
+        deviceSongCatalogArtistIndex = null;
         popularArtistSongCache.clear();
         popularArtistSongItems = [];
         updateDeviceSongCatalogStatus();
