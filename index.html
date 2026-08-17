@@ -11204,6 +11204,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
+      "Uフレットでコード検索 ↗": "Search U-Fret ↗",
+      "楽器.meでコード検索 ↗": "Search Gakki.me ↗",
       "歌詞を検索 ↗": "Search Lyrics ↗",
       "27,907曲から曲名・歌手名を検索": "Search 27,907 songs by title or artist",
       "27,907曲から曲名・歌手名・通称を検索": "Search 27,907 songs by title, artist, or alias"
@@ -15087,6 +15089,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
       const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
+      const ufretUrl = `https://www.ufret.jp/search.php?key=${encodeURIComponent(searchQuery)}`;
+      const gakkiUrl = `https://gakufu.gakki.me/search/?word=${encodeURIComponent(searchQuery)}`;
       const lyricsUrl = `https://www.google.com/search?q=${encodeURIComponent(`${searchQuery} 歌詞`)}`;
       return `
         <details class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
@@ -15102,6 +15106,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
+              <a href="${escapeText(ufretUrl)}" target="_blank" rel="noopener">${escapeText(uiText("Uフレットでコード検索 ↗"))}</a>
+              <a href="${escapeText(gakkiUrl)}" target="_blank" rel="noopener">${escapeText(uiText("楽器.meでコード検索 ↗"))}</a>
               <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
             </div>
             <div class="popular-song-actions">
