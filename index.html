@@ -11205,7 +11205,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
       "Uフレットでコード検索 ↗": "Search U-Fret ↗",
-      "楽器.meでコード検索 ↗": "Search Gakki.me ↗",
+      "J-Total Musicでコード検索 ↗": "Search J-Total Music ↗",
       "歌詞を検索 ↗": "Search Lyrics ↗",
       "27,907曲から曲名・歌手名を検索": "Search 27,907 songs by title or artist",
       "27,907曲から曲名・歌手名・通称を検索": "Search 27,907 songs by title, artist, or alias"
@@ -15090,7 +15090,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
       const ufretUrl = `https://www.ufret.jp/search.php?key=${encodeURIComponent(searchQuery)}`;
-      const gakkiUrl = `https://gakufu.gakki.me/search/?word=${encodeURIComponent(searchQuery)}`;
+      const gakkiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:music.j-total.net ${searchQuery}`)}`;
       const lyricsUrl = `https://www.google.com/search?q=${encodeURIComponent(`${searchQuery} 歌詞`)}`;
       return `
         <details class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
@@ -15107,7 +15107,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
               <a href="${escapeText(ufretUrl)}" target="_blank" rel="noopener">${escapeText(uiText("Uフレットでコード検索 ↗"))}</a>
-              <a href="${escapeText(gakkiUrl)}" target="_blank" rel="noopener">${escapeText(uiText("楽器.meでコード検索 ↗"))}</a>
+              <a href="${escapeText(gakkiUrl)}" target="_blank" rel="noopener">${escapeText(uiText("J-Total Musicでコード検索 ↗"))}</a>
               <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
             </div>
             <div class="popular-song-actions">
@@ -16069,6 +16069,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                 <strong>${highlightText(item.title, query)}</strong>
                 <span class="compact-song-links">
                   <button class="song-external-search" type="button" data-song-chords="${escapeText(item.id)}">♬ ${escapeText(uiText("コード"))}</button>
+                  <button class="song-external-search" type="button" data-song-ufret="${escapeText(item.id)}">🎸 Uフレ</button>
+                  <button class="song-external-search" type="button" data-song-gakki="${escapeText(item.id)}">🎵 J-Total</button>
                   <button class="song-external-search" type="button" data-song-lyrics="${escapeText(item.id)}">歌 ${escapeText(uiText("歌詞"))}</button>
                 </span>
               </div>
@@ -17024,7 +17026,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const words = [item.title, item.artist].filter(Boolean).join(" ");
       const url = type === "chords"
         ? `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${words}`)}`
-        : `https://www.uta-net.com/search/?Aselect=2&Keyword=${encodeURIComponent(item.title || words)}&Bselect=3`;
+        : type === "ufret"
+          ? `https://www.ufret.jp/search.php?key=${encodeURIComponent(words)}`
+          : type === "gakki"
+            ? `https://www.google.com/search?q=${encodeURIComponent(`site:music.j-total.net ${words}`)}`
+            : `https://www.uta-net.com/search/?Aselect=2&Keyword=${encodeURIComponent(item.title || words)}&Bselect=3`;
       window.open(url, "_blank", "noopener");
     }
 
@@ -17132,6 +17138,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const chordButton = event.target.closest("[data-song-chords]");
       if (chordButton) {
         openSongReference(chordButton.dataset.songChords, "chords");
+        return;
+      }
+      const ufretButton = event.target.closest("[data-song-ufret]");
+      if (ufretButton) {
+        openSongReference(ufretButton.dataset.songUfret, "ufret");
+        return;
+      }
+      const gakkiButton = event.target.closest("[data-song-gakki]");
+      if (gakkiButton) {
+        openSongReference(gakkiButton.dataset.songGakki, "gakki");
         return;
       }
       const lyricButton = event.target.closest("[data-song-lyrics]");
