@@ -15192,6 +15192,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (popularSongSearch.value.trim()) {
         if (popularSongCategory !== "catalog") popularSongCategoryBeforeSearch = popularSongCategory;
         popularSongCategory = "catalog";
+        popularIndexCollapsed = true;
+        try { localStorage.setItem("msdPopularIndexCollapsed", "1"); } catch (error) { /* ignore */ }
       } else if (popularSongCategoryBeforeSearch) {
         popularSongCategory = popularSongCategoryBeforeSearch;
         popularSongCategoryBeforeSearch = null;
