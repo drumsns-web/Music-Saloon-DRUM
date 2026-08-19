@@ -9068,6 +9068,22 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     </div>
   </div>
 
+  <div class="drink-modal" id="songCatalogUpdateModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="songCatalogUpdateModalTitle">
+    <div class="drink-modal-panel song-record-confirm-panel">
+      <div class="section-head">
+        <div>
+          <h2 id="songCatalogUpdateModalTitle">曲データの追加情報があります</h2>
+          <p class="lead" id="songCatalogUpdateModalBody">新しく追加・訂正された曲データがあります。今すぐ端末へ更新しますか？</p>
+        </div>
+        <button class="btn ghost" id="closeSongCatalogUpdateModal" type="button">閉じる</button>
+      </div>
+      <div class="control-row">
+        <button class="btn primary" id="confirmSongCatalogUpdate" type="button">今すぐ更新する</button>
+        <button class="btn ghost" id="laterSongCatalogUpdate" type="button">あとで</button>
+      </div>
+    </div>
+  </div>
+
   <div class="drink-modal" id="staffSongsModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="staffSongsModalTitle">
     <div class="drink-modal-panel staff-songs-modal-panel">
       <div class="section-head">
@@ -9623,6 +9639,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const createSetlistWithSong = document.getElementById("createSetlistWithSong");
     const quickSetlistStatus = document.getElementById("quickSetlistStatus");
     const liveModeModal = document.getElementById("liveModeModal");
+    const songCatalogUpdateModal = document.getElementById("songCatalogUpdateModal");
+    const songCatalogUpdateModalBody = document.getElementById("songCatalogUpdateModalBody");
+    const closeSongCatalogUpdateModal = document.getElementById("closeSongCatalogUpdateModal");
+    const confirmSongCatalogUpdate = document.getElementById("confirmSongCatalogUpdate");
+    const laterSongCatalogUpdate = document.getElementById("laterSongCatalogUpdate");
     const liveModeSetlistTitle = document.getElementById("liveModeSetlistTitle");
     const liveModeProgress = document.getElementById("liveModeProgress");
     const liveModeSongTitle = document.getElementById("liveModeSongTitle");
@@ -9938,6 +9959,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
     let songCatalogVersion = "";
+    const songCatalogVersionCheckStorageKey = "msdSongCatalogVersionCheckedAt";
+    const songCatalogVersionCheckIntervalMs = 6 * 60 * 60 * 1000; // 端末保存データがあれば6時間はサーバー確認を省略
+    const songCatalogUpdatePromptDismissedStorageKey = "msdSongCatalogUpdatePromptDismissedVersion";
 
     function songCatalogCountLabel(total = songCatalogTotal) {
       const count = Math.max(1, Number(total) || initialSongCatalogTotal);
@@ -10001,6 +10025,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
 
     async function refreshSongCatalogTotal(forceRefresh = false) {
       if (songCatalogTotalLoaded && !forceRefresh) return songCatalogTotal;
+      if (!forceRefresh && deviceSongCatalog.length > 0) {
+        let lastCheckedAt = 0;
+        try { lastCheckedAt = Number(localStorage.getItem(songCatalogVersionCheckStorageKey)) || 0; } catch (error) { lastCheckedAt = 0; }
+        if (Date.now() - lastCheckedAt < songCatalogVersionCheckIntervalMs) {
+          // 端末に保存済みのデータがあり、直近で確認済みなのでサーバーへは問い合わせずそのまま使う
+          return songCatalogTotal;
+        }
+      }
       try {
         const params = new URLSearchParams({ action: "song_catalog_count" });
         if (forceRefresh) params.set("refresh", String(Date.now()));
@@ -10010,6 +10042,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         updateSongCatalogTotal(payload.count);
         songCatalogVersion = String(payload.version || "");
         songCatalogTotalLoaded = true;
+        try { localStorage.setItem(songCatalogVersionCheckStorageKey, String(Date.now())); } catch (error) { /* ignore */ }
+        maybeShowSongCatalogUpdatePrompt();
       } catch (error) {
         console.warn(error);
       }
@@ -14778,6 +14812,42 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       return !songCatalogVersion || String(deviceSongCatalogMeta.version || "") === songCatalogVersion;
     }
 
+    function openSongCatalogUpdatePrompt(newCount) {
+      if (!songCatalogUpdateModal) return;
+      if (songCatalogUpdateModalBody) {
+        songCatalogUpdateModalBody.textContent = currentLanguage === "en"
+          ? `New or corrected song data is available (${Number(newCount || songCatalogTotal).toLocaleString()} songs). Update this device now?`
+          : `新しく追加・訂正された曲データがあります（全${Number(newCount || songCatalogTotal).toLocaleString()}曲）。今すぐ端末へ更新しますか？`;
+      }
+      songCatalogUpdateModal.classList.add("show");
+      songCatalogUpdateModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSongCatalogUpdatePrompt() {
+      if (!songCatalogUpdateModal) return;
+      songCatalogUpdateModal.classList.remove("show");
+      songCatalogUpdateModal.setAttribute("aria-hidden", "true");
+    }
+
+    function dismissSongCatalogUpdatePromptForVersion(version) {
+      try {
+        localStorage.setItem(songCatalogUpdatePromptDismissedStorageKey, String(version || ""));
+      } catch (error) { /* ignore */ }
+    }
+
+    function maybeShowSongCatalogUpdatePrompt() {
+      // すでに端末へ曲データを保存済みで、サーバー側のバージョンと異なる場合のみポップアップで知らせる
+      if (!songCatalogUpdateModal || !deviceSongCatalogMeta || !deviceSongCatalog.length) return;
+      if (!songCatalogVersion) return;
+      const savedVersion = String(deviceSongCatalogMeta.version || "");
+      if (savedVersion === songCatalogVersion) return;
+      let dismissedVersion = "";
+      try { dismissedVersion = localStorage.getItem(songCatalogUpdatePromptDismissedStorageKey) || ""; } catch (error) { dismissedVersion = ""; }
+      if (dismissedVersion === songCatalogVersion) return;
+      if (songCatalogUpdateModal.classList.contains("show")) return;
+      openSongCatalogUpdatePrompt(songCatalogTotal);
+    }
+
     async function saveDownloadedSongCatalog(payload) {
       const songsToSave = Array.isArray(payload && payload.songs)
         ? payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist)
@@ -18694,6 +18764,33 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     songRecordConfirmModal.addEventListener("click", (event) => {
       if (event.target === songRecordConfirmModal) closeSongRecordConfirmPanel();
     });
+    if (confirmSongCatalogUpdate) {
+      confirmSongCatalogUpdate.addEventListener("click", async () => {
+        const versionAtPromptTime = songCatalogVersion;
+        closeSongCatalogUpdatePrompt();
+        await downloadLatestSongCatalog();
+        dismissSongCatalogUpdatePromptForVersion(versionAtPromptTime);
+      });
+    }
+    if (laterSongCatalogUpdate) {
+      laterSongCatalogUpdate.addEventListener("click", () => {
+        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
+        closeSongCatalogUpdatePrompt();
+      });
+    }
+    if (closeSongCatalogUpdateModal) {
+      closeSongCatalogUpdateModal.addEventListener("click", () => {
+        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
+        closeSongCatalogUpdatePrompt();
+      });
+    }
+    if (songCatalogUpdateModal) {
+      songCatalogUpdateModal.addEventListener("click", (event) => {
+        if (event.target !== songCatalogUpdateModal) return;
+        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
+        closeSongCatalogUpdatePrompt();
+      });
+    }
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
@@ -18702,6 +18799,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (songTransferModal.classList.contains("show")) closeSongTransferPanel();
       if (quickSetlistModal.classList.contains("show")) closeQuickSetlistPanel();
       if (songRecordConfirmModal.classList.contains("show")) closeSongRecordConfirmPanel();
+      if (songCatalogUpdateModal && songCatalogUpdateModal.classList.contains("show")) {
+        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
+        closeSongCatalogUpdatePrompt();
+      }
       if (staffSongsModal.classList.contains("show")) closeStaffSongsPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
@@ -18884,7 +18985,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     renderSongs();
     renderHistory();
     renderBackupStatus();
-    loadDeviceSongCatalogFromStorage();
+    loadDeviceSongCatalogFromStorage().then(() => {
+      if (deviceSongCatalog.length) refreshSongCatalogTotal(false);
+    });
     showView(location.hash.replace("#", "") || "top", false);
     applyLanguage();
     updateSongPhotoTargetUi();
