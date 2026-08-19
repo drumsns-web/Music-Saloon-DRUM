@@ -2802,6 +2802,7 @@
 
     tr:last-child td { border-bottom: 0; }
     .empty { color: var(--muted); text-align: center; padding: 26px; font-weight: 800; }
+    .empty [data-popular-fallback-catalog] { display: inline-block; margin-top: 14px; }
     .status { color: var(--leaf); font-weight: 900; }
     .song-title-cell,
     .artist-cell {
@@ -11609,6 +11610,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let correctingSongItem = null;
     let popularSongCategory = "jp";
     let popularSongCategoryBeforeSearch = null;
+    let popularSongFallbackCatalogCount = 0;
     let popularIndexCollapsed = false;
     try { popularIndexCollapsed = localStorage.getItem("msdPopularIndexCollapsed") === "1"; } catch (error) { popularIndexCollapsed = false; }
     let popularSongSortMode = "artist";
@@ -15134,8 +15136,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const collapseLabel = popularIndexCollapsed
         ? (currentLanguage === "en" ? "▾ Show search / index" : "▾ 検索・索引を開く")
         : (currentLanguage === "en" ? "▴ Collapse" : "▴ 検索・索引を折りたたむ");
+      const categoryLabels = {
+        jp: currentLanguage === "en" ? "Japanese" : "国内曲",
+        western: currentLanguage === "en" ? "International" : "洋楽曲",
+        catalog: currentLanguage === "en" ? "Full catalog" : "全曲から検索"
+      };
+      const categoryButtonsHtml = ["jp", "western", "catalog"].map((key) => `
+          <button type="button" class="${popularSongCategory === key ? "is-active" : "ghost"}" data-popular-index-category="${key}" aria-pressed="${popularSongCategory === key}">${escapeText(categoryLabels[key])}</button>
+        `).join("");
       popularSongIndexJump.innerHTML = `
         <div class="popular-index-toolbar-head">
+          <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose song list" : "どこから探すか選ぶ"}">${categoryButtonsHtml}</div>
           <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
             <button type="button" class="${mode === "artist" ? "is-active" : ""}" data-popular-index-mode="artist" aria-pressed="${mode === "artist"}">${currentLanguage === "en" ? "Artist" : "歌手"}</button>
             <button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>
@@ -15214,7 +15225,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
       renderPopularExactIndex(items, indexMode);
       if (!items.length) {
-        popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
+        const fallbackHtml = popularSongFallbackCatalogCount > 0
+          ? `<button type="button" class="btn primary" data-popular-fallback-catalog>${escapeText(currentLanguage === "en"
+              ? `Search the full catalog instead (${popularSongFallbackCatalogCount} found) →`
+              : `全曲から検索すると${popularSongFallbackCatalogCount}件見つかりました。切り替えて見る →`)}</button>`
+          : "";
+        popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}${fallbackHtml}</div></div>`;
         return;
       }
       if (popularSongSortMode === "rank") {
@@ -15378,6 +15394,23 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           : (currentLanguage === "en"
             ? `Open a listed artist to browse all of their songs in the full catalog.${usingSavedCatalog ? " Saved data on this device is being used." : ""}`
             : `掲載歌手を開くと、全曲データにあるその歌手の曲をすべて見られます。${usingSavedCatalog ? "端末保存データを使用中です。" : ""}`);
+        popularSongFallbackCatalogCount = 0;
+        if (!popularSongItems.length && query && popularSongCategory !== "catalog") {
+          try {
+            if (usingSavedCatalog) {
+              popularSongFallbackCatalogCount = filterSavedSongCatalog(query, "catalog", popularSongSortMode, popularSongSearchScopeMode, 999).length;
+            } else {
+              const fallbackParams = new URLSearchParams({ action: "popular_songs", category: "catalog", sort: popularSongSortMode, scope: popularSongSearchScopeMode, q: query, limit: "999" });
+              const fallbackResponse = await fetch(`${sharedRankingApiUrl}?${fallbackParams.toString()}`, { cache: "no-store" });
+              const fallbackPayload = await fallbackResponse.json();
+              if (fallbackResponse.ok && fallbackPayload.ok && Array.isArray(fallbackPayload.songs)) {
+                popularSongFallbackCatalogCount = fallbackPayload.songs.length;
+              }
+            }
+          } catch (error) {
+            console.warn(error);
+          }
+        }
         renderPopularSongs();
       } catch (error) {
         console.warn(error);
@@ -16774,7 +16807,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (!popularSongSearch.value.trim()) runPopularSongSearch();
     });
     popularSongSearch.addEventListener("search", () => {
-      if (!popularSongSearch.value.trim()) runPopularSongSearch();
+      runPopularSongSearch();
     });
     popularSongIndexJump.addEventListener("submit", (event) => {
       const form = event.target.closest("[data-popular-index-search]");
@@ -16791,6 +16824,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         popularSongSearch.value = "";
         runPopularSongSearch();
       }
+    });
+    popularSongIndexJump.addEventListener("search", (event) => {
+      const input = event.target.closest("[data-popular-index-search-input]");
+      if (!input) return;
+      popularSongSearch.value = input.value;
+      runPopularSongSearch();
     });
     refreshPopularSongs.addEventListener("click", async () => {
       popularArtistSongCache.clear();
@@ -17737,6 +17776,19 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const previousSortMode = popularSongSortMode;
         popularSongSortMode = indexModeButton.dataset.popularIndexMode;
         if (popularSongSearchScopeMode === previousSortMode) popularSongSearchScopeMode = popularSongSortMode;
+        loadPopularSongs();
+      }
+      const indexCategoryButton = event.target.closest("[data-popular-index-category]");
+      if (indexCategoryButton && indexCategoryButton.dataset.popularIndexCategory !== popularSongCategory) {
+        popularSongCategory = indexCategoryButton.dataset.popularIndexCategory;
+        popularSongCategoryBeforeSearch = null;
+        if (popularSongCategory !== "catalog") popularSongSearch.value = "";
+        loadPopularSongs();
+      }
+      const fallbackCatalogButton = event.target.closest("[data-popular-fallback-catalog]");
+      if (fallbackCatalogButton) {
+        popularSongCategory = "catalog";
+        popularSongCategoryBeforeSearch = null;
         loadPopularSongs();
       }
       const closeArtistButton = event.target.closest("[data-popular-index-close-artist]");
