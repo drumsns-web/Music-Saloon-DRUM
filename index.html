@@ -14907,6 +14907,27 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       updateSongCatalogTotal(deviceSongCatalog.length);
     }
 
+    async function fetchSongCatalogFull() {
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 120000);
+      try {
+        const params = new URLSearchParams({ action: "song_catalog_full", refresh: String(Date.now()) });
+        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, {
+          cache: "no-store",
+          signal: controller.signal
+        });
+        if (!response.ok) return null;
+        const payload = await response.json();
+        if (!payload.ok || !Array.isArray(payload.songs)) return null;
+        return payload;
+      } catch (error) {
+        console.warn(error);
+        return null;
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
+    }
+
     async function fetchSongCatalogChunk(offset, limit) {
       let lastError;
       for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -14945,39 +14966,49 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? "Downloading and saving all song data…"
         : "全曲データをダウンロードして端末へ保存しています…";
       try {
-        const chunkSize = 1500;
-        const downloadedSongs = [];
-        let offset = 0;
+        const fullPayload = await fetchSongCatalogFull();
         let expectedCount = 0;
         let expectedVersion = "";
         let generatedAt = "";
-        while (true) {
-          const payload = await fetchSongCatalogChunk(offset, chunkSize);
-          const payloadCount = Math.max(0, Number(payload.count) || 0);
-          const payloadVersion = String(payload.version || "");
-          if (!expectedCount) {
-            expectedCount = payloadCount || payload.songs.length;
-            expectedVersion = payloadVersion;
-            generatedAt = String(payload.generated_at || "");
-          } else if (payloadCount !== expectedCount || (expectedVersion && payloadVersion && payloadVersion !== expectedVersion)) {
-            const changedError = new Error("Song catalog changed during download");
-            changedError.code = "CATALOG_CHANGED";
-            throw changedError;
+        let downloadedSongs;
+        if (fullPayload) {
+          downloadedSongs = fullPayload.songs;
+          expectedCount = Math.max(0, Number(fullPayload.count) || downloadedSongs.length);
+          expectedVersion = String(fullPayload.version || "");
+          generatedAt = String(fullPayload.generated_at || "");
+        } else {
+          // 一括取得に失敗した場合は、これまで通り分割取得を試す(古いapi.phpにも対応)
+          const chunkSize = 1500;
+          downloadedSongs = [];
+          let offset = 0;
+          while (true) {
+            const payload = await fetchSongCatalogChunk(offset, chunkSize);
+            const payloadCount = Math.max(0, Number(payload.count) || 0);
+            const payloadVersion = String(payload.version || "");
+            if (!expectedCount) {
+              expectedCount = payloadCount || payload.songs.length;
+              expectedVersion = payloadVersion;
+              generatedAt = String(payload.generated_at || "");
+            } else if (payloadCount !== expectedCount || (expectedVersion && payloadVersion && payloadVersion !== expectedVersion)) {
+              const changedError = new Error("Song catalog changed during download");
+              changedError.code = "CATALOG_CHANGED";
+              throw changedError;
+            }
+            downloadedSongs.push(...payload.songs);
+            const progressCount = Math.min(downloadedSongs.length, expectedCount);
+            deviceSongCatalogStatus.textContent = currentLanguage === "en"
+              ? `Downloading song data… ${progressCount.toLocaleString()} / ${expectedCount.toLocaleString()}`
+              : `全曲データを取得中… ${progressCount.toLocaleString()}／${expectedCount.toLocaleString()}曲`;
+            const isLegacyResponse = typeof payload.complete !== "boolean";
+            if (isLegacyResponse || payload.complete) break;
+            const nextOffset = Number(payload.next_offset);
+            if (!Number.isFinite(nextOffset) || nextOffset <= offset) {
+              const incompleteError = new Error("Invalid next offset in song catalog download");
+              incompleteError.code = "CATALOG_INCOMPLETE";
+              throw incompleteError;
+            }
+            offset = nextOffset;
           }
-          downloadedSongs.push(...payload.songs);
-          const progressCount = Math.min(downloadedSongs.length, expectedCount);
-          deviceSongCatalogStatus.textContent = currentLanguage === "en"
-            ? `Downloading song data… ${progressCount.toLocaleString()} / ${expectedCount.toLocaleString()}`
-            : `全曲データを取得中… ${progressCount.toLocaleString()}／${expectedCount.toLocaleString()}曲`;
-          const isLegacyResponse = typeof payload.complete !== "boolean";
-          if (isLegacyResponse || payload.complete) break;
-          const nextOffset = Number(payload.next_offset);
-          if (!Number.isFinite(nextOffset) || nextOffset <= offset) {
-            const incompleteError = new Error("Invalid next offset in song catalog download");
-            incompleteError.code = "CATALOG_INCOMPLETE";
-            throw incompleteError;
-          }
-          offset = nextOffset;
         }
         await saveDownloadedSongCatalog({
           version: expectedVersion,
