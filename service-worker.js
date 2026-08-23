@@ -1,4 +1,4 @@
-const CACHE_NAME = "music-saloon-drum-v20260818-96";
+const CACHE_NAME = "music-saloon-drum-v20260823-97";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -34,12 +34,18 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin || url.pathname.includes("/api/")) return;
 
   if (request.mode === "navigate") {
+    const cachedPage = caches.match("./index.html");
+    const updatePage = fetch(request, { cache: "no-store" })
+      .then(async (response) => {
+        if (response.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put("./index.html", response.clone());
+        }
+        return response;
+      });
+    event.waitUntil(updatePage.catch(() => undefined));
     event.respondWith(
-      fetch(request, { cache: "no-store" })
-        .then((response) => {
-          if (response.ok) caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", response.clone()));
-          return response;
-        })
+      cachedPage.then((cached) => cached || updatePage)
         .catch(() => caches.match("./index.html"))
     );
     return;

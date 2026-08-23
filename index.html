@@ -14978,7 +14978,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           generatedAt = String(fullPayload.generated_at || "");
         } else {
           // 一括取得に失敗した場合は、これまで通り分割取得を試す(古いapi.phpにも対応)
-          const chunkSize = 1500;
+          const chunkSize = 3000;
           downloadedSongs = [];
           let offset = 0;
           while (true) {
