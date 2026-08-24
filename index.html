@@ -4812,6 +4812,36 @@
       line-height: 1.6;
     }
 
+    .request-progress-status.is-sending {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--forest);
+    }
+
+    .request-progress-status.is-sending::before {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 16px;
+      border: 3px solid rgba(var(--theme-dark-rgb), .2);
+      border-top-color: var(--orange);
+      border-radius: 50%;
+      content: "";
+      animation: request-send-spin .8s linear infinite;
+    }
+
+    .request-progress-status.is-success {
+      color: #176238;
+    }
+
+    .request-progress-status.is-error {
+      color: #a12622;
+    }
+
+    @keyframes request-send-spin {
+      to { transform: rotate(360deg); }
+    }
+
     .shared-ranking .kana-group {
       margin-top: 14px;
     }
@@ -12724,6 +12754,80 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
 
+    function startRequestProgress(button, statusNode, labels = {}) {
+      const originalLabel = button.textContent;
+      const startedAt = Date.now();
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+      statusNode.classList.remove("is-success", "is-error");
+      statusNode.classList.add("request-progress-status", "is-sending");
+      const update = () => {
+        const seconds = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
+        const waiting = seconds >= 15;
+        statusNode.textContent = currentLanguage === "en"
+          ? (waiting ? `The server is still processing (${seconds}s). Please keep this screen open.` : `Sending (${seconds}s)…`)
+          : (waiting ? `サーバーで処理中です（${seconds}秒）。この画面のままお待ちください。` : `送信中です（${seconds}秒）…`);
+        button.textContent = currentLanguage === "en"
+          ? (labels.sendingEn || "Sending…")
+          : (labels.sendingJa || "送信中…");
+      };
+      update();
+      const timer = window.setInterval(update, 1000);
+      return () => {
+        window.clearInterval(timer);
+        button.removeAttribute("aria-busy");
+        button.textContent = originalLabel;
+        statusNode.classList.remove("is-sending");
+      };
+    }
+
+    async function readRequestApiResponse(response) {
+      let payload;
+      try {
+        payload = await response.json();
+      } catch (error) {
+        const invalidResponseError = new Error("invalid api response");
+        invalidResponseError.code = "INVALID_RESPONSE";
+        throw invalidResponseError;
+      }
+      if (!response.ok || !payload || !payload.ok) {
+        const apiError = new Error(String(payload?.message || "request api unavailable"));
+        apiError.code = `HTTP_${response.status}`;
+        throw apiError;
+      }
+      return payload;
+    }
+
+    function requestFailureText(error, bulk = false) {
+      if (!navigator.onLine) {
+        return currentLanguage === "en"
+          ? "You are offline. Reconnect and try again."
+          : "インターネット接続が切れています。接続後にもう一度お試しください。";
+      }
+      if (error?.code === "INVALID_RESPONSE") {
+        return currentLanguage === "en"
+          ? "The server response could not be confirmed. Please wait a moment before trying again."
+          : "サーバーの応答を確認できませんでした。少し時間を空けてからもう一度お試しください。";
+      }
+      if (error?.code === "HTTP_500" || error?.code === "HTTP_502" || error?.code === "HTTP_503" || error?.code === "HTTP_504") {
+        return currentLanguage === "en"
+          ? "The server is busy. Please wait a moment and try again."
+          : "サーバーが混み合っています。少し時間を空けてからもう一度お試しください。";
+      }
+      if (bulk) {
+        return currentLanguage === "en"
+          ? "Catalog requests could not be sent. Check your connection and try again."
+          : "曲データへの追加依頼を送信できませんでした。通信状態を確認して、もう一度お試しください。";
+      }
+      return uiText("送信できませんでした。通信状態を確認して再度お試しください。");
+    }
+
+    function showRequestResult(statusNode, text, type = "success") {
+      statusNode.classList.remove("is-sending", "is-success", "is-error");
+      statusNode.classList.add("request-progress-status", type === "error" ? "is-error" : "is-success");
+      statusNode.textContent = text;
+    }
+
     function normalizeKana(value) {
       return String(value || "")
         .trim()
@@ -15769,44 +15873,41 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         return;
       }
       if (!title || !artist || !titleReading || !artistReading) return;
-      submitSongRequest.disabled = true;
-      songRequestStatus.textContent = uiText("送信しています。");
+      const stopProgress = startRequestProgress(submitSongRequest, songRequestStatus);
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "song_request", requester_name: requesterName, title, title_reading: titleReading, artist, artist_reading: artistReading, search_keywords: searchKeywords, event_id: createId() })
         });
-        const payload = await response.json();
-        if (!response.ok || !payload.ok) throw new Error("song request unavailable");
+        const payload = await readRequestApiResponse(response);
         if (payload.status === "already_catalogued") {
-          songRequestStatus.textContent = uiText("この曲はすでに曲一覧にあります。全曲検索からマイ曲リストへ登録できます。");
+          showRequestResult(songRequestStatus, uiText("この曲はすでに曲一覧にあります。全曲検索からマイ曲リストへ登録できます。"));
           popularSongCategory = "catalog";
           popularSongSearch.value = title;
-          await loadPopularSongs();
-          popularSongList.scrollIntoView({ behavior: "smooth", block: "start" });
+          void loadPopularSongs().then(() => popularSongList.scrollIntoView({ behavior: "smooth", block: "start" }));
         } else if (payload.status === "already_requested") {
-          songRequestStatus.textContent = uiText("この曲はすでにリクエストされています。既存の1件にまとめました。");
-          await loadSongRequests();
+          showRequestResult(songRequestStatus, uiText("この曲はすでにリクエストされています。既存の1件にまとめました。"));
+          void loadSongRequests();
         } else if (payload.status === "keywords_updated") {
-          songRequestStatus.textContent = uiText("検索用キーワードを曲データへ追加しました。");
+          showRequestResult(songRequestStatus, uiText("検索用キーワードを曲データへ追加しました。"));
           songRequestKeywords.value = "";
-          await loadPopularSongs();
+          void loadPopularSongs();
         } else {
           localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
-          songRequestStatus.textContent = currentLanguage === "en" ? "The request was sent and is awaiting owner approval." : "追加リクエストを送信しました。店主の確認待ちです。";
+          showRequestResult(songRequestStatus, currentLanguage === "en" ? "The request was sent and is awaiting owner approval." : "追加リクエストを送信しました。店主の確認待ちです。");
           songRequestTitle.value = "";
           songRequestTitleReading.value = "";
           songRequestArtist.value = "";
           songRequestArtistReading.value = "";
           songRequestKeywords.value = "";
-          await loadSongRequests();
-          await loadPopularSongs();
+          void Promise.allSettled([loadSongRequests(), loadPopularSongs()]);
         }
       } catch (error) {
         console.warn(error);
-        songRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
+        showRequestResult(songRequestStatus, requestFailureText(error), "error");
       } finally {
+        stopProgress();
         submitSongRequest.disabled = false;
       }
     }
@@ -15824,25 +15925,24 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         songGeneralRequestComment.focus();
         return;
       }
-      submitSongGeneralRequest.disabled = true;
-      songGeneralRequestStatus.textContent = uiText("送信しています。");
+      const stopProgress = startRequestProgress(submitSongGeneralRequest, songGeneralRequestStatus);
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "song_general_request", requester_name: requesterName, comment, event_id: createId() })
         });
-        const payload = await response.json();
-        if (!response.ok || !payload.ok) throw new Error("general song request unavailable");
+        await readRequestApiResponse(response);
         localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
         if (songRequestRequester) songRequestRequester.value = requesterName;
         if (bulkSongRequestRequester) bulkSongRequestRequester.value = requesterName;
         songGeneralRequestComment.value = "";
-        songGeneralRequestStatus.textContent = uiText("自由リクエストを送信しました。");
+        showRequestResult(songGeneralRequestStatus, uiText("自由リクエストを送信しました。"));
       } catch (error) {
         console.warn(error);
-        songGeneralRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
+        showRequestResult(songGeneralRequestStatus, requestFailureText(error), "error");
       } finally {
+        stopProgress();
         submitSongGeneralRequest.disabled = false;
       }
     }
@@ -17832,8 +17932,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? `Request ${requestable.length} songs for the shared song catalog? Please verify every title and artist before sending.${skippedCount ? `\n\n${skippedCount} song(s) without an artist will not be sent.` : ""}${overLimitCount ? `\nOnly the first 300 songs can be sent at once. ${overLimitCount} song(s) will remain in the preview.` : ""}`
         : `${requestable.length}曲を共有の曲データへ一括追加依頼しますか？\n\n曲名・歌手名に間違いがないか、送信前にもう一度確認してください。${skippedCount ? `\n歌手名のない${skippedCount}曲は送信しません。` : ""}${overLimitCount ? `\n一度に送信できるのは300曲までです。残り${overLimitCount}曲は確認欄に残ります。` : ""}`;
       if (!confirm(confirmMessage)) return;
-      requestBulkCatalogButton.disabled = true;
-      songImportStatus.textContent = currentLanguage === "en" ? "Sending catalog requests…" : "曲データへの追加依頼を送信しています…";
+      const stopProgress = startRequestProgress(requestBulkCatalogButton, songImportStatus, { sendingEn: "Sending…", sendingJa: "一括送信中…" });
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
@@ -17851,8 +17950,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             }))
           })
         });
-        const payload = await response.json();
-        if (!response.ok || !payload.ok) throw new Error("bulk song request unavailable");
+        const payload = await readRequestApiResponse(response);
         localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
         const summary = payload.summary || {};
         const requestedCount = Number(summary.requested || 0);
@@ -17865,17 +17963,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           ...imported.filter((item) => !item.artist)
         ];
         renderSongImportPreview();
-        songImportStatus.textContent = currentLanguage === "en"
+        showRequestResult(songImportStatus, currentLanguage === "en"
           ? `Shared catalog result: ${processed} processed (new requests ${requestedCount}, already requested ${alreadyRequestedCount}, already in catalog ${alreadyCataloguedCount}, search keywords updated ${keywordsUpdatedCount}). Nothing was added to My Song List.${pendingSongImports.length ? ` ${pendingSongImports.length} unsent song(s) remain in the review list.` : ""}`
-          : `【共有の曲データへの送信結果】${processed}曲を処理しました。確認待ちの新規依頼 ${requestedCount}曲／すでに確認待ち ${alreadyRequestedCount}曲／曲データに登録済み ${alreadyCataloguedCount}曲／検索語の追加依頼 ${keywordsUpdatedCount}曲。承認前の曲は通常の曲データへ表示されません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`;
-        await loadSongRequests();
-        await loadPopularSongs();
+          : `【共有の曲データへの送信結果】${processed}曲を処理しました。確認待ちの新規依頼 ${requestedCount}曲／すでに確認待ち ${alreadyRequestedCount}曲／曲データに登録済み ${alreadyCataloguedCount}曲／検索語の追加依頼 ${keywordsUpdatedCount}曲。承認前の曲は通常の曲データへ表示されません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`);
+        void Promise.allSettled([loadSongRequests(), loadPopularSongs()]);
       } catch (error) {
         console.warn(error);
-        requestBulkCatalogButton.disabled = false;
-        songImportStatus.textContent = currentLanguage === "en"
-          ? "Catalog requests could not be sent. Check your connection and try again."
-          : "曲データへの追加依頼を送信できませんでした。通信状態を確認して、もう一度お試しください。";
+        showRequestResult(songImportStatus, requestFailureText(error, true), "error");
+      } finally {
+        stopProgress();
+        requestBulkCatalogButton.disabled = !pendingSongImports.some((item) => String(item.title || "").trim() && String(item.artist || "").trim());
       }
     });
 
