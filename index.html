@@ -4,17 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Music Saloon DRUM | 店舗・曲管理アプリ</title>
-  <meta name="description" content="Music Saloon DRUMの店舗・曲管理アプリです。曲データの検索・マイ曲リスト・セットリスト・ドリンク記録などが使えます。">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Music Saloon DRUM">
-  <meta property="og:title" content="Music Saloon DRUM | 店舗・曲管理アプリ">
-  <meta property="og:description" content="Music Saloon DRUMの店舗・曲管理アプリです。曲データの検索・マイ曲リスト・セットリスト・ドリンク記録などが使えます。">
-  <meta property="og:url" content="https://drumsns-web.github.io/Music-Saloon-DRUM/">
-  <meta property="og:image" content="https://drumsns-web.github.io/Music-Saloon-DRUM/app-icon-512.png?v=20260728b">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Music Saloon DRUM | 店舗・曲管理アプリ">
-  <meta name="twitter:description" content="Music Saloon DRUMの店舗・曲管理アプリです。曲データの検索・マイ曲リスト・セットリスト・ドリンク記録などが使えます。">
-  <meta name="twitter:image" content="https://drumsns-web.github.io/Music-Saloon-DRUM/app-icon-512.png?v=20260728b">
   <meta name="application-name" content="Music Saloon DRUM">
   <meta name="apple-mobile-web-app-title" content="Music Saloon DRUM">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1923,63 +1912,10 @@
 
     .bulk-register-destinations {
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       margin: 12px 0 16px;
     }
-
-    .bulk-register-destination.is-catalog { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-catalog { display: grid; }
-    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-my-list { display: none; }
-
-    .bulk-other-purpose-links {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin: 10px 0 16px;
-    }
-    .bulk-other-purpose-link {
-      display: grid;
-      align-content: start;
-      gap: 6px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: #fffdf8;
-      min-width: 0;
-    }
-    .bulk-other-purpose-link .btn {
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      white-space: normal;
-      text-align: center;
-      line-height: 1.3;
-      font-weight: 900;
-    }
-    .bulk-other-purpose-link .btn.secondary {
-      border: 2px solid var(--forest);
-      box-shadow: 0 8px 18px rgba(20, 63, 44, .16);
-    }
-    .bulk-other-purpose-link .btn.secondary:hover { background: rgba(236, 247, 239, .96); }
-    .bulk-song-entry.catalog-request-mode .bulk-other-purpose-link:first-child { display: none; }
-
-    .input-error-flash {
-      outline: 3px solid #d64545 !important;
-      background: #fff0f0 !important;
-      animation: bulk-input-error-shake .3s;
-    }
-    @keyframes bulk-input-error-shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-4px); }
-      75% { transform: translateX(4px); }
-    }
-
-    .bulk-format-example-catalog, .bulk-format-note-catalog { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-format-example-mylist,
-    .bulk-song-entry.catalog-request-mode .bulk-format-note-mylist { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-format-example-catalog,
-    .bulk-song-entry.catalog-request-mode .bulk-format-note-catalog { display: block; }
 
     .bulk-register-destination {
       display: grid;
@@ -2029,10 +1965,6 @@
       font-weight: 900;
     }
 
-    .bulk-destination-warning-catalog { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-destination-warning-mylist { display: none; }
-    .bulk-song-entry.catalog-request-mode .bulk-destination-warning-catalog { display: block; }
-
     .bulk-catalog-mode-note {
       display: none;
       margin: 10px 0 14px;
@@ -2045,14 +1977,16 @@
     }
 
     .bulk-song-entry.catalog-request-mode .bulk-catalog-mode-note { display: block; }
+    .bulk-song-entry.catalog-request-mode .bulk-destination-warning,
+    .bulk-song-entry.catalog-request-mode .bulk-register-destination.is-my-list,
     .bulk-song-entry.catalog-request-mode .bulk-key-settings,
     .bulk-song-entry.catalog-request-mode .bulk-import-key { display: none; }
+    .bulk-song-entry.catalog-request-mode .bulk-register-destinations { grid-template-columns: 1fr; }
 
     .bulk-register-destination strong,
     .bulk-register-destination small { display: block; }
 
     .bulk-register-destination .btn { width: 100%; }
-
 
     .song-title-with-links {
       display: flex;
@@ -2802,7 +2736,6 @@
 
     tr:last-child td { border-bottom: 0; }
     .empty { color: var(--muted); text-align: center; padding: 26px; font-weight: 800; }
-    .empty [data-popular-fallback-catalog] { display: inline-block; margin-top: 14px; }
     .status { color: var(--leaf); font-weight: 900; }
     .song-title-cell,
     .artist-cell {
@@ -3527,81 +3460,6 @@
       white-space: nowrap;
     }
 
-    .popular-index-close-artist {
-      min-height: 36px !important;
-      padding: 6px 12px !important;
-      white-space: normal;
-      text-align: center;
-      color: var(--red, #b5422a) !important;
-      border-color: rgba(181, 66, 42, .35) !important;
-    }
-
-    .popular-index-close-artist[hidden] { display: none !important; }
-
-    .popular-index-collapse-toggle {
-      min-height: 36px !important;
-      padding: 6px 12px !important;
-      white-space: nowrap;
-    }
-
-    .popular-index-collapsible {
-      display: grid;
-      gap: 6px;
-    }
-    .popular-index-collapsible[hidden] { display: none !important; }
-
-    .popular-index-free-search {
-      display: grid;
-      grid-template-columns: auto minmax(120px, 1fr) auto;
-      align-items: center;
-      gap: 6px;
-      min-width: 0;
-    }
-
-    .popular-index-search-scope {
-      display: inline-grid;
-      place-items: center;
-      min-height: 38px;
-      padding: 5px 10px;
-      border-radius: 9px;
-      background: var(--forest);
-      color: #fff;
-      font-size: 12px;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .popular-index-free-search input {
-      width: 100%;
-      min-width: 0;
-      min-height: 40px;
-      padding: 7px 11px;
-      border: 2px solid var(--forest);
-      border-radius: 9px;
-      background: #fff;
-      color: var(--forest-2);
-      font: inherit;
-      font-weight: 800;
-    }
-
-    .popular-index-free-search input:focus {
-      outline: 3px solid rgba(var(--theme-accent-rgb), .28);
-      border-color: var(--orange-dark);
-    }
-
-    .popular-index-free-search button {
-      min-height: 40px;
-      padding: 7px 14px;
-      border: 1px solid var(--orange-dark);
-      border-radius: 9px;
-      background: var(--orange);
-      color: var(--forest-2);
-      cursor: pointer;
-      font: inherit;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
     @media (max-width: 640px) {
       .popular-index-mode-switch {
         flex: 1 1 150px;
@@ -3613,18 +3471,6 @@
 
       .popular-index-request {
         flex: 1 1 100%;
-      }
-
-      .popular-index-free-search {
-        grid-template-columns: auto minmax(80px, 1fr) auto;
-      }
-
-      .popular-index-search-scope {
-        padding-inline: 7px;
-      }
-
-      .popular-index-free-search button {
-        padding-inline: 10px;
       }
 
     }
@@ -4812,36 +4658,6 @@
       line-height: 1.6;
     }
 
-    .request-progress-status.is-sending {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      color: var(--forest);
-    }
-
-    .request-progress-status.is-sending::before {
-      width: 16px;
-      height: 16px;
-      flex: 0 0 16px;
-      border: 3px solid rgba(var(--theme-dark-rgb), .2);
-      border-top-color: var(--orange);
-      border-radius: 50%;
-      content: "";
-      animation: request-send-spin .8s linear infinite;
-    }
-
-    .request-progress-status.is-success {
-      color: #176238;
-    }
-
-    .request-progress-status.is-error {
-      color: #a12622;
-    }
-
-    @keyframes request-send-spin {
-      to { transform: rotate(360deg); }
-    }
-
     .shared-ranking .kana-group {
       margin-top: 14px;
     }
@@ -5011,19 +4827,6 @@
       line-height: 1.35;
     }
 
-    .popular-song-search-scope {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .popular-song-search-scope .btn.is-active {
-      border-color: var(--orange);
-      background: var(--orange);
-      color: var(--forest-2);
-    }
-
     .popular-song-search input {
       min-height: 56px;
       border: 2px solid var(--forest);
@@ -5042,12 +4845,6 @@
       min-width: 120px;
       font-size: 16px;
       font-weight: 950;
-    }
-
-    .popular-song-search-note {
-      grid-column: 1 / -1;
-      margin: 0;
-      color: var(--muted);
     }
 
     .popular-song-list {
@@ -5111,47 +4908,15 @@
     }
 
     .popular-song-row {
-      display: block;
-      padding: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fffdf9;
-      overflow: hidden;
     }
-
-    .popular-song-row > summary {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 12px 14px;
-      cursor: pointer;
-      list-style: none;
-    }
-
-    .popular-song-row > summary::-webkit-details-marker { display: none; }
-    .popular-song-row > summary::marker { content: ""; }
-
-    .popular-song-summary-toggle {
-      flex: 0 0 auto;
-      display: inline-grid;
-      width: 30px;
-      height: 30px;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: #fff;
-      color: var(--forest);
-      font-weight: 900;
-      transition: transform .15s ease, background .15s ease;
-    }
-
-    .popular-song-row[open] > summary .popular-song-summary-toggle {
-      transform: rotate(180deg);
-      background: rgba(var(--theme-accent-rgb), .14);
-    }
-
-    .popular-song-body { padding: 0 14px 14px; }
 
     .popular-song-copy {
       min-width: 0;
@@ -5197,22 +4962,18 @@
       font-weight: 800;
     }
 
-    .popular-song-summary-text {
-      min-width: 0;
-    }
-
-    .popular-song-summary-text > strong,
-    .popular-song-summary-text > span {
+    .popular-song-row > div > strong,
+    .popular-song-row > div > span {
       display: block;
       overflow-wrap: anywhere;
     }
 
-    .popular-song-summary-text > strong {
+    .popular-song-row > div > strong {
       color: var(--forest);
       font-size: 16px;
     }
 
-    .popular-song-summary-text > span {
+    .popular-song-row > div > span {
       margin-top: 3px;
       color: var(--muted);
       font-size: 13px;
@@ -5267,14 +5028,8 @@
 
     .popular-song-row .btn {
       min-height: 40px;
-      min-width: 0;
-      max-width: 100%;
-      padding: 8px 10px;
+      padding: 8px 12px;
       white-space: normal;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-      line-height: 1.25;
-      text-align: center;
     }
 
     .song-request-form {
@@ -5420,7 +5175,7 @@
       .popular-song-row {
         grid-template-columns: 1fr;
       }
-      .popular-song-actions { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+      .popular-song-actions { grid-template-columns: 1fr 1fr; }
       .song-correction-form .row { grid-template-columns: 1fr; }
       .popular-song-row .btn {
         width: 100%;
@@ -6748,7 +6503,6 @@
       .simple-song-catalog-button { grid-column: 2; grid-row: 2; }
       .bulk-import-preview-row { grid-template-columns: minmax(0, 1fr) auto; }
       .bulk-register-destinations { grid-template-columns: 1fr; }
-      .bulk-other-purpose-links { grid-template-columns: 1fr; }
       .bulk-import-preview-row input:nth-child(2),
       .bulk-import-preview-row input:nth-child(3) { grid-column: 1; }
       .bulk-import-remove { grid-column: 2; grid-row: 1 / span 4; }
@@ -6967,18 +6721,18 @@
           <button class="btn primary js-open-guide-modal" id="openGuideModalHero" type="button">DRUMガイドを見る</button>
           <button class="btn secondary" id="openSettingsModalHero" type="button">⚙ 設定</button>
         </div>
-        <details class="app-update-card" id="appUpdateCard" open>
+        <details class="app-update-card" id="appUpdateCard">
           <summary>
             <span>
-              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.24</span></span>
-              <h2 id="appUpdateTitle">曲データに新曲を追加しました</h2>
+              <span class="app-update-label"><span class="tag orange">NEW</span><span>アプリ更新情報　2026.08.08</span></span>
+              <h2 id="appUpdateTitle">曲データ専用の一括追加に対応しました</h2>
             </span>
             <span class="app-update-chevron" aria-hidden="true">⌄</span>
           </summary>
           <div class="app-update-body">
-            <p>曲データへ新しい曲を追加しました。この端末に曲データを保存している方は、「曲・歌手データ」内の「最新版を取得して上書き」を押すと反映されます。</p>
+            <p>貼り付けた曲を、マイ曲リストへ保存せずに曲データだけへまとめて追加依頼できるようになりました。登録先は確認後に選べます。</p>
             <div class="app-update-latest-actions">
-              <a class="btn primary" href="#popular-songs">曲・歌手データを開く</a>
+              <a class="btn primary" href="#song-register">一括登録を開く</a>
             </div>
             <details class="app-update-history">
               <summary>これまでの更新履歴を見る</summary>
@@ -7049,7 +6803,7 @@
         </details>
         <aside class="top-song-catalog-feature" id="topSongCatalogFeature" aria-labelledby="topSongCatalogFeatureTitle">
           <div>
-            <strong id="topSongCatalogFeatureTitle" data-song-catalog-copy="top-feature-title">35,796曲から、歌いたい曲をすぐ検索</strong>
+            <strong id="topSongCatalogFeatureTitle" data-song-catalog-copy="top-feature-title">35,505曲から、歌いたい曲をすぐ検索</strong>
             <span data-song-catalog-copy="top-feature-description">邦楽・洋楽の曲名や歌手名から探して、マイ曲リストやセットリストへ追加できます。</span>
           </div>
           <a class="btn primary" href="#popular-songs" data-open-song-data-register>曲データを検索する</a>
@@ -7781,44 +7535,37 @@
             </div>
             <p class="alternative-register-heading">ほかの登録方法</p>
             <details class="bulk-song-entry secondary-entry" id="bulkSongEntry">
-              <summary>📋 リストをまとめてマイ曲リストへ登録</summary>
-              <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。この欄はこの端末の「マイ曲リスト」専用です。曲データへの送信はしません。</p>
-              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn secondary" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録に戻す →</button></div></div>
-              <div class="bulk-other-purpose-links">
-                <div class="bulk-other-purpose-link">
-                  <p class="small">曲データへの追加を依頼したい場合は</p>
-                  <button class="btn secondary" type="button" data-open-bulk-catalog-request>曲データへの追加依頼に切り替える →</button>
+              <summary>📋 リストをまとめて一括登録（マイ曲／曲データ）</summary>
+              <p class="small">メモやLINEなどにある曲一覧をまとめて貼り付け、登録前に曲名・歌手名・キーを確認できます。</p>
+              <div class="bulk-catalog-mode-note">現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。<div class="control-row"><button class="btn ghost" type="button" data-show-all-bulk-destinations>マイ曲リストへの登録も表示</button></div></div>
+              <p class="bulk-destination-warning">登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。</p>
+              <div class="bulk-register-destinations">
+                <div class="bulk-register-destination is-my-list">
+                  <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
+                  <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
                 </div>
-                <div class="bulk-other-purpose-link">
-                  <p class="small">曲名を決めず、要望だけ伝えたい場合は</p>
-                  <button class="btn secondary" type="button" data-open-song-request>自由リクエスト欄を開く →</button>
+                <div class="bulk-register-destination is-catalog" id="bulkCatalogDestination">
+                  <div><span class="bulk-destination-badge">管理者の確認後・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>1曲ずつ確認待ちになり、店主が承認した曲だけ共有の曲データへ追加されます。</small><label>店主があなたと分かる名前・ニックネーム<input id="bulkSongRequestRequester" maxlength="64" autocomplete="name" placeholder="例：いつも窓側に座る○○"></label></div>
+                  <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
                 </div>
               </div>
               <div class="bulk-format-guide">
-                <strong>① まずここに書き方の例のとおり貼り付けます</strong>
-                <p class="bulk-format-note-mylist">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。</p>
-                <pre class="bulk-format-example-mylist">【サザンオールスターズ】
+                <strong>一括入力の書き方</strong>
+                <p>おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。</p>
+                <pre>【サザンオールスターズ】
 いとしのエリー
 TSUNAMI／▼2</pre>
-                <p class="bulk-format-note-catalog">最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では<strong>キーの入力は不要</strong>です。曲名と歌手名だけで大丈夫です。</p>
-                <pre class="bulk-format-example-catalog">【サザンオールスターズ】
-いとしのエリー
-TSUNAMI</pre>
-                <p class="small">下の入力欄が空なら「この例を試す」を押すと、上の例文がそのまま入力欄にコピーされます。実際の曲リストに書き換えて使ってください。</p>
-                <details class="bulk-format-alt">
-                  <summary>1曲ずつ改行しない・別の書き方をしたい場合</summary>
-                  <p><strong>曲名／歌手名／キー</strong>の順で1行にまとめて書く方法もあります（キーは省略可）。全角の「／」と半角の「/」どちらも使えます。</p>
-                  <pre>いとしのエリー／サザンオールスターズ
+                <p>1行ずつ書く場合：<strong>曲名／歌手名／キー</strong>の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。</p>
+                <pre>いとしのエリー／サザンオールスターズ
 TSUNAMI／サザンオールスターズ／▼2</pre>
-                  <p class="small">「歌手名／曲名」の順ではないので注意してください。</p>
-                </details>
+                <p class="small">「歌手名／曲名」の順ではありません。貼り付け後に「解析して確認する」を押し、曲名と歌手名の欄を必ず確認してください。</p>
               </div>
-              <label for="songImportText">② 実際に曲リストを貼り付ける入力欄はここです</label>
+              <label for="songImportText">曲リストを貼り付ける</label>
+              <p class="small">「【歌手名】」の後へ曲を書いたリストも読み込めます。確実に分けるには1曲ごとに改行するか「／」で曲名とキーを区切ってください。</p>
               <div class="control-row bulk-paste-actions">
                 <button class="btn primary" id="pasteSongImportButton" type="button">クリップボードから貼り付け</button>
-                <button class="btn secondary" id="fillSongImportExampleButton" type="button">この例を試す</button>
+                <span class="small">または、下の入力欄を長押しして「貼り付け」を選べます。</span>
               </div>
-              <p class="small">スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。</p>
               <textarea id="songImportText" placeholder="例：&#10;【サザンオールスターズ】&#10;TSUNAMI／▼1〜2&#10;あじさいのうた／▼2&#10;いとしのエリー"></textarea>
               <div class="bulk-key-settings">
                 <label>
@@ -7831,22 +7578,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                 <p class="small">キーなしは選んだ基準の「そのまま」として扱います。▲2／+2、▼2／-2、全角の＋／－、範囲表記にも対応します。</p>
               </div>
               <div class="control-row">
-                <button class="btn ghost" id="previewSongImportButton" type="button">③ 解析して確認する</button>
+                <button class="btn ghost" id="previewSongImportButton" type="button">解析して確認する</button>
               </div>
               <p class="bulk-import-status small" id="songImportStatus" aria-live="polite"></p>
               <div class="bulk-import-preview" id="songImportPreview"></div>
-              <p class="bulk-destination-warning bulk-destination-warning-mylist">④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。</p>
-              <p class="bulk-destination-warning bulk-destination-warning-catalog">④ 内容を確認できたら、下のボタンで店の共有データへ追加を依頼します。（店主が承認するまでは追加されません）</p>
-              <div class="bulk-register-destinations">
-                <div class="bulk-register-destination is-my-list">
-                  <div><span class="bulk-destination-badge">端末内・自分用</span><strong>マイ曲リストへ一括登録</strong><small>このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。</small></div>
-                  <button class="btn secondary" id="importSongsButton" type="button" disabled>この端末のマイ曲リストへ登録</button>
-                </div>
-                <div class="bulk-register-destination is-catalog" id="bulkCatalogDestination">
-                  <div><span class="bulk-destination-badge">管理者の確認後・全利用者向け</span><strong>曲データへ一括追加依頼</strong><small>1曲ずつ確認待ちになり、店主が承認した曲だけ共有の曲データへ追加されます。</small><label>店主があなたと分かる名前・ニックネーム<input id="bulkSongRequestRequester" maxlength="64" autocomplete="name" placeholder="例：いつも窓側に座る○○"></label></div>
-                  <button class="btn primary" id="requestBulkCatalogButton" type="button" disabled>共有の曲データへ追加依頼</button>
-                </div>
-              </div>
             </details>
             <details class="photo-song-card secondary-entry">
               <summary>📷 写真から曲名・歌手名を入力</summary>
@@ -8643,9 +8378,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
             <h4 id="songCatalogDeviceTitle">曲データをこの端末に保存</h4>
-            <p class="small" data-song-catalog-copy="device-save">任意機能です。35,796曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
+            <p class="small" data-song-catalog-copy="device-save">任意機能です。35,505曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。</p>
             <div class="song-catalog-capacity-guide" id="songCatalogStorageEstimate">
-              <strong>保存容量の目安：全35,796曲で約15MB</strong>
+              <strong>保存容量の目安：全35,505曲で約15MB</strong>
               <span>スマホ写真（1枚約4MB）なら約4枚分、Yahoo! JAPANトップページ（画像込み約2MBと仮定）なら約7ページ分です。1GBの空き容量の約1.5%です。</span>
             </div>
             <p class="small">通信圧縮が使われる場合、ダウンロード通信量は約2～4MBが目安です。端末上ではブラウザの管理情報も含め約15～20MBになる場合があります。写真やWebページの容量は画質・広告・端末によって変わるため、比較値はおおよその目安です。</p>
@@ -8658,16 +8393,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <span class="song-catalog-device-status" id="deviceSongCatalogStatus" aria-live="polite">端末への保存状況を確認しています。</span>
           </aside>
           <form class="popular-song-search" id="popularSongSearchForm" role="search">
-            <label class="popular-song-search-label" for="popularSongSearch">🔎 曲データを検索</label>
-            <div class="popular-song-search-scope" id="popularSongSearchScope" role="group" aria-label="検索対象">
-              <button class="btn ghost" type="button" data-popular-search-scope="all">すべて</button>
-              <button class="btn is-active" type="button" data-popular-search-scope="artist">歌手名</button>
-              <button class="btn ghost" type="button" data-popular-search-scope="title">曲名</button>
-              <button class="btn ghost" type="button" data-popular-search-scope="keyword">キーワード</button>
-            </div>
+            <label class="popular-song-search-label" for="popularSongSearch">🔎 曲名・歌手名を検索</label>
             <input id="popularSongSearch" type="search" placeholder="曲名・歌手名を入力してください" autocomplete="off">
             <button class="btn primary" type="submit">検索する</button>
-            <p class="small popular-song-search-note">※曲データが端末に保存されている場合でも、検索結果の表示までに少し時間がかかることがあります。</p>
           </form>
           <div class="song-index-jump auxiliary-index-jump" id="popularSongIndexJump" aria-label="文字ジャンプ"></div>
           <div id="popularSongList"></div>
@@ -9099,22 +8827,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     </div>
   </div>
 
-  <div class="drink-modal" id="songCatalogUpdateModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="songCatalogUpdateModalTitle">
-    <div class="drink-modal-panel song-record-confirm-panel">
-      <div class="section-head">
-        <div>
-          <h2 id="songCatalogUpdateModalTitle">曲データの追加情報があります</h2>
-          <p class="lead" id="songCatalogUpdateModalBody">新しく追加・訂正された曲データがあります。今すぐ端末へ更新しますか？</p>
-        </div>
-        <button class="btn ghost" id="closeSongCatalogUpdateModal" type="button">閉じる</button>
-      </div>
-      <div class="control-row">
-        <button class="btn primary" id="confirmSongCatalogUpdate" type="button">今すぐ更新する</button>
-        <button class="btn ghost" id="laterSongCatalogUpdate" type="button">あとで</button>
-      </div>
-    </div>
-  </div>
-
   <div class="drink-modal" id="staffSongsModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="staffSongsModalTitle">
     <div class="drink-modal-panel staff-songs-modal-panel">
       <div class="section-head">
@@ -9478,7 +9190,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const songImportPreview = document.getElementById("songImportPreview");
     const previewSongImportButton = document.getElementById("previewSongImportButton");
     const pasteSongImportButton = document.getElementById("pasteSongImportButton");
-    const fillSongImportExampleButton = document.getElementById("fillSongImportExampleButton");
     const requestBulkCatalogButton = document.getElementById("requestBulkCatalogButton");
     const bulkSongRequestRequester = document.getElementById("bulkSongRequestRequester");
     const exportJsonButton = document.getElementById("exportJsonButton");
@@ -9522,7 +9233,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const communityIndexJump = document.getElementById("communityIndexJump");
     const popularSongTabs = document.getElementById("popularSongTabs");
     const popularSongSearchForm = document.getElementById("popularSongSearchForm");
-    const popularSongSearchScope = document.getElementById("popularSongSearchScope");
     const popularSongSearch = document.getElementById("popularSongSearch");
     const popularSongSort = document.getElementById("popularSongSort");
     const popularSongStatus = document.getElementById("popularSongStatus");
@@ -9670,11 +9380,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const createSetlistWithSong = document.getElementById("createSetlistWithSong");
     const quickSetlistStatus = document.getElementById("quickSetlistStatus");
     const liveModeModal = document.getElementById("liveModeModal");
-    const songCatalogUpdateModal = document.getElementById("songCatalogUpdateModal");
-    const songCatalogUpdateModalBody = document.getElementById("songCatalogUpdateModalBody");
-    const closeSongCatalogUpdateModal = document.getElementById("closeSongCatalogUpdateModal");
-    const confirmSongCatalogUpdate = document.getElementById("confirmSongCatalogUpdate");
-    const laterSongCatalogUpdate = document.getElementById("laterSongCatalogUpdate");
     const liveModeSetlistTitle = document.getElementById("liveModeSetlistTitle");
     const liveModeProgress = document.getElementById("liveModeProgress");
     const liveModeSongTitle = document.getElementById("liveModeSongTitle");
@@ -9720,12 +9425,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const favoriteDrinkButtons = document.getElementById("favoriteDrinkButtons");
     const drinkCategoryButtons = document.getElementById("drinkCategoryButtons");
     const drinkCategoryListTitle = document.getElementById("drinkCategoryListTitle");
-      const homePromptModal = document.getElementById("homePromptModal");
-      const installHomeAppButton = document.getElementById("installHomeAppButton");
-      const homeInstallHelp = document.getElementById("homeInstallHelp");
-      const homeIphoneGuide = document.getElementById("homeIphoneGuide");
-      const homeAndroidGuide = document.getElementById("homeAndroidGuide");
-      const appUpdateCard = document.getElementById("appUpdateCard");
+	    const homePromptModal = document.getElementById("homePromptModal");
+	    const installHomeAppButton = document.getElementById("installHomeAppButton");
+	    const homeInstallHelp = document.getElementById("homeInstallHelp");
+	    const homeIphoneGuide = document.getElementById("homeIphoneGuide");
+	    const homeAndroidGuide = document.getElementById("homeAndroidGuide");
+	    const appUpdateCard = document.getElementById("appUpdateCard");
     const closeHomePrompt = document.getElementById("closeHomePrompt");
     const dismissHomePromptToday = document.getElementById("dismissHomePromptToday");
     const disableHomePrompt = document.getElementById("disableHomePrompt");
@@ -9985,14 +9690,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const attrOriginals = new WeakMap();
     let currentLanguage = localStorage.getItem(languageStorageKey) || "ja";
     let isApplyingLanguage = false;
-    const initialSongCatalogTotal = 35796;
+    const initialSongCatalogTotal = 35505;
     const songCatalogEstimatedBytesPerSong = 405;
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
-    let songCatalogVersion = "";
-    const songCatalogVersionCheckStorageKey = "msdSongCatalogVersionCheckedAt";
-    const songCatalogVersionCheckIntervalMs = 6 * 60 * 60 * 1000; // 端末保存データがあれば6時間はサーバー確認を省略
-    const songCatalogUpdatePromptDismissedStorageKey = "msdSongCatalogUpdatePromptDismissedVersion";
 
     function songCatalogCountLabel(total = songCatalogTotal) {
       const count = Math.max(1, Number(total) || initialSongCatalogTotal);
@@ -10054,20 +9755,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (typeof updateDeviceSongCatalogStatus === "function") updateDeviceSongCatalogStatus();
     }
 
-      async function refreshSongCatalogTotal(forceRefresh = false) {
-        if (songCatalogTotalLoaded && !forceRefresh) {
-          maybeShowSongCatalogUpdatePrompt();
-          return songCatalogTotal;
-        }
-        if (!forceRefresh && Number(deviceSongCatalogMeta && deviceSongCatalogMeta.count || deviceSongCatalog.length || 0) > 0) {
-        let lastCheckedAt = 0;
-        try { lastCheckedAt = Number(localStorage.getItem(songCatalogVersionCheckStorageKey)) || 0; } catch (error) { lastCheckedAt = 0; }
-          if (Date.now() - lastCheckedAt < songCatalogVersionCheckIntervalMs) {
-            // 端末に保存済みのデータがあり、直近で確認済みなのでサーバーへは問い合わせずそのまま使う
-            maybeShowSongCatalogUpdatePrompt();
-            return songCatalogTotal;
-        }
-      }
+    async function refreshSongCatalogTotal(forceRefresh = false) {
+      if (songCatalogTotalLoaded && !forceRefresh) return songCatalogTotal;
       try {
         const params = new URLSearchParams({ action: "song_catalog_count" });
         if (forceRefresh) params.set("refresh", String(Date.now()));
@@ -10075,10 +9764,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song catalog count unavailable");
         updateSongCatalogTotal(payload.count);
-        songCatalogVersion = String(payload.version || "");
         songCatalogTotalLoaded = true;
-        try { localStorage.setItem(songCatalogVersionCheckStorageKey, String(Date.now())); } catch (error) { /* ignore */ }
-        maybeShowSongCatalogUpdatePrompt();
       } catch (error) {
         console.warn(error);
       }
@@ -10100,11 +9786,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "端末への保存状況を確認しています。": "Checking saved song data on this device.",
       "アプリ更新情報": "App Update",
       "アプリ更新情報　2026.08.08": "App Update  2026.08.08",
-      "アプリ更新情報　2026.08.18": "App Update  2026.08.18",
-      "アプリ更新情報　2026.08.24": "App Update  2026.08.24",
-      "曲データに新曲を追加しました": "Added New Songs to the Catalog",
-      "曲データへ新しい曲を追加しました。この端末に曲データを保存している方は、「曲・歌手データ」内の「最新版を取得して上書き」を押すと反映されます。": "New songs have been added to the shared catalog. If you've saved the catalog on this device, press \"Fetch and overwrite with the latest\" in Song & Artist Data to see them.",
-      "曲・歌手データを開く": "Open Song & Artist Data",
       "曲データ専用の一括追加に対応しました": "Added Catalog-Only Bulk Requests",
       "貼り付けた曲を、マイ曲リストへ保存せずに曲データだけへまとめて追加依頼できるようになりました。登録先は確認後に選べます。": "Request multiple pasted songs for the shared catalog without saving them to My Song List. Choose the destination after reviewing the songs.",
       "曲データ専用の一括追加依頼を追加": "Added Catalog-Only Bulk Requests",
@@ -10307,25 +9988,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "📋 リストをまとめて一括登録": "📋 Add Multiple Songs from a List",
       "📋 リストをまとめて一括登録（マイ曲／曲データ）": "📋 Add Multiple Songs (My List / Catalog)",
       "登録先は2種類あります。下の2つは別の機能で、押した方だけに登録されます。": "There are two separate destinations. Songs are added only to the destination whose button you press.",
-      "① どちらに登録しますか？　まずここを選んでください": "① Where should this go? Choose one first",
-      "この端末のマイ曲リストへ保存": "Save to My Song List on this device",
-      "このスマホ・パソコンだけに保存します。お店の曲データへは送信されません。": "Saved only on this phone/computer. Nothing is sent to the shared song catalog.",
-      "店の共有データへ追加を依頼": "Request addition to the shared catalog",
-      "店主が1曲ずつ確認し、承認した曲だけ全員が使える曲データに追加されます。": "The owner reviews each song, and only approved ones are added to the catalog everyone can use.",
-      "選ぶと、以降の説明と送信ボタンが選んだ登録先だけの表示に変わります。": "Once you choose, the guide and send button below will match only that destination.",
-      "② まずここに書き方の例のとおり貼り付けます": "② Paste your list here, following the example",
-      "③ 実際に曲リストを貼り付ける入力欄はここです": "③ Paste your song list in this box",
-      "④ 解析して確認する": "④ Parse and Review",
-      "⑤ 内容を確認できたら、①で選んだ登録先のボタンで送信します。": "⑤ Once you've checked the content, press the send button for the destination you chose in ①.",
-      "↑ まだ登録先が選ばれていません。①のボタンをどちらか押してください。": "↑ No destination chosen yet. Press one of the buttons in ① above.",
-      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。": "Just write 【Artist】 on the first line, then one song title per line below it. You can include a key (like ▼2) too.",
-      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では": "Just write 【Artist】 on the first line, then one song title per line below it. For catalog requests, ",
-      "キーの入力は不要": "no key is needed",
-      "です。曲名と歌手名だけで大丈夫です。": " — just the song title and artist are enough.",
-      "①でまだ登録先を選んでいません。選ぶと書き方の例が切り替わります。": "You haven't chosen a destination in ① yet. The example below will change once you do.",
-      "曲名を決めず「このアーティストの曲を増やしてほしい」のようなご要望だけ伝えたい場合は、曲名・歌手名を貼り付ける代わりにこちらをお使いください。": "If you just want to send a request like \"please add more songs by this artist\" without naming a specific song, use this instead of pasting a song list.",
-      "自由リクエストを書く欄を開く": "Open the free-form request box",
-      "④ 内容を確認できたら、送るデータを選んで送信します。下の2つは別の機能で、押した方だけに登録されます。": "④ Once you've checked the content, choose where to send it. These are two separate actions, and only the one you press will be registered.",
       "端末内・自分用": "On This Device / Personal",
       "共有・全利用者向け": "Shared / All Users",
       "このスマホ・パソコンの自分用曲リストへ保存します。曲データへは送信しません。": "Save to your personal song list on this phone or computer. Nothing is sent to the shared catalog.",
@@ -10907,24 +10569,24 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "貼り付けた曲を読み込む": "Import Pasted Songs",
       "マイ曲リストに保存": "Save to My Song List",
       "マイ曲リストを全削除": "Delete All Songs",
-        "ホーム画面に追加できます": "Add to Home Screen",
-        "お使いのスマホを選ぶと、必要な手順だけ表示します。": "Choose your phone to see only the steps you need.",
-        "ホーム画面に追加": "Add to Home Screen",
-        "Androidの対応ブラウザでは、追加の確認画面を直接開けます。": "On supported Android browsers, this button opens the install confirmation.",
-        "Safari推奨": "Safari recommended",
-        "Chrome推奨": "Chrome recommended",
-        "共有ボタンを押す": "Tap the Share button",
-        "「ホーム画面に追加」→「追加」": "Add to Home Screen → Add",
-        "Chrome・Googleアプリ・Firefoxの場合": "If using Chrome, the Google app, or Firefox",
-        "共有メニューから「Safariで開く」を選ぶと、店のアイコンで追加しやすくなります。": "Choose Open in Safari from the Share menu to add the shop icon more reliably.",
-        "右上の「︙」メニューを開く": "Open the upper-right ⋮ menu",
-        "「ホーム画面に追加」または「アプリをインストール」": "Add to Home Screen or Install app",
-        "「追加」を押す": "Tap Add",
-        "Firefoxの場合": "If using Firefox",
-        "右上の「︙」メニューから「ホーム画面に追加」を選んでください。": "Choose Add to Home Screen from the upper-right ⋮ menu.",
-        "保存について": "About saved data",
-        "マイ曲リストや記録は、この端末のブラウザ内に保存されます。": "Your song list and records are saved in this browser on this device.",
-        "今日は閉じる": "Close for Today",
+	      "ホーム画面に追加できます": "Add to Home Screen",
+	      "お使いのスマホを選ぶと、必要な手順だけ表示します。": "Choose your phone to see only the steps you need.",
+	      "ホーム画面に追加": "Add to Home Screen",
+	      "Androidの対応ブラウザでは、追加の確認画面を直接開けます。": "On supported Android browsers, this button opens the install confirmation.",
+	      "Safari推奨": "Safari recommended",
+	      "Chrome推奨": "Chrome recommended",
+	      "共有ボタンを押す": "Tap the Share button",
+	      "「ホーム画面に追加」→「追加」": "Add to Home Screen → Add",
+	      "Chrome・Googleアプリ・Firefoxの場合": "If using Chrome, the Google app, or Firefox",
+	      "共有メニューから「Safariで開く」を選ぶと、店のアイコンで追加しやすくなります。": "Choose Open in Safari from the Share menu to add the shop icon more reliably.",
+	      "右上の「︙」メニューを開く": "Open the upper-right ⋮ menu",
+	      "「ホーム画面に追加」または「アプリをインストール」": "Add to Home Screen or Install app",
+	      "「追加」を押す": "Tap Add",
+	      "Firefoxの場合": "If using Firefox",
+	      "右上の「︙」メニューから「ホーム画面に追加」を選んでください。": "Choose Add to Home Screen from the upper-right ⋮ menu.",
+	      "保存について": "About saved data",
+	      "マイ曲リストや記録は、この端末のブラウザ内に保存されます。": "Your song list and records are saved in this browser on this device.",
+	      "今日は閉じる": "Close for Today",
       "今後は表示しない": "Do Not Show Again",
       "おすすめ曲ガチャ": "Song Recommendation Gacha",
       "ガチャを回す": "Spin Gacha",
@@ -11172,7 +10834,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "人気順で見る": "View by Popularity",
       "追加してほしい曲をリクエスト": "Request a Song to Add",
       "見つからない曲をリクエスト": "Request a Missing Song",
-      "※曲データが端末に保存されている場合でも、検索結果の表示までに少し時間がかかることがあります。": "Even when the song catalog is saved on this device, results may take a moment to appear.",
       "見つからない曲を追加リクエスト": "Request a Missing Song",
       "曲を追加リクエスト": "Request Songs to Add",
       "1曲ずつでも、複数曲をまとめてもリクエストできます。": "Request one song or multiple songs at once.",
@@ -11189,32 +10850,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "自由リクエストを送信しました。": "Your free-form request was sent.",
       "1曲だけリクエストする場合": "To Request One Song",
       "一括入力の書き方": "Bulk Input Format",
-      "① まずここに書き方の例のとおり貼り付けます": "① Paste your list here, following the example",
-      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。": "Just write 【Artist】 on the first line, then one song title per line below it.",
-      "下の入力欄が空なら「この例を試す」を押すと、上の例文がそのまま入力欄にコピーされます。実際の曲リストに書き換えて使ってください。": "If the box below is empty, press \"Try this example\" to copy the sample text in. Replace it with your own song list.",
-      "1曲ずつ改行しない・別の書き方をしたい場合": "Prefer a different format (not one song per line)?",
-      "曲名／歌手名／キー": "Song / Artist / Key",
-      "の順で1行にまとめて書く方法もあります（キーは省略可）。全角の「／」と半角の「/」どちらも使えます。": "can also be written on one line, in that order (key optional). Both ／ and / separators are supported.",
-      "「歌手名／曲名」の順ではないので注意してください。": "Note: this is not Artist / Song order.",
-      "② 実際に曲リストを貼り付ける入力欄はここです": "② Paste your song list in this box",
-      "この例を試す": "Try this example",
-      "スマホの場合は、下の入力欄を長押しして「貼り付け」を選ぶこともできます。": "On a phone, you can also long-press the box below and choose Paste.",
-      "③ 解析して確認する": "③ Parse and Review",
-      "入力欄にすでに内容があります。例文で上書きしますか？": "The box already has content. Overwrite it with the example?",
-      "例文を入力欄に入れました。実際の曲リストに書き換えてから「解析して確認する」を押してください。": "The example has been added. Replace it with your own list, then press Parse and Review.",
       "現在は「共有の曲データへ一括リクエスト」する画面です。送信するのは曲名と歌手名です。キーは入力しなくて大丈夫です。": "This screen sends bulk requests to the shared catalog. Only the song title and artist are sent; no key is required.",
       "マイ曲リストへの登録も表示": "Also Show My Song List Registration",
-      "マイ曲リストへの登録に戻す →": "Switch back to My Song List →",
-      "曲データへの追加を依頼したい場合は": "If you'd like to request an addition to the shared catalog",
-      "曲データへの追加依頼に切り替える →": "Switch to catalog request mode →",
-      "曲名を決めず、要望だけ伝えたい場合は": "If you just want to send a request without naming a song",
-      "自由リクエスト欄を開く →": "Open the free-form request box →",
-      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。キー（▼2など）も一緒に書けます。": "Just write 【Artist】 on the first line, then one song title per line below it. You can include a key (like ▼2) too.",
-      "最初の行に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書くだけです。曲データへの依頼では": "Just write 【Artist】 on the first line, then one song title per line below it. For catalog requests, ",
-      "キーの入力は不要": "no key is needed",
-      "です。曲名と歌手名だけで大丈夫です。": " — just the song title and artist are enough.",
-      "④ 内容を確認できたら、下のボタンでマイ曲リストへ登録します。": "④ Once you've checked the content, press the button below to save it to My Song List.",
-      "④ 内容を確認できたら、下のボタンで店の共有データへ追加を依頼します。（店主が承認するまでは追加されません）": "④ Once you've checked the content, press the button below to request adding it to the shared catalog. (It won't be added until the owner approves it.)",
       "おすすめ：最初に【歌手名】を書き、その下へ曲名を1曲ずつ改行して書きます。": "Recommended: write 【Artist】 first, then put each song title on a new line below it.",
       "1行ずつ書く場合：": "For one song per line:",
       "の順です。キーは省略できます。全角の「／」と半角の「/」の両方を使えます。": "in this order. The key is optional. Both ／ and / separators are supported.",
@@ -11258,9 +10895,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "同じ訂正依頼はすでに送信されています。": "The same correction request has already been sent.",
       "訂正依頼を店主へ送信しました。": "The correction request was sent to the owner.",
       "訂正依頼を送信できませんでした。通信状態を確認して再度お試しください。": "Could not send the correction request. Check your connection and try again.",
-      "曲名または歌手名を入力して検索してください。": "Enter a song title or artist to search.",
+      "曲名または歌手名を1文字以上入力してください。検索後、結果の50音・数字・A–Zボタンが使えます。": "Enter at least one character from a song title or artist. After searching, you can use the Kana, 0–9, and A–Z buttons within the results.",
       "条件に合う曲が見つかりませんでした。": "No matching songs were found.",
-      "全曲検索は1文字から利用できます。": "Full catalog search works from one character.",
+      "全曲検索は1文字から利用できます。検索後、結果の50音・数字・A–Zボタンが使えます。": "Full catalog search works from one character. After searching, you can use the Kana, 0–9, and A–Z buttons within the results.",
       "曲一覧を読み込んでいます。": "Loading songs.",
       "曲一覧を取得できませんでした。時間をおいて再度お試しください。": "Could not load the song list. Please try again later.",
       "↻ 曲データを再読み込み": "↻ Reload Song Catalog",
@@ -11278,8 +10915,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
-      "Uフレットでコード検索 ↗": "Search U-Fret ↗",
-      "J-Total Musicでコード検索 ↗": "Search J-Total Music ↗",
       "歌詞を検索 ↗": "Search Lyrics ↗",
       "27,907曲から曲名・歌手名を検索": "Search 27,907 songs by title or artist",
       "27,907曲から曲名・歌手名・通称を検索": "Search 27,907 songs by title, artist, or alias"
@@ -11501,9 +11136,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     let savedSetlists = JSON.parse(localStorage.getItem(savedSetlistStorageKey) || "[]");
-      let pendingSongImports = [];
-      let pendingSongRecordId = "";
-      let deferredHomeInstallPrompt = null;
+	    let pendingSongImports = [];
+	    let pendingSongRecordId = "";
+	    let deferredHomeInstallPrompt = null;
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     if (settings.settingsVersion === undefined) {
       settings.showDrink = true;
@@ -11620,43 +11255,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let sharedCapabilities = [];
     let popularSongItems = [];
     let popularArtistSongItems = [];
-      const popularArtistSongCache = new Map();
-      const popularSongResultCache = new Map();
-      const popularArtistSummaryViewCache = new Map();
-      let popularSongItemsPreparedArtistOrder = false;
-      let deviceSongCatalog = [];
-      let deviceSongCatalogArtistIndex = null;
-      let deviceSongCatalogArtistSummaries = [];
-      let deviceSongCatalogArtistSummaryMeta = null;
-      let deviceSongCatalogArtistSummaryLoadPromise = null;
-      let deviceSongCatalogHeaderPromise = null;
-      let deviceSongCatalogSearchIndexReady = false;
-    function getDeviceSongCatalogArtistIndex() {
-      if (deviceSongCatalogArtistIndex) return deviceSongCatalogArtistIndex;
-      const index = new Map();
-      deviceSongCatalog.forEach((item) => {
-        const key = normalizeKana(item.artist);
-        let bucket = index.get(key);
-        if (!bucket) {
-          bucket = [];
-          index.set(key, bucket);
-        }
-        bucket.push(item);
-      });
-      deviceSongCatalogArtistIndex = index;
-      return index;
-    }
+    const popularArtistSongCache = new Map();
+    let deviceSongCatalog = [];
     let deviceSongCatalogMeta = null;
     let deviceSongCatalogLoadPromise = null;
     let requestedSongItems = [];
     let correctingSongItem = null;
     let popularSongCategory = "jp";
-    let popularSongCategoryBeforeSearch = null;
-    let popularSongFallbackCatalogCount = 0;
-    let popularIndexCollapsed = false;
-    try { popularIndexCollapsed = localStorage.getItem("msdPopularIndexCollapsed") === "1"; } catch (error) { popularIndexCollapsed = false; }
     let popularSongSortMode = "artist";
-    let popularSongSearchScopeMode = "artist";
     let catalogSearchItems = [];
     let catalogSearchController = null;
     const expandedSongGroups = new Set();
@@ -12754,90 +12360,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
     }
 
-    function startRequestProgress(button, statusNode, labels = {}) {
-      const originalLabel = button.textContent;
-      const startedAt = Date.now();
-      button.disabled = true;
-      button.setAttribute("aria-busy", "true");
-      statusNode.classList.remove("is-success", "is-error");
-      statusNode.classList.add("request-progress-status", "is-sending");
-      const update = () => {
-        const seconds = Math.max(1, Math.floor((Date.now() - startedAt) / 1000));
-        const waiting = seconds >= 15;
-        statusNode.textContent = currentLanguage === "en"
-          ? (waiting ? `The server is still processing (${seconds}s). Please keep this screen open.` : `Sending (${seconds}s)…`)
-          : (waiting ? `サーバーで処理中です（${seconds}秒）。この画面のままお待ちください。` : `送信中です（${seconds}秒）…`);
-        button.textContent = currentLanguage === "en"
-          ? (labels.sendingEn || "Sending…")
-          : (labels.sendingJa || "送信中…");
-      };
-      update();
-      const timer = window.setInterval(update, 1000);
-      return () => {
-        window.clearInterval(timer);
-        button.removeAttribute("aria-busy");
-        button.textContent = originalLabel;
-        statusNode.classList.remove("is-sending");
-      };
-    }
-
-    async function readRequestApiResponse(response) {
-      let payload;
-      try {
-        payload = await response.json();
-      } catch (error) {
-        const invalidResponseError = new Error("invalid api response");
-        invalidResponseError.code = "INVALID_RESPONSE";
-        throw invalidResponseError;
-      }
-      if (!response.ok || !payload || !payload.ok) {
-        const apiError = new Error(String(payload?.message || "request api unavailable"));
-        apiError.code = `HTTP_${response.status}`;
-        throw apiError;
-      }
-      return payload;
-    }
-
-    function requestFailureText(error, bulk = false) {
-      if (!navigator.onLine) {
-        return currentLanguage === "en"
-          ? "You are offline. Reconnect and try again."
-          : "インターネット接続が切れています。接続後にもう一度お試しください。";
-      }
-      if (error?.code === "INVALID_RESPONSE") {
-        return currentLanguage === "en"
-          ? "The server response could not be confirmed. Please wait a moment before trying again."
-          : "サーバーの応答を確認できませんでした。少し時間を空けてからもう一度お試しください。";
-      }
-      if (error?.code === "HTTP_500" || error?.code === "HTTP_502" || error?.code === "HTTP_503" || error?.code === "HTTP_504") {
-        return currentLanguage === "en"
-          ? "The server is busy. Please wait a moment and try again."
-          : "サーバーが混み合っています。少し時間を空けてからもう一度お試しください。";
-      }
-      if (bulk) {
-        return currentLanguage === "en"
-          ? "Catalog requests could not be sent. Check your connection and try again."
-          : "曲データへの追加依頼を送信できませんでした。通信状態を確認して、もう一度お試しください。";
-      }
-      return uiText("送信できませんでした。通信状態を確認して再度お試しください。");
-    }
-
-    function showRequestResult(statusNode, text, type = "success") {
-      statusNode.classList.remove("is-sending", "is-success", "is-error");
-      statusNode.classList.add("request-progress-status", type === "error" ? "is-error" : "is-success");
-      statusNode.textContent = text;
-    }
-
     function normalizeKana(value) {
       return String(value || "")
         .trim()
         .toLowerCase()
         .replace(/[ァ-ン]/g, (char) => String.fromCharCode(char.charCodeAt(0) - 96));
-    }
-
-    function normalizeCatalogSearchText(value) {
-      return normalizeKana(String(value || "").normalize("NFKC"))
-        .replace(/[\s\u3000\p{P}\p{S}]+/gu, "");
     }
 
     function normalizeSongDuplicateText(value) {
@@ -13143,7 +12670,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
 
     function initAppUpdateCard() {
       if (!appUpdateCard) return;
-      const updateVersion = "2026-08-24-song-catalog-additions-v1";
+      const updateVersion = "2026-08-01-song-register-simple-list-v1";
       let state = {};
       try {
         state = JSON.parse(localStorage.getItem(appUpdateStorageKey) || "{}");
@@ -13151,7 +12678,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         state = {};
       }
       if (state.readVersion === updateVersion) appUpdateCard.removeAttribute("open");
-      else appUpdateCard.setAttribute("open", "");
       appUpdateCard.addEventListener("toggle", () => {
         if (appUpdateCard.open) return;
         localStorage.setItem(appUpdateStorageKey, JSON.stringify({
@@ -13161,91 +12687,91 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       });
     }
 
-      function shouldShowHomePrompt() {
+	    function shouldShowHomePrompt() {
       const state = getHomePromptState();
       if (state.disabled) return false;
       if (state.dismissedDate === todayString()) return false;
-        return true;
-      }
+	      return true;
+	    }
 
-      function isIosDevice() {
-        return /iPad|iPhone|iPod/i.test(navigator.userAgent)
-          || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-      }
+	    function isIosDevice() {
+	      return /iPad|iPhone|iPod/i.test(navigator.userAgent)
+	        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+	    }
 
-      function isStandaloneApp() {
-        return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-      }
+	    function isStandaloneApp() {
+	      return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+	    }
 
-      function updateHomeInstallButton() {
-        if (!installHomeAppButton || !homeInstallHelp) return;
-        const english = currentLanguage === "en";
-        if (isStandaloneApp()) {
-          installHomeAppButton.disabled = true;
-          installHomeAppButton.textContent = english ? "Already added" : "ホーム画面に追加済み";
-          homeInstallHelp.textContent = english
-            ? "This app is already open from your home screen."
-            : "このアプリはホーム画面から開かれています。";
-          return;
-        }
-        installHomeAppButton.disabled = false;
-        installHomeAppButton.textContent = english ? "Add to Home Screen" : "ホーム画面に追加";
-        if (deferredHomeInstallPrompt) {
-          homeInstallHelp.textContent = english
-            ? "Tap the button to open your browser's install confirmation."
-            : "ボタンを押すと、ブラウザの追加確認画面が開きます。";
-        } else if (isIosDevice()) {
-          homeInstallHelp.textContent = english
-            ? "On iPhone, the button opens the short Safari instructions below."
-            : "iPhoneでは、ボタンを押すとSafariの短い手順を表示します。";
-        } else {
-          homeInstallHelp.textContent = english
-            ? "On supported Android browsers, the install confirmation opens directly."
-            : "Androidの対応ブラウザでは、追加の確認画面を直接開けます。";
-        }
-      }
+	    function updateHomeInstallButton() {
+	      if (!installHomeAppButton || !homeInstallHelp) return;
+	      const english = currentLanguage === "en";
+	      if (isStandaloneApp()) {
+	        installHomeAppButton.disabled = true;
+	        installHomeAppButton.textContent = english ? "Already added" : "ホーム画面に追加済み";
+	        homeInstallHelp.textContent = english
+	          ? "This app is already open from your home screen."
+	          : "このアプリはホーム画面から開かれています。";
+	        return;
+	      }
+	      installHomeAppButton.disabled = false;
+	      installHomeAppButton.textContent = english ? "Add to Home Screen" : "ホーム画面に追加";
+	      if (deferredHomeInstallPrompt) {
+	        homeInstallHelp.textContent = english
+	          ? "Tap the button to open your browser's install confirmation."
+	          : "ボタンを押すと、ブラウザの追加確認画面が開きます。";
+	      } else if (isIosDevice()) {
+	        homeInstallHelp.textContent = english
+	          ? "On iPhone, the button opens the short Safari instructions below."
+	          : "iPhoneでは、ボタンを押すとSafariの短い手順を表示します。";
+	      } else {
+	        homeInstallHelp.textContent = english
+	          ? "On supported Android browsers, the install confirmation opens directly."
+	          : "Androidの対応ブラウザでは、追加の確認画面を直接開けます。";
+	      }
+	    }
 
-      function openHomeOsGuide(type) {
-        if (!homeIphoneGuide || !homeAndroidGuide) return;
-        homeIphoneGuide.open = type === "iphone";
-        homeAndroidGuide.open = type === "android";
-        const target = type === "iphone" ? homeIphoneGuide : homeAndroidGuide;
-        requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }));
-      }
+	    function openHomeOsGuide(type) {
+	      if (!homeIphoneGuide || !homeAndroidGuide) return;
+	      homeIphoneGuide.open = type === "iphone";
+	      homeAndroidGuide.open = type === "android";
+	      const target = type === "iphone" ? homeIphoneGuide : homeAndroidGuide;
+	      requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+	    }
 
-      async function requestHomeInstall() {
-        if (isStandaloneApp()) {
-          updateHomeInstallButton();
-          return;
-        }
-        if (deferredHomeInstallPrompt) {
-          const promptEvent = deferredHomeInstallPrompt;
-          deferredHomeInstallPrompt = null;
-          try {
-            await promptEvent.prompt();
-            const choice = await promptEvent.userChoice;
-            homeInstallHelp.textContent = choice && choice.outcome === "accepted"
-              ? (currentLanguage === "en" ? "Follow the browser confirmation to finish adding the app." : "ブラウザの確認に従って追加を完了してください。")
-              : (currentLanguage === "en" ? "You can add it later from the browser menu." : "あとでブラウザのメニューから追加することもできます。");
-            if (!choice || choice.outcome !== "accepted") openHomeOsGuide("android");
-          } catch (error) {
-            openHomeOsGuide(isIosDevice() ? "iphone" : "android");
-          }
-          return;
-        }
-        const type = isIosDevice() ? "iphone" : "android";
-        openHomeOsGuide(type);
-        homeInstallHelp.textContent = type === "iphone"
-          ? (currentLanguage === "en" ? "Use Safari's Share menu to add this app." : "iPhoneはSafariの共有メニューから追加してください。")
-          : (currentLanguage === "en" ? "Use your browser menu to add this app." : "ブラウザのメニューからホーム画面へ追加してください。");
-      }
+	    async function requestHomeInstall() {
+	      if (isStandaloneApp()) {
+	        updateHomeInstallButton();
+	        return;
+	      }
+	      if (deferredHomeInstallPrompt) {
+	        const promptEvent = deferredHomeInstallPrompt;
+	        deferredHomeInstallPrompt = null;
+	        try {
+	          await promptEvent.prompt();
+	          const choice = await promptEvent.userChoice;
+	          homeInstallHelp.textContent = choice && choice.outcome === "accepted"
+	            ? (currentLanguage === "en" ? "Follow the browser confirmation to finish adding the app." : "ブラウザの確認に従って追加を完了してください。")
+	            : (currentLanguage === "en" ? "You can add it later from the browser menu." : "あとでブラウザのメニューから追加することもできます。");
+	          if (!choice || choice.outcome !== "accepted") openHomeOsGuide("android");
+	        } catch (error) {
+	          openHomeOsGuide(isIosDevice() ? "iphone" : "android");
+	        }
+	        return;
+	      }
+	      const type = isIosDevice() ? "iphone" : "android";
+	      openHomeOsGuide(type);
+	      homeInstallHelp.textContent = type === "iphone"
+	        ? (currentLanguage === "en" ? "Use Safari's Share menu to add this app." : "iPhoneはSafariの共有メニューから追加してください。")
+	        : (currentLanguage === "en" ? "Use your browser menu to add this app." : "ブラウザのメニューからホーム画面へ追加してください。");
+	    }
 
-      function openHomePrompt() {
-        if (!shouldShowHomePrompt()) return;
-        homePromptModal.classList.add("show");
-        homePromptModal.setAttribute("aria-hidden", "false");
-        updateHomeInstallButton();
-        refreshLanguageSoon();
+	    function openHomePrompt() {
+	      if (!shouldShowHomePrompt()) return;
+	      homePromptModal.classList.add("show");
+	      homePromptModal.setAttribute("aria-hidden", "false");
+	      updateHomeInstallButton();
+	      refreshLanguageSoon();
     }
 
     function closeHomePromptModal() {
@@ -14783,7 +14309,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         artist,
         artist_reading: isEqualLove ? "いこーるらぶ" : String(item && item.artist_reading || "").trim(),
         search_keywords: `${String(item && item.search_keywords || "").trim()}${isEqualLove ? " イコールラブ いこーるらぶ" : ""}`.trim(),
-        artist_search_keywords: `${String(item && item.artist_search_keywords || "").trim()}${isEqualLove ? " イコールラブ いこーるらぶ" : ""}`.trim(),
         artist_index: isEqualLove ? "い" : String(item && item.artist_index || "").trim(),
         popular_jp_rank: Number(item && item.popular_jp_rank || 0),
         popular_western_rank: Number(item && item.popular_western_rank || 0),
@@ -14793,11 +14318,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     const songCatalogDbName = "music-saloon-drum-song-catalog";
-      const songCatalogStoreName = "catalog";
-      const songCatalogRecordId = "full-catalog";
-      const songCatalogStorageSchema = 2;
-      const songCatalogArtistIndexRecordId = "artist-index";
-      const songCatalogArtistIndexSchema = 1;
+    const songCatalogStoreName = "catalog";
+    const songCatalogRecordId = "full-catalog";
 
     function openSongCatalogDatabase() {
       return new Promise((resolve, reject) => {
@@ -14817,161 +14339,25 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       });
     }
 
-      function songCatalogDbRequest(mode, callback) {
+    function songCatalogDbRequest(mode, callback) {
       return openSongCatalogDatabase().then((database) => new Promise((resolve, reject) => {
         const transaction = database.transaction(songCatalogStoreName, mode);
         const store = transaction.objectStore(songCatalogStoreName);
         let request;
-        let requestResult;
-        let settled = false;
-        const fail = (error) => {
-          if (settled) return;
-          settled = true;
-          database.close();
-          reject(error || new Error("Song catalog storage transaction failed"));
-        };
         try {
           request = callback(store);
         } catch (error) {
-          fail(error);
+          database.close();
+          reject(error);
           return;
         }
-        request.onsuccess = () => { requestResult = request.result; };
-        request.onerror = () => fail(request.error || new Error("Song catalog storage request failed"));
-        transaction.oncomplete = () => {
-          if (settled) return;
-          settled = true;
-          database.close();
-          resolve(requestResult);
-        };
-        transaction.onerror = () => fail(transaction.error || request.error);
-        transaction.onabort = () => fail(transaction.error || request.error || new Error("Song catalog storage transaction was aborted"));
-        }));
-      }
-
-      function loadStoredSongCatalogHeader() {
-        if (deviceSongCatalogHeaderPromise) return deviceSongCatalogHeaderPromise;
-        deviceSongCatalogHeaderPromise = songCatalogDbRequest("readonly", (store) => store.get(songCatalogRecordId))
-          .then((record) => {
-            if (!record || !record.payload || Number(record.count || 0) < 1) return null;
-            return {
-              savedAt: record.savedAt || "",
-              version: String(record.version || ""),
-              schema: Number(record.schema || 0),
-              count: Number(record.count || 0),
-              bytes: Number(record.bytes || 0)
-            };
-          })
-          .catch((error) => {
-            console.warn(error);
-            return null;
-          });
-        return deviceSongCatalogHeaderPromise;
-      }
-
-      function buildSongCatalogArtistSummaries(songs) {
-        const artistCounts = new Map();
-        (songs || []).forEach((item) => {
-          const key = normalizeKana(item.artist);
-          if (key) artistCounts.set(key, (artistCounts.get(key) || 0) + 1);
-        });
-        const summaries = new Map();
-        (songs || []).forEach((item) => {
-          const artist = String(item.artist || "").trim();
-          if (!artist) return;
-          let summary = summaries.get(artist);
-          if (!summary) {
-            summary = {
-              title: "",
-              artist,
-              title_reading: "",
-              artist_reading: String(item.artist_reading || "").trim(),
-              search_keywords: "",
-              artist_search_keywords: String(item.artist_search_keywords || "").trim(),
-              artist_index: String(item.artist_index || "").trim(),
-              popular_jp_rank: 0,
-              popular_western_rank: 0,
-              request_count: 0,
-              artist_catalog_count: artistCounts.get(normalizeKana(artist)) || 0,
-              _popularJp: false,
-              _popularWestern: false,
-              _artistSummary: true
-            };
-            summaries.set(artist, summary);
-          } else {
-            if (!summary.artist_reading && item.artist_reading) summary.artist_reading = String(item.artist_reading).trim();
-            if (!summary.artist_search_keywords && item.artist_search_keywords) summary.artist_search_keywords = String(item.artist_search_keywords).trim();
-            if (!summary.artist_index && item.artist_index) summary.artist_index = String(item.artist_index).trim();
-          }
-          if (Number(item.popular_jp_rank || 0) >= 1 || Number(item.request_count || 0) >= 1) summary._popularJp = true;
-          if (Number(item.popular_western_rank || 0) >= 1) summary._popularWestern = true;
-        });
-        return [...summaries.values()].filter((item) => item._popularJp || item._popularWestern);
-      }
-
-      async function persistSongCatalogArtistSummaryIndex(songs, meta) {
-        if (!Array.isArray(songs) || !songs.length || !meta) return false;
-        const sourceVersion = String(meta.version || "");
-        const sourceCount = Number(meta.count || songs.length);
-        if (sourceCount !== songs.length) return false;
-        const artists = buildSongCatalogArtistSummaries(songs);
-        if (!artists.length) return false;
-        if (!deviceSongCatalogMeta
-          || String(deviceSongCatalogMeta.version || "") !== sourceVersion
-          || Number(deviceSongCatalogMeta.count || 0) !== sourceCount) return false;
-        const record = {
-          id: songCatalogArtistIndexRecordId,
-          schema: songCatalogArtistIndexSchema,
-          catalogVersion: sourceVersion,
-          catalogCount: sourceCount,
-          generatedAt: new Date().toISOString(),
-          artists
-        };
-        await songCatalogDbRequest("readwrite", (store) => store.put(record));
-        deviceSongCatalogArtistSummaries = artists;
-        deviceSongCatalogArtistSummaryMeta = record;
-        popularArtistSummaryViewCache.clear();
-        deviceSongCatalogArtistSummaryLoadPromise = Promise.resolve(artists);
-        return true;
-      }
-
-      function scheduleSongCatalogArtistSummaryPersistence() {
-        const run = () => persistSongCatalogArtistSummaryIndex(deviceSongCatalog, deviceSongCatalogMeta).catch((error) => console.warn(error));
-        if (typeof requestIdleCallback === "function") requestIdleCallback(run, { timeout: 1200 });
-        else window.setTimeout(run, 0);
-      }
-
-      async function loadDeviceSongCatalogArtistSummaryFromStorage() {
-        if (deviceSongCatalogArtistSummaryLoadPromise) return deviceSongCatalogArtistSummaryLoadPromise;
-        deviceSongCatalogArtistSummaryLoadPromise = (async () => {
-          try {
-            const [header, record] = await Promise.all([
-              loadStoredSongCatalogHeader(),
-              songCatalogDbRequest("readonly", (store) => store.get(songCatalogArtistIndexRecordId))
-            ]);
-            if (header && !deviceSongCatalogMeta) deviceSongCatalogMeta = header;
-            const valid = !!(header && record
-              && Number(record.schema || 0) === songCatalogArtistIndexSchema
-              && Number(record.catalogCount || 0) === Number(header.count || 0)
-              && String(record.catalogVersion || "") === String(header.version || "")
-              && Array.isArray(record.artists));
-            if (!valid) {
-              deviceSongCatalogArtistSummaries = [];
-              deviceSongCatalogArtistSummaryMeta = null;
-            } else {
-              deviceSongCatalogArtistSummaries = record.artists;
-              deviceSongCatalogArtistSummaryMeta = record;
-            }
-          } catch (error) {
-            console.warn(error);
-            deviceSongCatalogArtistSummaries = [];
-            deviceSongCatalogArtistSummaryMeta = null;
-          }
-          updateDeviceSongCatalogStatus();
-          return deviceSongCatalogArtistSummaries;
-        })();
-        return deviceSongCatalogArtistSummaryLoadPromise;
-      }
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error("Song catalog storage request failed"));
+        transaction.oncomplete = () => database.close();
+        transaction.onerror = () => database.close();
+        transaction.onabort = () => database.close();
+      }));
+    }
 
     function formatSongCatalogSavedAt(value) {
       if (!value) return "";
@@ -14985,8 +14371,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     function updateDeviceSongCatalogStatus() {
-        const savedCatalogCount = Number(deviceSongCatalogMeta && deviceSongCatalogMeta.count || deviceSongCatalog.length || 0);
-        const hasSavedCatalog = savedCatalogCount > 0 && deviceSongCatalogMeta;
+      const hasSavedCatalog = deviceSongCatalog.length > 0 && deviceSongCatalogMeta;
       downloadSongCatalog.disabled = Boolean(hasSavedCatalog);
       updateSavedSongCatalog.disabled = !hasSavedCatalog;
       deleteSavedSongCatalog.disabled = !hasSavedCatalog;
@@ -15001,18 +14386,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const savedMegabytes = deviceSongCatalogMeta.bytes
         ? ` / ${Math.max(1, Math.round(deviceSongCatalogMeta.bytes / 1000000))} MB`
         : "";
-      const savedSchemaIsCurrent = Number(deviceSongCatalogMeta.schema || 0) >= songCatalogStorageSchema;
-      const savedVersionIsCurrent = !songCatalogVersion || String(deviceSongCatalogMeta.version || "") === songCatalogVersion;
-        const updateAvailable = !savedSchemaIsCurrent || (songCatalogTotalLoaded && (songCatalogTotal !== savedCatalogCount || !savedVersionIsCurrent));
+      const updateAvailable = songCatalogTotal > deviceSongCatalog.length;
       const updateNote = updateAvailable
         ? (currentLanguage === "en"
           ? ` / Latest catalog: ${songCatalogTotal.toLocaleString()} songs. Please update the saved copy.`
           : `／最新版は${songCatalogTotal.toLocaleString()}曲です。「最新版を取得して上書き」で更新できます。`)
         : "";
       deviceSongCatalogStatus.textContent = currentLanguage === "en"
-          ? `Saved on this device: ${savedCatalogCount.toLocaleString()} songs${savedMegabytes} / Updated ${savedAt}${updateNote}`
-          : `端末保存済み：${savedCatalogCount.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}${updateNote}`;
-        const savedBytesForCurrentCatalog = !updateAvailable && savedCatalogCount === songCatalogTotal ? deviceSongCatalogMeta.bytes : 0;
+        ? `Saved on this device: ${deviceSongCatalog.length.toLocaleString()} songs${savedMegabytes} / Updated ${savedAt}${updateNote}`
+        : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}${updateNote}`;
+      const savedBytesForCurrentCatalog = deviceSongCatalog.length === songCatalogTotal ? deviceSongCatalogMeta.bytes : 0;
       updateSongCatalogCapacityEstimate(songCatalogTotal, savedBytesForCurrentCatalog);
     }
 
@@ -15034,7 +14417,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             deviceSongCatalogMeta = deviceSongCatalog.length ? {
               savedAt: record.savedAt || payload.generated_at || "",
               version: record.version || payload.version || "",
-              schema: Number(record.schema || payload.schema || 0),
               count: deviceSongCatalog.length,
               bytes: Number(record.bytes) || storedBytes
             } : null;
@@ -15044,61 +14426,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           deviceSongCatalog = [];
           deviceSongCatalogMeta = null;
         }
-          updateDeviceSongCatalogStatus();
-          if (deviceSongCatalog.length && deviceSongCatalogMeta) {
-            const summaryIsCurrent = deviceSongCatalogArtistSummaryMeta
-              && Number(deviceSongCatalogArtistSummaryMeta.schema || 0) === songCatalogArtistIndexSchema
-              && Number(deviceSongCatalogArtistSummaryMeta.catalogCount || 0) === Number(deviceSongCatalogMeta.count || 0)
-              && String(deviceSongCatalogArtistSummaryMeta.catalogVersion || "") === String(deviceSongCatalogMeta.version || "");
-            if (!summaryIsCurrent) scheduleSongCatalogArtistSummaryPersistence();
-          }
-          return deviceSongCatalog;
+        updateDeviceSongCatalogStatus();
+        return deviceSongCatalog;
       })();
       return deviceSongCatalogLoadPromise;
-    }
-
-    function canUseSavedSongCatalog() {
-      if (!deviceSongCatalog.length) return false;
-      if (!deviceSongCatalogMeta || Number(deviceSongCatalogMeta.schema || 0) < songCatalogStorageSchema) return false;
-      if (!songCatalogTotalLoaded) return true;
-      if (deviceSongCatalog.length !== songCatalogTotal) return false;
-      return !songCatalogVersion || String(deviceSongCatalogMeta.version || "") === songCatalogVersion;
-    }
-
-    function openSongCatalogUpdatePrompt(newCount) {
-      if (!songCatalogUpdateModal) return;
-      if (songCatalogUpdateModalBody) {
-        songCatalogUpdateModalBody.textContent = currentLanguage === "en"
-          ? `New or corrected song data is available (${Number(newCount || songCatalogTotal).toLocaleString()} songs). Update this device now?`
-          : `新しく追加・訂正された曲データがあります（全${Number(newCount || songCatalogTotal).toLocaleString()}曲）。今すぐ端末へ更新しますか？`;
-      }
-      songCatalogUpdateModal.classList.add("show");
-      songCatalogUpdateModal.setAttribute("aria-hidden", "false");
-    }
-
-    function closeSongCatalogUpdatePrompt() {
-      if (!songCatalogUpdateModal) return;
-      songCatalogUpdateModal.classList.remove("show");
-      songCatalogUpdateModal.setAttribute("aria-hidden", "true");
-    }
-
-    function dismissSongCatalogUpdatePromptForVersion(version) {
-      try {
-        localStorage.setItem(songCatalogUpdatePromptDismissedStorageKey, String(version || ""));
-      } catch (error) { /* ignore */ }
-    }
-
-    function maybeShowSongCatalogUpdatePrompt() {
-      // すでに端末へ曲データを保存済みで、サーバー側のバージョンと異なる場合のみポップアップで知らせる
-        if (!songCatalogUpdateModal || !deviceSongCatalogMeta || Number(deviceSongCatalogMeta.count || deviceSongCatalog.length || 0) < 1) return;
-      if (!songCatalogVersion) return;
-      const savedVersion = String(deviceSongCatalogMeta.version || "");
-      if (savedVersion === songCatalogVersion) return;
-      let dismissedVersion = "";
-      try { dismissedVersion = localStorage.getItem(songCatalogUpdatePromptDismissedStorageKey) || ""; } catch (error) { dismissedVersion = ""; }
-      if (dismissedVersion === songCatalogVersion) return;
-      if (songCatalogUpdateModal.classList.contains("show")) return;
-      openSongCatalogUpdatePrompt(songCatalogTotal);
     }
 
     async function saveDownloadedSongCatalog(payload) {
@@ -15106,113 +14437,31 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? payload.songs.map(normalizePopularSong).filter((item) => item.title && item.artist)
         : [];
       if (!songsToSave.length) throw new Error("Downloaded catalog is empty");
-      const expectedCount = Math.max(0, Number(payload && payload.count) || 0);
-      if (expectedCount && songsToSave.length !== expectedCount) {
-        const incompleteError = new Error(`Incomplete song catalog: ${songsToSave.length}/${expectedCount}`);
-        incompleteError.code = "CATALOG_INCOMPLETE";
-        throw incompleteError;
-      }
       const savedAt = new Date().toISOString();
       const storedPayload = {
-        schema: songCatalogStorageSchema,
         version: String(payload.version || ""),
         generated_at: String(payload.generated_at || savedAt),
         songs: songsToSave
       };
       const blob = new Blob([JSON.stringify(storedPayload)], { type: "application/json" });
-      if (navigator.storage && typeof navigator.storage.estimate === "function") {
-        const estimate = await navigator.storage.estimate().catch(() => null);
-        const availableBytes = estimate && Number(estimate.quota) - Number(estimate.usage);
-        if (Number.isFinite(availableBytes) && availableBytes > 0 && availableBytes < blob.size * 1.25) {
-          const quotaError = new Error("Not enough browser storage for the full song catalog");
-          quotaError.name = "QuotaExceededError";
-          throw quotaError;
-        }
-      }
       await songCatalogDbRequest("readwrite", (store) => store.put({
         id: songCatalogRecordId,
         payload: blob,
         savedAt,
-        schema: songCatalogStorageSchema,
         version: storedPayload.version,
         count: songsToSave.length,
         bytes: blob.size
       }));
-      const verifiedRecord = await songCatalogDbRequest("readonly", (store) => store.get(songCatalogRecordId));
-      if (!verifiedRecord || Number(verifiedRecord.count) !== songsToSave.length || Number(verifiedRecord.bytes) !== blob.size) {
-        const verificationError = new Error("Saved song catalog verification failed");
-        verificationError.code = "CATALOG_VERIFY_FAILED";
-        throw verificationError;
-      }
       deviceSongCatalog = songsToSave;
-      deviceSongCatalogMeta = { savedAt, schema: songCatalogStorageSchema, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
+      deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
       deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
-        deviceSongCatalogArtistIndex = null;
-        deviceSongCatalogSearchIndexReady = false;
-        popularArtistSongCache.clear();
-        popularSongResultCache.clear();
-        popularArtistSummaryViewCache.clear();
-        popularArtistSongItems = [];
-        deviceSongCatalogHeaderPromise = Promise.resolve(deviceSongCatalogMeta);
-        deviceSongCatalogArtistSummaryLoadPromise = null;
-        await persistSongCatalogArtistSummaryIndex(deviceSongCatalog, deviceSongCatalogMeta);
+      popularArtistSongCache.clear();
+      popularArtistSongItems = [];
       if (navigator.storage && typeof navigator.storage.persist === "function") {
         navigator.storage.persist().catch(() => false);
       }
       updateDeviceSongCatalogStatus();
       updateSongCatalogTotal(deviceSongCatalog.length);
-    }
-
-    async function fetchSongCatalogFull() {
-      const controller = new AbortController();
-      const timeoutId = window.setTimeout(() => controller.abort(), 120000);
-      try {
-        const params = new URLSearchParams({ action: "song_catalog_full", refresh: String(Date.now()) });
-        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, {
-          cache: "no-store",
-          signal: controller.signal
-        });
-        if (!response.ok) return null;
-        const payload = await response.json();
-        if (!payload.ok || !Array.isArray(payload.songs)) return null;
-        return payload;
-      } catch (error) {
-        console.warn(error);
-        return null;
-      } finally {
-        window.clearTimeout(timeoutId);
-      }
-    }
-
-    async function fetchSongCatalogChunk(offset, limit) {
-      let lastError;
-      for (let attempt = 0; attempt < 3; attempt += 1) {
-        const controller = new AbortController();
-        const timeoutId = window.setTimeout(() => controller.abort(), 45000);
-        try {
-          const params = new URLSearchParams({
-            action: "song_catalog_download",
-            offset: String(offset),
-            limit: String(limit),
-            refresh: String(Date.now())
-          });
-          const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, {
-            cache: "no-store",
-            signal: controller.signal
-          });
-          const payload = await response.json();
-          if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) {
-            throw new Error("Song catalog chunk download failed");
-          }
-          return payload;
-        } catch (error) {
-          lastError = error;
-          if (attempt < 2) await new Promise((resolve) => window.setTimeout(resolve, 700 * (attempt + 1)));
-        } finally {
-          window.clearTimeout(timeoutId);
-        }
-      }
-      throw lastError || new Error("Song catalog chunk download failed");
     }
 
     async function downloadLatestSongCatalog() {
@@ -15222,56 +14471,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? "Downloading and saving all song data…"
         : "全曲データをダウンロードして端末へ保存しています…";
       try {
-        const fullPayload = await fetchSongCatalogFull();
-        let expectedCount = 0;
-        let expectedVersion = "";
-        let generatedAt = "";
-        let downloadedSongs;
-        if (fullPayload) {
-          downloadedSongs = fullPayload.songs;
-          expectedCount = Math.max(0, Number(fullPayload.count) || downloadedSongs.length);
-          expectedVersion = String(fullPayload.version || "");
-          generatedAt = String(fullPayload.generated_at || "");
-        } else {
-          // 一括取得に失敗した場合は、これまで通り分割取得を試す(古いapi.phpにも対応)
-          const chunkSize = 3000;
-          downloadedSongs = [];
-          let offset = 0;
-          while (true) {
-            const payload = await fetchSongCatalogChunk(offset, chunkSize);
-            const payloadCount = Math.max(0, Number(payload.count) || 0);
-            const payloadVersion = String(payload.version || "");
-            if (!expectedCount) {
-              expectedCount = payloadCount || payload.songs.length;
-              expectedVersion = payloadVersion;
-              generatedAt = String(payload.generated_at || "");
-            } else if (payloadCount !== expectedCount || (expectedVersion && payloadVersion && payloadVersion !== expectedVersion)) {
-              const changedError = new Error("Song catalog changed during download");
-              changedError.code = "CATALOG_CHANGED";
-              throw changedError;
-            }
-            downloadedSongs.push(...payload.songs);
-            const progressCount = Math.min(downloadedSongs.length, expectedCount);
-            deviceSongCatalogStatus.textContent = currentLanguage === "en"
-              ? `Downloading song data… ${progressCount.toLocaleString()} / ${expectedCount.toLocaleString()}`
-              : `全曲データを取得中… ${progressCount.toLocaleString()}／${expectedCount.toLocaleString()}曲`;
-            const isLegacyResponse = typeof payload.complete !== "boolean";
-            if (isLegacyResponse || payload.complete) break;
-            const nextOffset = Number(payload.next_offset);
-            if (!Number.isFinite(nextOffset) || nextOffset <= offset) {
-              const incompleteError = new Error("Invalid next offset in song catalog download");
-              incompleteError.code = "CATALOG_INCOMPLETE";
-              throw incompleteError;
-            }
-            offset = nextOffset;
-          }
-        }
-        await saveDownloadedSongCatalog({
-          version: expectedVersion,
-          generated_at: generatedAt,
-          count: expectedCount,
-          songs: downloadedSongs
-        });
+        const params = new URLSearchParams({ action: "song_catalog_download", refresh: String(Date.now()) });
+        const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
+        const payload = await response.json();
+        if (!response.ok || !payload.ok || !Array.isArray(payload.songs)) throw new Error("Song catalog download failed");
+        await saveDownloadedSongCatalog(payload);
         deviceSongCatalogStatus.textContent = currentLanguage === "en"
           ? `Saved ${deviceSongCatalog.length.toLocaleString()} songs on this device.`
           : `最新版の${deviceSongCatalog.length.toLocaleString()}曲をこの端末へ保存しました。`;
@@ -15279,66 +14483,29 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       } catch (error) {
         console.warn(error);
         updateDeviceSongCatalogStatus();
-        if (error && error.name === "QuotaExceededError") {
-          deviceSongCatalogStatus.textContent = currentLanguage === "en"
-            ? "Not enough browser storage. Free at least 25 MB or delete old browser data, then try again."
-            : "ブラウザの保存容量が不足しています。25MB以上の空きを確保するか、古いブラウザデータを整理して再度お試しください。";
-        } else if (error && error.code === "CATALOG_CHANGED") {
-          deviceSongCatalogStatus.textContent = currentLanguage === "en"
-            ? "The song catalog was updated during the download. Please try once more."
-            : "ダウンロード中に曲データが更新されました。もう一度押すと最新版を取得できます。";
-        } else if (error && (error.code === "CATALOG_INCOMPLETE" || error.code === "CATALOG_VERIFY_FAILED")) {
-          deviceSongCatalogStatus.textContent = currentLanguage === "en"
-            ? "The full catalog could not be verified, so incomplete data was not activated. Please try again."
-            : "全曲分を確認できなかったため、不完全なデータは使用していません。もう一度お試しください。";
-        } else {
-          deviceSongCatalogStatus.textContent = currentLanguage === "en"
-            ? "The download was interrupted. Check your connection and try again; each section is retried automatically."
-            : "ダウンロードが途中で止まりました。通信状態を確認して再度お試しください。分割データは自動で再試行します。";
-        }
+        deviceSongCatalogStatus.textContent = currentLanguage === "en"
+          ? "Could not save the song data. Check your connection and free storage, then try again."
+          : "曲データを保存できませんでした。通信状態と端末の空き容量を確認して、もう一度お試しください。";
       }
     }
 
-    function ensureDeviceSongCatalogSearchIndex() {
-      if (deviceSongCatalogSearchIndexReady) return;
+    function filterSavedSongCatalog(query, category, sortMode, limit = 5000) {
+      const queryKey = normalizeKana(query);
       const artistCounts = new Map();
       deviceSongCatalog.forEach((item) => {
         const key = normalizeKana(item.artist);
         if (key) artistCounts.set(key, (artistCounts.get(key) || 0) + 1);
       });
-      deviceSongCatalog.forEach((item) => {
-        item._searchAll = normalizeCatalogSearchText(`${item.title || ""}${item.artist || ""}${item.title_reading || ""}${item.artist_reading || ""}${item.search_keywords || ""}${item.artist_search_keywords || ""}`);
-        item._searchArtist = normalizeCatalogSearchText(`${item.artist || ""}${item.artist_reading || ""}${item.artist_search_keywords || ""}`);
-        item._searchTitle = normalizeCatalogSearchText(`${item.title || ""}${item.title_reading || ""}`);
-        item._searchKeyword = normalizeCatalogSearchText(`${item.search_keywords || ""}`);
-        item._artistCatalogCount = artistCounts.get(normalizeKana(item.artist)) || 0;
-      });
-      deviceSongCatalogSearchIndexReady = true;
-    }
-
-      function filterSavedSongCatalog(query, category, sortMode, searchScope = "all", limit = 5000) {
-        ensureDeviceSongCatalogSearchIndex();
-        const queryKey = normalizeCatalogSearchText(query);
-        const cacheKey = [
-          String(deviceSongCatalogMeta && deviceSongCatalogMeta.version || ""),
-          String(deviceSongCatalog.length), currentLanguage, category, sortMode, searchScope, queryKey, String(limit)
-        ].join("|");
-        if (popularSongResultCache.has(cacheKey)) return popularSongResultCache.get(cacheKey);
-        const matches = [];
-      for (let i = 0; i < deviceSongCatalog.length; i++) {
-        const item = deviceSongCatalog[i];
-        if (category === "jp" && item.popular_jp_rank < 1 && item.request_count < 1) continue;
-        if (category === "western" && item.popular_western_rank < 1) continue;
-        if (category === "catalog" && !queryKey) continue;
+      const matches = deviceSongCatalog.filter((item) => {
+        if (category === "jp" && item.popular_jp_rank < 1 && item.request_count < 1) return false;
+        if (category === "western" && item.popular_western_rank < 1) return false;
+        if (category === "catalog" && !queryKey) return false;
         if (queryKey) {
-          const haystack = searchScope === "artist" ? item._searchArtist
-            : searchScope === "title" ? item._searchTitle
-            : searchScope === "keyword" ? item._searchKeyword
-            : item._searchAll;
-          if (!haystack.includes(queryKey)) continue;
+          const haystack = normalizeKana(`${item.title}${item.artist}${item.title_reading}${item.artist_reading}${item.search_keywords}`);
+          if (!haystack.includes(queryKey)) return false;
         }
-        matches.push(item);
-      }
+        return true;
+      }).map((item) => ({ ...item, artist_catalog_count: artistCounts.get(normalizeKana(item.artist)) || 0 }));
       const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
       matches.sort((left, right) => {
         const leftPrimary = sortMode === "title" ? (left.title_reading || left.title) : (left.artist_reading || left.artist);
@@ -15346,25 +14513,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const primary = collator.compare(leftPrimary, rightPrimary);
         return primary || collator.compare(left.title_reading || left.title, right.title_reading || right.title);
       });
-        const result = matches.slice(0, limit).map((item) => ({ ...item, artist_catalog_count: item._artistCatalogCount }));
-        popularSongResultCache.set(cacheKey, result);
-        while (popularSongResultCache.size > 12) popularSongResultCache.delete(popularSongResultCache.keys().next().value);
-        return result;
-      }
-
-      function savedArtistSummaryItems(category) {
-        const cacheKey = [
-          String(deviceSongCatalogArtistSummaryMeta && deviceSongCatalogArtistSummaryMeta.catalogVersion || ""),
-          String(deviceSongCatalogArtistSummaryMeta && deviceSongCatalogArtistSummaryMeta.catalogCount || 0),
-          currentLanguage, category
-        ].join("|");
-        if (popularArtistSummaryViewCache.has(cacheKey)) return popularArtistSummaryViewCache.get(cacheKey);
-        const result = deviceSongCatalogArtistSummaries
-          .filter((item) => category === "western" ? item._popularWestern : item._popularJp);
-        sortPopularArtistItems(result);
-        popularArtistSummaryViewCache.set(cacheKey, result);
-        return result;
-      }
+      return matches.slice(0, limit);
+    }
 
     function findLocalPopularSong(item) {
       if (!item || !item.title) return null;
@@ -15377,13 +14527,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       return [..."あいうえおかきくけこさしすせそたちつてとなにぬねのはひふへほまみむめもやゆよらりるれろわをん", ..."0123456789", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ", "その他"];
     }
 
-      function popularExactIndexGroup(item, mode = "artist") {
+    function popularExactIndexGroup(item, mode = "artist") {
       const visibleName = String(mode === "title"
         ? item && item.title || ""
         : item && item.artist || "").trim();
       const visibleFirst = visibleName.normalize("NFKC").charAt(0).toUpperCase();
       if (/^[0-9]$/.test(visibleFirst)) return visibleFirst;
-      if (mode === "title" && /^[A-Z]$/.test(visibleFirst)) return visibleFirst;
+      if (/^[A-Z]$/.test(visibleFirst)) return visibleFirst;
       const source = String(mode === "title"
         ? item && (item.title_reading || item.title) || ""
         : item && (item.artist_reading || item.artist) || "").trim();
@@ -15391,10 +14541,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const rawLatin = rawFirst.toUpperCase();
       if (/^[0-9]$/.test(rawFirst)) return rawFirst;
       if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
-      const storedIndexFirst = mode === "artist" && item && item.artist_index
+      let first = mode === "artist" && item && item.artist_index
         ? normalizeKana(item.artist_index).charAt(0)
-        : "";
-      let first = /^[ぁ-ん]$/.test(rawFirst) ? rawFirst : (storedIndexFirst || rawFirst);
+        : rawFirst;
       const latin = first.toUpperCase();
       if (/^[A-Z]$/.test(latin)) return latin;
       const kanaBase = {
@@ -15407,24 +14556,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ", "ゎ": "わ"
       };
       first = kanaBase[first] || first;
-        return popularExactIndexLabels().includes(first) ? first : "その他";
-      }
-
-      function sortPopularArtistItems(items) {
-        const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
-        const indexLabels = popularExactIndexLabels();
-        items.sort((a, b) => {
-          const aIndex = popularExactIndexGroup(a, "artist");
-          const bIndex = popularExactIndexGroup(b, "artist");
-          const aName = String(/^[A-Z]$/.test(aIndex) ? (a.artist || "") : (a.artist_reading || a.artist || "")).normalize("NFKC");
-          const bName = String(/^[A-Z]$/.test(bIndex) ? (b.artist || "") : (b.artist_reading || b.artist || "")).normalize("NFKC");
-          return indexLabels.indexOf(aIndex) - indexLabels.indexOf(bIndex)
-            || collator.compare(aName, bName)
-            || collator.compare(a.artist || "", b.artist || "")
-            || collator.compare(a.title_reading || a.title || "", b.title_reading || b.title || "");
-        });
-        return items;
-      }
+      return popularExactIndexLabels().includes(first) ? first : "その他";
+    }
 
     function renderPopularExactIndex(items, mode) {
       if (!popularSongIndexJump) return;
@@ -15450,46 +14583,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const enabled = menu.labels.some((label) => available.has(label));
         return `<details class="popular-index-menu${enabled ? "" : " is-disabled"}"><summary>${escapeText(menu.label)}</summary><div class="popular-index-popover">${buttonHtml(menu.labels)}</div></details>`;
       }).join("");
-      const scopeLabel = ({
-        all: currentLanguage === "en" ? "All" : "すべて",
-        artist: currentLanguage === "en" ? "Artist" : "歌手名",
-        title: currentLanguage === "en" ? "Song" : "曲名",
-        keyword: currentLanguage === "en" ? "Keyword" : "キーワード"
-      }[popularSongSearchScopeMode]) || (currentLanguage === "en" ? "All" : "すべて");
-      const floatingSearchValue = popularSongSearch ? popularSongSearch.value : "";
-      const openArtistGroup = popularSongList ? popularSongList.querySelector(".popular-artist-group[open]") : null;
-      const collapseLabel = popularIndexCollapsed
-        ? (currentLanguage === "en" ? "▾ Show search / index" : "▾ 検索・索引を開く")
-        : (currentLanguage === "en" ? "▴ Collapse" : "▴ 検索・索引を折りたたむ");
-      const categoryLabels = {
-        jp: currentLanguage === "en" ? "Japanese" : "国内曲",
-        western: currentLanguage === "en" ? "International" : "洋楽曲",
-        catalog: currentLanguage === "en" ? "Full catalog" : "全曲から検索"
-      };
-      const categoryButtonsHtml = ["jp", "western", "catalog"].map((key) => `
-          <button type="button" class="${popularSongCategory === key ? "is-active" : "ghost"}" data-popular-index-category="${key}" aria-pressed="${popularSongCategory === key}">${escapeText(categoryLabels[key])}</button>
-        `).join("");
       popularSongIndexJump.innerHTML = `
         <div class="popular-index-toolbar-head">
-          <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose song list" : "どこから探すか選ぶ"}">${categoryButtonsHtml}</div>
           <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
             <button type="button" class="${mode === "artist" ? "is-active" : ""}" data-popular-index-mode="artist" aria-pressed="${mode === "artist"}">${currentLanguage === "en" ? "Artist" : "歌手"}</button>
             <button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>
           </div>
-          <button class="btn ghost popular-index-collapse-toggle" type="button" data-popular-index-collapse-toggle aria-expanded="${popularIndexCollapsed ? "false" : "true"}">${collapseLabel}</button>
-          <button class="btn ghost popular-index-close-artist" type="button" data-popular-index-close-artist ${openArtistGroup ? "" : "hidden"}>${currentLanguage === "en" ? "✕ Close song list" : "✕ 開いている歌手の曲一覧を閉じる"}</button>
           <button class="btn primary popular-index-request" type="button" data-open-song-request>${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</button>
         </div>
-        <div class="popular-index-collapsible" ${popularIndexCollapsed ? "hidden" : ""}>
-          <form class="popular-index-free-search" data-popular-index-search role="search">
-            <span class="popular-index-search-scope">${escapeText(scopeLabel)}</span>
-            <input type="search" data-popular-index-search-input value="${escapeText(floatingSearchValue)}" aria-label="${currentLanguage === "en" ? "Search songs" : "曲名・歌手名をフリーワード検索"}" placeholder="${currentLanguage === "en" ? "Enter a search term" : "ここからフリーワード検索"}" autocomplete="off">
-            <button type="submit">${currentLanguage === "en" ? "Search" : "検索"}</button>
-          </form>
-          <div class="popular-index-groups">${menuHtml}</div>
-        </div>
+        <div class="popular-index-groups">${menuHtml}</div>
       `;
-      popularSongIndexJump.hidden = false;
+      popularSongIndexJump.hidden = !items || !items.length;
     }
 
     function popularSongRowHtml(item, index, source = "popular") {
@@ -15499,50 +14603,49 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
       const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
-      const ufretUrl = `https://www.ufret.jp/search.php?key=${encodeURIComponent(searchQuery)}`;
-      const gakkiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:music.j-total.net ${searchQuery}`)}`;
       const lyricsUrl = `https://www.google.com/search?q=${encodeURIComponent(`${searchQuery} 歌詞`)}`;
       return `
-        <details class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
-          <summary>
-            <span class="popular-song-summary-text">
-              <strong>${escapeText(item.title || "-")}</strong>
-              <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
-            </span>
-            <span class="popular-song-summary-toggle" aria-hidden="true">▾</span>
-          </summary>
-          <div class="popular-song-body">
+        <article class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
+          <div>
+            <strong>${escapeText(item.title || "-")}</strong>
+            <span>${escapeText(item.artist || uiText("歌手名未登録"))}</span>
             <div class="popular-song-web-actions">
               <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
-              <a href="${escapeText(ufretUrl)}" target="_blank" rel="noopener">${escapeText(uiText("Uフレットでコード検索 ↗"))}</a>
-              <a href="${escapeText(gakkiUrl)}" target="_blank" rel="noopener">${escapeText(uiText("J-Total Musicでコード検索 ↗"))}</a>
               <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
             </div>
-            <div class="popular-song-actions">
-              <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
-              <button class="btn ghost" type="button" data-popular-setlist="${escapeText(source)}" data-popular-index="${index}">セットリストへ追加</button>
-              <button class="btn ghost song-correction-button" type="button" data-song-correction="${escapeText(source)}" data-popular-index="${index}">${escapeText(uiText("訂正を依頼"))}</button>
-            </div>
           </div>
-        </details>
+          <div class="popular-song-actions">
+            <button class="btn ${existing ? "ghost is-complete" : "primary"} popular-song-copy" type="button" data-popular-add="${escapeText(source)}" data-popular-index="${index}" ${existing ? "disabled" : ""}>${escapeText(uiText(existing ? "✓ マイ曲リスト登録済み" : "マイ曲リストへ登録"))}</button>
+            <button class="btn ghost" type="button" data-popular-setlist="${escapeText(source)}" data-popular-index="${index}">セットリストへ追加</button>
+            <button class="btn ghost song-correction-button" type="button" data-song-correction="${escapeText(source)}" data-popular-index="${index}">${escapeText(uiText("訂正を依頼"))}</button>
+          </div>
+        </article>
       `;
     }
 
     function renderPopularSongs() {
       if (!popularSongList || !popularSongStatus) return;
       const items = popularSongItems;
-        if (popularSongSortMode === "artist" && !popularSongItemsPreparedArtistOrder) sortPopularArtistItems(items);
+      if (popularSongSortMode === "artist") {
+        const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
+        const indexLabels = popularExactIndexLabels();
+        items.sort((a, b) => {
+          const aIndex = popularExactIndexGroup(a, "artist");
+          const bIndex = popularExactIndexGroup(b, "artist");
+          const aName = String(/^[A-Z]$/.test(aIndex) ? (a.artist || "") : (a.artist_reading || a.artist || "")).normalize("NFKC");
+          const bName = String(/^[A-Z]$/.test(bIndex) ? (b.artist || "") : (b.artist_reading || b.artist || "")).normalize("NFKC");
+          return indexLabels.indexOf(aIndex) - indexLabels.indexOf(bIndex)
+            || collator.compare(aName, bName)
+            || collator.compare(a.artist || "", b.artist || "")
+            || collator.compare(a.title_reading || a.title || "", b.title_reading || b.title || "");
+        });
+      }
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
       renderPopularExactIndex(items, indexMode);
       if (!items.length) {
-        const fallbackHtml = popularSongFallbackCatalogCount > 0
-          ? `<button type="button" class="btn primary" data-popular-fallback-catalog>${escapeText(currentLanguage === "en"
-              ? `Search the full catalog instead (${popularSongFallbackCatalogCount} found) →`
-              : `全曲から検索すると${popularSongFallbackCatalogCount}件見つかりました。切り替えて見る →`)}</button>`
-          : "";
-        popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を入力して検索してください。" : "条件に合う曲が見つかりませんでした。"))}${fallbackHtml}</div></div>`;
+        popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を1文字以上入力してください。検索後、結果の50音・数字・A–Zボタンが使えます。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
         return;
       }
       if (popularSongSortMode === "rank") {
@@ -15588,13 +14691,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (Math.abs(scrollDelta) > 1) window.scrollBy({ top: scrollDelta, left: 0, behavior: "auto" });
     }
 
-    function updatePopularIndexCloseButton() {
-      const closeButton = popularSongIndexJump ? popularSongIndexJump.querySelector("[data-popular-index-close-artist]") : null;
-      if (!closeButton) return;
-      const hasOpen = !!(popularSongList && popularSongList.querySelector(".popular-artist-group[open]"));
-      closeButton.hidden = !hasOpen;
-    }
-
     function autoClosePassedPopularArtists() {
       popularArtistAutoCloseFrame = 0;
       if (!popularSongList) return;
@@ -15608,7 +14704,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const passedLastArtist = !nextArtist && details.getBoundingClientRect().bottom <= closeLine;
         if (!passedIntoNextArtist && !passedLastArtist) continue;
         details.open = false;
-        updatePopularIndexCloseButton();
         placePopularArtistBelowFloatingBar(details);
         break;
       }
@@ -15619,44 +14714,18 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       popularArtistAutoCloseFrame = requestAnimationFrame(autoClosePassedPopularArtists);
     }
 
-    function updatePopularSongSearchScopeButtons() {
-      popularSongSearchScope.querySelectorAll("[data-popular-search-scope]").forEach((button) => {
-        const active = button.dataset.popularSearchScope === popularSongSearchScopeMode;
-        button.classList.toggle("is-active", active);
-        button.classList.toggle("ghost", !active);
-        button.setAttribute("aria-pressed", String(active));
-      });
-    }
-
-    function runPopularSongSearch(forceRefresh = false) {
-      if (popularSongSearch.value.trim()) {
-        if (popularSongCategory !== "catalog") popularSongCategoryBeforeSearch = popularSongCategory;
-        popularSongCategory = "catalog";
-        popularIndexCollapsed = true;
-        try { localStorage.setItem("msdPopularIndexCollapsed", "1"); } catch (error) { /* ignore */ }
-      } else if (popularSongCategoryBeforeSearch) {
-        popularSongCategory = popularSongCategoryBeforeSearch;
-        popularSongCategoryBeforeSearch = null;
-      }
-      return loadPopularSongs(forceRefresh);
-    }
-
-      async function loadPopularSongs(forceRefresh = false) {
-        if (!popularSongStatus) return;
-        popularSongItemsPreparedArtistOrder = false;
-        const query = popularSongSearch.value.trim();
+    async function loadPopularSongs(forceRefresh = false) {
+      if (!popularSongStatus) return;
+      await loadDeviceSongCatalogFromStorage();
+      await refreshSongCatalogTotal(forceRefresh);
+      const query = popularSongSearch.value.trim();
       const scopeLabels = {
         jp: currentLanguage === "en" ? "Japanese Song List" : "国内曲リスト",
         western: currentLanguage === "en" ? "International Song List" : "洋楽曲リスト",
         catalog: songCatalogCountLabel()
       };
       popularSongSearch.placeholder = popularSongCategory === "catalog"
-        ? ({
-          all: currentLanguage === "en" ? `Search all fields in ${songCatalogCountLabel()}` : `${songCatalogCountLabel()}からすべての項目を検索`,
-          artist: currentLanguage === "en" ? `Search ${songCatalogCountLabel()} by artist name or reading` : `${songCatalogCountLabel()}から歌手名・読みを検索`,
-          title: currentLanguage === "en" ? `Search ${songCatalogCountLabel()} by song title or reading` : `${songCatalogCountLabel()}から曲名・読みを検索`,
-          keyword: currentLanguage === "en" ? `Search ${songCatalogCountLabel()} by aliases and keywords` : `${songCatalogCountLabel()}から通称・キーワードを検索`
-        }[popularSongSearchScopeMode])
+        ? (currentLanguage === "en" ? `Search ${songCatalogCountLabel()} by title, artist, or alias` : `${songCatalogCountLabel()}から曲名・歌手名・通称を検索`)
         : `${scopeLabels[popularSongCategory]}${currentLanguage === "en" ? ": search title, artist, or alias" : "内を曲名・歌手名・通称で検索"}`;
       popularSongTabs.querySelectorAll("[data-popular-category]").forEach((button) => {
         const active = button.dataset.popularCategory === popularSongCategory;
@@ -15669,51 +14738,26 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         button.classList.toggle("is-active", active);
         button.classList.toggle("ghost", !active);
         button.setAttribute("aria-pressed", String(active));
-        });
-        updatePopularSongSearchScopeButtons();
-        const canRenderSavedArtistIndex = !forceRefresh && !query
-          && popularSongSortMode === "artist"
-          && (popularSongCategory === "jp" || popularSongCategory === "western");
-        if (canRenderSavedArtistIndex) {
-          await loadDeviceSongCatalogArtistSummaryFromStorage();
-          const summaryItems = savedArtistSummaryItems(popularSongCategory);
-          if (summaryItems.length) {
-            popularSongItems = summaryItems.slice();
-            popularSongItemsPreparedArtistOrder = true;
-            popularSongFallbackCatalogCount = 0;
-            popularSongStatus.textContent = currentLanguage === "en"
-              ? "Open a listed artist to browse all of their songs in the full catalog. Saved data on this device is being used."
-              : "掲載歌手を開くと、全曲データにあるその歌手の曲をすべて見られます。端末保存データを使用中です。";
-            renderPopularSongs();
-            refreshSongCatalogTotal(false).catch((error) => console.warn(error));
-            return;
-          }
-        }
-        if (popularSongCategory === "catalog" && !query) {
-          popularSongItems = [];
-          popularSongStatus.textContent = uiText("全曲検索は1文字から利用できます。");
-          renderPopularSongs();
-          loadDeviceSongCatalogArtistSummaryFromStorage()
-            .then(() => refreshSongCatalogTotal(forceRefresh))
-            .catch((error) => console.warn(error));
-          return;
+      });
+      if (popularSongCategory === "catalog" && !query) {
+        popularSongItems = [];
+        popularSongStatus.textContent = uiText("全曲検索は1文字から利用できます。検索後、結果の50音・数字・A–Zボタンが使えます。");
+        renderPopularSongs();
+        return;
       }
       popularSongStatus.textContent = `${scopeLabels[popularSongCategory]}：${uiText("曲一覧を読み込んでいます。")}`;
       popularSongList.innerHTML = "";
       if (refreshPopularSongs) {
         refreshPopularSongs.disabled = true;
         refreshPopularSongs.textContent = currentLanguage === "en" ? "↻ Reloading…" : "↻ 再読み込み中…";
-        }
-        try {
-          await loadDeviceSongCatalogFromStorage();
-          refreshSongCatalogTotal(forceRefresh).catch((error) => console.warn(error));
-          const usingSavedCatalog = canUseSavedSongCatalog();
+      }
+      try {
+        const usingSavedCatalog = deviceSongCatalog.length > 0;
         const resultLimit = popularSongCategory === "catalog" ? 1200 : 5000;
         if (usingSavedCatalog) {
-          await new Promise((resolve) => requestAnimationFrame(resolve));
-          popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, popularSongSearchScopeMode, resultLimit);
+          popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, resultLimit);
         } else {
-          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, scope: popularSongSearchScopeMode, q: query, limit: String(resultLimit) });
+          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: String(resultLimit) });
           if (forceRefresh) params.set("refresh", String(Date.now()));
           const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
           const payload = await response.json();
@@ -15728,23 +14772,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           : (currentLanguage === "en"
             ? `Open a listed artist to browse all of their songs in the full catalog.${usingSavedCatalog ? " Saved data on this device is being used." : ""}`
             : `掲載歌手を開くと、全曲データにあるその歌手の曲をすべて見られます。${usingSavedCatalog ? "端末保存データを使用中です。" : ""}`);
-        popularSongFallbackCatalogCount = 0;
-        if (!popularSongItems.length && query && popularSongCategory !== "catalog") {
-          try {
-            if (usingSavedCatalog) {
-              popularSongFallbackCatalogCount = filterSavedSongCatalog(query, "catalog", popularSongSortMode, popularSongSearchScopeMode, 999).length;
-            } else {
-              const fallbackParams = new URLSearchParams({ action: "popular_songs", category: "catalog", sort: popularSongSortMode, scope: popularSongSearchScopeMode, q: query, limit: "999" });
-              const fallbackResponse = await fetch(`${sharedRankingApiUrl}?${fallbackParams.toString()}`, { cache: "no-store" });
-              const fallbackPayload = await fallbackResponse.json();
-              if (fallbackResponse.ok && fallbackPayload.ok && Array.isArray(fallbackPayload.songs)) {
-                popularSongFallbackCatalogCount = fallbackPayload.songs.length;
-              }
-            }
-          } catch (error) {
-            console.warn(error);
-          }
-        }
         renderPopularSongs();
       } catch (error) {
         console.warn(error);
@@ -15771,8 +14798,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         if (!rows) {
           await loadDeviceSongCatalogFromStorage();
           let artistSongs;
-          if (canUseSavedSongCatalog()) {
-            artistSongs = getDeviceSongCatalogArtistIndex().get(cacheKey) || [];
+          if (deviceSongCatalog.length) {
+            artistSongs = deviceSongCatalog.filter((item) => normalizeKana(item.artist) === cacheKey);
           } else {
             const params = new URLSearchParams({ action: "popular_artist_songs", artist });
             const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
@@ -15873,41 +14900,44 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         return;
       }
       if (!title || !artist || !titleReading || !artistReading) return;
-      const stopProgress = startRequestProgress(submitSongRequest, songRequestStatus);
+      submitSongRequest.disabled = true;
+      songRequestStatus.textContent = uiText("送信しています。");
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "song_request", requester_name: requesterName, title, title_reading: titleReading, artist, artist_reading: artistReading, search_keywords: searchKeywords, event_id: createId() })
         });
-        const payload = await readRequestApiResponse(response);
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("song request unavailable");
         if (payload.status === "already_catalogued") {
-          showRequestResult(songRequestStatus, uiText("この曲はすでに曲一覧にあります。全曲検索からマイ曲リストへ登録できます。"));
+          songRequestStatus.textContent = uiText("この曲はすでに曲一覧にあります。全曲検索からマイ曲リストへ登録できます。");
           popularSongCategory = "catalog";
           popularSongSearch.value = title;
-          void loadPopularSongs().then(() => popularSongList.scrollIntoView({ behavior: "smooth", block: "start" }));
+          await loadPopularSongs();
+          popularSongList.scrollIntoView({ behavior: "smooth", block: "start" });
         } else if (payload.status === "already_requested") {
-          showRequestResult(songRequestStatus, uiText("この曲はすでにリクエストされています。既存の1件にまとめました。"));
-          void loadSongRequests();
+          songRequestStatus.textContent = uiText("この曲はすでにリクエストされています。既存の1件にまとめました。");
+          await loadSongRequests();
         } else if (payload.status === "keywords_updated") {
-          showRequestResult(songRequestStatus, uiText("検索用キーワードを曲データへ追加しました。"));
+          songRequestStatus.textContent = uiText("検索用キーワードを曲データへ追加しました。");
           songRequestKeywords.value = "";
-          void loadPopularSongs();
+          await loadPopularSongs();
         } else {
           localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
-          showRequestResult(songRequestStatus, currentLanguage === "en" ? "The request was sent and is awaiting owner approval." : "追加リクエストを送信しました。店主の確認待ちです。");
+          songRequestStatus.textContent = currentLanguage === "en" ? "The request was sent and is awaiting owner approval." : "追加リクエストを送信しました。店主の確認待ちです。";
           songRequestTitle.value = "";
           songRequestTitleReading.value = "";
           songRequestArtist.value = "";
           songRequestArtistReading.value = "";
           songRequestKeywords.value = "";
-          void Promise.allSettled([loadSongRequests(), loadPopularSongs()]);
+          await loadSongRequests();
+          await loadPopularSongs();
         }
       } catch (error) {
         console.warn(error);
-        showRequestResult(songRequestStatus, requestFailureText(error), "error");
+        songRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
       } finally {
-        stopProgress();
         submitSongRequest.disabled = false;
       }
     }
@@ -15925,24 +14955,25 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         songGeneralRequestComment.focus();
         return;
       }
-      const stopProgress = startRequestProgress(submitSongGeneralRequest, songGeneralRequestStatus);
+      submitSongGeneralRequest.disabled = true;
+      songGeneralRequestStatus.textContent = uiText("送信しています。");
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ action: "song_general_request", requester_name: requesterName, comment, event_id: createId() })
         });
-        await readRequestApiResponse(response);
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("general song request unavailable");
         localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
         if (songRequestRequester) songRequestRequester.value = requesterName;
         if (bulkSongRequestRequester) bulkSongRequestRequester.value = requesterName;
         songGeneralRequestComment.value = "";
-        showRequestResult(songGeneralRequestStatus, uiText("自由リクエストを送信しました。"));
+        songGeneralRequestStatus.textContent = uiText("自由リクエストを送信しました。");
       } catch (error) {
         console.warn(error);
-        showRequestResult(songGeneralRequestStatus, requestFailureText(error), "error");
+        songGeneralRequestStatus.textContent = uiText("送信できませんでした。通信状態を確認して再度お試しください。");
       } finally {
-        stopProgress();
         submitSongGeneralRequest.disabled = false;
       }
     }
@@ -16506,8 +15537,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
                 <strong>${highlightText(item.title, query)}</strong>
                 <span class="compact-song-links">
                   <button class="song-external-search" type="button" data-song-chords="${escapeText(item.id)}">♬ ${escapeText(uiText("コード"))}</button>
-                  <button class="song-external-search" type="button" data-song-ufret="${escapeText(item.id)}">🎸 Uフレ</button>
-                  <button class="song-external-search" type="button" data-song-gakki="${escapeText(item.id)}">🎵 J-Total</button>
                   <button class="song-external-search" type="button" data-song-lyrics="${escapeText(item.id)}">歌 ${escapeText(uiText("歌詞"))}</button>
                 </span>
               </div>
@@ -17110,56 +16139,18 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const button = event.target.closest("[data-popular-category]");
       if (!button) return;
       popularSongCategory = button.dataset.popularCategory;
-      popularSongCategoryBeforeSearch = null;
       if (popularSongCategory !== "catalog") popularSongSearch.value = "";
       loadPopularSongs();
     });
     popularSongSort.addEventListener("click", (event) => {
       const button = event.target.closest("[data-popular-sort]");
       if (!button) return;
-      const previousSortMode = popularSongSortMode;
       popularSongSortMode = button.dataset.popularSort;
-      if (popularSongSearchScopeMode === previousSortMode) popularSongSearchScopeMode = popularSongSortMode;
       loadPopularSongs();
-    });
-    popularSongSearchScope.addEventListener("click", (event) => {
-      const button = event.target.closest("[data-popular-search-scope]");
-      if (!button) return;
-      popularSongSearchScopeMode = button.dataset.popularSearchScope;
-      updatePopularSongSearchScopeButtons();
-      runPopularSongSearch();
     });
     popularSongSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      runPopularSongSearch();
-    });
-    popularSongSearch.addEventListener("input", () => {
-      if (!popularSongSearch.value.trim()) runPopularSongSearch();
-    });
-    popularSongSearch.addEventListener("search", () => {
-      runPopularSongSearch();
-    });
-    popularSongIndexJump.addEventListener("submit", (event) => {
-      const form = event.target.closest("[data-popular-index-search]");
-      if (!form) return;
-      event.preventDefault();
-      const input = form.querySelector("[data-popular-index-search-input]");
-      popularSongSearch.value = input ? input.value : "";
-      runPopularSongSearch();
-    });
-    popularSongIndexJump.addEventListener("input", (event) => {
-      const input = event.target.closest("[data-popular-index-search-input]");
-      if (!input) return;
-      if (!input.value.trim()) {
-        popularSongSearch.value = "";
-        runPopularSongSearch();
-      }
-    });
-    popularSongIndexJump.addEventListener("search", (event) => {
-      const input = event.target.closest("[data-popular-index-search-input]");
-      if (!input) return;
-      popularSongSearch.value = input.value;
-      runPopularSongSearch();
+      loadPopularSongs();
     });
     refreshPopularSongs.addEventListener("click", async () => {
       popularArtistSongCache.clear();
@@ -17178,22 +16169,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? "Delete the song catalog saved on this device? My Song List will not be deleted."
         : "この端末に保存した曲データを削除しますか？マイ曲リストは削除されません。");
       if (!confirmed) return;
-        try {
-          await songCatalogDbRequest("readwrite", (store) => {
-            store.delete(songCatalogArtistIndexRecordId);
-            return store.delete(songCatalogRecordId);
-          });
-          deviceSongCatalog = [];
-          deviceSongCatalogMeta = null;
-          deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
-          deviceSongCatalogArtistIndex = null;
-          deviceSongCatalogArtistSummaries = [];
-          deviceSongCatalogArtistSummaryMeta = null;
-          deviceSongCatalogArtistSummaryLoadPromise = Promise.resolve([]);
-          deviceSongCatalogHeaderPromise = Promise.resolve(null);
-          deviceSongCatalogSearchIndexReady = false;
-          popularArtistSongCache.clear();
-          popularSongResultCache.clear();
+      try {
+        await songCatalogDbRequest("readwrite", (store) => store.delete(songCatalogRecordId));
+        deviceSongCatalog = [];
+        deviceSongCatalogMeta = null;
+        deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
+        popularArtistSongCache.clear();
         popularArtistSongItems = [];
         updateDeviceSongCatalogStatus();
         await loadPopularSongs(true);
@@ -17222,12 +16203,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       addPopularSongToMyList(sourceItems[Number(button.dataset.popularIndex)]);
     });
     popularSongList.addEventListener("toggle", (event) => {
-      const details = event.target;
-      if (!details.classList || !details.classList.contains("popular-artist-group")) return;
-      if (!details.open) {
-        updatePopularIndexCloseButton();
-        return;
-      }
+      const details = event.target.closest(".popular-artist-group");
+      if (!details || !details.open) return;
       const beforeTop = details.getBoundingClientRect().top;
       popularSongList.querySelectorAll(".popular-artist-group[open]").forEach((otherDetails) => {
         if (otherDetails !== details) otherDetails.open = false;
@@ -17235,7 +16212,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const afterTop = details.getBoundingClientRect().top;
       const shift = afterTop - beforeTop;
       if (Math.abs(shift) > 1) window.scrollBy({ top: shift, left: 0, behavior: "auto" });
-      updatePopularIndexCloseButton();
       loadPopularArtistSongs(details);
     }, true);
     window.addEventListener("scroll", schedulePopularArtistAutoClose, { passive: true });
@@ -17477,11 +16453,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const words = [item.title, item.artist].filter(Boolean).join(" ");
       const url = type === "chords"
         ? `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${words}`)}`
-        : type === "ufret"
-          ? `https://www.ufret.jp/search.php?key=${encodeURIComponent(words)}`
-          : type === "gakki"
-            ? `https://www.google.com/search?q=${encodeURIComponent(`site:music.j-total.net ${words}`)}`
-            : `https://www.uta-net.com/search/?Aselect=2&Keyword=${encodeURIComponent(item.title || words)}&Bselect=3`;
+        : `https://www.uta-net.com/search/?Aselect=2&Keyword=${encodeURIComponent(item.title || words)}&Bselect=3`;
       window.open(url, "_blank", "noopener");
     }
 
@@ -17589,16 +16561,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const chordButton = event.target.closest("[data-song-chords]");
       if (chordButton) {
         openSongReference(chordButton.dataset.songChords, "chords");
-        return;
-      }
-      const ufretButton = event.target.closest("[data-song-ufret]");
-      if (ufretButton) {
-        openSongReference(ufretButton.dataset.songUfret, "ufret");
-        return;
-      }
-      const gakkiButton = event.target.closest("[data-song-gakki]");
-      if (gakkiButton) {
-        openSongReference(gakkiButton.dataset.songGakki, "gakki");
         return;
       }
       const lyricButton = event.target.closest("[data-song-lyrics]");
@@ -17838,31 +16800,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       renderSongImportPreview();
     });
 
-    const bulkImportPlaceholderMyList = "例：\n【サザンオールスターズ】\nTSUNAMI／▼1〜2\nあじさいのうた／▼2\nいとしのエリー";
-    const bulkImportPlaceholderCatalog = "例：\n【サザンオールスターズ】\nTSUNAMI\nあじさいのうた\nいとしのエリー";
-    function isBulkCatalogMode() {
-      const bulkEntry = document.getElementById("bulkSongEntry");
-      return !!(bulkEntry && bulkEntry.classList.contains("catalog-request-mode"));
-    }
-    function updateBulkImportPlaceholder() {
-      if (!songImportText) return;
-      songImportText.placeholder = isBulkCatalogMode() ? bulkImportPlaceholderCatalog : bulkImportPlaceholderMyList;
-    }
-
-    if (fillSongImportExampleButton) {
-      fillSongImportExampleButton.addEventListener("click", () => {
-        const exampleText = isBulkCatalogMode()
-          ? "【サザンオールスターズ】\nいとしのエリー\nTSUNAMI"
-          : "【サザンオールスターズ】\nいとしのエリー\nTSUNAMI／▼2";
-        if (songImportText.value.trim()) {
-          if (!confirm(uiText("入力欄にすでに内容があります。例文で上書きしますか？"))) return;
-        }
-        songImportText.value = exampleText;
-        songImportText.focus();
-        songImportStatus.textContent = uiText("例文を入力欄に入れました。実際の曲リストに書き換えてから「解析して確認する」を押してください。");
-      });
-    }
-
     pasteSongImportButton.addEventListener("click", async () => {
       try {
         if (!navigator.clipboard || typeof navigator.clipboard.readText !== "function") throw new Error("clipboard unavailable");
@@ -17909,12 +16846,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     requestBulkCatalogButton.addEventListener("click", async () => {
       const requesterName = bulkSongRequestRequester.value.trim();
       if (!requesterName) {
-        const message = currentLanguage === "en" ? "Enter a name or nickname the owner can recognize." : "店主があなたと分かる名前・ニックネームを入力してください。";
-        alert(message);
-        songImportStatus.textContent = message;
+        songImportStatus.textContent = currentLanguage === "en" ? "Enter a name or nickname the owner can recognize." : "店主があなたと分かる名前・ニックネームを入力してください。";
         bulkSongRequestRequester.focus();
-        bulkSongRequestRequester.classList.add("input-error-flash");
-        window.setTimeout(() => bulkSongRequestRequester.classList.remove("input-error-flash"), 1600);
         return;
       }
       const imported = pendingSongImports
@@ -17932,7 +16865,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         ? `Request ${requestable.length} songs for the shared song catalog? Please verify every title and artist before sending.${skippedCount ? `\n\n${skippedCount} song(s) without an artist will not be sent.` : ""}${overLimitCount ? `\nOnly the first 300 songs can be sent at once. ${overLimitCount} song(s) will remain in the preview.` : ""}`
         : `${requestable.length}曲を共有の曲データへ一括追加依頼しますか？\n\n曲名・歌手名に間違いがないか、送信前にもう一度確認してください。${skippedCount ? `\n歌手名のない${skippedCount}曲は送信しません。` : ""}${overLimitCount ? `\n一度に送信できるのは300曲までです。残り${overLimitCount}曲は確認欄に残ります。` : ""}`;
       if (!confirm(confirmMessage)) return;
-      const stopProgress = startRequestProgress(requestBulkCatalogButton, songImportStatus, { sendingEn: "Sending…", sendingJa: "一括送信中…" });
+      requestBulkCatalogButton.disabled = true;
+      songImportStatus.textContent = currentLanguage === "en" ? "Sending catalog requests…" : "曲データへの追加依頼を送信しています…";
       try {
         const response = await fetch(sharedRankingApiUrl, {
           method: "POST",
@@ -17950,7 +16884,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             }))
           })
         });
-        const payload = await readRequestApiResponse(response);
+        const payload = await response.json();
+        if (!response.ok || !payload.ok) throw new Error("bulk song request unavailable");
         localStorage.setItem(songCorrectionRequesterStorageKey, requesterName);
         const summary = payload.summary || {};
         const requestedCount = Number(summary.requested || 0);
@@ -17963,16 +16898,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           ...imported.filter((item) => !item.artist)
         ];
         renderSongImportPreview();
-        showRequestResult(songImportStatus, currentLanguage === "en"
+        songImportStatus.textContent = currentLanguage === "en"
           ? `Shared catalog result: ${processed} processed (new requests ${requestedCount}, already requested ${alreadyRequestedCount}, already in catalog ${alreadyCataloguedCount}, search keywords updated ${keywordsUpdatedCount}). Nothing was added to My Song List.${pendingSongImports.length ? ` ${pendingSongImports.length} unsent song(s) remain in the review list.` : ""}`
-          : `【共有の曲データへの送信結果】${processed}曲を処理しました。確認待ちの新規依頼 ${requestedCount}曲／すでに確認待ち ${alreadyRequestedCount}曲／曲データに登録済み ${alreadyCataloguedCount}曲／検索語の追加依頼 ${keywordsUpdatedCount}曲。承認前の曲は通常の曲データへ表示されません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`);
-        void Promise.allSettled([loadSongRequests(), loadPopularSongs()]);
+          : `【共有の曲データへの送信結果】${processed}曲を処理しました。確認待ちの新規依頼 ${requestedCount}曲／すでに確認待ち ${alreadyRequestedCount}曲／曲データに登録済み ${alreadyCataloguedCount}曲／検索語の追加依頼 ${keywordsUpdatedCount}曲。承認前の曲は通常の曲データへ表示されません。${pendingSongImports.length ? ` 未送信の${pendingSongImports.length}曲は確認欄に残しています。` : ""}`;
+        await loadSongRequests();
+        await loadPopularSongs();
       } catch (error) {
         console.warn(error);
-        showRequestResult(songImportStatus, requestFailureText(error, true), "error");
-      } finally {
-        stopProgress();
-        requestBulkCatalogButton.disabled = !pendingSongImports.some((item) => String(item.title || "").trim() && String(item.artist || "").trim());
+        requestBulkCatalogButton.disabled = false;
+        songImportStatus.textContent = currentLanguage === "en"
+          ? "Catalog requests could not be sent. Check your connection and try again."
+          : "曲データへの追加依頼を送信できませんでした。通信状態を確認して、もう一度お試しください。";
       }
     });
 
@@ -18018,26 +16954,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       songImportStatus.textContent = resultMessage;
       songExportText.value = createSongExportText();
       importSongsButton.disabled = true;
-
-      const catalogCandidates = imported.filter((item) => item.artist);
-      if (catalogCandidates.length) {
-        const followUpMessage = currentLanguage === "en"
-          ? `Also request adding these ${catalogCandidates.length} song(s) to the shared song catalog now?\n\nThis sends the song title and artist only — no key.`
-          : `続けて、今登録した${catalogCandidates.length}曲を曲データへも一括で追加依頼しますか？\n\n送信するのは曲名と歌手名だけです（キーは送りません）。`;
-        if (confirm(followUpMessage)) {
-          const bulkEntry = document.getElementById("bulkSongEntry");
-          if (bulkEntry) bulkEntry.classList.add("catalog-request-mode");
-          updateBulkImportPlaceholder();
-          songImportText.value = catalogCandidates.map((item) => `${item.title}／${item.artist}`).join("\n");
-          pendingSongImports = catalogCandidates.map((item) => importedSong(item.title, item.artist, "", item.kana));
-          renderSongImportPreview();
-          window.requestAnimationFrame(() => {
-            const catalogDestination = document.getElementById("bulkCatalogDestination");
-            if (catalogDestination) catalogDestination.scrollIntoView({ behavior: "smooth", block: "center" });
-            if (bulkSongRequestRequester) bulkSongRequestRequester.focus({ preventScroll: true });
-          });
-        }
-      }
     });
 
     searchBox.addEventListener("input", () => {
@@ -18108,42 +17024,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }
       const indexModeButton = event.target.closest("[data-popular-index-mode]");
       if (indexModeButton && indexModeButton.dataset.popularIndexMode !== popularSongSortMode) {
-        const previousSortMode = popularSongSortMode;
         popularSongSortMode = indexModeButton.dataset.popularIndexMode;
-        if (popularSongSearchScopeMode === previousSortMode) popularSongSearchScopeMode = popularSongSortMode;
         loadPopularSongs();
-      }
-      const indexCategoryButton = event.target.closest("[data-popular-index-category]");
-      if (indexCategoryButton && indexCategoryButton.dataset.popularIndexCategory !== popularSongCategory) {
-        popularSongCategory = indexCategoryButton.dataset.popularIndexCategory;
-        popularSongCategoryBeforeSearch = null;
-        if (popularSongCategory !== "catalog") popularSongSearch.value = "";
-        loadPopularSongs();
-      }
-      const fallbackCatalogButton = event.target.closest("[data-popular-fallback-catalog]");
-      if (fallbackCatalogButton) {
-        popularSongCategory = "catalog";
-        popularSongCategoryBeforeSearch = null;
-        loadPopularSongs();
-      }
-      const closeArtistButton = event.target.closest("[data-popular-index-close-artist]");
-      if (closeArtistButton && popularSongList) {
-        const openGroup = popularSongList.querySelector(".popular-artist-group[open]");
-        if (openGroup) {
-          openGroup.open = false;
-          updatePopularIndexCloseButton();
-        }
-      }
-      const collapseToggleButton = event.target.closest("[data-popular-index-collapse-toggle]");
-      if (collapseToggleButton) {
-        popularIndexCollapsed = !popularIndexCollapsed;
-        try { localStorage.setItem("msdPopularIndexCollapsed", popularIndexCollapsed ? "1" : "0"); } catch (error) { /* ignore */ }
-        const collapsibleBody = popularSongIndexJump.querySelector(".popular-index-collapsible");
-        if (collapsibleBody) collapsibleBody.hidden = popularIndexCollapsed;
-        collapseToggleButton.setAttribute("aria-expanded", String(!popularIndexCollapsed));
-        collapseToggleButton.textContent = popularIndexCollapsed
-          ? (currentLanguage === "en" ? "▾ Show search / index" : "▾ 検索・索引を開く")
-          : (currentLanguage === "en" ? "▴ Collapse" : "▴ 検索・索引を折りたたむ");
       }
       const requestButton = event.target.closest("[data-open-song-request]");
       if (requestButton) {
@@ -18165,7 +17047,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             bulkEntry.classList.add("catalog-request-mode");
             bulkEntry.open = true;
           }
-          updateBulkImportPlaceholder();
           window.requestAnimationFrame(() => {
             if (catalogDestination) catalogDestination.scrollIntoView({ behavior: "smooth", block: "center" });
             if (songImportText) songImportText.focus({ preventScroll: true });
@@ -18176,13 +17057,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (showAllBulkDestinations) {
         const bulkEntry = document.getElementById("bulkSongEntry");
         if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
-        updateBulkImportPlaceholder();
       }
       const bulkEntrySummary = event.target.closest("#bulkSongEntry > summary");
       if (bulkEntrySummary) {
         const bulkEntry = document.getElementById("bulkSongEntry");
         if (bulkEntry) bulkEntry.classList.remove("catalog-request-mode");
-        updateBulkImportPlaceholder();
       }
       const indexSummary = event.target.closest(".popular-index-menu > summary");
       if (indexSummary) {
@@ -19065,37 +17944,37 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (event.target === guideModal) closeGuideModalPanel();
     });
 
-      guideModal.addEventListener("click", (event) => {
-        const shareButton = event.target.closest("[data-share-app]");
-        if (shareButton) {
-          closeGuideModalPanel();
-          shareApp();
-          return;
-        }
+	    guideModal.addEventListener("click", (event) => {
+	      const shareButton = event.target.closest("[data-share-app]");
+	      if (shareButton) {
+	        closeGuideModalPanel();
+	        shareApp();
+	        return;
+	      }
 
-        const button = event.target.closest("[data-guide-target]");
+	      const button = event.target.closest("[data-guide-target]");
       if (!button) return;
       const target = button.dataset.guideTarget;
       closeGuideModalPanel();
-        showView(target);
-      });
+	      showView(target);
+	    });
 
-      window.addEventListener("beforeinstallprompt", (event) => {
-        event.preventDefault();
-        deferredHomeInstallPrompt = event;
-        updateHomeInstallButton();
-      });
+	    window.addEventListener("beforeinstallprompt", (event) => {
+	      event.preventDefault();
+	      deferredHomeInstallPrompt = event;
+	      updateHomeInstallButton();
+	    });
 
-      window.addEventListener("appinstalled", () => {
-        deferredHomeInstallPrompt = null;
-        saveHomePromptState({ disabled: true, dismissedDate: todayString() });
-        updateHomeInstallButton();
-        closeHomePromptModal();
-      });
+	    window.addEventListener("appinstalled", () => {
+	      deferredHomeInstallPrompt = null;
+	      saveHomePromptState({ disabled: true, dismissedDate: todayString() });
+	      updateHomeInstallButton();
+	      closeHomePromptModal();
+	    });
 
-      installHomeAppButton.addEventListener("click", requestHomeInstall);
+	    installHomeAppButton.addEventListener("click", requestHomeInstall);
 
-      closeHomePrompt.addEventListener("click", () => {
+	    closeHomePrompt.addEventListener("click", () => {
       saveHomePromptState({ ...getHomePromptState(), dismissedDate: todayString() });
       closeHomePromptModal();
     });
@@ -19151,33 +18030,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     songRecordConfirmModal.addEventListener("click", (event) => {
       if (event.target === songRecordConfirmModal) closeSongRecordConfirmPanel();
     });
-    if (confirmSongCatalogUpdate) {
-      confirmSongCatalogUpdate.addEventListener("click", async () => {
-        const versionAtPromptTime = songCatalogVersion;
-        closeSongCatalogUpdatePrompt();
-        await downloadLatestSongCatalog();
-        dismissSongCatalogUpdatePromptForVersion(versionAtPromptTime);
-      });
-    }
-    if (laterSongCatalogUpdate) {
-      laterSongCatalogUpdate.addEventListener("click", () => {
-        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
-        closeSongCatalogUpdatePrompt();
-      });
-    }
-    if (closeSongCatalogUpdateModal) {
-      closeSongCatalogUpdateModal.addEventListener("click", () => {
-        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
-        closeSongCatalogUpdatePrompt();
-      });
-    }
-    if (songCatalogUpdateModal) {
-      songCatalogUpdateModal.addEventListener("click", (event) => {
-        if (event.target !== songCatalogUpdateModal) return;
-        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
-        closeSongCatalogUpdatePrompt();
-      });
-    }
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") return;
@@ -19186,10 +18038,6 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (songTransferModal.classList.contains("show")) closeSongTransferPanel();
       if (quickSetlistModal.classList.contains("show")) closeQuickSetlistPanel();
       if (songRecordConfirmModal.classList.contains("show")) closeSongRecordConfirmPanel();
-      if (songCatalogUpdateModal && songCatalogUpdateModal.classList.contains("show")) {
-        dismissSongCatalogUpdatePromptForVersion(songCatalogVersion);
-        closeSongCatalogUpdatePrompt();
-      }
       if (staffSongsModal.classList.contains("show")) closeStaffSongsPanel();
       if (drinkModal.classList.contains("show")) closeDrinkModal.click();
       if (gachaModal.classList.contains("show")) closeGachaModal.click();
@@ -19372,14 +18220,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     renderSongs();
     renderHistory();
     renderBackupStatus();
-      loadDeviceSongCatalogArtistSummaryFromStorage().then((artists) => {
-        if (deviceSongCatalogMeta) refreshSongCatalogTotal(false);
-        if (!artists.length && deviceSongCatalogMeta) {
-          const migrate = () => loadDeviceSongCatalogFromStorage().catch((error) => console.warn(error));
-          if (typeof requestIdleCallback === "function") requestIdleCallback(migrate, { timeout: 2500 });
-          else window.setTimeout(migrate, 1200);
-        }
-      });
+    loadDeviceSongCatalogFromStorage();
     showView(location.hash.replace("#", "") || "top", false);
     applyLanguage();
     updateSongPhotoTargetUi();
