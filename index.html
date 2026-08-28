@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
@@ -4962,6 +4962,16 @@
       font-weight: 800;
     }
 
+    .song-correction-bulk-note {
+      margin: -2px 0 0;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: #eef7f2;
+      color: var(--forest);
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
     .popular-song-row > div > strong,
     .popular-song-row > div > span {
       display: block;
@@ -8770,6 +8780,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <label>正しい曲名の読み<input id="songCorrectionTitleReading" maxlength="255" required placeholder="ひらがな・カタカナ・アルファベット"></label>
           <label>正しい歌手名の読み<input id="songCorrectionArtistReading" maxlength="255" required placeholder="ひらがな・カタカナ・アルファベット"></label>
         </div>
+        <p class="song-correction-bulk-note">歌手名を変えずに読みを直すと、承認後、同じ歌手の全登録曲へ一括反映されます。</p>
         <label>店主があなたと分かる名前・ニックネーム<input id="songCorrectionRequester" maxlength="64" required autocomplete="name" placeholder="例：いつも窓側に座る○○"></label>
         <label>補足（任意）<textarea id="songCorrectionNote" maxlength="500" placeholder="どこが間違っているかなど"></textarea></label>
         <div class="song-correction-warning">誰からの依頼か店主が確認できない場合、訂正されないことがあります。いたずらや第三者になりすました依頼は送らないでください。</div>
@@ -9425,12 +9436,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const favoriteDrinkButtons = document.getElementById("favoriteDrinkButtons");
     const drinkCategoryButtons = document.getElementById("drinkCategoryButtons");
     const drinkCategoryListTitle = document.getElementById("drinkCategoryListTitle");
-	    const homePromptModal = document.getElementById("homePromptModal");
-	    const installHomeAppButton = document.getElementById("installHomeAppButton");
-	    const homeInstallHelp = document.getElementById("homeInstallHelp");
-	    const homeIphoneGuide = document.getElementById("homeIphoneGuide");
-	    const homeAndroidGuide = document.getElementById("homeAndroidGuide");
-	    const appUpdateCard = document.getElementById("appUpdateCard");
+        const homePromptModal = document.getElementById("homePromptModal");
+        const installHomeAppButton = document.getElementById("installHomeAppButton");
+        const homeInstallHelp = document.getElementById("homeInstallHelp");
+        const homeIphoneGuide = document.getElementById("homeIphoneGuide");
+        const homeAndroidGuide = document.getElementById("homeAndroidGuide");
+        const appUpdateCard = document.getElementById("appUpdateCard");
     const closeHomePrompt = document.getElementById("closeHomePrompt");
     const dismissHomePromptToday = document.getElementById("dismissHomePromptToday");
     const disableHomePrompt = document.getElementById("disableHomePrompt");
@@ -10569,24 +10580,24 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "貼り付けた曲を読み込む": "Import Pasted Songs",
       "マイ曲リストに保存": "Save to My Song List",
       "マイ曲リストを全削除": "Delete All Songs",
-	      "ホーム画面に追加できます": "Add to Home Screen",
-	      "お使いのスマホを選ぶと、必要な手順だけ表示します。": "Choose your phone to see only the steps you need.",
-	      "ホーム画面に追加": "Add to Home Screen",
-	      "Androidの対応ブラウザでは、追加の確認画面を直接開けます。": "On supported Android browsers, this button opens the install confirmation.",
-	      "Safari推奨": "Safari recommended",
-	      "Chrome推奨": "Chrome recommended",
-	      "共有ボタンを押す": "Tap the Share button",
-	      "「ホーム画面に追加」→「追加」": "Add to Home Screen → Add",
-	      "Chrome・Googleアプリ・Firefoxの場合": "If using Chrome, the Google app, or Firefox",
-	      "共有メニューから「Safariで開く」を選ぶと、店のアイコンで追加しやすくなります。": "Choose Open in Safari from the Share menu to add the shop icon more reliably.",
-	      "右上の「︙」メニューを開く": "Open the upper-right ⋮ menu",
-	      "「ホーム画面に追加」または「アプリをインストール」": "Add to Home Screen or Install app",
-	      "「追加」を押す": "Tap Add",
-	      "Firefoxの場合": "If using Firefox",
-	      "右上の「︙」メニューから「ホーム画面に追加」を選んでください。": "Choose Add to Home Screen from the upper-right ⋮ menu.",
-	      "保存について": "About saved data",
-	      "マイ曲リストや記録は、この端末のブラウザ内に保存されます。": "Your song list and records are saved in this browser on this device.",
-	      "今日は閉じる": "Close for Today",
+          "ホーム画面に追加できます": "Add to Home Screen",
+          "お使いのスマホを選ぶと、必要な手順だけ表示します。": "Choose your phone to see only the steps you need.",
+          "ホーム画面に追加": "Add to Home Screen",
+          "Androidの対応ブラウザでは、追加の確認画面を直接開けます。": "On supported Android browsers, this button opens the install confirmation.",
+          "Safari推奨": "Safari recommended",
+          "Chrome推奨": "Chrome recommended",
+          "共有ボタンを押す": "Tap the Share button",
+          "「ホーム画面に追加」→「追加」": "Add to Home Screen → Add",
+          "Chrome・Googleアプリ・Firefoxの場合": "If using Chrome, the Google app, or Firefox",
+          "共有メニューから「Safariで開く」を選ぶと、店のアイコンで追加しやすくなります。": "Choose Open in Safari from the Share menu to add the shop icon more reliably.",
+          "右上の「︙」メニューを開く": "Open the upper-right ⋮ menu",
+          "「ホーム画面に追加」または「アプリをインストール」": "Add to Home Screen or Install app",
+          "「追加」を押す": "Tap Add",
+          "Firefoxの場合": "If using Firefox",
+          "右上の「︙」メニューから「ホーム画面に追加」を選んでください。": "Choose Add to Home Screen from the upper-right ⋮ menu.",
+          "保存について": "About saved data",
+          "マイ曲リストや記録は、この端末のブラウザ内に保存されます。": "Your song list and records are saved in this browser on this device.",
+          "今日は閉じる": "Close for Today",
       "今後は表示しない": "Do Not Show Again",
       "おすすめ曲ガチャ": "Song Recommendation Gacha",
       "ガチャを回す": "Spin Gacha",
@@ -10877,6 +10888,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "正しい歌手名": "Correct Artist Name",
       "正しい曲名の読み": "Correct Song Title Reading",
       "正しい歌手名の読み": "Correct Artist Name Reading",
+      "歌手名を変えずに読みを直すと、承認後、同じ歌手の全登録曲へ一括反映されます。": "If you correct only the artist reading without changing the artist name, it will be applied to all registered songs by that artist after approval.",
       "ひらがな・カタカナ・アルファベット": "Hiragana, katakana, or alphabet",
       "店主があなたと分かる名前・ニックネーム": "Name or nickname the owner can identify",
       "管理者の確認後・全利用者向け": "For All Users After Owner Approval",
@@ -11136,9 +11148,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let dailyMemos = JSON.parse(localStorage.getItem(dailyMemoStorageKey) || "{}");
     let settings = JSON.parse(localStorage.getItem(settingsStorageKey) || '{"showMemo":true,"showDrink":true,"showSongCount":true,"showSetlistCopy":true,"showHistoryMemo":true,"showDrinkTotal":true,"settingsVersion":2}');
     let savedSetlists = JSON.parse(localStorage.getItem(savedSetlistStorageKey) || "[]");
-	    let pendingSongImports = [];
-	    let pendingSongRecordId = "";
-	    let deferredHomeInstallPrompt = null;
+        let pendingSongImports = [];
+        let pendingSongRecordId = "";
+        let deferredHomeInstallPrompt = null;
     if (settings.showSongCount === undefined) settings.showSongCount = true;
     if (settings.settingsVersion === undefined) {
       settings.showDrink = true;
@@ -12687,91 +12699,91 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       });
     }
 
-	    function shouldShowHomePrompt() {
+        function shouldShowHomePrompt() {
       const state = getHomePromptState();
       if (state.disabled) return false;
       if (state.dismissedDate === todayString()) return false;
-	      return true;
-	    }
+          return true;
+        }
 
-	    function isIosDevice() {
-	      return /iPad|iPhone|iPod/i.test(navigator.userAgent)
-	        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-	    }
+        function isIosDevice() {
+          return /iPad|iPhone|iPod/i.test(navigator.userAgent)
+            || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+        }
 
-	    function isStandaloneApp() {
-	      return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-	    }
+        function isStandaloneApp() {
+          return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+        }
 
-	    function updateHomeInstallButton() {
-	      if (!installHomeAppButton || !homeInstallHelp) return;
-	      const english = currentLanguage === "en";
-	      if (isStandaloneApp()) {
-	        installHomeAppButton.disabled = true;
-	        installHomeAppButton.textContent = english ? "Already added" : "ホーム画面に追加済み";
-	        homeInstallHelp.textContent = english
-	          ? "This app is already open from your home screen."
-	          : "このアプリはホーム画面から開かれています。";
-	        return;
-	      }
-	      installHomeAppButton.disabled = false;
-	      installHomeAppButton.textContent = english ? "Add to Home Screen" : "ホーム画面に追加";
-	      if (deferredHomeInstallPrompt) {
-	        homeInstallHelp.textContent = english
-	          ? "Tap the button to open your browser's install confirmation."
-	          : "ボタンを押すと、ブラウザの追加確認画面が開きます。";
-	      } else if (isIosDevice()) {
-	        homeInstallHelp.textContent = english
-	          ? "On iPhone, the button opens the short Safari instructions below."
-	          : "iPhoneでは、ボタンを押すとSafariの短い手順を表示します。";
-	      } else {
-	        homeInstallHelp.textContent = english
-	          ? "On supported Android browsers, the install confirmation opens directly."
-	          : "Androidの対応ブラウザでは、追加の確認画面を直接開けます。";
-	      }
-	    }
+        function updateHomeInstallButton() {
+          if (!installHomeAppButton || !homeInstallHelp) return;
+          const english = currentLanguage === "en";
+          if (isStandaloneApp()) {
+            installHomeAppButton.disabled = true;
+            installHomeAppButton.textContent = english ? "Already added" : "ホーム画面に追加済み";
+            homeInstallHelp.textContent = english
+              ? "This app is already open from your home screen."
+              : "このアプリはホーム画面から開かれています。";
+            return;
+          }
+          installHomeAppButton.disabled = false;
+          installHomeAppButton.textContent = english ? "Add to Home Screen" : "ホーム画面に追加";
+          if (deferredHomeInstallPrompt) {
+            homeInstallHelp.textContent = english
+              ? "Tap the button to open your browser's install confirmation."
+              : "ボタンを押すと、ブラウザの追加確認画面が開きます。";
+          } else if (isIosDevice()) {
+            homeInstallHelp.textContent = english
+              ? "On iPhone, the button opens the short Safari instructions below."
+              : "iPhoneでは、ボタンを押すとSafariの短い手順を表示します。";
+          } else {
+            homeInstallHelp.textContent = english
+              ? "On supported Android browsers, the install confirmation opens directly."
+              : "Androidの対応ブラウザでは、追加の確認画面を直接開けます。";
+          }
+        }
 
-	    function openHomeOsGuide(type) {
-	      if (!homeIphoneGuide || !homeAndroidGuide) return;
-	      homeIphoneGuide.open = type === "iphone";
-	      homeAndroidGuide.open = type === "android";
-	      const target = type === "iphone" ? homeIphoneGuide : homeAndroidGuide;
-	      requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }));
-	    }
+        function openHomeOsGuide(type) {
+          if (!homeIphoneGuide || !homeAndroidGuide) return;
+          homeIphoneGuide.open = type === "iphone";
+          homeAndroidGuide.open = type === "android";
+          const target = type === "iphone" ? homeIphoneGuide : homeAndroidGuide;
+          requestAnimationFrame(() => target.scrollIntoView({ behavior: "smooth", block: "nearest" }));
+        }
 
-	    async function requestHomeInstall() {
-	      if (isStandaloneApp()) {
-	        updateHomeInstallButton();
-	        return;
-	      }
-	      if (deferredHomeInstallPrompt) {
-	        const promptEvent = deferredHomeInstallPrompt;
-	        deferredHomeInstallPrompt = null;
-	        try {
-	          await promptEvent.prompt();
-	          const choice = await promptEvent.userChoice;
-	          homeInstallHelp.textContent = choice && choice.outcome === "accepted"
-	            ? (currentLanguage === "en" ? "Follow the browser confirmation to finish adding the app." : "ブラウザの確認に従って追加を完了してください。")
-	            : (currentLanguage === "en" ? "You can add it later from the browser menu." : "あとでブラウザのメニューから追加することもできます。");
-	          if (!choice || choice.outcome !== "accepted") openHomeOsGuide("android");
-	        } catch (error) {
-	          openHomeOsGuide(isIosDevice() ? "iphone" : "android");
-	        }
-	        return;
-	      }
-	      const type = isIosDevice() ? "iphone" : "android";
-	      openHomeOsGuide(type);
-	      homeInstallHelp.textContent = type === "iphone"
-	        ? (currentLanguage === "en" ? "Use Safari's Share menu to add this app." : "iPhoneはSafariの共有メニューから追加してください。")
-	        : (currentLanguage === "en" ? "Use your browser menu to add this app." : "ブラウザのメニューからホーム画面へ追加してください。");
-	    }
+        async function requestHomeInstall() {
+          if (isStandaloneApp()) {
+            updateHomeInstallButton();
+            return;
+          }
+          if (deferredHomeInstallPrompt) {
+            const promptEvent = deferredHomeInstallPrompt;
+            deferredHomeInstallPrompt = null;
+            try {
+              await promptEvent.prompt();
+              const choice = await promptEvent.userChoice;
+              homeInstallHelp.textContent = choice && choice.outcome === "accepted"
+                ? (currentLanguage === "en" ? "Follow the browser confirmation to finish adding the app." : "ブラウザの確認に従って追加を完了してください。")
+                : (currentLanguage === "en" ? "You can add it later from the browser menu." : "あとでブラウザのメニューから追加することもできます。");
+              if (!choice || choice.outcome !== "accepted") openHomeOsGuide("android");
+            } catch (error) {
+              openHomeOsGuide(isIosDevice() ? "iphone" : "android");
+            }
+            return;
+          }
+          const type = isIosDevice() ? "iphone" : "android";
+          openHomeOsGuide(type);
+          homeInstallHelp.textContent = type === "iphone"
+            ? (currentLanguage === "en" ? "Use Safari's Share menu to add this app." : "iPhoneはSafariの共有メニューから追加してください。")
+            : (currentLanguage === "en" ? "Use your browser menu to add this app." : "ブラウザのメニューからホーム画面へ追加してください。");
+        }
 
-	    function openHomePrompt() {
-	      if (!shouldShowHomePrompt()) return;
-	      homePromptModal.classList.add("show");
-	      homePromptModal.setAttribute("aria-hidden", "false");
-	      updateHomeInstallButton();
-	      refreshLanguageSoon();
+        function openHomePrompt() {
+          if (!shouldShowHomePrompt()) return;
+          homePromptModal.classList.add("show");
+          homePromptModal.setAttribute("aria-hidden", "false");
+          updateHomeInstallButton();
+          refreshLanguageSoon();
     }
 
     function closeHomePromptModal() {
@@ -17944,37 +17956,37 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       if (event.target === guideModal) closeGuideModalPanel();
     });
 
-	    guideModal.addEventListener("click", (event) => {
-	      const shareButton = event.target.closest("[data-share-app]");
-	      if (shareButton) {
-	        closeGuideModalPanel();
-	        shareApp();
-	        return;
-	      }
+        guideModal.addEventListener("click", (event) => {
+          const shareButton = event.target.closest("[data-share-app]");
+          if (shareButton) {
+            closeGuideModalPanel();
+            shareApp();
+            return;
+          }
 
-	      const button = event.target.closest("[data-guide-target]");
+          const button = event.target.closest("[data-guide-target]");
       if (!button) return;
       const target = button.dataset.guideTarget;
       closeGuideModalPanel();
-	      showView(target);
-	    });
+          showView(target);
+        });
 
-	    window.addEventListener("beforeinstallprompt", (event) => {
-	      event.preventDefault();
-	      deferredHomeInstallPrompt = event;
-	      updateHomeInstallButton();
-	    });
+        window.addEventListener("beforeinstallprompt", (event) => {
+          event.preventDefault();
+          deferredHomeInstallPrompt = event;
+          updateHomeInstallButton();
+        });
 
-	    window.addEventListener("appinstalled", () => {
-	      deferredHomeInstallPrompt = null;
-	      saveHomePromptState({ disabled: true, dismissedDate: todayString() });
-	      updateHomeInstallButton();
-	      closeHomePromptModal();
-	    });
+        window.addEventListener("appinstalled", () => {
+          deferredHomeInstallPrompt = null;
+          saveHomePromptState({ disabled: true, dismissedDate: todayString() });
+          updateHomeInstallButton();
+          closeHomePromptModal();
+        });
 
-	    installHomeAppButton.addEventListener("click", requestHomeInstall);
+        installHomeAppButton.addEventListener("click", requestHomeInstall);
 
-	    closeHomePrompt.addEventListener("click", () => {
+        closeHomePrompt.addEventListener("click", () => {
       saveHomePromptState({ ...getHomePromptState(), dismissedDate: todayString() });
       closeHomePromptModal();
     });
