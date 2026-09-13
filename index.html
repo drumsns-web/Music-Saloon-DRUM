@@ -9713,6 +9713,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const songCatalogEstimatedBytesPerSong = 405;
     let songCatalogTotal = initialSongCatalogTotal;
     let songCatalogTotalLoaded = false;
+    let songCatalogServerVersion = "";
 
     function songCatalogCountLabel(total = songCatalogTotal) {
       const count = Math.max(1, Number(total) || initialSongCatalogTotal);
@@ -9782,6 +9783,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
         const payload = await response.json();
         if (!response.ok || !payload.ok) throw new Error("song catalog count unavailable");
+        songCatalogServerVersion = String(payload.version || "");
         updateSongCatalogTotal(payload.count);
         songCatalogTotalLoaded = true;
       } catch (error) {
@@ -10931,6 +10933,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
+      "U-FRETでコード検索 ↗": "Search U-FRET ↗",
+      "J-Total Musicでコード検索 ↗": "Search J-Total Music ↗",
       "歌詞を検索 ↗": "Search Lyrics ↗",
       "27,907曲から曲名・歌手名を検索": "Search 27,907 songs by title or artist",
       "27,907曲から曲名・歌手名・通称を検索": "Search 27,907 songs by title, artist, or alias"
@@ -14403,7 +14407,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const savedMegabytes = deviceSongCatalogMeta.bytes
         ? ` / ${Math.max(1, Math.round(deviceSongCatalogMeta.bytes / 1000000))} MB`
         : "";
-      const updateAvailable = songCatalogTotal > deviceSongCatalog.length;
+      const savedVersion = String(deviceSongCatalogMeta.version || "");
+      const updateAvailable = songCatalogTotal !== deviceSongCatalog.length
+        || Boolean(songCatalogServerVersion && savedVersion && songCatalogServerVersion !== savedVersion);
       const updateNote = updateAvailable
         ? (currentLanguage === "en"
           ? ` / Latest catalog: ${songCatalogTotal.toLocaleString()} songs. Please update the saved copy.`
@@ -14414,6 +14420,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         : `端末保存済み：${deviceSongCatalog.length.toLocaleString()}曲${savedMegabytes}／最終更新 ${savedAt}${updateNote}`;
       const savedBytesForCurrentCatalog = deviceSongCatalog.length === songCatalogTotal ? deviceSongCatalogMeta.bytes : 0;
       updateSongCatalogCapacityEstimate(songCatalogTotal, savedBytesForCurrentCatalog);
+    }
+
+    function savedSongCatalogMatchesLatest() {
+      if (!deviceSongCatalog.length || !deviceSongCatalogMeta) return false;
+      if (songCatalogTotalLoaded && deviceSongCatalog.length !== songCatalogTotal) return false;
+      const savedVersion = String(deviceSongCatalogMeta.version || "");
+      if (songCatalogServerVersion && savedVersion && songCatalogServerVersion !== savedVersion) return false;
+      return true;
     }
 
     async function loadDeviceSongCatalogFromStorage() {
@@ -14471,6 +14485,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       }));
       deviceSongCatalog = songsToSave;
       deviceSongCatalogMeta = { savedAt, version: storedPayload.version, count: songsToSave.length, bytes: blob.size };
+      if (storedPayload.version) songCatalogServerVersion = storedPayload.version;
       deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
       popularArtistSongCache.clear();
       popularArtistSongItems = [];
@@ -14679,6 +14694,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const youtubeUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(searchQuery)}`;
       const webUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
       const chordWikiUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:ja.chordwiki.org ${searchQuery}`)}`;
+      const uFretUrl = `https://www.ufret.jp/search.php?key=${encodeURIComponent(searchQuery)}`;
+      const jTotalUrl = `https://www.google.com/search?q=${encodeURIComponent(`site:music.j-total.net ${searchQuery}`)}`;
       const lyricsUrl = `https://www.google.com/search?q=${encodeURIComponent(`${searchQuery} 歌詞`)}`;
       return `
         <article class="popular-song-row" data-list-index-group="${escapeText(popularExactIndexGroup(item, popularSongSortMode === "title" ? "title" : "artist"))}">
@@ -14689,6 +14706,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
               <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
               <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
+              <a href="${escapeText(uFretUrl)}" target="_blank" rel="noopener">${escapeText(uiText("U-FRETでコード検索 ↗"))}</a>
+              <a href="${escapeText(jTotalUrl)}" target="_blank" rel="noopener">${escapeText(uiText("J-Total Musicでコード検索 ↗"))}</a>
               <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
             </div>
           </div>
@@ -14828,12 +14847,12 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         refreshPopularSongs.textContent = currentLanguage === "en" ? "↻ Reloading…" : "↻ 再読み込み中…";
       }
       try {
-        const usingSavedCatalog = deviceSongCatalog.length > 0;
+        const usingSavedCatalog = savedSongCatalogMatchesLatest();
         const resultLimit = popularSongCategory === "catalog" ? 1200 : 5000;
         if (usingSavedCatalog) {
           popularSongItems = filterSavedSongCatalog(query, popularSongCategory, popularSongSortMode, resultLimit);
         } else {
-          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, q: query, limit: String(resultLimit) });
+          const params = new URLSearchParams({ action: "popular_songs", category: popularSongCategory, sort: popularSongSortMode, scope: "all", q: query, limit: String(resultLimit) });
           if (forceRefresh) params.set("refresh", String(Date.now()));
           const response = await fetch(`${sharedRankingApiUrl}?${params.toString()}`, { cache: "no-store" });
           const payload = await response.json();
@@ -14874,7 +14893,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         if (!rows) {
           await loadDeviceSongCatalogFromStorage();
           let artistSongs;
-          if (deviceSongCatalog.length) {
+          if (savedSongCatalogMatchesLatest()) {
             artistSongs = deviceSongCatalog.filter((item) => normalizeKana(item.artist) === cacheKey);
           } else {
             const params = new URLSearchParams({ action: "popular_artist_songs", artist });
