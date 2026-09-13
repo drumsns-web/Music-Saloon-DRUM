@@ -5037,9 +5037,14 @@
     }
 
     .popular-song-row .btn {
+      min-width: 0;
+      max-width: 100%;
       min-height: 40px;
       padding: 8px 12px;
+      line-height: 1.35;
       white-space: normal;
+      word-break: normal;
+      overflow-wrap: anywhere;
     }
 
     .song-request-form {
@@ -5185,7 +5190,10 @@
       .popular-song-row {
         grid-template-columns: 1fr;
       }
-      .popular-song-actions { grid-template-columns: 1fr 1fr; }
+      .popular-song-actions {
+        grid-template-columns: minmax(0, 1fr);
+        min-width: 0;
+      }
       .song-correction-form .row { grid-template-columns: 1fr; }
       .popular-song-row .btn {
         width: 100%;
