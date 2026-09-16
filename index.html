@@ -4803,6 +4803,63 @@
       line-height: 1.65;
     }
 
+    .external-search-details {
+      margin-top: 18px;
+      border: 1px solid rgba(19, 45, 34, .25);
+      background: #f8f7f1;
+      box-shadow: none;
+    }
+
+    .external-search-details > summary {
+      cursor: pointer;
+      color: var(--forest);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .external-search-details[open] > summary {
+      margin-bottom: 14px;
+    }
+
+    .external-search-note {
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      border-left: 5px solid #8d8172;
+      border-radius: 8px;
+      background: #fff;
+      color: #3f352c;
+      font-weight: 750;
+      line-height: 1.65;
+    }
+
+    .catalog-no-result-actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 16px;
+      border: 2px solid rgba(var(--theme-accent-rgb), .45);
+      border-radius: 12px;
+      background: #fffaf2;
+    }
+
+    .catalog-no-result-actions p {
+      margin: 0;
+      color: #3f352c;
+      font-weight: 750;
+      line-height: 1.65;
+    }
+
+    .catalog-no-result-actions details {
+      padding-top: 10px;
+      border-top: 1px solid rgba(19, 45, 34, .18);
+    }
+
+    .catalog-no-result-actions summary {
+      cursor: pointer;
+      color: var(--forest);
+      font-weight: 900;
+    }
+
     .popular-song-tabs,
     .popular-song-sort,
     .popular-song-search-scope {
@@ -7393,13 +7450,14 @@
       <div class="wrap">
         <div class="section-head">
           <div>
+            <span class="tag orange">自分専用・端末保存</span>
             <h2>マイ曲リスト</h2>
-            <p class="lead">曲名だけでも登録できます。歌手名・キー・メモはあとから追加できます。</p>
+            <p class="lead">自分が歌える曲・歌いたい曲を管理する、自分だけの一覧です。共有の曲データとは別で、この端末に保存されます。</p>
           </div>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
-            <span class="song-hub-group-title">自分の曲</span>
+            <span class="song-hub-group-title">自分用（この端末）</span>
             <div class="song-hub-group-links">
               <a class="active" href="#customers" aria-current="page">マイ曲リスト</a>
               <a href="#favorites">よく歌う曲</a>
@@ -7407,9 +7465,9 @@
             </div>
           </div>
           <div class="song-hub-group">
-            <span class="song-hub-group-title">みんなの曲</span>
+            <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">曲・歌手データ</a>
+              <a href="#popular-songs">共有の曲データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -7581,35 +7639,33 @@
           </div>
 
           <div class="card song-form-card" id="songRegister">
-            <h3 id="songFormTitle">曲を登録する</h3>
-            <p class="form-lead">曲データから選ぶか、外部検索を使ってマイ曲リストへ登録できます。</p>
+            <h3 id="songFormTitle">マイ曲リストへ登録</h3>
+            <p class="form-lead">まず共有の曲データから探すのがおすすめです。見つけた曲は、そのまま自分用のマイ曲リストへ保存できます。</p>
             <div class="song-data-register-callout">
-              <span class="catalog-eyebrow">おすすめ・かんたん登録</span>
-              <h4>曲データリストから選んで登録</h4>
-              <p>曲名・歌手名から探して、そのままマイ曲リストへ追加できます。</p>
-              <button class="btn primary" type="button" data-open-song-data-register>曲データから探す</button>
+              <span class="catalog-eyebrow">共有の曲データ（お店管理）</span>
+              <h4>共有の曲データから選ぶ</h4>
+              <p>お店が管理する曲・歌手一覧から探して、「マイ曲リストへ登録」を押すだけで自分の端末へ保存できます。</p>
+              <button class="btn primary" type="button" data-open-song-data-register>共有の曲データから探す</button>
             </div>
-            <p class="alternative-register-heading catalog-register-heading">検索サイトから登録する場合</p>
-            <div class="song-catalog-card">
-              <span class="catalog-eyebrow">外部検索から登録</span>
-              <h4>① 曲名または歌手名を入力</h4>
-              <p class="catalog-main-help">まずDAM、次にJOYSOUNDの公式検索で確認し、見つからない時だけMusicBrainzの候補検索を使えます。</p>
+            <details class="song-catalog-card external-search-details" id="externalSongSearchDetails">
+              <summary>曲データで見つからない場合：外部サイトで確認</summary>
+              <p class="external-search-note">DAM・JOYSOUNDは、カラオケ配信状況や正しい曲名・歌手名を確認するための補助検索です。外部サイトで見つけても、このアプリへは自動登録されません。</p>
               <form class="song-catalog-search" id="songCatalogSearchForm">
-                <input id="songCatalogQuery" type="search" placeholder="ここに曲名・歌手名を入力" autocomplete="off" aria-label="曲名または歌手名で曲データを検索">
-                <p class="song-catalog-priority-label">② まず公式カラオケで検索</p>
+                <input id="songCatalogQuery" type="search" placeholder="確認したい曲名・歌手名を入力" autocomplete="off" aria-label="外部サイトで確認する曲名または歌手名">
+                <p class="song-catalog-priority-label">外部サイトを開いて確認</p>
                 <div class="song-catalog-priority-actions">
                   <button class="btn dam-check" type="button" data-catalog-query-check="dam">DAMで検索 ↗</button>
                   <button class="btn joysound-check" type="button" data-catalog-query-check="joysound">JOYSOUNDで検索 ↗</button>
                 </div>
-                <div class="musicbrainz-fallback">
-                  <span>③ 公式検索で見つからない場合</span>
-                  <button class="btn ghost" id="songCatalogSearchButton" type="submit">MusicBrainzで候補検索</button>
-                </div>
+                <button id="songCatalogSearchButton" type="submit" hidden>候補検索</button>
               </form>
-              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">曲名または歌手名を入力して、公式検索からお試しください。</p>
-              <div class="song-catalog-results" id="songCatalogResults"></div>
-              <p class="catalog-source-note">MusicBrainzは一般の音楽データベースのため、カバー歌手や別バージョンが先に表示される場合があります。カラオケ配信の確認はDAM、次にJOYSOUNDの公式検索を優先してください。</p>
-            </div>
+              <p class="song-catalog-status" id="songCatalogStatus" aria-live="polite">外部サイトで表記を確認した後、必要なら手入力または追加リクエストをご利用ください。</p>
+              <div class="song-catalog-results" id="songCatalogResults" hidden></div>
+              <div class="control-row">
+                <button class="btn ghost" type="button" data-open-manual-song-entry>手入力でマイ曲リストへ保存</button>
+                <button class="btn ghost" type="button" data-open-song-request>共有の曲データへ追加リクエスト</button>
+              </div>
+            </details>
             <p class="alternative-register-heading">ほかの登録方法</p>
             <details class="bulk-song-entry secondary-entry" id="bulkSongEntry">
               <summary>📋 リストをまとめて一括登録（マイ曲／曲データ）</summary>
@@ -8237,7 +8293,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
-            <span class="song-hub-group-title">自分の曲</span>
+            <span class="song-hub-group-title">自分用（この端末）</span>
             <div class="song-hub-group-links">
               <a href="#customers">マイ曲リスト</a>
               <a href="#favorites">よく歌う曲</a>
@@ -8245,9 +8301,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             </div>
           </div>
           <div class="song-hub-group">
-            <span class="song-hub-group-title">みんなの曲</span>
+            <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">曲・歌手データ</a>
+              <a href="#popular-songs">共有の曲データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8300,7 +8356,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
-            <span class="song-hub-group-title">自分の曲</span>
+            <span class="song-hub-group-title">自分用（この端末）</span>
             <div class="song-hub-group-links">
               <a href="#customers">マイ曲リスト</a>
               <a class="active" href="#favorites" aria-current="page">よく歌う曲</a>
@@ -8308,9 +8364,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             </div>
           </div>
           <div class="song-hub-group">
-            <span class="song-hub-group-title">みんなの曲</span>
+            <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">曲・歌手データ</a>
+              <a href="#popular-songs">共有の曲データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8355,8 +8411,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         <div class="section-head">
           <div>
             <span class="tag orange">Song Catalog</span>
-            <h2>曲・歌手データから探す</h2>
-            <p class="lead">国内曲・洋楽曲や全曲データを、歌手別・曲名順で見たり、検索してマイ曲リストへ登録できます。</p>
+            <h2>共有の曲データから探す</h2>
+            <p class="lead">お店が管理する検索用の曲・歌手一覧です。ここで見つけた曲は「マイ曲リストへ登録」を押すと、自分専用の一覧としてこの端末へ保存できます。</p>
           </div>
         </div>
 
@@ -8366,7 +8422,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         </p>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
-            <span class="song-hub-group-title">自分の曲</span>
+            <span class="song-hub-group-title">自分用（この端末）</span>
             <div class="song-hub-group-links">
               <a href="#customers">マイ曲リスト</a>
               <a href="#favorites">よく歌う曲</a>
@@ -8374,22 +8430,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             </div>
           </div>
           <div class="song-hub-group">
-            <span class="song-hub-group-title">みんなの曲</span>
+            <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a class="active" href="#popular-songs" aria-current="page">曲・歌手データ</a>
+              <a class="active" href="#popular-songs" aria-current="page">共有の曲データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
           </div>
         </nav>
-
-        <div class="external-song-search-callout">
-          <div>
-            <strong>店内の曲データで見つからない時は、外部検索も使えます</strong>
-            <span>一般の音楽データベースから候補を探し、DAM・JOYSOUNDの公式検索でも確認できます。</span>
-          </div>
-          <button class="btn primary" type="button" data-open-external-song-search>外部検索から曲を登録</button>
-        </div>
 
         <details class="shared-ranking song-request-collapsible" id="song-request-area">
           <summary>見つからない曲を追加リクエスト</summary>
@@ -8505,7 +8553,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
-            <span class="song-hub-group-title">自分の曲</span>
+            <span class="song-hub-group-title">自分用（この端末）</span>
             <div class="song-hub-group-links">
               <a href="#customers">マイ曲リスト</a>
               <a href="#favorites">よく歌う曲</a>
@@ -8513,9 +8561,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             </div>
           </div>
           <div class="song-hub-group">
-            <span class="song-hub-group-title">みんなの曲</span>
+            <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">曲・歌手データ</a>
+              <a href="#popular-songs">共有の曲データ</a>
               <a class="active" href="#community" aria-current="page">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8547,7 +8595,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         </div>
         <nav class="song-hub-nav" aria-label="曲関連ページ">
           <div class="song-hub-group">
-            <span class="song-hub-group-title">自分の曲</span>
+            <span class="song-hub-group-title">自分用（この端末）</span>
             <div class="song-hub-group-links">
               <a href="#customers">マイ曲リスト</a>
               <a href="#favorites">よく歌う曲</a>
@@ -8555,9 +8603,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             </div>
           </div>
           <div class="song-hub-group">
-            <span class="song-hub-group-title">みんなの曲</span>
+            <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">曲・歌手データ</a>
+              <a href="#popular-songs">共有の曲データ</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる曲</a>
             </div>
@@ -9048,7 +9096,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <div class="guide-shortcut-grid">
             <button class="guide-shortcut" type="button" data-guide-target="popular-songs">
               <span class="guide-shortcut-icon">☆</span>
-              <span><strong>曲・歌手データ</strong><span>国内曲・洋楽曲、全曲検索、追加リクエスト</span></span>
+              <span><strong>共有の曲データ</strong><span>お店管理の曲・歌手一覧、全曲検索、追加リクエスト</span></span>
               <span class="guide-shortcut-arrow">›</span>
             </button>
             <button class="guide-shortcut" type="button" data-guide-target="community">
@@ -9618,7 +9666,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       { id: "gacha", label: "曲ガチャ", target: "gacha" },
       { id: "favorites", label: "よく歌う曲", target: "favorites" },
       { id: "community", label: "みんなのお気に入り曲", target: "community" },
-      { id: "popular-songs", label: "曲・歌手データ", target: "popular-songs" },
+      { id: "popular-songs", label: "共有の曲データ", target: "popular-songs" },
       { id: "performance-share", label: "歌える・演奏できる曲", target: "performance-share" },
       { id: "staff", label: "スタッフ紹介", target: "staff" },
       { id: "history", label: "歌った記録", target: "history" },
@@ -9639,7 +9687,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       { id: "info", label: "お知らせ", shortLabel: "お知らせ", target: "info", icon: "●" },
       { id: "favorites", label: "よく歌う曲", shortLabel: "よく歌う", target: "favorites", icon: "↻" },
       { id: "community", label: "みんなのお気に入り曲", shortLabel: "みんなの曲", target: "community", icon: "★" },
-      { id: "popular-songs", label: "曲・歌手データ", shortLabel: "曲データ", target: "popular-songs", icon: "☆" },
+      { id: "popular-songs", label: "共有の曲データ", shortLabel: "共有曲", target: "popular-songs", icon: "☆" },
       { id: "performance-share", label: "歌える・演奏できる曲", shortLabel: "歌・演奏", target: "performance-share", icon: "♬" },
       { id: "staff", label: "スタッフ紹介", shortLabel: "スタッフ", target: "staff", icon: "♩" },
       { id: "history", label: "歌った記録", shortLabel: "歌った記録", target: "history", icon: "◷" },
@@ -9867,6 +9915,29 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     }
 
     const exactTranslations = {
+      "自分専用・端末保存": "Private · Saved on This Device",
+      "自分が歌える曲・歌いたい曲を管理する、自分だけの一覧です。共有の曲データとは別で、この端末に保存されます。": "Your private list for songs you can sing or want to sing. It is separate from the shared catalog and is saved on this device.",
+      "自分用（この端末）": "My Data (This Device)",
+      "共有データ（お店管理）": "Shared Data (Shop Managed)",
+      "共有の曲データ": "Shared Song Catalog",
+      "共有の曲データから探す": "Search the Shared Song Catalog",
+      "お店が管理する検索用の曲・歌手一覧です。ここで見つけた曲は「マイ曲リストへ登録」を押すと、自分専用の一覧としてこの端末へ保存できます。": "This searchable song and artist catalog is managed by the shop. Select Add to My Song List to save a song privately on this device.",
+      "マイ曲リストへ登録": "Add to My Song List",
+      "まず共有の曲データから探すのがおすすめです。見つけた曲は、そのまま自分用のマイ曲リストへ保存できます。": "Start with the shared song catalog. Songs you find can be saved directly to your private My Song List.",
+      "共有の曲データ（お店管理）": "Shared Song Catalog (Shop Managed)",
+      "共有の曲データから選ぶ": "Choose from the Shared Song Catalog",
+      "お店が管理する曲・歌手一覧から探して、「マイ曲リストへ登録」を押すだけで自分の端末へ保存できます。": "Search the shop-managed song and artist catalog, then select Add to My Song List to save it on your device.",
+      "曲データで見つからない場合：外部サイトで確認": "If Not Found: Check External Sites",
+      "DAM・JOYSOUNDは、カラオケ配信状況や正しい曲名・歌手名を確認するための補助検索です。外部サイトで見つけても、このアプリへは自動登録されません。": "DAM and JOYSOUND are reference searches for karaoke availability and correct titles or artist names. External results are not added to this app automatically.",
+      "外部サイトを開いて確認": "Open an External Site to Check",
+      "外部サイトで表記を確認した後、必要なら手入力または追加リクエストをご利用ください。": "After checking the wording externally, use manual entry or submit a catalog request if needed.",
+      "手入力でマイ曲リストへ保存": "Save to My Song List Manually",
+      "共有の曲データへ追加リクエスト": "Request Addition to the Shared Catalog",
+      "表記や読み方を変えて再検索しても見つからない場合は、共有の曲データへ追加リクエストを送れます。": "If changing the spelling or reading still finds nothing, you can request that the song be added to the shared catalog.",
+      "この曲を追加リクエスト": "Request This Song",
+      "外部サイトでも確認する（補助機能）": "Also Check External Sites (Reference)",
+      "外部検索は、正しい表記やカラオケ配信状況を確認するためのものです。外部サイトの検索結果は、このアプリへ自動登録されません。": "External search is only for checking correct wording and karaoke availability. Its results are not added to this app automatically.",
+      "外部検索を開く": "Open External Search",
       "曲データをこの端末に保存": "Save Song Data on This Device",
       "任意機能です。27,907曲を端末へ保存すると、次回からサーバーの読み込みを待たずに検索・表示できます。マイ曲リストとは別に保存されます。": "Optional. Save 27,907 songs for faster catalog searches and display without waiting for the server. This is separate from My Song List.",
       "⚠ 重要：カラオケ未配信曲を含みます": "⚠ Important: Includes songs not available on karaoke",
@@ -11375,6 +11446,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let popularSongSearchScopeMode = "all";
     let popularSongSortMode = "artist";
     let popularSongLoadRun = 0;
+    let popularSongLoadFailed = false;
     let catalogSearchItems = [];
     let catalogSearchController = null;
     const expandedSongGroups = new Set();
@@ -15026,7 +15098,32 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const indexMode = popularSongSortMode === "title" ? "title" : "artist";
       renderPopularExactIndex(items, indexMode);
       if (!items.length) {
-        popularSongList.innerHTML = `<div class="kana-group"><div class="empty">${escapeText(uiText(popularSongCategory === "catalog" && !popularSongSearch.value.trim() ? "曲名または歌手名を1文字以上入力してください。検索後、結果の50音・数字・A–Zボタンが使えます。" : "条件に合う曲が見つかりませんでした。"))}</div></div>`;
+        const query = popularSongSearch.value.trim();
+        const isEmptyCatalogSearch = popularSongCategory === "catalog" && Boolean(query) && !popularSongLoadFailed;
+        const emptyMessage = popularSongLoadFailed
+          ? "曲一覧を取得できませんでした。時間をおいて再度お試しください。"
+          : (popularSongCategory === "catalog" && !query
+            ? "曲名または歌手名を1文字以上入力してください。検索後、結果の50音・数字・A–Zボタンが使えます。"
+            : "条件に合う曲が見つかりませんでした。");
+        popularSongList.innerHTML = `
+          <div class="kana-group">
+            <div class="empty">${escapeText(uiText(emptyMessage))}</div>
+            ${isEmptyCatalogSearch ? `
+              <div class="catalog-no-result-actions">
+                <p>${escapeText(uiText("表記や読み方を変えて再検索しても見つからない場合は、共有の曲データへ追加リクエストを送れます。"))}</p>
+                <div class="control-row">
+                  <button class="btn primary" type="button" data-open-song-request>${escapeText(uiText("この曲を追加リクエスト"))}</button>
+                </div>
+                <details>
+                  <summary>${escapeText(uiText("外部サイトでも確認する（補助機能）"))}</summary>
+                  <p>${escapeText(uiText("外部検索は、正しい表記やカラオケ配信状況を確認するためのものです。外部サイトの検索結果は、このアプリへ自動登録されません。"))}</p>
+                  <div class="control-row">
+                    <button class="btn ghost" type="button" data-open-external-song-search>${escapeText(uiText("外部検索を開く"))}</button>
+                  </div>
+                </details>
+              </div>
+            ` : ""}
+          </div>`;
         return;
       }
       if (popularSongSortMode === "rank") {
@@ -15098,6 +15195,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     async function loadPopularSongs(forceRefresh = false) {
       if (!popularSongStatus) return;
       const loadRun = ++popularSongLoadRun;
+      popularSongLoadFailed = false;
       const query = popularSongSearch.value.trim();
       const requestedCategory = popularSongCategory;
       const requestedSort = popularSongSortMode;
@@ -15202,6 +15300,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       } catch (error) {
         console.warn(error);
         if (loadRun !== popularSongLoadRun) return;
+        popularSongLoadFailed = true;
         popularSongItems = [];
         popularSongStatus.textContent = uiText("曲一覧を取得できませんでした。時間をおいて再度お試しください。");
         renderPopularSongs();
@@ -16847,7 +16946,13 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
 
     songCatalogSearchForm.addEventListener("submit", (event) => {
       event.preventDefault();
-      searchSongCatalog();
+      const query = songCatalogQuery.value.trim();
+      if (!query) {
+        songCatalogStatus.textContent = uiText("曲名または歌手名を入力してください。");
+        songCatalogQuery.focus();
+        return;
+      }
+      window.open(`https://www.clubdam.com/karaokesearch/?keyword=${encodeURIComponent(query)}&type=keyword`, "_blank", "noopener");
     });
 
     songCatalogSearchForm.addEventListener("click", (event) => {
@@ -17449,9 +17554,21 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         showView("song-register");
         window.setTimeout(() => {
           const catalogCard = songCatalogQuery && songCatalogQuery.closest(".song-catalog-card");
+          if (catalogCard instanceof HTMLDetailsElement) catalogCard.open = true;
+          if (songCatalogQuery && popularSongSearch) songCatalogQuery.value = popularSongSearch.value.trim();
           if (catalogCard) catalogCard.scrollIntoView({ behavior: "smooth", block: "start" });
           if (songCatalogQuery) songCatalogQuery.focus({ preventScroll: true });
         }, 180);
+      }
+      const manualSongEntryButton = event.target.closest("[data-open-manual-song-entry]");
+      if (manualSongEntryButton) {
+        showView("song-register");
+        window.setTimeout(() => {
+          if (manualSongEntry) manualSongEntry.open = true;
+          if (manualSongEntry) manualSongEntry.scrollIntoView({ behavior: "smooth", block: "start" });
+          const titleInput = document.getElementById("songTitle");
+          if (titleInput) titleInput.focus({ preventScroll: true });
+        }, 120);
       }
       const songDataRegisterButton = event.target.closest("[data-open-song-data-register]");
       if (songDataRegisterButton) {
@@ -17541,7 +17658,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       else restoreSongDraft();
       showView("song-register");
       setTimeout(() => {
-        songCatalogQuery.focus();
+        const catalogButton = songRegister && songRegister.querySelector("[data-open-song-data-register]");
+        if (catalogButton) catalogButton.focus({ preventScroll: true });
       }, 320);
     });
 
