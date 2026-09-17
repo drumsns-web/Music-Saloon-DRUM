@@ -5144,6 +5144,18 @@
       border-color: rgba(255, 0, 51, .34);
     }
 
+    .pwa-external-link-note {
+      display: none;
+    }
+
+    @media (display-mode: standalone) {
+      .pwa-external-link-note {
+        display: inline;
+        margin-left: 4px;
+        font-size: 10px;
+      }
+    }
+
     .popular-song-youtube-mark {
       display: inline-grid;
       width: 22px;
@@ -11117,6 +11129,9 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "YouTubeで検索 ↗": "Search YouTube ↗",
       "Webで検索 ↗": "Search the Web ↗",
       "ChordWikiでコード検索 ↗": "Search ChordWiki ↗",
+      "（ブラウザを選ぶ）": "(choose browser)",
+      "リンクをコピーしました。Safariなどのブラウザに貼り付けて開いてください。": "Link copied. Paste it into Safari or another browser.",
+      "共有画面を開けませんでした。リンクを長押ししてコピーしてください。": "Could not open the share sheet. Press and hold the link to copy it.",
       "U-FRETでコード検索 ↗": "Search U-FRET ↗",
       "J-Total Musicでコード検索 ↗": "Search J-Total Music ↗",
       "歌詞を検索 ↗": "Search Lyrics ↗",
@@ -15267,10 +15282,10 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
             <div class="popular-song-web-actions">
               <a class="is-youtube" href="${escapeText(youtubeUrl)}" target="_blank" rel="noopener" aria-label="${escapeText(uiText("YouTubeで検索 ↗"))}"><span class="popular-song-youtube-mark" aria-hidden="true">▶</span>${escapeText(uiText("YouTubeで検索 ↗"))}</a>
               <a href="${escapeText(webUrl)}" target="_blank" rel="noopener">Webで検索 ↗</a>
-              <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener">ChordWikiでコード検索 ↗</a>
+              <a href="${escapeText(chordWikiUrl)}" target="_blank" rel="noopener" data-pwa-external-link>${escapeText(uiText("ChordWikiでコード検索 ↗"))}<span class="pwa-external-link-note">${escapeText(uiText("（ブラウザを選ぶ）"))}</span></a>
               <a href="${escapeText(uFretUrl)}" target="_blank" rel="noopener">${escapeText(uiText("U-FRETでコード検索 ↗"))}</a>
               <a href="${escapeText(jTotalUrl)}" target="_blank" rel="noopener">${escapeText(uiText("J-Total Musicでコード検索 ↗"))}</a>
-              <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener">${escapeText(uiText("歌詞を検索 ↗"))}</a>
+              <a href="${escapeText(lyricsUrl)}" target="_blank" rel="noopener" data-pwa-external-link>${escapeText(uiText("歌詞を検索 ↗"))}<span class="pwa-external-link-note">${escapeText(uiText("（ブラウザを選ぶ）"))}</span></a>
             </div>
           </div>
           <div class="popular-song-actions">
@@ -16952,6 +16967,26 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           : "端末保存した曲データを削除できませんでした。もう一度お試しください。";
       }
     });
+    document.addEventListener("click", (event) => {
+      const link = event.target.closest("a[data-pwa-external-link]");
+      if (!link) return;
+      const standalone = window.navigator.standalone === true
+        || window.matchMedia("(display-mode: standalone)").matches;
+      if (!standalone || typeof navigator.share !== "function") return;
+      event.preventDefault();
+      event.stopPropagation();
+      // iOSのホーム画面アプリからはブラウザを直接指定できないため、OSの共有先選択へ渡す。
+      navigator.share({ url: link.href }).catch(async (error) => {
+        if (error && error.name === "AbortError") return;
+        try {
+          await navigator.clipboard.writeText(link.href);
+          showUndo(uiText("リンクをコピーしました。Safariなどのブラウザに貼り付けて開いてください。"));
+        } catch (copyError) {
+          console.warn(copyError);
+          showUndo(uiText("共有画面を開けませんでした。リンクを長押ししてコピーしてください。"));
+        }
+      });
+    }, true);
     popularSongList.addEventListener("click", (event) => {
       const setlistButton = event.target.closest("[data-popular-setlist]");
       if (setlistButton) {
