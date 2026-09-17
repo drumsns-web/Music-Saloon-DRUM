@@ -4025,6 +4025,18 @@
       box-shadow: 0 5px 12px rgba(240, 138, 53, .2);
     }
 
+    .song-hub-group-links a.song-hub-database-link {
+      grid-column: 1 / -1;
+      min-height: 50px;
+    }
+
+    .song-hub-nav a.song-hub-database-link:not(.active) {
+      border: 2px solid var(--orange);
+      background: rgba(var(--theme-accent-rgb), .15);
+      color: var(--forest);
+      box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), .12);
+    }
+
     .app-update-card {
       margin: 18px 0;
       padding: 16px 18px;
@@ -7467,7 +7479,7 @@
           <div class="song-hub-group">
             <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">共有の曲データ</a>
+              <a class="song-hub-database-link" href="#popular-songs" data-open-song-data-register>🔎 曲データベースから探す</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8303,7 +8315,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <div class="song-hub-group">
             <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">共有の曲データ</a>
+              <a class="song-hub-database-link" href="#popular-songs" data-open-song-data-register>🔎 曲データベースから探す</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8366,7 +8378,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <div class="song-hub-group">
             <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">共有の曲データ</a>
+              <a class="song-hub-database-link" href="#popular-songs" data-open-song-data-register>🔎 曲データベースから探す</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8432,7 +8444,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <div class="song-hub-group">
             <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a class="active" href="#popular-songs" aria-current="page">共有の曲データ</a>
+              <a class="song-hub-database-link active" href="#popular-songs" aria-current="page">🔎 曲データベースから探す</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8563,7 +8575,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <div class="song-hub-group">
             <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">共有の曲データ</a>
+              <a class="song-hub-database-link" href="#popular-songs" data-open-song-data-register>🔎 曲データベースから探す</a>
               <a class="active" href="#community" aria-current="page">みんなのお気に入り曲</a>
               <a href="#performance-share">歌える・演奏できる曲</a>
             </div>
@@ -8605,7 +8617,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           <div class="song-hub-group">
             <span class="song-hub-group-title">共有データ（お店管理）</span>
             <div class="song-hub-group-links">
-              <a href="#popular-songs">共有の曲データ</a>
+              <a class="song-hub-database-link" href="#popular-songs" data-open-song-data-register>🔎 曲データベースから探す</a>
               <a href="#community">みんなのお気に入り曲</a>
               <a class="active" href="#performance-share" aria-current="page">歌える・演奏できる曲</a>
             </div>
@@ -9920,6 +9932,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "自分用（この端末）": "My Data (This Device)",
       "共有データ（お店管理）": "Shared Data (Shop Managed)",
       "共有の曲データ": "Shared Song Catalog",
+      "🔎 曲データベースから探す": "🔎 Search Song Database",
       "共有の曲データから探す": "Search the Shared Song Catalog",
       "お店が管理する検索用の曲・歌手一覧です。ここで見つけた曲は「マイ曲リストへ登録」を押すと、自分専用の一覧としてこの端末へ保存できます。": "This searchable song and artist catalog is managed by the shop. Select Add to My Song List to save a song privately on this device.",
       "マイ曲リストへ登録": "Add to My Song List",
