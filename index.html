@@ -8495,17 +8495,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         <div class="shared-ranking" id="popular-search-area">
           <div class="popular-song-controls">
             <div>
-              <h3>一覧から探す（抜粋）</h3>
-              <p class="small">邦楽・洋楽のボタンは、検索せずに眺めるための一部の曲を表示します。掲載されていない歌手や曲も、上の全曲検索では人気・知名度に関係なく探せます。</p>
+              <h3>歌手一覧・曲検索</h3>
+              <p class="small">端末に曲データを保存すると、歌手を50音順で見られます。邦楽・洋楽のボタンは一部の曲の抜粋です。全曲検索では人気・知名度に関係なく探せます。</p>
             </div>
             <div class="popular-song-tabs" id="popularSongTabs">
-              <button class="btn is-active" type="button" data-popular-category="catalog">全曲から検索</button>
+              <button class="btn is-active" type="button" data-popular-category="catalog">全曲・歌手一覧</button>
               <button class="btn ghost" type="button" data-popular-category="jp">邦楽</button>
               <button class="btn ghost" type="button" data-popular-category="western">洋楽</button>
             </div>
           </div>
           <div class="popular-load-status-row">
-            <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">曲名または歌手名を入力して、全曲データから検索できます。</p>
+            <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">保存済みの歌手一覧を読み込んでいます。</p>
             <button class="btn primary" id="refreshPopularSongs" type="button">↻ 曲データを再読み込み</button>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
@@ -11006,6 +11006,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "洋楽人気曲": "Popular International Songs",
       "邦楽": "Japanese Songs",
       "洋楽": "International Songs",
+      "全曲・歌手一覧": "All Songs & Artists",
+      "歌手一覧・曲検索": "Artist Directory & Song Search",
+      "端末に曲データを保存すると、歌手を50音順で見られます。邦楽・洋楽のボタンは一部の曲の抜粋です。全曲検索では人気・知名度に関係なく探せます。": "Save the catalog on this device to browse artists by Japanese syllabary. The Japanese and international tabs show selections; full search covers every song regardless of popularity.",
+      "保存済みの歌手一覧を読み込んでいます。": "Loading saved artists.",
+      "端末保存済みの歌手一覧を準備しています…": "Preparing saved artists…",
+      "歌手一覧を準備しています…": "Preparing the artist directory…",
+      "端末に全曲データを保存すると、歌手一覧を50音順ですぐに表示できます。曲名や歌手名の検索は保存なしでも利用できます。": "Save the full catalog on this device to open the Japanese-syllabary artist directory quickly. Search works without saving.",
+      "曲名または歌手名を入力して検索するか、全曲データを端末に保存してください。": "Search by song or artist, or save the full catalog on this device.",
       "全曲から検索": "Search Full Catalog",
       "🔎 全曲データから検索": "🔎 Search the Full Song Catalog",
       "人気・知名度に関係なく、登録されている全曲から曲名・歌手名・カタカナ読みで探せます。邦楽・洋楽の一覧にない曲も検索対象です。": "Search every catalog song by title, artist, or Japanese reading, regardless of popularity. Songs absent from the Japanese or international browse lists are included.",
@@ -11458,6 +11466,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let deviceSongCatalogBrowseIndex = null;
     let deviceSongCatalogBrowseIndexLoadPromise = null;
     let deviceSongCatalogBrowseIndexBuildPromise = null;
+    let deviceSongArtistDirectory = null;
+    let deviceSongArtistDirectoryLoadPromise = null;
+    let deviceSongArtistDirectoryBuildPromise = null;
+    let deviceSongArtistDirectoryGroups = null;
+    let songArtistDirectoryGroup = "あ";
     let requestedSongItems = [];
     let correctingSongItem = null;
     let popularSongCategory = "catalog";
@@ -14525,6 +14538,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     const songCatalogRecordId = "full-catalog";
     const songCatalogBrowseIndexRecordId = "browse-index";
     const songCatalogBrowseIndexSchema = 1;
+    const songArtistDirectoryRecordId = "artist-directory";
+    const songArtistDirectorySchema = 1;
     const songCatalogDownloadChunkSize = 3000;
 
     function openSongCatalogDatabase() {
@@ -14628,6 +14643,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       return Array.isArray(index.jp) && Array.isArray(index.western);
     }
 
+    function songArtistDirectoryMatchesMetadata(directory = deviceSongArtistDirectory, meta = deviceSongCatalogMeta) {
+      const validGroups = new Set(popularExactIndexLabels());
+      return Boolean(directory && meta
+        && Number(directory.schema) === songArtistDirectorySchema
+        && Number(directory.count) === Number(meta.count)
+        && String(directory.version || "") === String(meta.version || "")
+        && Array.isArray(directory.artists)
+        && directory.artists.every((item) => item.artist && validGroups.has(item.artist_group)));
+    }
+
     function savedSongCatalogBrowseIndexMatchesLatest() {
       if (!songCatalogBrowseIndexMatchesMetadata()) return false;
       const savedCount = Number(deviceSongCatalogMeta.count) || 0;
@@ -14689,6 +14714,119 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       deviceSongCatalogBrowseIndex = index;
       deviceSongCatalogBrowseIndexLoadPromise = Promise.resolve(index);
       return index;
+    }
+
+    function createSongArtistDirectory(songs, meta) {
+      const artists = new Map();
+      songs.forEach((item) => {
+        const key = normalizeKana(item.artist);
+        if (!key) return;
+        let artist = artists.get(key);
+        if (!artist) {
+          artist = {
+            artist: item.artist,
+            artist_reading: item.artist_reading,
+            artist_index: item.artist_index,
+            artist_catalog_count: 0
+          };
+          artists.set(key, artist);
+        }
+        artist.artist_catalog_count += 1;
+        if (!artist.artist_reading && item.artist_reading) artist.artist_reading = item.artist_reading;
+        if (!artist.artist_index && item.artist_index) artist.artist_index = item.artist_index;
+      });
+      const labels = popularExactIndexLabels();
+      const collator = new Intl.Collator("ja", { numeric: true, sensitivity: "base" });
+      const sortedArtists = [...artists.values()].map((artist) => ({
+        ...artist,
+        artist_group: popularExactIndexGroup(artist, "artist")
+      })).sort((left, right) => {
+        const leftGroup = left.artist_group;
+        const rightGroup = right.artist_group;
+        const leftName = /^[A-Z]$/.test(leftGroup) ? left.artist : (left.artist_reading || left.artist);
+        const rightName = /^[A-Z]$/.test(rightGroup) ? right.artist : (right.artist_reading || right.artist);
+        return labels.indexOf(leftGroup) - labels.indexOf(rightGroup)
+          || collator.compare(leftName, rightName)
+          || collator.compare(left.artist, right.artist);
+      });
+      return {
+        schema: songArtistDirectorySchema,
+        version: String(meta && meta.version || ""),
+        count: songs.length,
+        artists: sortedArtists
+      };
+    }
+
+    async function saveSongArtistDirectory(songs, meta) {
+      const directory = createSongArtistDirectory(songs, meta);
+      const blob = new Blob([JSON.stringify(directory)], { type: "application/json" });
+      await songCatalogDbRequest("readwrite", (store) => store.put({
+        id: songArtistDirectoryRecordId,
+        payload: blob,
+        schema: directory.schema,
+        version: directory.version,
+        count: directory.count,
+        bytes: blob.size,
+        savedAt: new Date().toISOString()
+      }));
+      deviceSongArtistDirectory = directory;
+      deviceSongArtistDirectoryGroups = null;
+      deviceSongArtistDirectoryLoadPromise = Promise.resolve(directory);
+      return directory;
+    }
+
+    async function loadSongArtistDirectoryFromStorage() {
+      if (deviceSongArtistDirectoryLoadPromise) return deviceSongArtistDirectoryLoadPromise;
+      deviceSongArtistDirectoryLoadPromise = (async () => {
+        try {
+          const [catalogRecord, directoryRecord] = await Promise.all([
+            songCatalogDbRequest("readonly", (store) => store.get(songCatalogRecordId)),
+            songCatalogDbRequest("readonly", (store) => store.get(songArtistDirectoryRecordId))
+          ]);
+          if (!catalogRecord || !catalogRecord.payload || !Number(catalogRecord.count)) return null;
+          deviceSongCatalogMeta = {
+            savedAt: catalogRecord.savedAt || "",
+            version: String(catalogRecord.version || ""),
+            count: Number(catalogRecord.count) || 0,
+            bytes: Number(catalogRecord.bytes) || (catalogRecord.payload instanceof Blob ? catalogRecord.payload.size : 0)
+          };
+          updateDeviceSongCatalogStatus();
+          if (!directoryRecord || !directoryRecord.payload) return null;
+          const json = directoryRecord.payload instanceof Blob
+            ? await directoryRecord.payload.text()
+            : String(directoryRecord.payload || "");
+          const directory = JSON.parse(json);
+          if (!songArtistDirectoryMatchesMetadata(directory, deviceSongCatalogMeta)) return null;
+          deviceSongArtistDirectory = directory;
+          deviceSongArtistDirectoryGroups = null;
+          return directory;
+        } catch (error) {
+          console.warn(error);
+          return null;
+        }
+      })();
+      return deviceSongArtistDirectoryLoadPromise;
+    }
+
+    async function ensureSongArtistDirectory() {
+      const stored = await loadSongArtistDirectoryFromStorage();
+      if (songArtistDirectoryMatchesMetadata(stored, deviceSongCatalogMeta)) return stored;
+      if (deviceSongArtistDirectoryBuildPromise) return deviceSongArtistDirectoryBuildPromise;
+      deviceSongArtistDirectoryBuildPromise = (async () => {
+        await loadDeviceSongCatalogFromStorage();
+        if (!deviceSongCatalog.length || !deviceSongCatalogMeta) return null;
+        try {
+          return await saveSongArtistDirectory(deviceSongCatalog, deviceSongCatalogMeta);
+        } catch (error) {
+          console.warn(error);
+          return null;
+        }
+      })();
+      try {
+        return await deviceSongArtistDirectoryBuildPromise;
+      } finally {
+        deviceSongArtistDirectoryBuildPromise = null;
+      }
     }
 
     async function loadDeviceSongCatalogBrowseIndexFromStorage() {
@@ -14828,6 +14966,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       popularArtistSongItems = [];
       try {
         await saveSongCatalogBrowseIndex(deviceSongCatalog, deviceSongCatalogMeta);
+      } catch (error) {
+        console.warn(error);
+      }
+      try {
+        await saveSongArtistDirectory(deviceSongCatalog, deviceSongCatalogMeta);
       } catch (error) {
         console.warn(error);
       }
@@ -15000,14 +15143,11 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         : item && item.artist || "").trim();
       const visibleFirst = visibleName.normalize("NFKC").charAt(0).toUpperCase();
       if (/^[0-9]$/.test(visibleFirst)) return visibleFirst;
-      if (/^[A-Z]$/.test(visibleFirst)) return visibleFirst;
+      if (mode === "title" && /^[A-Z]$/.test(visibleFirst)) return visibleFirst;
       const source = String(mode === "title"
         ? item && (item.title_reading || item.title) || ""
         : item && (item.artist_reading || item.artist) || "").trim();
       const rawFirst = normalizeKana(source).charAt(0);
-      const rawLatin = rawFirst.toUpperCase();
-      if (/^[0-9]$/.test(rawFirst)) return rawFirst;
-      if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
       let first = mode === "artist" && item && item.artist_index
         ? normalizeKana(item.artist_index).charAt(0)
         : rawFirst;
@@ -15023,12 +15163,16 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         "ゃ": "や", "ゅ": "ゆ", "ょ": "よ", "っ": "つ", "ゎ": "わ"
       };
       first = kanaBase[first] || first;
-      return popularExactIndexLabels().includes(first) ? first : "その他";
+      if (popularExactIndexLabels().includes(first)) return first;
+      const rawLatin = rawFirst.toUpperCase();
+      if (/^[0-9]$/.test(rawFirst)) return rawFirst;
+      if (/^[A-Z]$/.test(rawLatin)) return rawLatin;
+      return /^[A-Z]$/.test(visibleFirst) ? visibleFirst : "その他";
     }
 
-    function renderPopularExactIndex(items, mode) {
+    function renderPopularExactIndex(items, mode, artistOnly = false) {
       if (!popularSongIndexJump) return;
-      const available = new Set((items || []).map((item) => popularExactIndexGroup(item, mode)));
+      const available = new Set((items || []).map((item) => artistOnly ? item.artist_group : popularExactIndexGroup(item, mode)));
       const buttonHtml = (labels) => labels.map((label) => `
           <button type="button" data-aux-index-jump="${escapeText(label)}" data-aux-index-target="popularSongList" ${available.has(label) ? "" : "disabled"}>${escapeText(label)}</button>
         `).join("");
@@ -15054,13 +15198,55 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         <div class="popular-index-toolbar-head">
           <div class="popular-index-mode-switch" role="group" aria-label="${currentLanguage === "en" ? "Choose index type" : "探し方を選ぶ"}">
             <button type="button" class="${mode === "artist" ? "is-active" : ""}" data-popular-index-mode="artist" aria-pressed="${mode === "artist"}">${currentLanguage === "en" ? "Artist" : "歌手"}</button>
-            <button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>
+          ${artistOnly ? "" : `<button type="button" class="${mode === "title" ? "is-active" : ""}" data-popular-index-mode="title" aria-pressed="${mode === "title"}">${currentLanguage === "en" ? "Song" : "曲名"}</button>`}
           </div>
           <button class="btn primary popular-index-request" type="button" data-open-song-request>${currentLanguage === "en" ? "Request a missing song" : "見つからない曲をリクエスト"}</button>
         </div>
         <div class="popular-index-groups">${menuHtml}</div>
       `;
       popularSongIndexJump.hidden = !items || !items.length;
+    }
+
+    function songArtistDirectoryGroups() {
+      if (deviceSongArtistDirectoryGroups) return deviceSongArtistDirectoryGroups;
+      const groups = new Map();
+      (deviceSongArtistDirectory?.artists || []).forEach((artist) => {
+        const label = artist.artist_group;
+        if (!groups.has(label)) groups.set(label, []);
+        groups.get(label).push(artist);
+      });
+      deviceSongArtistDirectoryGroups = groups;
+      return groups;
+    }
+
+    function renderSongArtistDirectoryGroup(requestedGroup = songArtistDirectoryGroup) {
+      const groups = songArtistDirectoryGroups();
+      const group = groups.has(requestedGroup)
+        ? requestedGroup
+        : popularExactIndexLabels().find((label) => groups.has(label));
+      if (!group) {
+        popularSongList.innerHTML = `<div class="empty">${escapeText(uiText("歌手データが見つかりませんでした。"))}</div>`;
+        return;
+      }
+      songArtistDirectoryGroup = group;
+      const artists = groups.get(group);
+      popularSongList.innerHTML = `
+        <section class="kana-group" data-list-index-group="${escapeText(group)}">
+          <div class="kana-head"><span>${escapeText(group)}</span><span>${currentLanguage === "en" ? `${artists.length} artists` : `${artists.length}組`}</span></div>
+          <div class="popular-song-list">${artists.map((artist) => `
+            <details class="popular-artist-group" data-list-index-group="${escapeText(group)}">
+              <summary><span class="popular-artist-name">${escapeText(artist.artist)}</span><span class="popular-artist-count">${escapeText(currentLanguage === "en" ? `${artist.artist_catalog_count} songs` : `${artist.artist_catalog_count}曲`)}</span></summary>
+              <div class="popular-song-list" data-popular-artist-songs="${escapeText(artist.artist)}"><div class="empty">${escapeText(currentLanguage === "en" ? "Open this artist to load their songs." : "開くと、この歌手の曲を表示します。")}</div></div>
+            </details>
+          `).join("")}</div>
+        </section>`;
+    }
+
+    function renderSongArtistDirectory() {
+      if (!songArtistDirectoryMatchesMetadata()) return false;
+      renderPopularExactIndex(deviceSongArtistDirectory.artists, "artist", true);
+      renderSongArtistDirectoryGroup();
+      return true;
     }
 
     function popularSongRowHtml(item, index, source = "popular") {
@@ -15098,6 +15284,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
 
     function renderPopularSongs() {
       if (!popularSongList || !popularSongStatus) return;
+      if (popularSongCategory === "catalog" && !popularSongSearch.value.trim() && renderSongArtistDirectory()) return;
       const items = popularSongItems;
       if (popularSongSortMode === "artist") {
         const collator = new Intl.Collator(currentLanguage === "en" ? "en" : "ja", { numeric: true, sensitivity: "base" });
@@ -15215,6 +15402,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const loadRun = ++popularSongLoadRun;
       popularSongLoadFailed = false;
       const query = popularSongSearch.value.trim();
+      if (popularSongCategory === "catalog" && !query) popularSongSortMode = "artist";
       const requestedCategory = popularSongCategory;
       const requestedSort = popularSongSortMode;
       const requestedScope = popularSongSearchScopeMode;
@@ -15246,6 +15434,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         button.classList.toggle("is-active", active);
         button.classList.toggle("ghost", !active);
         button.setAttribute("aria-pressed", String(active));
+        button.disabled = popularSongCategory === "catalog" && !query && button.dataset.popularSort === "title";
       });
       popularSongSearchScope.querySelectorAll("[data-popular-search-scope]").forEach((button) => {
         const active = button.dataset.popularSearchScope === popularSongSearchScopeMode;
@@ -15255,8 +15444,25 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       });
       if (popularSongCategory === "catalog" && !query) {
         popularSongItems = [];
-        popularSongStatus.textContent = uiText("全曲検索は1文字から利用できます。検索後、結果の50音・数字・A–Zボタンが使えます。");
-        renderPopularSongs();
+        if (renderSongArtistDirectory()) {
+          popularSongStatus.textContent = currentLanguage === "en"
+            ? `${deviceSongArtistDirectory.artists.length.toLocaleString()} artists saved on this device. Choose a letter, then open an artist.`
+            : `端末保存済みの歌手${deviceSongArtistDirectory.artists.length.toLocaleString()}組を50音順で表示しています。文字を選び、歌手を開くと曲が見られます。`;
+        } else {
+          popularSongStatus.textContent = uiText("端末保存済みの歌手一覧を準備しています…");
+          popularSongIndexJump.hidden = true;
+          popularSongList.innerHTML = `<div class="empty">${escapeText(uiText("歌手一覧を準備しています…"))}</div>`;
+          const directory = await ensureSongArtistDirectory();
+          if (loadRun !== popularSongLoadRun) return;
+          if (directory && renderSongArtistDirectory()) {
+            popularSongStatus.textContent = currentLanguage === "en"
+              ? `${directory.artists.length.toLocaleString()} artists saved on this device. Choose a letter, then open an artist.`
+              : `端末保存済みの歌手${directory.artists.length.toLocaleString()}組を50音順で表示しています。文字を選び、歌手を開くと曲が見られます。`;
+          } else {
+            popularSongStatus.textContent = uiText("端末に全曲データを保存すると、歌手一覧を50音順ですぐに表示できます。曲名や歌手名の検索は保存なしでも利用できます。");
+            popularSongList.innerHTML = `<div class="empty">${escapeText(uiText("曲名または歌手名を入力して検索するか、全曲データを端末に保存してください。"))}</div>`;
+          }
+        }
         catalogRefreshPromise.catch((error) => console.warn(error));
         return;
       }
@@ -16724,12 +16930,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       try {
         await songCatalogDbRequest("readwrite", (store) => store.delete(songCatalogRecordId));
         await songCatalogDbRequest("readwrite", (store) => store.delete(songCatalogBrowseIndexRecordId));
+        await songCatalogDbRequest("readwrite", (store) => store.delete(songArtistDirectoryRecordId));
         deviceSongCatalog = [];
         deviceSongCatalogMeta = null;
         deviceSongCatalogLoadPromise = Promise.resolve(deviceSongCatalog);
         deviceSongCatalogBrowseIndex = null;
         deviceSongCatalogBrowseIndexLoadPromise = Promise.resolve(null);
         deviceSongCatalogBrowseIndexBuildPromise = null;
+        deviceSongArtistDirectory = null;
+        deviceSongArtistDirectoryLoadPromise = Promise.resolve(null);
+        deviceSongArtistDirectoryBuildPromise = null;
+        deviceSongArtistDirectoryGroups = null;
         popularArtistSongCache.clear();
         popularArtistSongItems = [];
         updateDeviceSongCatalogStatus();
@@ -17652,6 +17863,15 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const container = document.getElementById(button.dataset.auxIndexTarget);
       if (!container) return;
       const label = button.dataset.auxIndexJump;
+      if (container.id === "popularSongList" && popularSongCategory === "catalog"
+          && !popularSongSearch.value.trim() && songArtistDirectoryMatchesMetadata()) {
+        renderSongArtistDirectoryGroup(label);
+        const indexMenu = button.closest(".popular-index-menu");
+        if (indexMenu) indexMenu.removeAttribute("open");
+        const groupHeading = container.querySelector("[data-list-index-group]");
+        if (groupHeading) placePopularArtistBelowFloatingBar(groupHeading);
+        return;
+      }
       const target = [...container.querySelectorAll("[data-list-index-group]")].find((item) => item.dataset.listIndexGroup === label);
       if (!target) return;
       if (container.id !== "popularSongList") {
