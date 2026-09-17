@@ -8484,17 +8484,17 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
         <div class="shared-ranking" id="popular-search-area">
           <div class="popular-song-controls">
             <div>
-              <h3>検索せずに一覧から探す</h3>
-              <p class="small">国内・洋楽の人気曲を眺めるための補助一覧です。上の検索では、人気順位に関係なく全曲データを探します。</p>
+              <h3>一覧から探す（抜粋）</h3>
+              <p class="small">邦楽・洋楽のボタンは、検索せずに眺めるための一部の曲を表示します。掲載されていない歌手や曲も、上の全曲検索では人気・知名度に関係なく探せます。</p>
             </div>
             <div class="popular-song-tabs" id="popularSongTabs">
-              <button class="btn is-active" type="button" data-popular-category="jp">国内人気曲</button>
-              <button class="btn ghost" type="button" data-popular-category="western">洋楽人気曲</button>
-              <button class="btn ghost" type="button" data-popular-category="catalog">全曲から検索</button>
+              <button class="btn is-active" type="button" data-popular-category="catalog">全曲から検索</button>
+              <button class="btn ghost" type="button" data-popular-category="jp">邦楽</button>
+              <button class="btn ghost" type="button" data-popular-category="western">洋楽</button>
             </div>
           </div>
           <div class="popular-load-status-row">
-            <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">曲データを読み込んでいます。</p>
+            <p class="shared-ranking-status" id="popularSongStatus" aria-live="polite">曲名または歌手名を入力して、全曲データから検索できます。</p>
             <button class="btn primary" id="refreshPopularSongs" type="button">↻ 曲データを再読み込み</button>
           </div>
           <aside class="song-catalog-device-card" aria-labelledby="songCatalogDeviceTitle">
@@ -8515,7 +8515,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
           </aside>
           <form class="popular-song-search" id="popularSongSearchForm" role="search">
             <label class="popular-song-search-label" for="popularSongSearch">🔎 全曲データから検索</label>
-            <p class="popular-song-search-help">曲名・歌手名・カタカナ読みで探せます。検索すると自動的に全曲検索へ切り替わります。</p>
+            <p class="popular-song-search-help">人気・知名度に関係なく、登録されている全曲から曲名・歌手名・カタカナ読みで探せます。邦楽・洋楽の一覧にない曲も検索対象です。</p>
             <div class="popular-song-search-options">
               <div>
                 <span class="popular-song-option-label">検索対象</span>
@@ -10992,8 +10992,14 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       "洋楽曲リスト": "International Song List",
       "国内人気曲": "Popular Japanese Songs",
       "洋楽人気曲": "Popular International Songs",
+      "邦楽": "Japanese Songs",
+      "洋楽": "International Songs",
       "全曲から検索": "Search Full Catalog",
       "🔎 全曲データから検索": "🔎 Search the Full Song Catalog",
+      "人気・知名度に関係なく、登録されている全曲から曲名・歌手名・カタカナ読みで探せます。邦楽・洋楽の一覧にない曲も検索対象です。": "Search every catalog song by title, artist, or Japanese reading, regardless of popularity. Songs absent from the Japanese or international browse lists are included.",
+      "一覧から探す（抜粋）": "Browse a Selection",
+      "邦楽・洋楽のボタンは、検索せずに眺めるための一部の曲を表示します。掲載されていない歌手や曲も、上の全曲検索では人気・知名度に関係なく探せます。": "The Japanese and international buttons show a selection for browsing. The full search above also finds artists and songs not listed there, regardless of popularity.",
+      "曲名または歌手名を入力して、全曲データから検索できます。": "Enter a song title or artist to search the full catalog.",
       "曲名・歌手名・カタカナ読みで探せます。検索すると自動的に全曲検索へ切り替わります。": "Search by song title, artist, or Japanese reading. Searching automatically switches to the full catalog.",
       "検索せずに一覧から探す": "Browse Without Searching",
       "国内・洋楽の人気曲を眺めるための補助一覧です。上の検索では、人気順位に関係なく全曲データを探します。": "These optional lists are for browsing popular Japanese and international songs. The search above covers the full catalog regardless of popularity.",
@@ -11442,7 +11448,7 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
     let deviceSongCatalogBrowseIndexBuildPromise = null;
     let requestedSongItems = [];
     let correctingSongItem = null;
-    let popularSongCategory = "jp";
+    let popularSongCategory = "catalog";
     let popularSongSearchScopeMode = "all";
     let popularSongSortMode = "artist";
     let popularSongLoadRun = 0;
@@ -15202,8 +15208,8 @@ TSUNAMI／サザンオールスターズ／▼2</pre>
       const requestedScope = popularSongSearchScopeMode;
       const catalogRefreshPromise = refreshSongCatalogTotal(forceRefresh);
       const scopeLabels = {
-        jp: currentLanguage === "en" ? "Popular Japanese Songs" : "国内人気曲",
-        western: currentLanguage === "en" ? "Popular International Songs" : "洋楽人気曲",
+        jp: currentLanguage === "en" ? "Japanese songs (selection)" : "邦楽（抜粋）",
+        western: currentLanguage === "en" ? "International songs (selection)" : "洋楽（抜粋）",
         catalog: songCatalogCountLabel()
       };
       const catalogLabel = songCatalogCountLabel();
